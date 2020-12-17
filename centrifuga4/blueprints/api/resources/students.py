@@ -1,3 +1,5 @@
+from flasgger import swag_from
+
 import centrifuga4.blueprints.api.common.base_resource as easy
 from centrifuga4.jwt_utils.privileges import PRIVILEGE_RESOURCE_STUDENTS
 from centrifuga4.models import Student
@@ -13,35 +15,33 @@ class StudentsRes(easy.ImplementsEasyResource,
     model = Student
     privileges = (PRIVILEGE_RESOURCE_STUDENTS,)
 
+    definitions = {'StudentSchema': schema}
+    parameters = [{
+        "id": "id_",
+            "description": "UUID4 of the student to get",
+        "in": "path",
+        "type": "string",
+        "required": "true"
+                }]
+
+    summary = "hello"
+    description = "a student is high"
+
     def get(self, *args, **kwargs):
-        """Example endpoint returning a list of colors by palette
-        This is using docstrings for specifications.
-        ---
-        parameters:
-          - name: palette
-            in: path
-            type: string
-            enum: ['all', 'rgb', 'cmyk']
-            required: true
-            default: all
-        definitions:
-          Palette:
-            type: object
-            properties:
-              palette_name:
-                type: array
-                items:
-                  $ref: '#/definitions/Color'
-          Color:
-            type: string
-        responses:
-          200:
-            description: A list of colors (may be filtered by palette)
-            schema:
-              $ref: '#/definitions/Palette'
-            examples:
-              rgb: ['red', 'green', 'blue']
-        """
+        """GET
+                Retrieve a student
+                ---
+                tags: ["student"]
+                summary: Retrieve a student
+                description: HWT RETR
+                responses:
+                  200:
+                    description: A student
+                    schema:
+                      $ref: '#/definitions/StudentSchema'
+                    examples:
+                      rgb: ['red', 'green', 'blue']
+                """
         return super().get(*args, **kwargs)
 
 

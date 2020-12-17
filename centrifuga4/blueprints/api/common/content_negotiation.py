@@ -2,7 +2,7 @@ import csv
 import io
 from datetime import datetime
 
-from typing import List, Union
+from typing import List, Union, Tuple
 
 from flask import request, jsonify, send_file
 
@@ -10,24 +10,35 @@ from centrifuga4.blueprints.api.common.errors import BaseBadRequest
 from centrifuga4.constants import SHORT_NAME
 
 
+def to_file(function):
+    def wrapper(*args, **kwargs):
+        proxy = io.StringIO()
+        _ = function(*args, **kwargs, proxy=proxy)  # writes to proxy
+        f = io.BytesIO()
+        f.write(proxy.getvalue().encode('utf-8'))
+        f.seek(0)
+        proxy.close()
+        return f
+
+    return wrapper
+
+
 class Flattener:
     def __init__(self):
         pass
 
-    def flatten_to_csv(self, src):
+
+    @to_file
+    def flatten_to_csv(self, src, proxy=None):
+        if proxy is None:
+            raise ValueError("proxy can't be none, value must be provided")
+
         matrix, keys = self.flatten(src)
         keys = list(keys)
         keys.sort()
-        proxy = io.StringIO()
         dict_writer = csv.DictWriter(proxy, keys)
         dict_writer.writeheader()
         dict_writer.writerows(matrix)
-
-        file = io.BytesIO()
-        file.write(proxy.getvalue().encode('utf-8'))
-        file.seek(0)
-        proxy.close()
-        return file
 
     def flatten(self, src):
         if type(src) is not list:
@@ -56,14 +67,15 @@ class Flattener:
         return result
 
 
-def produces(accepted_mimetypes: List[str]):
+def produces(_accepted_mimetypes: Tuple[str, ...] = None):
     def decorator(function):
         def function_wrapper(*args, **kwargs):
             # check content type is ok
             requested_mimetypes = request.accept_mimetypes
+            accepted_mimetypes = _accepted_mimetypes if _accepted_mimetypes else ["application/json"]
 
             if len(requested_mimetypes) == 0:
-                match = accepted_mimetypes[0]
+                match = accepted_mimetypes[0]  # default to the first mimetype of the accepted ones
             else:
                 match = requested_mimetypes.best_match(accepted_mimetypes)
                 if not match:
@@ -78,14 +90,18 @@ def produces(accepted_mimetypes: List[str]):
             if match == "application/json":
                 return jsonify(result)
             elif match == "text/csv":
-                r = Flattener().flatten_to_csv(result["data"])
-                filename = "%s-export-%s-%s.csv" % (SHORT_NAME,
-                                                    type(args[0]).__name__,
-                                                    datetime.now().strftime("%Y%m%dT%H%M%S"))
+                extension = "csv"
+                filename = "%s-export-%s-%s.%s" % (SHORT_NAME,
+                                                   type(args[0]).__name__,
+                                                   datetime.now().strftime("%Y%m%dT%H%M%S"),
+                                                   extension)
+
+                f = Flattener().flatten_to_csv(result["data"])
+
                 return send_file(
-                    r,
+                    f,
                     as_attachment=True,
-                    mimetype="text/csv",
+                    mimetype=match,
                     attachment_filename=filename)
             else:
                 raise NotImplementedError("mimeType cast not implemented")

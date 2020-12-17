@@ -42,49 +42,4 @@ def needs_privileges(*privileges):
     return decorator
 
 
-def reader_only(function):
-    @wraps(function)
-    @needs_privileges([PRIVILEGE_ACTION_READ])
-    def function_wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-    return function_wrapper
 
-
-def editor_only(function):
-    @wraps(function)
-    @needs_privileges([PRIVILEGE_ACTION_EDIT])
-    def function_wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-    return function_wrapper
-
-
-def deleter_only(function):
-    @wraps(function)
-    @needs_privileges([PRIVILEGE_ACTION_DELETE])
-    def function_wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-    return function_wrapper
-
-
-def creator_only(function):
-    @wraps(function)
-    @needs_privileges([PRIVILEGE_ACTION_CREATE])
-    def function_wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-    return function_wrapper
-
-
-def sender_only(function):
-    @wraps(function)
-    @needs_privileges([PRIVILEGE_ACTION_SEND_EMAILS])
-    def function_wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-    return function_wrapper
-
-
-def user_manager_only(function):
-    @wraps(function)
-    @needs_privileges([PRIVILEGE_RESOURCE_USERS])
-    def function_wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-    return function_wrapper

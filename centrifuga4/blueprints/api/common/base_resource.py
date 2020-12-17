@@ -1,6 +1,7 @@
 from functools import wraps
 from typing import List
 
+from flasgger import SwaggerView
 from flask import request
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource
@@ -14,11 +15,11 @@ from centrifuga4.blueprints.api.common.errors import integrity, no_nested, safe_
     ResourceBaseBadRequest, ResourceModelBadRequest, BaseBadRequest
 from centrifuga4.blueprints.api.common.identifiers import generate_new_id
 from centrifuga4.jwt_utils.privileges import PRIVILEGE_ACTION_CREATE, \
-    PRIVILEGE_ACTION_DELETE, check_privileges, PRIVILEGE_ACTION_EDIT
+    PRIVILEGE_ACTION_DELETE, PRIVILEGE_ACTION_EDIT, check_privileges
 from centrifuga4.schemas.schemas import BaseAutoSchema
 
 
-def easy_needs_privileges(*additional_privileges):
+def easy_needs_privileges(*additional_privileges):  # todo avoid code duplication only check self.privileges
     def decorator(function):
         @wraps(function)
         def function_wrapper(self, *args, **kwargs):
@@ -29,8 +30,7 @@ def easy_needs_privileges(*additional_privileges):
 
     return decorator
 
-
-class ImplementsEasyResource(Resource):
+class ImplementsEasyResource(Resource, SwaggerView):
     def __init_subclass__(cls, **kwargs):
         try:
             cls.schema
@@ -48,6 +48,7 @@ class ImplementsEasyResource(Resource):
                           Model), "instances of EasyResource must initialise field model with a valid SQLAlchemy model, found %s" % type(
             cls.model).__name__
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -59,11 +60,19 @@ class ImplementsEasyResource(Resource):
             self.privileges = ()
 
 
+def register(*decorators):
+    def register_wrapper(func):
+        for deco in decorators[::-1]:
+            func=deco(func)
+        func._decorators=decorators
+        return func
+    return register_wrapper
+
 
 def safe_get(function):
     # @jwt_required
     # @easy_needs_privileges(PRIVILEGE_READ)
-    @produces(("application/json", "text/csv"))  # todo if 1 res does not need it we should over
+    @register(produces(("application/json", "text/csv")))  # todo if 1 res does not need it we should over
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
     return decorator
@@ -73,7 +82,8 @@ class _ImplementsGet:
     model: Model
     schema: BaseAutoSchema
 
-    def _parse_args(self, url_args):
+    @staticmethod
+    def _parse_args(url_args):
         filters = {}
         sort = {}
         page = 1
@@ -92,7 +102,7 @@ class _ImplementsGet:
                 raise BaseBadRequest("Invalid query element found.", **{k[0]: "Query item not accepted."})
         return filters, sort, pagination, page
 
-    @safe_get
+    @register(safe_get)
     def get(self, *args, id_=None, many=False, **kwargs):
         filters, _, do_pagination, page = self._parse_args(request.args)
 
@@ -251,3 +261,5 @@ class ImplementsDeleteOne:
 
         db.session.delete(result)
         db.session.commit()
+
+

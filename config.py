@@ -20,8 +20,8 @@ class Config(object):
     JWT_COOKIE_CSRF_PROTECT = True  # csrf double submit protection, ref: http://www.redotheweb.com/2015/11/09/api-security.html
     JWT_SECRET_KEY = SECRET_KEY
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
-    JWT_ACCESS_CSRF_HEADER_NAME = "X-CSRF-ACCESS-TOKEN"
-    JWT_REFRESH_CSRF_HEADER_NAME = "X-CSRF-REFRESH-TOKEN"
+    JWT_ACCESS_CSRF_HEADER_NAME = "access_csrf"
+    JWT_REFRESH_CSRF_HEADER_NAME = "refresh_csrf"
 
 
 class ProductionConfig(Config):

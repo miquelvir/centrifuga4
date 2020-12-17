@@ -23,6 +23,11 @@ class User(Person):
         """ checks if password hash matches stored patch """
         return pwd_context.verify(password, self.password_hash)
 
+    @staticmethod
+    def hash_password(password: str) -> str:
+        """ returns the hashed password """
+        return pwd_context.encrypt(password)
+
     @property
     def privileges(self):
         privileges = []
