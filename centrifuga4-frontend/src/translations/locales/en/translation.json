@@ -12,5 +12,18 @@
   "payments": "payments",
   "users": "users",
   "settings": "settings",
-  "search": "search"
+  "search": "search",
+  "name": "name",
+  "surname1": "first surname",
+  "surname2": "second surname",
+  "email": "email",
+  "phone": "phone",
+  "address": "address",
+  "city": "city",
+  "zip": "zip",
+  "dni": "dni",
+  "gender": "gender",
+  "birth date": "birth date",
+  "country_of_origin": "country of origin"
+
 }

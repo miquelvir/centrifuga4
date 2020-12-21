@@ -28,6 +28,7 @@ import Routes from "../routes";
 import {BrowserRouter, Route, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import HomeToolbar from "./toolbar.home.component";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
@@ -113,21 +114,12 @@ const useStyles = makeStyles(theme => (createStyles({
     },
 })));
 
-const languageMap = {
-  en: { label: "english", dir: "ltr", active: true },
-  cat: { label: "català", dir: "ltr", active: false }
-};
-
-
 const Home = (props) => {
-    const changeTheme = props.changeTheme;
     const classes = useStyles();
 
-    const selected = localStorage.getItem("i18nextLng") || "en";
     const { t } = useTranslation();
 
     const [open, setOpen] = React.useState(false);
-    const title = "centrífuga4";
     const theme = useTheme();
 
     const handleDrawerOpen = () => {
@@ -137,62 +129,10 @@ const Home = (props) => {
         setOpen(false);
     };
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const isMenuOpen = Boolean(anchorEl);
-    const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
     const onItemClick = title => () => {
         // setTitle(title);
     };
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-            id={menuId}
-            keepMounted
-            transformOrigin={{vertical: 'top', horizontal: 'right'}}
-            open={isMenuOpen}
-            onClose={handleMenuClose}>
-            <MenuItem onClick={handleMenuClose}>{t("log_out")}</MenuItem>
-        </Menu>
-    );
 
-    const [anchorElLan, setAnchorElLan] = React.useState(null);
-    const isLanguageMenuOpen = Boolean(anchorElLan);
-    const handleLanguageMenuOpen = (event) => {
-        setAnchorElLan(event.currentTarget);
-    };
-    const handleLanguageMenuClose = () => {
-        setAnchorElLan(null);
-    };
-    const changeLanguage = (language) => {
-        i18next.changeLanguage(language).then();
-        handleLanguageMenuClose();
-    }
-    React.useEffect(() => {
-        document.body.dir = languageMap[selected].dir;
-      }, [anchorElLan, selected]);
-
-    const languageMenuId = 'primary-language-select-menu';
-    const languageMenu = (
-        <Menu
-            anchorEl={anchorElLan}
-            anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-            id={languageMenuId}
-            keepMounted
-            transformOrigin={{vertical: 'top', horizontal: 'right'}}
-            open={isLanguageMenuOpen}
-            onClose={handleLanguageMenuClose}>
-            {Object.keys(languageMap)?.map(item => (
-              <MenuItem key={item} onClick={() => changeLanguage(item)}>{languageMap[item].label}</MenuItem>
-            ))}
-        </Menu>
-    );
 
     return (
         <div className={classes.root}>
@@ -202,66 +142,12 @@ const Home = (props) => {
                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: open,
                 })}>
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label={t("open_drawer")}
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        className={clsx(classes.menuButton, {
-                            [classes.hide]: open,
-                        })}>
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="h6" noWrap>
-                      {title}
-                    </Typography>
-                    <div className={classes.grow}/>
-
-                    <Tooltip title={t("download_backup")}>
-                        <IconButton
-                            color="inherit"
-                            aria-label={t("download_backup")}
-                            onClick={() => changeTheme()}>
-                            <CloudDownloadIcon/>
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={t("change_language")}>
-                        <IconButton
-                            color="inherit"
-                            onClick={handleLanguageMenuOpen}
-                            aria-label={t("change_language")}
-                            aria-controls={languageMenuId}
-                            aria-haspopup="true">
-                            <TranslateIcon/>
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={t("dark_light_theme")}>
-                        <IconButton
-                            color="inherit"
-                            aria-label={t("dark_light_theme")}
-                            onClick={changeTheme}>
-                            <Brightness4Icon/>
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={t("my_account")}>
-                        <IconButton
-                            color="inherit"
-                            onClick={handleProfileMenuOpen}
-                            aria-label={t("my_account")}
-                            aria-controls={menuId}
-                            aria-haspopup="true">
-                            <AccountCircleIcon/>
-                        </IconButton>
-                    </Tooltip>
-
-                </Toolbar>
+                <HomeToolbar
+                    changeTheme={props.changeTheme}
+                    handleDrawerOpen={handleDrawerOpen}
+                    handleDrawerClose={handleDrawerClose}
+                />
             </AppBar>
-            {renderMenu}
-            {languageMenu}
             <BrowserRouter>
                 <Drawer
                     variant="permanent"

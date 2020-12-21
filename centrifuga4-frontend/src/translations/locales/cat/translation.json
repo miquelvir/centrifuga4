@@ -13,5 +13,17 @@
   "users": "usuaris",
   "settings": "configuració",
   "locations": "ubicacions",
-  "search": "cercar"
+  "search": "cercar",
+  "name": "nom",
+  "surname1": "primer cognom",
+  "surname2": "segon cognom",
+  "email": "correu",
+  "phone": "telèfon",
+  "address": "adreça",
+  "city": "ciutat",
+  "zip": "codi postal",
+  "dni": "dni",
+  "gender": "gènere",
+  "birth date": "data de naixement",
+  "country_of_origin": "estat d'origen"
 }
