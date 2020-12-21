@@ -3,7 +3,7 @@ from flasgger import swag_from
 import centrifuga4.blueprints.api.common.base_resource as easy
 from centrifuga4.jwt_utils.privileges import PRIVILEGE_RESOURCE_STUDENTS
 from centrifuga4.models import Student
-from centrifuga4.schemas import StudentSchema
+from centrifuga4.schemas.schemas import StudentSchema
 
 
 class StudentsRes(easy.ImplementsEasyResource,

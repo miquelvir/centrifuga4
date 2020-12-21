@@ -1,5 +1,4 @@
-import flask_restful
-from flask import Blueprint, jsonify
+from flask import Blueprint
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 

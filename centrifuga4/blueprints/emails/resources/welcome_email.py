@@ -1,17 +1,13 @@
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from rq.job import Job
+
+from email_queue.welcome_email import my_job
 from email_queue.worker import conn
 from centrifuga4 import q
 
 
-def my_job(name):
-    print(name)
-
-
 class WelcomeEmailRes(Resource):
-
-
     def get(self, job_id):
         print("reading")
         job = Job.fetch(job_id, connection=conn)

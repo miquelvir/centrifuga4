@@ -1,11 +1,12 @@
 from marshmallow import post_load, validates_schema, ValidationError, RAISE
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, fields
+
 import centrifuga4.models as models
 from centrifuga4 import db
 from flasgger import Schema
 
 
-class BaseAutoSchema(SQLAlchemyAutoSchema):
+class BaseAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
     """
     Base class for automatic Marshmallow schemas
 
@@ -14,6 +15,7 @@ class BaseAutoSchema(SQLAlchemyAutoSchema):
     it uses the default db session and load returns an object instead
     of a dictionary.
     """
+
     class Meta:
         """
         Meta class
@@ -38,54 +40,54 @@ class BaseAutoSchema(SQLAlchemyAutoSchema):
         return self.Meta.model(**data)
 
 
-class RoomSchema(BaseAutoSchema, Schema):
+class RoomSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Room
 
 
-class CourseSchema(BaseAutoSchema, Schema):
+class CourseSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Course
 
 
-class ScheduleSchema(BaseAutoSchema, Schema):
+class ScheduleSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Schedule
 
 
-class PersonSchema(BaseAutoSchema, Schema):
+class PersonSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Person
 
 
-class GuardianSchema(BaseAutoSchema, Schema):
+class GuardianSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Guardian
 
 
-class StudentSchema(BaseAutoSchema, Schema):
+class StudentSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Student
 
     # guardians = fields.Nested(GuardianSchema, many=True)  # todo do rest
 
 
-class PeriodicDateSchema(BaseAutoSchema, Schema):
+class PeriodicDateSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.PeriodicDate
 
 
-class PaymentSchema(BaseAutoSchema, Schema):
+class PaymentSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Payment
 
 
-class UserSchema(BaseAutoSchema, Schema):
+class UserSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.User
 
 
-class TeacherSchema(BaseAutoSchema, Schema):
+class TeacherSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Teacher
 

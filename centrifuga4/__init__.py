@@ -68,7 +68,7 @@ def init_app(config=DevelopmentConfig):
         app.register_blueprint(api, url_prefix='/api/v1')
         app.register_blueprint(dashboard, url_prefix='/dashboard/v1')
         app.register_blueprint(auth, url_prefix='/auth/v1')
-        app.register_blueprint(emails_service, url_prefix='/emails-service')
+        app.register_blueprint(emails_service, url_prefix='/email-service')
 
         # print(swagger.get_apispecs())  # todo customize ui
 

@@ -23,6 +23,6 @@ if __name__ == "__main__":
         centrifuga4.db.session.commit()"""
 
         app.run(host="0.0.0.0",
-                port="443",
-                ssl_context=("W:\\centrifuga4\\development_deployment\\cert.pem",
-                             "W:\\centrifuga4\\development_deployment\\key.pem"))
+                port="4999",
+                ssl_context=("cert.pem","key.pem")
+                )
