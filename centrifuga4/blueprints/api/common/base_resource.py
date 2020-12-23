@@ -16,6 +16,7 @@ from centrifuga4.blueprints.api.common.errors import integrity, no_nested, safe_
 from centrifuga4.blueprints.api.common.identifiers import generate_new_id
 from centrifuga4.jwt_utils.privileges import PRIVILEGE_ACTION_CREATE, \
     PRIVILEGE_ACTION_DELETE, PRIVILEGE_ACTION_EDIT, check_privileges
+from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import BaseAutoSchema
 
 
@@ -79,46 +80,61 @@ def safe_get(function):
 
 
 class _ImplementsGet:
-    model: Model
+    model: MyBase
     schema: BaseAutoSchema
 
-    @staticmethod
-    def _parse_args(url_args):
-        filters = {}
+    def _parse_args(self, url_args):
+        filters = []
         sort = {}
         page = 1
-        pagination = True
         for k, v in url_args.items():
-            k = k.split('.', 1)
+            k = k.split('.', 2)
             if k[0] == "filter":
-                filters[k[1]] = v
+                try:
+                    field = k[1]
+                    operator = k[2]
+                except IndexError:
+                    raise BaseBadRequest("Filter must have operator 'eq' or 'like'. Syntax: filter.[param-name].[operator]")
+
+                try:
+                    if operator == "eq":
+                        filters.append(self.model.get_field(field) == v)
+                    elif operator == "like":
+                        filters.append(self.model.get_field(field).like(v))
+                    else:
+                        raise BaseBadRequest("Filter must have operator 'eq' or 'like'. Found: '%s'" % k[2])
+                except KeyError:
+                    raise BaseBadRequest("Uknown field '%s'" % field)
+
             elif k[0] == "sort":
-                sort[k[1]] = v  # todo
+                try:
+                    sort[k[1]] = v  # todo
+                except IndexError:
+                    raise BaseBadRequest("Sort not used properly")  # todo
             elif k[0] == "page":
                 page = int(v)  # todo
-            elif k[0] == "pagination":
-                pagination = bool(int(v))
             else:
                 raise BaseBadRequest("Invalid query element found.", **{k[0]: "Query item not accepted."})
-        return filters, sort, pagination, page
+        return filters, sort, page
 
     @register(safe_get)
     def get(self, *args, id_=None, many=False, **kwargs):
-        filters, _, do_pagination, page = self._parse_args(request.args)
+        filters, _, page = self._parse_args(request.args)
+        do_pagination = True
 
         if many:  # todo destroy super and do both?
             try:
                 if do_pagination:
-                    pagination = self.model.query.filter_by(**filters).paginate(page, per_page=20, error_out=True)  # .all()
+                    pagination = self.model.query.filter(*filters).paginate(page, per_page=20, error_out=True)  # .all()
                     result = pagination.items  # todo per page constant line above
                 else:
-                    result = self.model.query.filter_by(**filters).all()
+                    result = self.model.query.filter(*filters).all()
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
         else:
             try:
-                result = self.model.query.filter_by(id=id_, **filters).first()
+                result = self.model.query.filter(self.model.id == id_, *filters).first()
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
@@ -139,7 +155,8 @@ class _ImplementsGet:
                     "nextPage": pagination.next_num,
                     "prevPage": pagination.prev_num,
                     "hasNext": pagination.has_next,
-                    "hasPrev": pagination.has_prev
+                    "hasPrev": pagination.has_prev,
+                    "totalPages": pagination.total
                 }
             }
         else:

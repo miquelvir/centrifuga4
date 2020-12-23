@@ -1,3 +1,7 @@
+from sqlalchemy import cast, String, case
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import column_property
+
 from centrifuga4 import db
 from centrifuga4.models.person import Person
 
@@ -24,5 +28,4 @@ class Student(Person):
                                 secondary="student_guardian",
                                 back_populates="students")
 
-    def has_guardians(self):
-        return len(self.guardians) != 0
+

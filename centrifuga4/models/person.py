@@ -1,11 +1,14 @@
 import uuid
 
-from sqlalchemy.orm import validates
+from sqlalchemy import case
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import validates, column_property
 
 from centrifuga4 import db
+from centrifuga4.models._base import MyBase
 
 
-class Person(db.Model):
+class Person(MyBase):
     __tablename__ = "person"
     __mapper_args__ = {
         'polymorphic_identity': "person"
@@ -24,6 +27,13 @@ class Person(db.Model):
     gender = db.Column(db.Text, nullable=True)
     birth_date = db.Column(db.Date, nullable=True)
     country_of_origin = db.Column(db.Date, nullable=True)
+
+    full_name = column_property(
+        case([(name != None, name + " "),], else_="") +
+        case([(surname1 != None, surname1 + " "), ], else_="") +
+        case([(surname2 != None, surname2), ], else_=""))
+    # todo full_name no accents with collate https://docs.sqlalchemy.org/en/13/core/sqlelement.html#sqlalchemy.sql.expression.collate
+
 
     def __init__(self, *args, **kwargs):
         print("initing")

@@ -1,6 +1,6 @@
 from marshmallow import post_load, validates_schema, ValidationError, RAISE
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, fields
-
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, fields, auto_field
+from marshmallow import fields
 import centrifuga4.models as models
 from centrifuga4 import db
 from flasgger import Schema
@@ -59,17 +59,33 @@ class PersonSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Person
 
+        dump_only = (
+            model.full_name.key,
+        )
+
+    full_name = fields.Str(dump_only=True)
+
 
 class GuardianSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Guardian
+
+        dump_only = (
+            model.full_name.key,
+        )
+
+    full_name = fields.Str(dump_only=True)
 
 
 class StudentSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Student
 
-    # guardians = fields.Nested(GuardianSchema, many=True)  # todo do rest
+        dump_only = (
+            model.full_name.key,
+        )
+
+    full_name = fields.Str(dump_only=True)
 
 
 class PeriodicDateSchema(BaseAutoSchema):
@@ -86,10 +102,21 @@ class UserSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.User
 
+        dump_only = (
+            model.full_name.key,
+        )
+
+    full_name = fields.Str(dump_only=True)
+
 
 class TeacherSchema(BaseAutoSchema):
     class Meta(BaseAutoSchema.Meta):
         model = models.Teacher
 
+        dump_only = (
+            model.full_name.key,
+        )
+
+    full_name = fields.Str(dump_only=True)
     # courses = fields.Nested(CourseSchema, many=True) for nesting
 

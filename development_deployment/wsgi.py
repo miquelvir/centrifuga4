@@ -1,4 +1,6 @@
 import centrifuga4
+from centrifuga4.models import Person, Student
+
 app = centrifuga4.init_app("config.DevelopmentConfig")
 
 
@@ -21,6 +23,8 @@ if __name__ == "__main__":
         centrifuga4.db.session.add(u)
         centrifuga4.db.session.add(g)
         centrifuga4.db.session.commit()"""
+
+        # print([x.fullname for x in Student.query.all()])
 
         app.run(host="0.0.0.0",
                 port="4999",

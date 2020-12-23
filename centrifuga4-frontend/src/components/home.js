@@ -146,6 +146,7 @@ const Home = (props) => {
                     changeTheme={props.changeTheme}
                     handleDrawerOpen={handleDrawerOpen}
                     handleDrawerClose={handleDrawerClose}
+                    open={open}
                 />
             </AppBar>
             <BrowserRouter>
@@ -184,7 +185,7 @@ const Home = (props) => {
                     </List>
                 </Drawer>
                 <main className={classes.content}>
-                  <div className={classes.toolbar}/> {/* space placeholder */}
+                    <div className={classes.toolbar}/> {/* space placeholder */}
                     {Routes.map((prop, key) => {
                         return (
                             <Route exact path={prop.path} component={prop.component}/>)

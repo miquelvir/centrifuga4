@@ -4,7 +4,7 @@ from datetime import datetime
 
 from typing import List, Union, Tuple
 
-from flask import request, jsonify, send_file
+from flask import request, jsonify, send_file, make_response
 
 from centrifuga4.blueprints.api.common.errors import BaseBadRequest
 from centrifuga4.constants import SHORT_NAME
@@ -26,7 +26,6 @@ def to_file(function):
 class Flattener:
     def __init__(self):
         pass
-
 
     @to_file
     def flatten_to_csv(self, src, proxy=None):
@@ -86,6 +85,8 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
             # call the actual endpoint
             result = function(*args, **kwargs)
 
+            print(match, _accepted_mimetypes, requested_mimetypes)
+
             # return in matched type
             if match == "application/json":
                 return jsonify(result)
@@ -98,11 +99,13 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
 
                 f = Flattener().flatten_to_csv(result["data"])
 
-                return send_file(
+                r = make_response(send_file(
                     f,
                     as_attachment=True,
                     mimetype=match,
-                    attachment_filename=filename)
+                    attachment_filename=filename))
+                r.headers["Access-Control-Expose-Headers"] = "content-disposition"
+                return r
             else:
                 raise NotImplementedError("mimeType cast not implemented")
 

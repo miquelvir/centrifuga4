@@ -6,15 +6,16 @@ import {lightTheme, darkTheme} from './theme';
 import Home from './components/home';
 
 function App() {
-    const [theme, setTheme] = useState(true);
-    const appliedTheme = createMuiTheme(theme ? lightTheme : darkTheme);
+    const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
+    const appliedTheme = createMuiTheme(theme ? darkTheme : lightTheme);
     const changeTheme = () => {
+        localStorage.setItem("darkTheme", (!theme).toString());
         setTheme(!theme);
     }
     return (
       <ThemeProvider theme={appliedTheme}>
         <CssBaseline />
-        <Home changeTheme={changeTheme}/>
+             <Home changeTheme={changeTheme}/>
       </ThemeProvider>
     );
 }

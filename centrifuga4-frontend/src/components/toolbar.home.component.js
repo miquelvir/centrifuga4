@@ -19,10 +19,9 @@ import createStyles from "@material-ui/styles/createStyles";
 
 const languageMap = {
     en: { label: "english", dir: "ltr", active: true },
-  cat: { label: "català", dir: "ltr", active: false }
+    cat: { label: "català", dir: "ltr", active: false }
 };
 
-const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
     toolbar: {
         display: 'flex',
@@ -123,7 +122,7 @@ export default function HomeToolbar(props){
                         onClick={props.handleDrawerOpen}
                         edge="start"
                         className={clsx(classes.menuButton, {
-                            [classes.hide]: open,
+                            [classes.hide]: props.open,
                         })}>
                         <MenuIcon/>
                     </IconButton>
