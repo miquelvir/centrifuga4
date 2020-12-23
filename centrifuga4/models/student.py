@@ -16,6 +16,8 @@ class Student(Person):
                    db.ForeignKey('person.id'),
                    primary_key=True)
 
+    price_term = db.Column(db.Float, nullable=True)
+
     courses = db.relationship("Course",
                               secondary="student_course",
                               back_populates="students")

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -15,6 +15,8 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import Typography from "@material-ui/core/Typography";
 import countryList from "../data/countries";
 import Attendee from "./students.student.attendee.component";
+import StudentsDataService from "../services/students.service";
+import report from "./snackbar.report";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,11 +52,14 @@ function a11yProps(index) {
   };
 }
 
-export default function Students() {
+export default function Student(props) {
+  const currentStudent = props.currentStudent;
+  const setCurrentStudent = props.setCurrentStudent;
+
   const classes = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
-    const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -66,15 +71,7 @@ export default function Students() {
   let contacts = [1,2];
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3} className={classes.grid}>
-        <Grid item xs={4}>
-          <h1>{t("students")}</h1>
-          <StudentsList/>
-        </Grid>
-
-        <Grid item xs={8}>
-          <Paper elevation={3} square className={classes.contentPanel}>
+    <Paper elevation={3} square className={classes.contentPanel}>
             <AppBar position="static" color="default">
                 <Tabs
                   value={value}
@@ -96,7 +93,11 @@ export default function Students() {
             index={value}
             onChangeIndex={handleChangeIndex}
           >
-            <Attendee value={value} index={0} dir={theme.direction} title="attendee"/>
+            <Attendee value={value}
+                      index={0}
+                      dir={theme.direction}
+                      title="attendee"
+                      currentStudent={currentStudent}/>
             {
               contacts && contacts.map((contact, index) => (
                    <Attendee value={value} index={index+1} dir={theme.direction} title={"contact " + (index + 1)}/>
@@ -105,8 +106,5 @@ export default function Students() {
             }
           </SwipeableViews>
           </Paper>
-        </Grid>
-      </Grid>
-    </div>
   );
 }

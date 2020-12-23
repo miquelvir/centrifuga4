@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Attendee(props) {
-  const { children, value, index, title, ...other } = props;
+  const { children, value, index, title, currentStudent, ...other } = props;
 
   const { t } = useTranslation();
   const loading = false;
@@ -47,9 +47,9 @@ function Attendee(props) {
             <Box px={2}>
               <h1>{title}</h1>
 
-              <Person/>
+              <Person currentPerson={currentStudent}/>
 
-              {loading
+              {loading || currentStudent === null
               ?
                   (<Box>
                         <Divider variant="middle" />
@@ -61,7 +61,13 @@ function Attendee(props) {
                           <Box py={2}>
                             <Divider variant="middle" />
                             <Box className={classes.line}>
-              <TextField id="standard-basic" label={t("price per term (€)")} type="number" className={classes.sizeSmall}/>
+              <TextField
+                  id="standard-basic"
+                  label={t("price per term (€)")}
+                  type="number"
+                  className={classes.sizeSmall}
+                  value={currentStudent["price_term"]}
+              />
                           </Box>
 
                           </Box>

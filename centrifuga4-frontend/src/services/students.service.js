@@ -30,6 +30,7 @@ class StudentsDataService {
                   link.remove();
                   resolve();
               }).catch(function (err) {
+                  console.log("0" + err);
               reject(Error(err));
           });
           });
@@ -48,7 +49,7 @@ class StudentsDataService {
               .then(function (response) {
                 resolve(response.data);
               }).catch(function (err) {
-              reject(Error(err));
+              reject(err);
           });
         });
   }

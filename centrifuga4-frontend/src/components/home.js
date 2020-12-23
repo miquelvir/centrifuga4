@@ -4,30 +4,20 @@ import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import clsx from "clsx";
-import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Divider from "@material-ui/core/Divider";
-import TranslateIcon from '@material-ui/icons/Translate';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import Routes from "../routes";
 import {BrowserRouter, Route, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import i18next from "i18next";
 import HomeToolbar from "./toolbar.home.component";
 
 const drawerWidth = 240;
@@ -115,12 +105,12 @@ const useStyles = makeStyles(theme => (createStyles({
 })));
 
 const Home = (props) => {
+    const theme = useTheme();
     const classes = useStyles();
 
     const { t } = useTranslation();
 
     const [open, setOpen] = React.useState(false);
-    const theme = useTheme();
 
     const handleDrawerOpen = () => {
         setOpen(true);
