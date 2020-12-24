@@ -6,7 +6,7 @@ import SchoolIcon from "@material-ui/icons/School";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
 import SettingsIcon from "@material-ui/icons/Settings";
-import Students from "./components/students.component";
+import Students from "./_components/students.component";
 import {useTranslation} from "react-i18next";
 
 

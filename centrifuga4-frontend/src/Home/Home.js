@@ -18,7 +18,7 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import Routes from "../routes";
 import {BrowserRouter, Route, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import HomeToolbar from "./toolbar.home.component";
+import HomeToolbar from "../_components/toolbar.home.component";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import StudentsDataService from "../services/students.service";
+import StudentsDataService from "../_services/students.service";
 import Pagination from '@material-ui/lab/Pagination';
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
@@ -8,7 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Divider from "@material-ui/core/Divider";
-import SearchBar from '../components/searchbar.component'
+import SearchBar from './/searchbar.component'
 import Box from "@material-ui/core/Box";
 import {useTranslation} from "react-i18next";
 import {Chip, ListItemSecondaryAction} from "@material-ui/core";

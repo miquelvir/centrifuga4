@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import {lightTheme, darkTheme} from './theme';
-import Home from './components/home';
+import {lightTheme, darkTheme} from '../theme';
+import Home from '../Home/Home';
 import { SnackbarProvider } from 'notistack';
 
 function App() {

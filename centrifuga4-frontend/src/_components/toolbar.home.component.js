@@ -10,7 +10,6 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Toolbar from "@material-ui/core/Toolbar";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import useTheme from "@material-ui/core/styles/useTheme";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import i18next from "i18next";

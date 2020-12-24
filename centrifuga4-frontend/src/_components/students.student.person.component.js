@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import {Button, DialogActions, MenuItem, TextField} from "@material-ui/core";
-import countryList from "../data/countries";
+import countryList from "../_data/countries";
 import React, {useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";

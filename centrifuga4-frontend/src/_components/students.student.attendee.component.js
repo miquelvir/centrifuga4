@@ -2,7 +2,6 @@ import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import {MenuItem, TextField} from "@material-ui/core";
-import countryList from "../data/countries";
 import PropTypes from "prop-types";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
