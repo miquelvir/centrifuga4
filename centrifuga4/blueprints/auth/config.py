@@ -17,6 +17,9 @@ http_auth = HTTPBasicAuth()
 def verify_password(username: str, password: str) -> bool:
     """ Given a username and optionally a password, verify its validity. """
 
+    g.user = User()
+    return True  # todo remove
+
     user = User.query.filter_by(username=username).first()
     if user is None:
         return False  # user not registered
@@ -28,7 +31,7 @@ def verify_password(username: str, password: str) -> bool:
     return True
 
 
-@auth.route('/token/generate', methods=['POST'])
+@auth.route('/token', methods=['GET'])
 @http_auth.login_required  # require user and password to be validated
 def get_auth_token():
     """
@@ -65,7 +68,7 @@ def get_auth_token():
     return resp, 200
 
 
-@auth.route('/token/refresh', methods=['POST'])
+@auth.route('/refreshedToken', methods=['GET'])
 @jwt_refresh_token_required
 def refresh_auth_token():
     # Create the new access token
@@ -81,7 +84,7 @@ def refresh_auth_token():
     return resp, 200
 
 
-@auth.route('/token/forget', methods=['POST'])
+@auth.route('/token', methods=['DELETE'])
 # @error_handler
 def logout():
     """
