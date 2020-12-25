@@ -1,23 +1,30 @@
 __version__ = '4.0.1'
 
+from collections import namedtuple
+
 from flasgger import Swagger
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_mobility import Mobility
+from flask_principal import Principal, identity_loaded, ItemNeed, ActionNeed
+from flask_seasurf import SeaSurf
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_talisman import Talisman, GOOGLE_CSP_POLICY
+from flask_login import LoginManager, current_user
+
 from config import DevelopmentConfig
 from rq import Queue
 from rq.job import Job
 from email_queue.worker import conn
 
-mobility = Mobility()  # todo needed?
 db = SQLAlchemy()
-jwt = JWTManager()
 # man = Talisman()
 cors = CORS()  # todo remove prod
 q = Queue(connection=conn)  # todo here
+login = LoginManager()
+principal = Principal()
+csrf = SeaSurf()
 
 temp = {
         "swagger": "2.0",
@@ -42,16 +49,17 @@ swagger = Swagger(template=temp)
 
 def init_app(config=DevelopmentConfig):
     # app creation
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../centrifuga4-frontend/build', static_url_path='/')
     app.config.from_object(config)
 
     # plugin initialization
-    mobility.init_app(app)
     db.init_app(app)
-    jwt.init_app(app)
     cors.init_app(app)
-    # man.init_app(app, content_security_policy=GOOGLE_CSP_POLICY)
+    login.init_app(app)
+    # man.init_app(app)
     swagger.init_app(app)
+    principal.init_app(app)
+    csrf.init_app(app)
 
 
     """app.view_functions["flasgger.apidocs"].talisman_view_options = {
@@ -64,6 +72,24 @@ def init_app(config=DevelopmentConfig):
 
     with app.app_context():
         from .blueprints import api, dashboard, auth, emails_service
+        from centrifuga4.models import User
+
+        @app.route('/')
+        def index():
+            return app.send_static_file('index.html')
+
+        @login.user_loader  # todo can move away?
+        def load_user(id_):
+            return User.query.get(id_)
+
+        @identity_loaded.connect_via(app)   # todo can move away?
+        def on_identity_loaded(sender, identity):
+            # Set the identity user object
+            identity.user = current_user
+
+            if hasattr(current_user, 'privileges'):
+                for role in current_user.privileges:
+                    identity.provides.add(ActionNeed(role))
 
         app.register_blueprint(api, url_prefix='/api/v1')
         app.register_blueprint(dashboard, url_prefix='/dashboard/v1')

@@ -13,15 +13,18 @@ class Config(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # ref: https://stackoverflow.com/questions/33738467/how-do-i-know-if-i-can-disable-sqlalchemy-track-modifications/33790196#33790196
 
-    JWT_TOKEN_LOCATION = ["cookies"]  # store JWTs in cookies
-    JWT_COOKIE_SECURE = True
-    JWT_ACCESS_COOKIE_PATH = '/'   # todo test list # all points (except login) need cookie, so we generalise and send them always
-    JWT_REFRESH_COOKIE_PATH = '/auth/v1/token/refresh'  # only send refresh cookie for the refresh endpoint
-    JWT_COOKIE_CSRF_PROTECT = True  # csrf double submit protection, ref: http://www.redotheweb.com/2015/11/09/api-security.html
-    JWT_SECRET_KEY = SECRET_KEY
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
-    JWT_ACCESS_CSRF_HEADER_NAME = "access_csrf"
-    JWT_REFRESH_CSRF_HEADER_NAME = "refresh_csrf"
+    CSRF_COOKIE_SAMESITE = 'Strict'
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_NAME = "X-CSRF-TOKEN"
+
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Strict'
+
+    REMEMBER_COOKIE_DURATION = timedelta(days=30)
+    REMEMBER_COOKIE_SECURE = True
+    REMEMBER_COOKIE_HTTPONLY = True
+    SESSION_PROTECTION = "strong"
 
 
 class ProductionConfig(Config):

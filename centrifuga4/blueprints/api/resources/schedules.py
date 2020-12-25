@@ -1,5 +1,5 @@
 import centrifuga4.blueprints.api.common.base_resource as easy
-from centrifuga4.jwt_utils.privileges import PRIVILEGE_RESOURCE_SCHEDULES
+from centrifuga4.auth_auth.resource_need import SchedulesPermission
 from centrifuga4.models import Schedule
 from centrifuga4.schemas.schemas import ScheduleSchema
 
@@ -11,11 +11,11 @@ class SchedulesRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = ScheduleSchema
     model = Schedule
-    privileges = (PRIVILEGE_RESOURCE_SCHEDULES,)
+    permissions = (SchedulesPermission,)
 
 
 class SchedulesCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = ScheduleSchema
     model = Schedule
-    privileges = (PRIVILEGE_RESOURCE_SCHEDULES,)
+    permissions = (SchedulesPermission,)

@@ -1,5 +1,5 @@
 import centrifuga4.blueprints.api.common.base_resource as easy
-from centrifuga4.jwt_utils.privileges import PRIVILEGE_RESOURCE_ROOMS
+from centrifuga4.auth_auth.resource_need import RoomsPermission
 from centrifuga4.models import Room
 from centrifuga4.schemas.schemas import RoomSchema
 
@@ -11,11 +11,11 @@ class RoomsRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = RoomSchema
     model = Room
-    privileges = (PRIVILEGE_RESOURCE_ROOMS,)
+    permissions = (RoomsPermission,)
 
 
 class RoomsCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = RoomSchema
     model = Room
-    privileges = (PRIVILEGE_RESOURCE_ROOMS,)
+    permissions = (RoomsPermission,)

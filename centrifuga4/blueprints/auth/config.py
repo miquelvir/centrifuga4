@@ -1,11 +1,14 @@
 from functools import wraps
 
-from flask import Blueprint, g, jsonify
+from flask import Blueprint, g, jsonify, request, current_app, session
 
 # initialise the blueprint
 from flask_httpauth import HTTPBasicAuth
 from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, \
     get_jwt_identity, unset_jwt_cookies, jwt_refresh_token_required, get_csrf_token, get_jwt_claims
+from flask_login import login_user, logout_user, login_required
+from flask_principal import identity_changed, Identity, AnonymousIdentity
+
 from centrifuga4.models import User
 
 auth = Blueprint('auth', __name__)
@@ -17,8 +20,7 @@ http_auth = HTTPBasicAuth()
 def verify_password(username: str, password: str) -> bool:
     """ Given a username and optionally a password, verify its validity. """
 
-    g.user = User()
-    return True  # todo remove
+    print(username, password)
 
     user = User.query.filter_by(username=username).first()
     if user is None:
@@ -31,7 +33,7 @@ def verify_password(username: str, password: str) -> bool:
     return True
 
 
-@auth.route('/token', methods=['GET'])
+@auth.route('/login', methods=['GET'])
 @http_auth.login_required  # require user and password to be validated
 def get_auth_token():
     """
@@ -45,46 +47,18 @@ def get_auth_token():
     """
 
     user = g.user
-    claims = user.get_claims()
+    remember = request.args.get('remember')
+    remember = remember == "1" if remember else False
 
-    # Create the tokens we will be sending back to the user
-    access_token = create_access_token(identity=user.username,
-                                       fresh=True,
-                                       user_claims=claims)
-    refresh_token = create_refresh_token(identity=user.username,
-                                         user_claims=claims)
+    login_user(user, remember=remember)
+    identity_changed.send(current_app._get_current_object(),
+                          identity=Identity(user.id))
 
-    # Set the JWTs and the CSRF double submit protection cookies
-    # in this response
-
-    resp = jsonify({
-        'access_csrf': get_csrf_token(access_token),
-        'refresh_csrf': get_csrf_token(refresh_token)
-    })
-
-    set_access_cookies(resp, access_token)
-    set_refresh_cookies(resp, refresh_token)
-
-    return resp, 200
+    return "", 200
 
 
-@auth.route('/refreshedToken', methods=['GET'])
-@jwt_refresh_token_required
-def refresh_auth_token():
-    # Create the new access token
-    current_user = get_jwt_identity()
-
-    access_token = create_access_token(identity=current_user, fresh=False, user_claims=get_jwt_claims())  # todo are claims refreshed
-
-    # Set the access JWT and CSRF double submit protection cookies
-    # in this response
-    resp = jsonify({'refreshed': True})
-    set_access_cookies(resp, access_token)
-
-    return resp, 200
-
-
-@auth.route('/token', methods=['DELETE'])
+@auth.route('/logout', methods=['GET'])
+@login_required
 # @error_handler
 def logout():
     """
@@ -94,6 +68,12 @@ def logout():
     # in order to logout. unset_jwt_cookies is a helper function to
     # do just that.
     """
-    resp = jsonify({'logout': True})
-    unset_jwt_cookies(resp)
-    return resp, 200
+    logout_user()
+
+    # Remove session keys set by Flask-Principal
+    for key in ('identity.name', 'identity.auth_type'):  # todo refractor function
+        session.pop(key, None)
+    # Tell Flask-Principal the user is anonymous
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
+    return "", 200

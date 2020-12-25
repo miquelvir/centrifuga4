@@ -1,7 +1,7 @@
 from flasgger import swag_from
 
 import centrifuga4.blueprints.api.common.base_resource as easy
-from centrifuga4.jwt_utils.privileges import PRIVILEGE_RESOURCE_STUDENTS
+from centrifuga4.auth_auth.resource_need import StudentsPermission
 from centrifuga4.models import Student
 from centrifuga4.schemas.schemas import StudentSchema
 
@@ -13,7 +13,7 @@ class StudentsRes(easy.ImplementsEasyResource,
                   easy.ImplementsDeleteOne):
     schema = StudentSchema
     model = Student
-    privileges = (PRIVILEGE_RESOURCE_STUDENTS,)
+    permissions = (StudentsPermission,)
 
     definitions = {'StudentSchema': schema}
     parameters = [{
@@ -51,4 +51,4 @@ class StudentsCollectionRes(easy.ImplementsEasyResource,
                             easy.ImplementsGetCollection):
     schema = StudentSchema
     model = Student
-    privileges = (PRIVILEGE_RESOURCE_STUDENTS,)
+    permissions = (StudentsPermission,)

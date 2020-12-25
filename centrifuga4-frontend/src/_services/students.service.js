@@ -1,3 +1,5 @@
+import {authHeader} from "../_helpers/auth-header";
+
 const axios = require('axios');
 
 class StudentsDataService {
@@ -13,9 +15,9 @@ class StudentsDataService {
                   params: {
                   "filter.full_name.like": '%' + searchText + '%'
                   },
-                  headers: {
+                  headers: {...{
                       'Accept': 'text/csv'
-                  }
+                  }, ...authHeader()}
               }).then(response => {
                   console.log(response);
                   let filename = response.headers["content-disposition"].split("filename=")[1];
@@ -42,9 +44,9 @@ class StudentsDataService {
               params: {
                   "filter.full_name.like": '%' + searchText + '%'
               },
-              headers: {
+              headers: {...{
                   'Content-Type': download ? 'text/csv' : 'application/json'
-              }
+              }, ...authHeader()}
             })
               .then(function (response) {
                 resolve(response.data);

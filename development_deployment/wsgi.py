@@ -1,10 +1,14 @@
+from flask_principal import Permission, RoleNeed
+
 import centrifuga4
-from centrifuga4.models import Person, Student
+from centrifuga4.models import Person, Student, User
 
 app = centrifuga4.init_app("config.DevelopmentConfig")
 
+admin_permission = Permission(RoleNeed('admin'))
 
 @app.route("/hi")
+@admin_permission.require()
 def _hi():
     return "hiiiiiiiiii"
 
@@ -15,17 +19,19 @@ if __name__ == "__main__":
         # centrifuga4.db.create_all()
         # s = Student(id="john", name="john", price_term=23, email="john@gmail.com")
         # s.guardians.append(Guardian(id="ua81-john", name="ua81-john", relation="mother"))
-        # u = User(id="admin", name="admin", username="admin", password_hash=pwd_context.hash("admin"), privilege_read=True)
+        # u = User(id="admin", name="admin",
+                # username="admin", password_hash=User.hash_password("admin"),
+                # privilege_read=True)
         # g = Guardian(id="g", name="guard")"""
         # u = User(id="admin", name="admin", username="admin", password_hash=pwd_context.hash("admin"))
 
         # centrifuga4.db.session.add(s)
-        """centrifuga4.db.session.add(u)
-        centrifuga4.db.session.add(g)
+         # centrifuga4.db.session.add(u)
+        """centrifuga4.db.session.add(g)
         centrifuga4.db.session.commit()"""
 
         # print([x.full name for x in Student.query.all()])
-        # centrifuga4.db.session.commit()
+        #centrifuga4.db.session.commit()
         app.run(host="0.0.0.0",
                 port="4999",
                 ssl_context=("cert.pem","key.pem")

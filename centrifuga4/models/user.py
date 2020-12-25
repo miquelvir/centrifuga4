@@ -1,9 +1,11 @@
+from flask_login import UserMixin
+
 from centrifuga4 import db
 from centrifuga4.models.person import Person
 from passlib.apps import custom_app_context as pwd_context
 
 
-class User(Person):
+class User(Person, UserMixin):
     __tablename__ = "user"
     __mapper_args__ = {
         'polymorphic_identity': "user"
@@ -52,5 +54,3 @@ class User(Person):
 
         return privileges
 
-    def get_claims(self):
-        return {"privileges": self.privileges}

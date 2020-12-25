@@ -104,7 +104,7 @@ const useStyles = makeStyles(theme => (createStyles({
     },
 })));
 
-const Home = (props) => {
+const HomePage = (props) => {
     const theme = useTheme();
     const classes = useStyles();
 
@@ -186,4 +186,4 @@ const Home = (props) => {
     );
 }
 
-export default Home;
+export default HomePage;

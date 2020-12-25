@@ -1,11 +1,11 @@
 from flask import request
 
 import centrifuga4.blueprints.api.common.base_resource as easy
-from centrifuga4.jwt_utils.privileges import PRIVILEGE_RESOURCE_USERS
+from centrifuga4.auth_auth.resource_need import UsersPermission
 from centrifuga4.models import User
 from centrifuga4.schemas.schemas import UserSchema
 
-
+# todo not dump the password hash on api calls
 class UsersRes(easy.ImplementsEasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
@@ -13,7 +13,7 @@ class UsersRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = UserSchema
     model = User
-    privileges = (PRIVILEGE_RESOURCE_USERS,)
+    permissions = (UsersPermission,)
 
     def post(self, *args, **kwargs):
 
@@ -31,4 +31,4 @@ class UsersCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = UserSchema
     model = User
-    privileges = (PRIVILEGE_RESOURCE_USERS,)
+    permissions = (UsersPermission,)

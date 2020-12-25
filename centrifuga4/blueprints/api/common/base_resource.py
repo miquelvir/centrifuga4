@@ -10,26 +10,27 @@ from flask_sqlalchemy import Model
 from sqlalchemy.exc import InvalidRequestError
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.action_need import ReadPermission, EditPermission, CreatePermission, DeletePermission
+from centrifuga4.auth_auth.utils import check_permissions
 from centrifuga4.blueprints.api.common.content_negotiation import produces
 from centrifuga4.blueprints.api.common.errors import integrity, no_nested, safe_marshmallow, NotFound, \
     ResourceBaseBadRequest, ResourceModelBadRequest, BaseBadRequest
 from centrifuga4.blueprints.api.common.identifiers import generate_new_id
-from centrifuga4.jwt_utils.privileges import PRIVILEGE_ACTION_CREATE, \
-    PRIVILEGE_ACTION_DELETE, PRIVILEGE_ACTION_EDIT, check_privileges
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import BaseAutoSchema
 
 
-def easy_needs_privileges(*additional_privileges):  # todo avoid code duplication only check self.privileges
+def easy_requires(*extra_needs):  # todo avoid code duplication only check self.privileges, maybe class factory instead of function
     def decorator(function):
         @wraps(function)
         def function_wrapper(self, *args, **kwargs):
             """ allow only if current JWT in cookie has admin role """
-            if check_privileges(additional_privileges + self.privileges):
+            if check_permissions(extra_needs + self.permissions):
                 return function(self, *args, **kwargs)
         return function_wrapper
 
     return decorator
+
 
 class ImplementsEasyResource(Resource, SwaggerView):
     def __init_subclass__(cls, **kwargs):
@@ -56,23 +57,23 @@ class ImplementsEasyResource(Resource, SwaggerView):
         self.schema = self.schema()  # init schema
 
         try:
-            self.privileges
+            self.permissions
         except AttributeError:
-            self.privileges = ()
+            self.permissions = ()
 
 
 def register(*decorators):
     def register_wrapper(func):
         for deco in decorators[::-1]:
-            func=deco(func)
-        func._decorators=decorators
+            func = deco(func)
+        func._decorators = decorators
         return func
     return register_wrapper
 
 
 def safe_get(function):
     # @jwt_required
-    # @easy_needs_privileges(PRIVILEGE_READ)
+    @easy_requires(ReadPermission)
     @register(produces(("application/json", "text/csv")))  # todo if 1 res does not need it we should over
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
@@ -183,7 +184,7 @@ class ImplementsGetCollection(_ImplementsGet):
 
 def safe_patch(function):
     @jwt_required
-    @easy_needs_privileges(PRIVILEGE_ACTION_EDIT)
+    @easy_requires(EditPermission)
     @safe_marshmallow
     @no_nested
     @integrity
@@ -215,7 +216,7 @@ class ImplementsPatchOne:
 
 def safe_post(function):
     @jwt_required
-    @easy_needs_privileges(PRIVILEGE_ACTION_CREATE)
+    @easy_requires(CreatePermission)
     @safe_marshmallow
     @no_nested
     def decorator(*args, **kwargs):
@@ -253,7 +254,7 @@ class ImplementsPostOne:
 
 def safe_delete(function):
     @jwt_required
-    @easy_needs_privileges(PRIVILEGE_ACTION_DELETE)
+    @easy_requires(DeletePermission)
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
     return decorator

@@ -3,8 +3,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import {lightTheme, darkTheme} from '../theme';
-import Home from '../Home/Home';
 import { SnackbarProvider } from 'notistack';
+
+import { history } from '../_helpers/history';
+import { authenticationService } from '../_services/auth.service';
+import PrivateRoute from '../_components/PrivateRoute';
+import HomePage from '../HomePage/HomePage';
+import LoginPage from '../LoginPage/LoginPage';
+import { Router, Route, Link } from 'react-router-dom';
+import {Home} from "@material-ui/icons";
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
@@ -13,11 +20,23 @@ function App() {
         localStorage.setItem("darkTheme", (!theme).toString());
         setTheme(!theme);
     }
+
+    //const [currentUser, setCurrentUser] = useState(null);
+    // authenticationService.currentUser.subscribe(x => setCurrentUser(x));
+
+    const logout = () => {
+        authenticationService.logout();
+        history.push('/login');
+    }
+
     return (
       <ThemeProvider theme={appliedTheme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
-             <Home changeTheme={changeTheme}/>
+            <Router history={history}>
+                <PrivateRoute exact path="/" component={HomePage} changeTheme={changeTheme}/>
+                <Route path="/login" component={LoginPage} />
+            </Router>
         </SnackbarProvider>
       </ThemeProvider>
     );

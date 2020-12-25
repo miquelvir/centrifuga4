@@ -23,6 +23,7 @@ def handle(e):
 
 @api_blueprint.errorhandler(RawForbidden)
 def handle(e):
+    print(e)
     raise Forbidden(e.message, **e.kwargs)
 
 
