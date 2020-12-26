@@ -8,13 +8,15 @@ import TranslateIcon from "@material-ui/icons/Translate";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Toolbar from "@material-ui/core/Toolbar";
-import React from "react";
+import React, {useContext} from "react";
 import {useTranslation} from "react-i18next";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import i18next from "i18next";
 import {makeStyles} from "@material-ui/core/styles";
 import createStyles from "@material-ui/styles/createStyles";
+import {userContext} from "../_context/user-context";
+import {authenticationService} from "../_services/auth.service";
 
 const languageMap = {
     en: { label: "english", dir: "ltr", active: true },
@@ -60,7 +62,7 @@ export default function HomeToolbar(props){
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
-    const handleProfileMenuOpen = (event) => {
+    const handleProfileMenuOpen = (event, ) => {
         setAnchorEl(event.currentTarget);
     };
     const handleMenuClose = () => {
@@ -99,6 +101,9 @@ export default function HomeToolbar(props){
         </Menu>
     );
 
+    const userCtx = useContext(userContext);
+
+
     const userMenuId = 'primary-search-account-menu';
     const userMenu = (
         <Menu
@@ -109,7 +114,18 @@ export default function HomeToolbar(props){
             transformOrigin={{vertical: 'top', horizontal: 'right'}}
             open={isMenuOpen}
             onClose={handleMenuClose}>
-            <MenuItem onClick={handleMenuClose}>{t("log_out")}</MenuItem>
+
+
+                     <MenuItem
+                         onClick={(event) => {
+                             userCtx["setUser"]({logged: false});
+                             authenticationService.logout().then();
+                             handleMenuClose(event);
+                         }}>
+                         {t("log_out")}
+                     </MenuItem>
+
+
         </Menu>
     );
 
@@ -159,7 +175,8 @@ export default function HomeToolbar(props){
                         </IconButton>
                     </Tooltip>
 
-                    <Tooltip title={t("my_account")}>
+
+                        <Tooltip title={t("my_account")}>
                         <IconButton
                             color="inherit"
                             onClick={handleProfileMenuOpen}
@@ -169,6 +186,8 @@ export default function HomeToolbar(props){
                             <AccountCircleIcon/>
                         </IconButton>
                     </Tooltip>
+
+
         {languageMenu}
         {userMenu}
                 </Toolbar>

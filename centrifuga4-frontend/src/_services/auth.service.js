@@ -1,32 +1,34 @@
-import { BehaviorSubject } from 'rxjs';
-import { handleResponse } from '../_helpers/handle-response';
-
-const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('csrf_token')));
+import axios from "axios";
 
 export const authenticationService = {
     login,
-    logout,
-    currentUser: currentUserSubject.asObservable(),
-    get currentUserValue () { return currentUserSubject.value }
+    logout
 };
 
 function login(username, password) {
-    const requestOptions = {
-        method: 'GET',
-        auth: {
-            username: username,
-            password: password
-        }
-    };
 
-    return fetch(`https://127.0.0.1:4999/auth/v1/login`, requestOptions)
-        .then(handleResponse)
-        .then(response => {
-            currentUserSubject.next(true);
-            return true;
+    return new Promise(function(resolve, reject) {
+        axios({url: 'https://127.0.0.1:4999/auth/v1/login',
+            method: 'GET',
+            auth: {
+                username: username,
+                password: password
+            }
+        }).then(response => {
+            resolve(true);
+        }).catch(function (err) {
+            reject(Error(err));
         });
+    });
 }
 
 function logout() {
-    currentUserSubject.next(null);
+    return new Promise(function(resolve, reject) {
+        axios({url: 'https://127.0.0.1:4999/auth/v1/logout',
+            method: 'GET'
+        }).then(response => {
+            resolve(false);
+        }).catch(function (err) {
+            reject(Error(err));
+        });});
 }

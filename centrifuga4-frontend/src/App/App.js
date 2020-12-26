@@ -12,6 +12,7 @@ import HomePage from '../HomePage/HomePage';
 import LoginPage from '../LoginPage/LoginPage';
 import { Router, Route, Link } from 'react-router-dom';
 import {Home} from "@material-ui/icons";
+import {userContext} from '../_context/user-context';
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
@@ -21,22 +22,19 @@ function App() {
         setTheme(!theme);
     }
 
-    //const [currentUser, setCurrentUser] = useState(null);
-    // authenticationService.currentUser.subscribe(x => setCurrentUser(x));
+    const [user, setUser] = useState({});
 
-    const logout = () => {
-        authenticationService.logout();
-        history.push('/login');
-    }
 
     return (
       <ThemeProvider theme={appliedTheme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
-            <Router history={history}>
-                <PrivateRoute exact path="/" component={HomePage} changeTheme={changeTheme}/>
-                <Route path="/login" component={LoginPage} />
-            </Router>
+            <userContext.Provider value={{user: user, setUser: setUser}}>
+                <Router history={history}>
+                    <PrivateRoute exact path="/" component={HomePage} changeTheme={changeTheme}/>
+                    <Route path="/login" component={LoginPage} />
+                </Router>
+            </userContext.Provider>
         </SnackbarProvider>
       </ThemeProvider>
     );

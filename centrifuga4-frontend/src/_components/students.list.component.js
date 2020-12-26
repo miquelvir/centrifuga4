@@ -17,12 +17,12 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
 import {useSnackbar} from 'notistack';
 import report from "./snackbar.report";
+import {useErrorHandler} from "../_helpers/handle-response";
+import LoadingBackdrop from "./loadingBackdrop.component";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         maxHeight: "70vh",
-        height: "100%",
-        minHeight: "100%",
         display: "flex",
         flexDirection: "column"
     },
@@ -53,10 +53,11 @@ const StudentsList = (props) => {
     const [count, setCount] = useState(0);
     const [pageSize, setPageSize] = useState(3);
 
-    const pageSizes = [3, 6, 9];
     const classes = useStyles();
 
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const errorHandler = useErrorHandler();
+
+    const [loading, setLoading] = useState(false);
 
     const onChangeSearchTerm = (e) => {
         console.log(e.target.value);
@@ -64,19 +65,12 @@ const StudentsList = (props) => {
     };
 
     function search() {
-        StudentsDataService.getAll(searchTerm).then(function (result) {
-            setStudents(result["data"]);
-            setCount(result["_pagination"]["totalPages"]);
-        }, function (err) {
-            enqueueSnackbar("Something went wrong! 😣",
-                {
-                    variant: "error",
-                    autoHideDuration: 10000,
-                    action: key => {
-                        return report(key, closeSnackbar, t, err)
-                    }
-                });
-        });
+        StudentsDataService.getAll(searchTerm, false, page).then(...errorHandler).then(
+            function (result) {
+                console.log("1");
+                setStudents(result["data"]);
+                setCount(result["_pagination"]["totalPages"]);
+            });
     }
 
     useEffect(search, [page, pageSize]);
@@ -91,21 +85,18 @@ const StudentsList = (props) => {
     };
 
     function exportCsv() {
-        StudentsDataService.getAll(searchTerm, true).then(function (result) {
-        }, function (err) {
-            enqueueSnackbar("Something went wrong! 😣",
-                {
-                    variant: "error",
-                    autoHideDuration: 10000,
-                    action: key => {
-                        return report(key, closeSnackbar, t, err)
-                    }
-                });
-        });
+        setLoading(true);
+        StudentsDataService
+            .getAll(searchTerm, true, page)
+            .then(...errorHandler)
+            .finally(()=>{
+                setLoading(false);
+            });
     }
 
     return (
         <Box className={classes.root}>
+            <LoadingBackdrop loading={loading}/>
             <Box className={classes.box}>
                 <SearchBar
                     label={t("students")}

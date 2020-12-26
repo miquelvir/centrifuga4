@@ -13,18 +13,18 @@ class Config(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # ref: https://stackoverflow.com/questions/33738467/how-do-i-know-if-i-can-disable-sqlalchemy-track-modifications/33790196#33790196
 
-    CSRF_COOKIE_SAMESITE = 'Strict'
+    # todo CSRF_COOKIE_SAMESITE = 'Strict'
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_NAME = "X-CSRF-TOKEN"
 
-    SESSION_COOKIE_SECURE = True
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Strict'
+    # SESSION_COOKIE_SECURE = True
+    # SESSION_COOKIE_HTTPONLY = True
+    # todo SESSION_COOKIE_SAMESITE = 'Strict'
 
     REMEMBER_COOKIE_DURATION = timedelta(days=30)
     REMEMBER_COOKIE_SECURE = True
     REMEMBER_COOKIE_HTTPONLY = True
-    SESSION_PROTECTION = "strong"
+    # todo SESSION_PROTECTION = "strong"
 
 
 class ProductionConfig(Config):

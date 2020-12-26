@@ -24,7 +24,7 @@ cors = CORS()  # todo remove prod
 q = Queue(connection=conn)  # todo here
 login = LoginManager()
 principal = Principal()
-csrf = SeaSurf()
+# csrf = SeaSurf()
 
 temp = {
         "swagger": "2.0",
@@ -59,7 +59,7 @@ def init_app(config=DevelopmentConfig):
     # man.init_app(app)
     swagger.init_app(app)
     principal.init_app(app)
-    csrf.init_app(app)
+    # csrf.init_app(app)
 
 
     """app.view_functions["flasgger.apidocs"].talisman_view_options = {
@@ -71,7 +71,7 @@ def init_app(config=DevelopmentConfig):
     }"""
 
     with app.app_context():
-        from .blueprints import api, dashboard, auth, emails_service
+        from .blueprints import api, dashboard, auth_service, emails_service
         from centrifuga4.models import User
 
         @app.route('/')
@@ -93,7 +93,7 @@ def init_app(config=DevelopmentConfig):
 
         app.register_blueprint(api, url_prefix='/api/v1')
         app.register_blueprint(dashboard, url_prefix='/dashboard/v1')
-        app.register_blueprint(auth, url_prefix='/auth/v1')
+        app.register_blueprint(auth_service, url_prefix='/auth/v1')
         app.register_blueprint(emails_service, url_prefix='/email-service')
 
         # print(swagger.get_apispecs())  # todo customize ui

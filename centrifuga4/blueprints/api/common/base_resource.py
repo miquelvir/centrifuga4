@@ -2,7 +2,7 @@ from functools import wraps
 from typing import List
 
 from flasgger import SwaggerView
-from flask import request
+from flask import request, abort
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from flask_sqlalchemy import Model
@@ -157,7 +157,7 @@ class _ImplementsGet:
                     "prevPage": pagination.prev_num,
                     "hasNext": pagination.has_next,
                     "hasPrev": pagination.has_prev,
-                    "totalPages": pagination.total
+                    "totalPages": pagination.pages
                 }
             }
         else:

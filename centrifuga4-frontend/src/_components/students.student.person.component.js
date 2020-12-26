@@ -36,20 +36,19 @@ function Person(props) {
     const loading = false;
     const classes = useStyles();
 
-    const validationSchema = yup.object({
-                                email: yup.string().email('Enter a valid email.'),
-                                name: yup.string().required('Required')
-                            });
-
     console.log(props, currentPerson);
 
     const formik = useFormik({
-    initialValues: currentPerson===null? {}:currentPerson,
-    validationSchema: validationSchema,
-    enableReinitialize: true,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    }});
+        initialValues: currentPerson===null? {}:currentPerson,
+        validationSchema: yup.object({
+                                email: yup.string().email('Enter a valid email.'),
+                                name: yup.string().required('Required')
+                            }),
+        enableReinitialize: true,
+        onSubmit: (values) => {
+          alert(JSON.stringify(values, null, 2));
+        }
+    });
 
     console.log(formik.values);
 

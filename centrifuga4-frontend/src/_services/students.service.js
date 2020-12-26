@@ -4,7 +4,7 @@ const axios = require('axios');
 
 class StudentsDataService {
 
-  getAll(searchText, download=false) {
+  getAll(searchText, download=false, page=1) {
       const res = '/students';
       if (download){
           return new Promise(function(resolve, reject) {
@@ -13,7 +13,8 @@ class StudentsDataService {
                   method: 'GET',
                   responseType: 'blob', // important
                   params: {
-                  "filter.full_name.like": '%' + searchText + '%'
+                      "filter.full_name.like": '%' + searchText + '%',
+                      "page": page
                   },
                   headers: {...{
                       'Accept': 'text/csv'
@@ -33,8 +34,8 @@ class StudentsDataService {
                   resolve();
               }).catch(function (err) {
                   console.log("0" + err);
-              reject(Error(err));
-          });
+                reject(Error(err));
+              });
           });
       }
       return new Promise(function(resolve, reject) {
@@ -42,15 +43,18 @@ class StudentsDataService {
               method: 'get',
               url: 'https://127.0.0.1:4999/api/v1/students',
               params: {
-                  "filter.full_name.like": '%' + searchText + '%'
+                  "filter.full_name.like": '%' + searchText + '%',
+                  "page": page
               },
               headers: {...{
-                  'Content-Type': download ? 'text/csv' : 'application/json'
+                  'Content-Type': 'application/json'
               }, ...authHeader()}
             })
               .then(function (response) {
+                  console.log("hiro");
                 resolve(response.data);
               }).catch(function (err) {
+                  console.log("hiro2", err);
               reject(err);
           });
         });
