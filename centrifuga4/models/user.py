@@ -14,12 +14,7 @@ class User(Person, UserMixin):
     id = db.Column(db.Text, db.ForeignKey('person.id'), primary_key=True)
     username = db.Column(db.Text, unique=True, nullable=False)
     password_hash = db.Column(db.Text, nullable=False)
-    privilege_read = db.Column(db.Boolean, nullable=False, default=False)
-    privilege_edit = db.Column(db.Boolean, nullable=False, default=False)
-    privilege_create = db.Column(db.Boolean, nullable=False, default=False)
-    privilege_delete = db.Column(db.Boolean, nullable=False, default=False)
-    privilege_send = db.Column(db.Boolean, nullable=False, default=False)
-    privilege_users = db.Column(db.Boolean, nullable=False, default=False)
+    needs = db.relationship("Need", secondary="user_need")
 
     def login(self, password: str) -> bool:
         """ checks if password hash matches stored patch """
@@ -31,26 +26,6 @@ class User(Person, UserMixin):
         return pwd_context.encrypt(password)
 
     @property
-    def privileges(self):
-        privileges = []
-
-        if self.privilege_read:
-            privileges.append("read")
-
-        if self.privilege_edit:
-            privileges.append("edit")
-
-        if self.privilege_create:
-            privileges.append("create")
-
-        if self.privilege_send:
-            privileges.append("send")
-
-        if self.privilege_delete:
-            privileges.append("delete")
-
-        if self.privilege_users:
-            privileges.append("users")
-
-        return privileges
-
+    def permissions(self):  # todo uneeded?
+        for x in self.needs:
+            yield x.permission

@@ -9,26 +9,26 @@ ReadNeed = partial(ActionNeed, 'read')
 EditNeed = partial(ActionNeed, 'edit')
 CreateNeed = partial(ActionNeed, 'create')
 DeleteNeed = partial(ActionNeed, 'delete')
-SendNeed = partial(ActionNeed, 'send')
-UsersNeed = partial(ActionNeed, 'users')
+EmailNeed = partial(ActionNeed, 'send')
+InviteNeed = partial(ActionNeed, 'users')
 
 
-class ReadPermission(Permission):
+class GetPermission(Permission):
     def __init__(self):
         need = ReadNeed()
-        super(ReadPermission, self).__init__(need)
+        super(GetPermission, self).__init__(need)
 
 
-class EditPermission(Permission):
+class PatchPermission(Permission):
     def __init__(self):
         need = EditNeed()
-        super(EditPermission, self).__init__(need)
+        super(PatchPermission, self).__init__(need)
 
 
-class CreatePermission(Permission):
+class PostPermission(Permission):
     def __init__(self):
         need = CreateNeed()
-        super(CreatePermission, self).__init__(need)
+        super(PostPermission, self).__init__(need)
 
 
 class DeletePermission(Permission):
@@ -37,8 +37,14 @@ class DeletePermission(Permission):
         super(DeletePermission, self).__init__(need)
 
 
-class SendPermission(Permission):
+class EmailPermission(Permission):
     def __init__(self):
-        need = SendNeed()
-        super(SendPermission, self).__init__(need)
+        need = EmailNeed()
+        super(EmailPermission, self).__init__(need)
+
+
+class InvitePermission(Permission):
+    def __init__(self):
+        need = InviteNeed()
+        super(InvitePermission, self).__init__(need)  # todo simplify super
 

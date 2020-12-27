@@ -4,7 +4,7 @@ import logging as log
 from centrifuga4.models import Person
 
 
-def generate_new_id(db, model=Person, avoid=None):
+def generate_new_id(db, model=Person, avoid=None):  # todo migrated to base model method
     if avoid is None:
         avoid = []
 

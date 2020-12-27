@@ -101,9 +101,9 @@ def init_app(config=DevelopmentConfig):
             # Set the identity user object
             identity.user = current_user
 
-            if hasattr(current_user, 'privileges'):
-                for role in current_user.privileges:
-                    identity.provides.add(ActionNeed(role))
+            if hasattr(current_user, 'permissions'):
+                for need in current_user.needs:
+                    identity.provides.add(need.need)  # gets the need object instead of the key
 
         app.register_blueprint(api, url_prefix='/api/v1')
         app.register_blueprint(dashboard, url_prefix='/dashboard/v1')

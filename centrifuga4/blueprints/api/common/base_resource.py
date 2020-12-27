@@ -10,7 +10,7 @@ from flask_sqlalchemy import Model
 from sqlalchemy.exc import InvalidRequestError
 
 from centrifuga4 import db
-from centrifuga4.auth_auth.action_need import ReadPermission, EditPermission, CreatePermission, DeletePermission
+from centrifuga4.auth_auth.action_need import GetPermission, PatchPermission, PostPermission, DeletePermission
 from centrifuga4.auth_auth.utils import check_permissions
 from centrifuga4.blueprints.api.common.content_negotiation import produces
 from centrifuga4.blueprints.api.common.errors import integrity, no_nested, safe_marshmallow, NotFound, \
@@ -73,7 +73,7 @@ def register(*decorators):
 
 def safe_get(function):
     # @jwt_required
-    @easy_requires(ReadPermission)
+    @easy_requires(GetPermission)
     @register(produces(("application/json", "text/csv")))  # todo if 1 res does not need it we should over
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
@@ -184,7 +184,7 @@ class ImplementsGetCollection(_ImplementsGet):
 
 def safe_patch(function):
     @jwt_required
-    @easy_requires(EditPermission)
+    @easy_requires(PatchPermission)
     @safe_marshmallow
     @no_nested
     @integrity
@@ -216,7 +216,7 @@ class ImplementsPatchOne:
 
 def safe_post(function):
     @jwt_required
-    @easy_requires(CreatePermission)
+    @easy_requires(PostPermission)
     @safe_marshmallow
     @no_nested
     def decorator(*args, **kwargs):
