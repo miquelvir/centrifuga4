@@ -56,6 +56,9 @@ class NewUserCollectionRes(Resource):
                     username=user_email,  # todo uniqueness in model
                      password_hash=User.hash_password(user_password),
                  privilege_read=True)
+
+            for need in data["needs"]:
+                u.needs.append(need)  # todo search and add properly, by id or need to query?
             # todo with privileges
             db.session.add(u)
             db.session.commit()

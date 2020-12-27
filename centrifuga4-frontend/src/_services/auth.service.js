@@ -30,7 +30,7 @@ function logout() {
         }).then(response => {
             resolve(false);
         }).catch(function (err) {
-            reject(Error(err));
+            reject(err);
         });});
 }
 

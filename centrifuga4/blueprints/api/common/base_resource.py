@@ -72,7 +72,6 @@ def register(*decorators):
 
 
 def safe_get(function):
-    # @jwt_required
     @easy_requires(GetPermission)
     @register(produces(("application/json", "text/csv")))  # todo if 1 res does not need it we should over
     def decorator(*args, **kwargs):

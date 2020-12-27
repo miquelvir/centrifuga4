@@ -105,8 +105,8 @@ const StudentsList = (props) => {
                     onSearch={search}
                 />
                 <Box my={1}>
-                    <Tooltip title={t("export search results as .csv")} aria-label={t("export search results as .csv")}>
-                        <Chip variant="outlined" size="small" avatar={<Avatar>csv</Avatar>} label="export"
+                    <Tooltip title={t("export_results_csv")} aria-label={t("export_results_csv")}>
+                        <Chip variant="outlined" size="small" avatar={<Avatar>csv</Avatar>} label={t("export")}
                               onClick={exportCsv}/>
                     </Tooltip>
                 </Box>

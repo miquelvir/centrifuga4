@@ -33,13 +33,27 @@ class UserInviteCollectionRes(Resource):
             user_email = request.json["userEmail"]
         except KeyError:
             abort(400, "no user email found in body")
-        print("new user invite", user_email)
+
+        try:
+            needs = request.json["needs"]
+        except KeyError:
+            abort(400, "no needs found in body")
+
+        clean_needs = []
+        for need in needs:
+            if type(need) is not list:
+                abort(400, "incorrect format")  # todo formalize
+            try:
+                clean_needs.append({"type": need["type"],
+                                    "name": need["name"]})
+            except KeyError:
+                abort(400, "incorrect format")
 
         if User.query.filter_by(username=user_email).count() > 0:
             abort(400, "user already exists")
 
         token = jwt.encode({'userEmail': user_email,
-                    "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)},
+                           "needs": clean_needs},
                    current_app.secret_key,
                    algorithm='HS256')
 

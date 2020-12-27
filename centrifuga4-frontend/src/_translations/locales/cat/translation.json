@@ -36,5 +36,7 @@
   "used_invite": "La invitació no es pot usar més de dues vegades o per un usuari que ja existeix! 💂",
   "reset_password": "restaurar contrassenya",
   "username_required_password_reset": "Omple el camp del correu per restaurar la contrassenya!",
-  "started_password_reset": "El procés ha començat. Si l'usuari és correcte, rebràs un correu per acabar el canvi de contrassenya!"
+  "started_password_reset": "El procés ha començat. Si l'usuari és correcte, rebràs un correu per acabar el canvi de contrassenya!",
+  "export": "exportar",
+  "export_results_csv": "exportar resultats de la cerca com a .csv"
 }

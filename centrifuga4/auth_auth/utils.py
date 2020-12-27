@@ -8,8 +8,9 @@ from centrifuga4.errors.authorization import Forbidden
 
 
 def check_permissions(permissions: Union[List[Permission], Tuple[Permission, ...]]):
+    return True  # todo production
     print(g.identity.provides, [p.__name__ for p in permissions])
-    return True  # todo production, perfect permissions in db
+
     if not all((p().can() for p in permissions)):
         raise Forbidden("Insufficient privileges for requested action.",
                         receivedPrivileges=[str(p) for p in g.identity.provides],

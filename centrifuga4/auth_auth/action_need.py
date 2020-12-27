@@ -5,29 +5,29 @@ from sqlalchemy.util import namedtuple
 
 ActionNeed = namedtuple('action_need', ['action'])
 
-ReadNeed = partial(ActionNeed, 'read')
-EditNeed = partial(ActionNeed, 'edit')
-CreateNeed = partial(ActionNeed, 'create')
+GetNeed = partial(ActionNeed, 'get')
+PatchNeed = partial(ActionNeed, 'patch')
+PostNeed = partial(ActionNeed, 'post')
 DeleteNeed = partial(ActionNeed, 'delete')
-EmailNeed = partial(ActionNeed, 'send')
-InviteNeed = partial(ActionNeed, 'users')
+EmailNeed = partial(ActionNeed, 'email')
+InviteNeed = partial(ActionNeed, 'invite')
 
 
 class GetPermission(Permission):
     def __init__(self):
-        need = ReadNeed()
+        need = GetNeed()
         super(GetPermission, self).__init__(need)
 
 
 class PatchPermission(Permission):
     def __init__(self):
-        need = EditNeed()
+        need = PatchNeed()
         super(PatchPermission, self).__init__(need)
 
 
 class PostPermission(Permission):
     def __init__(self):
-        need = CreateNeed()
+        need = PostNeed()
         super(PostPermission, self).__init__(need)
 
 

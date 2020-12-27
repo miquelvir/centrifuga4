@@ -100,11 +100,13 @@ def init_app(config=DevelopmentConfig):
         def on_identity_loaded(sender, identity):
             # Set the identity user object
             identity.user = current_user
-
+            print(1)
             if hasattr(current_user, 'permissions'):
+                print(2, current_user, current_user.permissions, current_user.needs)
                 for need in current_user.needs:
+                    print(need, need.need)
                     identity.provides.add(need.need)  # gets the need object instead of the key
-
+            print(identity.provides)
         app.register_blueprint(api, url_prefix='/api/v1')
         app.register_blueprint(dashboard, url_prefix='/dashboard/v1')
         app.register_blueprint(auth_service, url_prefix='/auth/v1')

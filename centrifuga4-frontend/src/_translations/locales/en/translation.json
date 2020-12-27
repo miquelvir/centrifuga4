@@ -35,5 +35,7 @@
   "used_invite": "Your invitation can't be used twice or for a user that already exists! 💂",
   "reset_password": "reset password",
   "username_required_password_reset": "Fill in the email field to ask for a password reset!",
-  "started_password_reset": "Process started. If the username is correct, you will receive an email to finish the password change!"
+  "started_password_reset": "Process started. If the username is correct, you will receive an email to finish the password change!",
+  "export": "export",
+  "export_results_csv": "export search results as .csv"
 }
