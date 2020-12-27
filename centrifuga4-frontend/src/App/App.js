@@ -13,6 +13,9 @@ import LoginPage from '../LoginPage/LoginPage';
 import { Router, Route, Link } from 'react-router-dom';
 import {Home} from "@material-ui/icons";
 import {userContext} from '../_context/user-context';
+import {themeContext} from '../_context/theme-context';
+import SignupPage from "../SignupPage/SignupPage";
+import ResetPage from "../ResetPage/ResetPage";
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
@@ -30,10 +33,14 @@ function App() {
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
             <userContext.Provider value={{user: user, setUser: setUser}}>
-                <Router history={history}>
-                    <PrivateRoute exact path="/" component={HomePage} changeTheme={changeTheme}/>
-                    <Route path="/login" component={LoginPage} />
-                </Router>
+                <themeContext.Provider value={{theme: theme}}>
+                    <Router history={history} basename={`${process.env.PUBLIC_URL}`}>
+                        <PrivateRoute exact path={'/'}  component={HomePage} changeTheme={changeTheme}/>
+                        <Route path={'/login'} component={LoginPage}/>
+                        <Route path={'/signup'} component={SignupPage}/>
+                        <Route path={'/reset-password'} component={ResetPage}/>
+                    </Router>
+                </themeContext.Provider>
             </userContext.Provider>
         </SnackbarProvider>
       </ThemeProvider>

@@ -19,6 +19,7 @@ import Routes from "../routes";
 import {BrowserRouter, Route, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
+import {history} from "../_helpers/history";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
@@ -139,7 +140,7 @@ const HomePage = (props) => {
                     open={open}
                 />
             </AppBar>
-            <BrowserRouter>
+            <BrowserRouter history={history} basename={`${process.env.PUBLIC_URL}/`}>
                 <Drawer
                     variant="permanent"
                     onItemClick={onItemClick}

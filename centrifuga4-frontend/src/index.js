@@ -9,6 +9,7 @@ import "./i18nextConf";
 ReactDOM.render(
   <React.StrictMode>
       <head>
+          <base href={`${process.env.PUBLIC_URL}/`}/>
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
           <meta

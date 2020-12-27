@@ -1,5 +1,6 @@
 {
   "log_out": "log out",
+  "log_in": "log in",
   "download_backup": "download backup",
   "change_language": "change language",
   "dark_light_theme": "dark/light theme",
@@ -24,6 +25,15 @@
   "dni": "dni",
   "gender": "gender",
   "birth date": "birth date",
-  "country_of_origin": "country of origin"
-
+  "country_of_origin": "country of origin",
+  "been_invited": "you have been invited to join centrífuga4 📯",
+  "confirm_password": "confirm password",
+  "password": "password",
+  "username": "username",
+  "invalid_expired_invite": "Your invitation has expired or is invalid! 💂",
+  "invalid_expired_reset": "Your reset link has expired or is invalid! 💂",
+  "used_invite": "Your invitation can't be used twice or for a user that already exists! 💂",
+  "reset_password": "reset password",
+  "username_required_password_reset": "Fill in the email field to ask for a password reset!",
+  "started_password_reset": "Process started. If the username is correct, you will receive an email to finish the password change!"
 }

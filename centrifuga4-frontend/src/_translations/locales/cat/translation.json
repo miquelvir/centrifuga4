@@ -1,5 +1,6 @@
 {
   "log_out": "tancar la sessió",
+  "log_in": "iniciar sessió",
   "download_backup": "descarregar còpia",
   "change_language": "cambiar idioma",
   "dark_light_theme": "tema clar/fosc",
@@ -25,5 +26,15 @@
   "dni": "dni",
   "gender": "gènere",
   "birth date": "data de naixement",
-  "country_of_origin": "estat d'origen"
+  "country_of_origin": "estat d'origen",
+  "been_invited": "t'han convidat a unir-te a la centrífuga4 \uD83D\uDCEF",
+  "confirm_password": "confirma la contrassenya",
+  "password": "contrassenya",
+  "username": "nom d'usuari",
+  "invalid_expired_invite": "La invitació ha caducat o no és vàlida! 💂",
+  "invalid_expired_reset": "L'enllaç pel canvi de contrassenya ha caducat o no és vàlid! \uD83D\uDC82",
+  "used_invite": "La invitació no es pot usar més de dues vegades o per un usuari que ja existeix! 💂",
+  "reset_password": "restaurar contrassenya",
+  "username_required_password_reset": "Omple el camp del correu per restaurar la contrassenya!",
+  "started_password_reset": "El procés ha començat. Si l'usuari és correcte, rebràs un correu per acabar el canvi de contrassenya!"
 }

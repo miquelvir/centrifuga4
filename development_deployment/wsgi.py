@@ -1,4 +1,6 @@
+from flask import current_app, request
 from flask_principal import Permission, RoleNeed
+from pip._vendor import requests
 
 import centrifuga4
 from centrifuga4.models import Person, Student, User
@@ -7,10 +9,16 @@ app = centrifuga4.init_app("config.DevelopmentConfig")
 
 admin_permission = Permission(RoleNeed('admin'))
 
+
 @app.route("/hi")
-@admin_permission.require()
 def _hi():
     return "hiiiiiiiiii"
+
+
+@app.route("/hi2")
+def _hi2():
+    print(request.url_rule)
+    return requests.get("https://127.0.0.1/hi")
 
 
 if __name__ == "__main__":
@@ -69,6 +77,8 @@ if __name__ == "__main__":
         # centrifuga4.db.session.add(u)
         """centrifuga4.db.session.add(g)
         centrifuga4.db.session.commit()"""
+
+        print(app.url_map)
 
         # print([x.full name for x in Student.query.all()])
         #centrifuga4.db.session.commit()

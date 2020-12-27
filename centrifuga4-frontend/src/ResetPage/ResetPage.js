@@ -15,9 +15,9 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import {themeContext} from "../_context/theme-context";
 import {func} from "prop-types";
-import Link from "@material-ui/core/Link";
-import {passwordResetService} from "../_services/password-reset.service";
+import {authenticationService as signupService} from "../_services/signup.service";
 import {useSnackbar} from "notistack";
+import {passwordResetService} from "../_services/password-reset.service";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,83 +31,57 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         width: "50%",
-        height: "50%",
         minWidth: "500px",
+        height: "50%",
         padding: "50px",
         margin: "auto"
-    },
-    reset: {
-        width: "100%",
-        textAlign: "end",
-        cursor: ""
     }
 }));
 
-const LoginPage = (props) => {
+const ResetPage = (props) => {
     const classes = useStyles();
-    const userCtx = React.useContext(userContext);
     const themeCtx = React.useContext(themeContext);
 
     const {enqueueSnackbar} = useSnackbar();
 
-    const logged = () => {
-        const setLogged = userCtx["setUser"];
-        setLogged({logged: true});
-        const {from} = props.location.state || {from: {pathname: "/"}};
-        props.history.push(from);
-    }
-
     const {t} = useTranslation();
+    const query = new URLSearchParams(window.location.search);
+    const token = query.get('token')
+    const username = query.get('username')
     const formik = useFormik({
         initialValues: {
-            username: '',
-            password: ''
+            username: username,
+            password: '',
+            password2: ''
         },
         validationSchema: yup.object({
-            username: yup.string().required('Email is required').email('Enter a valid email.'),
-            password: yup.string().required('Password is required')
+            username: yup.string().required('Username is required').email('Enter a valid email.'),
+            password: yup.string().required('Password is required').matches(
+              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+              "Must be longer than 8 characters; including: 1 uppercase, 1 lowercase, 1 number and 1 of '@$!%*#?&'"
+            ),
+            password2: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required("Password is required")
         }),
         enableReinitialize: true,
-        onSubmit: ({username, password}, {setStatus, setSubmitting}) => {
+        onSubmit: ({username, password, password2}, {setStatus, setSubmitting}) => {
             setStatus();
-            authenticationService.login(username, password)
+
+            passwordResetService.signup(username, password, token)
                 .then(
                     function (result) {
-                        logged();
+                        setSubmitting(false);
+                        props.history.push("/login");
                     },
                     function (error) {
-                        console.log(">>><<<", error);
                         setSubmitting(false);
                         setStatus(error);
+
+                        if (error.response.status === 401){
+                            enqueueSnackbar(t("invalid_expired_reset"), { variant: "warning"});
+                        } // TODO report, same in the signup
                     });
         }
     });
-
-    useEffect(() => {
-        if (userCtx["user"]["logged"]) {
-        props.history.push('/');
-        return null;
-    }
-
-    authenticationService.ping().then(function(success){
-        if (success) {
-            logged();
-            return null;
-        }
-    })
-    }, []);
-
-    const resetPassword = () => {
-        const username = formik.values["username"];
-        if (username === null || username === '' || username === undefined) {
-            enqueueSnackbar(t("username_required_password_reset"), { variant: "warning"});
-        } else {
-            passwordResetService.startReset(username).then(r => {
-            enqueueSnackbar(t("started_password_reset"), { variant: "success"});
-        })
-        }
-
-    }
 
     return (
         <div className={classes.root}>
@@ -128,10 +102,13 @@ const LoginPage = (props) => {
                                 <Paper className={classes.paper}>
                                     <img src={themeCtx.theme? "logo_centrifuga4_dark.svg": "logo_centrifuga4_light.svg"} alt="Logo Centrífuga" style={{height: "85px"}}/>
 
+                                     <Box m={2}>
+                                         <Typography>{t("choose your new password 🔑")}</Typography>
+                                    </Box>
+
                                     <form onSubmit={formik.handleSubmit}>
                                         <TextField
-                                            label={t("email")}
-                                            disabled={formik.isSubmitting}
+                                            label={t("username")}
                                             helperText={formik.touched["username"] && formik.errors["username"]}
                                             type="email"
                                             name="username"
@@ -140,6 +117,7 @@ const LoginPage = (props) => {
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={formik.status}
+                                            disabled
                                         />
                                         <TextField
                                             label={t("password")}
@@ -153,6 +131,18 @@ const LoginPage = (props) => {
                                             onBlur={formik.handleBlur}
                                             error={formik.status}
                                         />
+                                        <TextField
+                                            label={t("confirm_password")}
+                                            name="password2"
+                                            type="password"
+                                            helperText={formik.touched["password2"] && formik.errors["password2"]}
+                                            className={classes.field}
+                                            value={formik.values["password2"]}
+                                            disabled={formik.isSubmitting}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            error={formik.status}
+                                        />
                                         <Box my={3}>
                                             <Button
                                                 variant="contained"
@@ -160,23 +150,12 @@ const LoginPage = (props) => {
                                                 type="submit"
                                                 disabled={formik.isSubmitting}
                                                 className={classes.field}>
-                                                {t("log_in")}
+                                                {t("change password")}
                                             </Button>
                                         </Box>
                                     </form>
-
-                                    <Box className={classes.reset}>
-                                        <Typography variant="caption">
-                                            <Link
-                                              component="button"
-                                              variant="body2"
-                                              onClick={resetPassword}
-                                            >
-                                              {t("reset_password")}
-                                            </Link>
-                                        </Typography>
-                                        </Box>
-                                </Paper></Box>
+                                </Paper>
+                            </Box>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -185,4 +164,4 @@ const LoginPage = (props) => {
 
 }
 
-export default LoginPage;
+export default ResetPage;

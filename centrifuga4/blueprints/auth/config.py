@@ -85,3 +85,9 @@ def logout():
     identity_changed.send(current_app._get_current_object(),
                           identity=AnonymousIdentity())
     return "", 200
+
+
+@auth_service.route('/ping', methods=['GET'])
+@login_required
+def ping():
+    return "pong"

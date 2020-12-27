@@ -1,10 +1,11 @@
 __version__ = '4.0.1'
 
 from collections import namedtuple
-
+from flask_limiter.util import get_remote_address
 from flasgger import Swagger
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_limiter import Limiter
 from flask_mobility import Mobility
 from flask_principal import Principal, identity_loaded, ItemNeed, ActionNeed
 from flask_seasurf import SeaSurf
@@ -60,6 +61,7 @@ def init_app(config=DevelopmentConfig):
     swagger.init_app(app)
     principal.init_app(app)
     # csrf.init_app(app)
+    # limiter.init_app(app)
 
 
     """app.view_functions["flasgger.apidocs"].talisman_view_options = {
@@ -71,11 +73,23 @@ def init_app(config=DevelopmentConfig):
     }"""
 
     with app.app_context():
-        from .blueprints import api, dashboard, auth_service, emails_service
+        from .blueprints import api, dashboard, auth_service, emails_service, invites_service, password_reset_service
         from centrifuga4.models import User
 
         @app.route('/')
         def index():
+            return app.send_static_file('index.html')
+
+        @app.route('/login')
+        def index_login():
+            return app.send_static_file('index.html')
+
+        @app.route('/signup')
+        def index_signup():
+            return app.send_static_file('index.html')
+
+        @app.route('/reset-password')
+        def index_reset_password():
             return app.send_static_file('index.html')
 
         @login.user_loader  # todo can move away?
@@ -94,8 +108,9 @@ def init_app(config=DevelopmentConfig):
         app.register_blueprint(api, url_prefix='/api/v1')
         app.register_blueprint(dashboard, url_prefix='/dashboard/v1')
         app.register_blueprint(auth_service, url_prefix='/auth/v1')
-        app.register_blueprint(emails_service, url_prefix='/email-service')
-
+        app.register_blueprint(emails_service, url_prefix='/emails/v1')
+        app.register_blueprint(invites_service, url_prefix='/invites/v1')
+        app.register_blueprint(password_reset_service, url_prefix='/password-reset/v1')
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app

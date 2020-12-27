@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Centrífuga 4",
+  "name": "Xamfrà - Centrífuga 4",
   "icons": [
     {
       "src": "favicon.png",
@@ -8,7 +8,6 @@
       "type": "image/png"
     }
   ],
-  "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
