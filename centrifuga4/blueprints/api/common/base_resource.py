@@ -2,7 +2,7 @@ from functools import wraps
 from typing import List
 
 from flasgger import SwaggerView
-from flask import request, abort
+from flask import request, abort, current_app
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from flask_sqlalchemy import Model
@@ -11,25 +11,12 @@ from sqlalchemy.exc import InvalidRequestError
 
 from centrifuga4 import db
 from centrifuga4.auth_auth.action_need import GetPermission, PatchPermission, PostPermission, DeletePermission
-from centrifuga4.auth_auth.utils import check_permissions
+from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.blueprints.api.common.content_negotiation import produces
 from centrifuga4.blueprints.api.common.errors import integrity, no_nested, safe_marshmallow, NotFound, \
     ResourceBaseBadRequest, ResourceModelBadRequest, BaseBadRequest
-from centrifuga4.blueprints.api.common.identifiers import generate_new_id
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import BaseAutoSchema
-
-
-def easy_requires(*extra_needs):  # todo avoid code duplication only check self.privileges, maybe class factory instead of function
-    def decorator(function):
-        @wraps(function)
-        def function_wrapper(self, *args, **kwargs):
-            """ allow only if current JWT in cookie has admin role """
-            if check_permissions(extra_needs + self.permissions):
-                return function(self, *args, **kwargs)
-        return function_wrapper
-
-    return decorator
 
 
 class ImplementsEasyResource(Resource, SwaggerView):
@@ -59,21 +46,20 @@ class ImplementsEasyResource(Resource, SwaggerView):
         try:
             self.permissions
         except AttributeError:
-            self.permissions = ()
+            self.permissions = {}
 
 
-def register(*decorators):
-    def register_wrapper(func):
-        for deco in decorators[::-1]:
-            func = deco(func)
-        func._decorators = decorators
-        return func
-    return register_wrapper
+class EasyRequires(Requires):
+    # signature mismatch is on porpoise
+    # noinspection PyMethodOverriding
+    def wrapper(self, function, resource: ImplementsEasyResource, *args, **kwargs):
+        self.permissions = self.permissions.union(resource.permissions)  # add additional base permissions
+        return super().wrapper(function, resource, *args, **kwargs)
 
 
 def safe_get(function):
-    @easy_requires(GetPermission)
-    @register(produces(("application/json", "text/csv")))  # todo if 1 res does not need it we should over
+    @EasyRequires(GetPermission)
+    @produces(("application/json", "text/csv"))  # todo if 1 res does not need it we should over
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
     return decorator
@@ -112,21 +98,26 @@ class _ImplementsGet:
                 except IndexError:
                     raise BaseBadRequest("Sort not used properly")  # todo
             elif k[0] == "page":
-                page = int(v)  # todo
+                try:
+                    page = int(v)
+                except ValueError:
+                    raise BaseBadRequest("Page is not a valid integer")
             else:
                 raise BaseBadRequest("Invalid query element found.", **{k[0]: "Query item not accepted."})
         return filters, sort, page
 
-    @register(safe_get)
+    @safe_get
     def get(self, *args, id_=None, many=False, **kwargs):
-        filters, _, page = self._parse_args(request.args)
+        filters, sort, page = self._parse_args(request.args)  # todo sort
         do_pagination = True
 
-        if many:  # todo destroy super and do both?
+        if many:
             try:
                 if do_pagination:
-                    pagination = self.model.query.filter(*filters).paginate(page, per_page=20, error_out=True)  # .all()
-                    result = pagination.items  # todo per page constant line above
+                    pagination = self.model.query.filter(*filters).paginate(page,
+                                                                            per_page=current_app.config["API_PAGINATION"],
+                                                                            error_out=True)
+                    result = pagination.items
                 else:
                     result = self.model.query.filter(*filters).all()
             except InvalidRequestError as e:
@@ -144,8 +135,21 @@ class _ImplementsGet:
                                filters=request.args)
 
         result = self.schema.dump(result, many=many)
-        print(result)
+
         if many and do_pagination:
+            def get_page_url(original_url, _page):
+                url_params = request.url[len(request.base_url):]
+                if len(url_params) <= 1:
+                    return "%s?page=%s" % (original_url, _page)
+                else:
+                    if "?page=%s" % page in url_params:
+                        url_params = url_params.replace("?page=%s" % page, "?page=%s" % _page)
+                    elif "&page=%s" % page in url_params:
+                        url_params = url_params.replace("&page=%s" % page, "&page=%s" % _page)
+                    else:
+                        url_params += "&page=%s" % _page
+                    return request.base_url + url_params
+
             return {
                 "data": result,
                 "_pagination": {
@@ -157,6 +161,15 @@ class _ImplementsGet:
                     "hasNext": pagination.has_next,
                     "hasPrev": pagination.has_prev,
                     "totalPages": pagination.pages
+                },
+                "_links": {
+                    "self": {"href": get_page_url(request.base_url, page)},
+                    "first": {"href": get_page_url(request.base_url, 1)},
+                    "last": {"href": get_page_url(request.url, pagination.pages)},
+                    "prev": {"href": get_page_url(request.url, pagination.prev_num)}
+                            if page > 1 else None,
+                    "next": {"href": get_page_url(request.url, pagination.next_num)}
+                            if page < pagination.pages else None
                 }
             }
         else:
@@ -164,26 +177,24 @@ class _ImplementsGet:
 
 
 class ImplementsGetOne(_ImplementsGet):
-    model: Model
+    model: MyBase
     schema: BaseAutoSchema
 
     def get(self, id_, *args, **kwargs):
         return super().get(*args, id_=id_, many=False, **kwargs)
 
 
-
 class ImplementsGetCollection(_ImplementsGet):
-    model: Model
+    model: MyBase
     schema: BaseAutoSchema
 
     def get(self, *args, **kwargs):
         return super().get(*args, many=True, **kwargs)
 
 
-
 def safe_patch(function):
     @jwt_required
-    @easy_requires(PatchPermission)
+    @EasyRequires(PatchPermission)
     @safe_marshmallow
     @no_nested
     @integrity
@@ -192,9 +203,8 @@ def safe_patch(function):
     return decorator
 
 
-
 class ImplementsPatchOne:
-    model: Model
+    model: MyBase
     schema: BaseAutoSchema
     privileges = List[str]
 
@@ -215,7 +225,7 @@ class ImplementsPatchOne:
 
 def safe_post(function):
     @jwt_required
-    @easy_requires(PostPermission)
+    @EasyRequires(PostPermission)
     @safe_marshmallow
     @no_nested
     def decorator(*args, **kwargs):
@@ -224,7 +234,7 @@ def safe_post(function):
 
 
 class ImplementsPostOne:
-    model: Model
+    model: MyBase
     schema: BaseAutoSchema
 
     @safe_post
@@ -234,7 +244,7 @@ class ImplementsPostOne:
             raise ResourceBaseBadRequest("post does not admit id argument",
                                          messages={"id": ["Found value '%s', expects no id." % body["id"]]})
 
-        new_id = generate_new_id(db, model=self.model)
+        new_id = self.model.generate_new_id(db)
         body["id"] = new_id
 
         """if "guardians" in body:
@@ -253,14 +263,14 @@ class ImplementsPostOne:
 
 def safe_delete(function):
     @jwt_required
-    @easy_requires(DeletePermission)
+    @EasyRequires(DeletePermission)
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
     return decorator
 
 
 class ImplementsDeleteOne:
-    model: Model
+    model: MyBase
     schema: BaseAutoSchema
 
     @safe_delete

@@ -5,13 +5,28 @@ from centrifuga4.models import Student, User, Guardian, Need
 from random import randint, choice
 
 
-n1 = Need(id=0, name="get", description="can perform get operations", type="action")
-n2 = Need(id=1, name="students", description="can use student resources", type="res")
+need_get = Need(id=0, name="get", description="can perform get operations", type="action")
+need_patch = Need(id=1, name="patch", description="can perform patch operations", type="action")
+need_delete = Need(id=2, name="delete", description="can perform delete operations", type="action")
+need_post = Need(id=3, name="post", description="can perform post operations", type="action")
+need_send_email = Need(id=4, name="send_email", description="can send emails", type="action")
+need_invite_users = Need(id=5, name="invite_users", description="can invite users", type="action")
+need_students = Need(id=6, name="students", description="can use students resource", type="res")
+need_courses = Need(id=7, name="courses", description="can use courses resource", type="res")
+need_guardians = Need(id=8, name="guardians", description="can use guardians resource", type="res")
+need_payments = Need(id=9, name="payments", description="can use payments resource", type="res")
+need_rooms = Need(id=10, name="rooms", description="can use rooms resource", type="res")
+need_schedules = Need(id=11, name="schedules", description="can use schedules resource", type="res")
+need_teachers = Need(id=12, name="teachers", description="can use teachers resource", type="res")
+need_users = Need(id=13, name="users", description="can use users resource", type="res")
+all_needs = (need_get, need_patch, need_delete, need_post, need_send_email, need_invite_users,
+             need_students, need_courses, need_guardians, need_payments, need_rooms, need_schedules,
+             need_teachers, need_users)
 
 
 def add_needs():
-    centrifuga4.db.session.add(n1)
-    centrifuga4.db.session.add(n2)
+    for need in all_needs:
+        centrifuga4.db.session.add(need)
 
 
 def add_users():
@@ -33,8 +48,9 @@ def add_users():
              username="admin@gmail.com",
              password_hash=User.hash_password("admin"))
 
-    admin.needs.append(n1)
-    admin.needs.append(n2)
+    for need in all_needs:
+        admin.needs.append(need)
+
     centrifuga4.db.session.add(admin)
 
 

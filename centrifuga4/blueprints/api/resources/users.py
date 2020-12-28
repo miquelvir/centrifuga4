@@ -13,7 +13,7 @@ class UsersRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = UserSchema
     model = User
-    permissions = (UsersPermission,)
+    permissions = {UsersPermission}
 
     def post(self, *args, **kwargs):
 
@@ -31,4 +31,4 @@ class UsersCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = UserSchema
     model = User
-    permissions = (UsersPermission,)
+    permissions = {UsersPermission}

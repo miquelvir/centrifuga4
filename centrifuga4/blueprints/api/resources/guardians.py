@@ -11,11 +11,11 @@ class GuardiansRes(easy.ImplementsEasyResource,
                    easy.ImplementsDeleteOne):
     schema = GuardianSchema
     model = Guardian
-    permissions = (GuardiansPermission,)
+    permissions = {GuardiansPermission}
 
 
 class GuardiansCollectionRes(easy.ImplementsEasyResource,
                              easy.ImplementsGetCollection):
     schema = GuardianSchema
     model = Guardian
-    permissions = (GuardiansPermission,)
+    permissions = {GuardiansPermission}

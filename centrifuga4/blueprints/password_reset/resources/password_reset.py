@@ -8,26 +8,11 @@ from rq.job import Job
 
 from centrifuga4.models import User
 from email_queue.password_reset_email import my_job
-from email_queue.worker import conn
+
 from centrifuga4 import q
 
 
-class PasswordResetRes(Resource):  # todo mirror all redis queues
-    def get(self, job_id):
-        job = Job.fetch(job_id, connection=conn)
-
-        if job.is_finished:
-            return str(job.result), 200
-        else:
-            return "Nay!", 202
-
-# todo, ui, before posting, checks if initial values are same
-
-
 class PasswordResetCollectionRes(Resource):
-
-    # @jwt_required
-    # @needs_privileges(PRIVILEGE_ACTION_SEND_EMAILS)
     def post(self):
         try:
             username = request.json["username"]
@@ -48,5 +33,3 @@ class PasswordResetCollectionRes(Resource):
         )
 
         return job.get_id()
-
-

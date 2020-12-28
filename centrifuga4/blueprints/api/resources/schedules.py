@@ -11,11 +11,11 @@ class SchedulesRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = ScheduleSchema
     model = Schedule
-    permissions = (SchedulesPermission,)
+    permissions = {SchedulesPermission}
 
 
 class SchedulesCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = ScheduleSchema
     model = Schedule
-    permissions = (SchedulesPermission,)
+    permissions = {SchedulesPermission}

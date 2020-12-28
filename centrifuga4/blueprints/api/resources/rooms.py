@@ -11,11 +11,11 @@ class RoomsRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = RoomSchema
     model = Room
-    permissions = (RoomsPermission,)
+    permissions = {RoomsPermission}
 
 
 class RoomsCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = RoomSchema
     model = Room
-    permissions = (RoomsPermission,)
+    permissions = {RoomsPermission}

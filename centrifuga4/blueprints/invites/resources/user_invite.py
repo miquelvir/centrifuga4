@@ -6,28 +6,17 @@ from flask_jwt_extended import jwt_required
 from flask_restful import Resource, abort
 from rq.job import Job
 
+from centrifuga4.auth_auth.action_need import InvitePermission
+from centrifuga4.auth_auth.requires import Requires
+from centrifuga4.auth_auth.resource_need import UsersPermission
 from centrifuga4.models import User
 from email_queue.invite_email import my_job
-from email_queue.worker import conn
 from centrifuga4 import q
-
-
-class UserInviteRes(Resource):
-    def get(self, job_id):
-        job = Job.fetch(job_id, connection=conn)
-
-        if job.is_finished:
-            return str(job.result), 200
-        else:
-            return "Nay!", 202
-
-# todo, ui, before posting, checks if initial values are same
 
 
 class UserInviteCollectionRes(Resource):
 
-    # @jwt_required
-    # @needs_privileges(PRIVILEGE_ACTION_SEND_EMAILS)
+    @Requires({InvitePermission, UsersPermission})
     def post(self):
         try:
             user_email = request.json["userEmail"]

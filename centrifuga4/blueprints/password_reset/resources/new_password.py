@@ -1,7 +1,6 @@
 import jwt
 from flask import request, current_app
 from flask_restful import Resource
-from centrifuga4.blueprints.api.common.identifiers import generate_new_id
 from centrifuga4.models import User
 from centrifuga4 import q, db
 

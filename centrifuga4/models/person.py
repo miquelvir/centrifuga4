@@ -20,7 +20,7 @@ class Person(MyBase):
     surname2 = db.Column(db.Text, nullable=True)
     email = db.Column(db.Text, nullable=True)
     phone = db.Column(db.Text, nullable=True)
-    address = db.Column(db.Text, nullable=True)  # todo maybe object
+    address = db.Column(db.Text, nullable=True)
     zip = db.Column(db.Text, nullable=True)
     city = db.Column(db.Text, nullable=True)
     dni = db.Column(db.Text, nullable=True)

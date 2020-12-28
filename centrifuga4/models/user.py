@@ -24,8 +24,3 @@ class User(Person, UserMixin):
     def hash_password(password: str) -> str:
         """ returns the hashed password """
         return pwd_context.encrypt(password)
-
-    @property
-    def permissions(self):  # todo uneeded?
-        for x in self.needs:
-            yield x.permission

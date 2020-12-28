@@ -13,7 +13,7 @@ class StudentsRes(easy.ImplementsEasyResource,
                   easy.ImplementsDeleteOne):
     schema = StudentSchema
     model = Student
-    permissions = (StudentsPermission,)
+    permissions = {StudentsPermission}
 
     definitions = {'StudentSchema': schema}
     parameters = [{
@@ -45,10 +45,8 @@ class StudentsRes(easy.ImplementsEasyResource,
         return super().get(*args, **kwargs)
 
 
-
-
 class StudentsCollectionRes(easy.ImplementsEasyResource,
                             easy.ImplementsGetCollection):
     schema = StudentSchema
     model = Student
-    permissions = (StudentsPermission,)
+    permissions = {StudentsPermission}

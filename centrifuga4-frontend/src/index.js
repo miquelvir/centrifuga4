@@ -16,9 +16,19 @@ ReactDOM.render(
               name="viewport"
               content="minimum-scale=1, initial-scale=1, width=device-width"/>
           <title>centrífuga4</title>
+          <meta property="csp-nonce" content="{{ csp_nonce() }}"/>
+          <style
+                  id="jss-server-side"
+                  nonce="{{ csp_nonce() }}"
+                />
       </head>
       <Helmet>
           <title>centrífuga4</title>
+          <meta property="csp-nonce" content="{{ csp_nonce() }}"/>
+          <style
+                  id="jss-server-side"
+                  nonce="{{ csp_nonce() }}"
+                />
       </Helmet>
       <App/>
   </React.StrictMode>,

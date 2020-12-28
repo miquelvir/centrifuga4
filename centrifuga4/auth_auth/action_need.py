@@ -15,36 +15,30 @@ InviteNeed = partial(ActionNeed, 'invite')
 
 class GetPermission(Permission):
     def __init__(self):
-        need = GetNeed()
-        super(GetPermission, self).__init__(need)
+        super().__init__(GetNeed())
 
 
 class PatchPermission(Permission):
     def __init__(self):
-        need = PatchNeed()
-        super(PatchPermission, self).__init__(need)
+        super().__init__(PatchNeed())
 
 
 class PostPermission(Permission):
     def __init__(self):
-        need = PostNeed()
-        super(PostPermission, self).__init__(need)
+        super().__init__(PostNeed())
 
 
 class DeletePermission(Permission):
     def __init__(self):
-        need = DeleteNeed()
-        super(DeletePermission, self).__init__(need)
+        super().__init__(DeleteNeed())
 
 
 class EmailPermission(Permission):
     def __init__(self):
-        need = EmailNeed()
-        super(EmailPermission, self).__init__(need)
+        super().__init__(EmailNeed())
 
 
 class InvitePermission(Permission):
     def __init__(self):
-        need = InviteNeed()
-        super(InvitePermission, self).__init__(need)  # todo simplify super
+        super().__init__(InviteNeed())
 

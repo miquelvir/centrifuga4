@@ -107,6 +107,7 @@ class UserSchema(BaseAutoSchema):
         )
 
     full_name = fields.Str(dump_only=True)
+    password_hash = fields.Str(load_only=True)  # due to security
 
 
 class TeacherSchema(BaseAutoSchema):

@@ -11,11 +11,11 @@ class PaymentsRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = PaymentSchema
     model = Payment
-    permissions = (PaymentsPermission,)
+    permissions = {PaymentsPermission}
 
 
 class PaymentsCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = PaymentSchema
     model = Payment
-    permissions = (PaymentsPermission,)
+    permissions = {PaymentsPermission}

@@ -85,8 +85,6 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
             # call the actual endpoint
             result = function(*args, **kwargs)
 
-            print(match, _accepted_mimetypes, requested_mimetypes)
-
             # return in matched type
             if match == "application/json":
                 return jsonify(result)

@@ -6,7 +6,7 @@ from centrifuga4.blueprints.api.common.errors import Unauthorized, Forbidden
 from centrifuga4.errors.authorization import Forbidden as RawForbidden
 from .resources.new_user import NewUserCollectionRes
 
-from .resources.user_invite import UserInviteRes, UserInviteCollectionRes
+from .resources.user_invite import UserInviteCollectionRes
 
 invites_blueprint = Blueprint('invites', __name__)
 
@@ -23,7 +23,6 @@ def handle(e):
 
 api = Api(invites_blueprint)
 
-api.add_resource(UserInviteRes, '/userInvite/<job_id>')
 api.add_resource(UserInviteCollectionRes, '/userInvite')
 api.add_resource(NewUserCollectionRes, '/newUser')
 

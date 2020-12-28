@@ -1,31 +1,26 @@
 __version__ = '4.0.1'
 
-from collections import namedtuple
-from flask_limiter.util import get_remote_address
 from flasgger import Swagger
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from flask_limiter import Limiter
-from flask_mobility import Mobility
-from flask_principal import Principal, identity_loaded, ItemNeed, ActionNeed
+from flask_principal import Principal, identity_loaded
 from flask_seasurf import SeaSurf
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
-from flask_talisman import Talisman, GOOGLE_CSP_POLICY
-from flask_login import LoginManager, current_user
+from flask import Flask, render_template
+from flask_talisman import Talisman
+from flask_login import LoginManager
+
 
 from config import DevelopmentConfig
 from rq import Queue
-from rq.job import Job
 from email_queue.worker import conn
 
 db = SQLAlchemy()
-# man = Talisman()
-cors = CORS()  # todo remove prod
-q = Queue(connection=conn)  # todo here
+man = Talisman()
 login = LoginManager()
 principal = Principal()
-# csrf = SeaSurf()
+csrf = SeaSurf()
+
+q = Queue(connection=conn)  # todo here
 
 temp = {
         "swagger": "2.0",
@@ -50,72 +45,61 @@ swagger = Swagger(template=temp)
 
 def init_app(config=DevelopmentConfig):
     # app creation
-    app = Flask(__name__, static_folder='../centrifuga4-frontend/build', static_url_path='/')
+    app = Flask(__name__,
+                static_folder='../centrifuga4-frontend/build',
+                static_url_path='/',
+                template_folder='../centrifuga4-frontend/build',)
+
     app.config.from_object(config)
 
     # plugin initialization
     db.init_app(app)
-    cors.init_app(app)
     login.init_app(app)
-    # man.init_app(app)
+    man.init_app(app, content_security_policy={
+            "style-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.googleapis.com'],  # todo production
+            "font-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.gstatic.com'],
+            "img-src": "'self' data:",
+            "script-src":  ["\'self\'", "'unsafe-inline'"],
+        })  #  content_security_policy_nonce_in=['script-src', 'style-src']
     swagger.init_app(app)
     principal.init_app(app)
-    # csrf.init_app(app)
-    # limiter.init_app(app)
+    csrf.init_app(app)
 
-
-    """app.view_functions["flasgger.apidocs"].talisman_view_options = {
-        "content_security_policy": {
-            "style-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-            "font-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.gstatic.com'],
-            "img-src": "'self' data:"
-        }
-    }"""
+    if app.config["DEVELOPMENT"]:
+        # allow cors only during development (due to the front end development server)
+        cors = CORS()
+        cors.init_app(app)
 
     with app.app_context():
         from .blueprints import api, dashboard, auth_service, emails_service, invites_service, password_reset_service
         from centrifuga4.models import User
+        from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
+        import centrifuga4.auth_auth
 
+        # serve the frontend
         @app.route('/')
-        def index():
-            return app.send_static_file('index.html')
-
         @app.route('/login')
-        def index_login():
-            return app.send_static_file('index.html')
-
         @app.route('/signup')
-        def index_signup():
-            return app.send_static_file('index.html')
-
         @app.route('/reset-password')
-        def index_reset_password():
-            return app.send_static_file('index.html')
+        def index():
+            return render_template('index.html')  # todo sendstaticfile
 
-        @login.user_loader  # todo can move away?
-        def load_user(id_):
-            return User.query.get(id_)
+        # basic ping/pong
+        @app.route("/ping")
+        def hi():
+            return "pong"
 
-        @identity_loaded.connect_via(app)   # todo can move away?
-        def on_identity_loaded(sender, identity):
-            # Set the identity user object
-            identity.user = current_user
-            print(1)
-            if hasattr(current_user, 'permissions'):
-                print(2, current_user, current_user.permissions, current_user.needs)
-                for need in current_user.needs:
-                    print(need, need.need)
-                    identity.provides.add(need.need)  # gets the need object instead of the key
-            print(identity.provides)
+        # add identity loader for Flask Principal
+        identity_loaded.connect_via(app)(on_identity_loaded)
+
+        # load blueprints for the different parts
         app.register_blueprint(api, url_prefix='/api/v1')
         app.register_blueprint(dashboard, url_prefix='/dashboard/v1')
         app.register_blueprint(auth_service, url_prefix='/auth/v1')
         app.register_blueprint(emails_service, url_prefix='/emails/v1')
         app.register_blueprint(invites_service, url_prefix='/invites/v1')
         app.register_blueprint(password_reset_service, url_prefix='/password-reset/v1')
+
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app
-
-
-

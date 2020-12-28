@@ -19,5 +19,15 @@ https://medium.com/@samneetdhillon/flask-restful-micro-service-with-swagger-ui-t
 
 https://www.google.com/search?q=add+google+translate+button&oq=add+google+translate+button&aqs=chrome..69i57.4047j0j4&sourceid=chrome&ie=UTF-8
 Flask-Babel
+
+
+https://flask-smorest.readthedocs.io/en/latest/openapi.html
 """
+
+
+# todo, ui, before posting, checks if initial values are same
+
+# todo do tests
+
+# todo csrf token in post/patch/etc
 

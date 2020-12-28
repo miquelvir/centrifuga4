@@ -11,11 +11,11 @@ class TeachersRes(easy.ImplementsEasyResource,
                easy.ImplementsDeleteOne):
     schema = TeacherSchema
     model = Teacher
-    permissions = (TeachersPermission,)
+    permissions = {TeachersPermission}
 
 
 class TeachersCollectionRes(easy.ImplementsEasyResource,
                          easy.ImplementsGetCollection):
     schema = TeacherSchema
     model = Teacher
-    permissions = (TeachersPermission,)
+    permissions = {TeachersPermission}

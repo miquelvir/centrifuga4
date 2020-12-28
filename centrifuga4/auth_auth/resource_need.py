@@ -17,47 +17,39 @@ UsersNeed = partial(ResourceNeed, 'users')
 
 class StudentsPermission(Permission):
     def __init__(self):
-        need = StudentsNeed()
-        super(StudentsPermission, self).__init__(need)
+        super().__init__(StudentsNeed())
 
 
 class TeachersPermission(Permission):
     def __init__(self):
-        need = TeachersNeed()
-        super(TeachersPermission, self).__init__(need)
+        super().__init__(TeachersNeed())
 
 
 class UsersPermission(Permission):
     def __init__(self):
-        need = UsersNeed()
-        super(UsersPermission, self).__init__(need)
+        super().__init__(UsersNeed())
 
 
 class CoursesPermission(Permission):
     def __init__(self):
-        need = CoursesNeed()
-        super(CoursesPermission, self).__init__(need)
+        super().__init__(CoursesNeed())
 
 
 class GuardiansPermission(Permission):
     def __init__(self):
-        need = GuardiansNeed()
-        super(GuardiansPermission, self).__init__(need)
+        super().__init__(GuardiansNeed())
 
 
 class PaymentsPermission(Permission):
     def __init__(self):
-        need = PaymentsNeed()
-        super(PaymentsPermission, self).__init__(need)
+        super().__init__(PaymentsNeed())
 
 
 class RoomsPermission(Permission):
     def __init__(self):
-        need = RoomsNeed()
-        super(RoomsPermission, self).__init__(need)
+        super().__init__(RoomsNeed())
 
 
 class SchedulesPermission(Permission):
     def __init__(self):
-        need = SchedulesNeed()
-        super(SchedulesPermission, self).__init__(need)
+        super().__init__(SchedulesNeed())

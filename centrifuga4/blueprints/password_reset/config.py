@@ -4,7 +4,7 @@ from flask_restful import Api as Api
 
 from centrifuga4.blueprints.api.common.errors import Unauthorized, Forbidden
 from centrifuga4.blueprints.password_reset.resources.new_password import NewPasswordCollectionRes
-from centrifuga4.blueprints.password_reset.resources.password_reset import PasswordResetRes, PasswordResetCollectionRes
+from centrifuga4.blueprints.password_reset.resources.password_reset import PasswordResetCollectionRes
 from centrifuga4.errors.authorization import Forbidden as RawForbidden
 
 password_reset_blueprint = Blueprint('password_reset', __name__)
@@ -22,7 +22,6 @@ def handle(e):
 
 api = Api(password_reset_blueprint)
 
-api.add_resource(PasswordResetRes, '/passwordReset/<job_id>')
 api.add_resource(PasswordResetCollectionRes, '/passwordReset')
 api.add_resource(NewPasswordCollectionRes, '/newPassword')
 
