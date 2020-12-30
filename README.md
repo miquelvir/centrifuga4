@@ -9,6 +9,7 @@ DEVELOPMENT
 1. Python backend
     1. Use development/generate_sample_db.py to create a new database. It will contain a user 'admin@gmail.com' : 'admin'
     2. Run development/wsgi_development.py to run the backend development server
+    3. Create email_queue/secrets.py and add a variable `SMTP_PASSWORD = None`
 2. Frontend development server
     1. Run `npm start` to start the frontend development server
     
