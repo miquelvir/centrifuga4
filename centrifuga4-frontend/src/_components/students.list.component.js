@@ -62,10 +62,8 @@ const StudentsList = (props) => {
     };
 
     function search() {
-        console.log("searching...");
         StudentsDataService
-            .getAll(searchTerm, false, page)
-            .then(...errorHandler())
+            .getAll(searchTerm, page)
             .then(function (res) {
                     console.log("1");
                     console.log(res);
@@ -83,8 +81,7 @@ const StudentsList = (props) => {
     function exportCsv() {
         setLoading(true);
         StudentsDataService
-            .getAll(searchTerm, true, page)
-            .then(...errorHandler())
+            .downloadAllCsv(searchTerm, page)
             .finally(()=>{
                 setLoading(false);
             });

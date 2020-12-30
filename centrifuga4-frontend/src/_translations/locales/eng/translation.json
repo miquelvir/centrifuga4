@@ -49,5 +49,15 @@
   "reset_password_success": "password change successful",
   "sign_up_success": "sign up successful",
   "sign_up": "sign up",
-  "change_password": "change password"
+  "change_password": "change password",
+  "name_required": "name is required",
+  "surname1_required": "first surname is required",
+  "surname2_required": "second surname is required",
+  "longer_8": "must be longer than 8 characters",
+  "shorter_64": "must be smaller than 64 characters",
+  "has_lowecase": "must have at least 1 lowercase character",
+  "has_uppercase": "must have at least 1 uppercase character",
+  "has_digit": "must have at least 1 digit (0-9)",
+  "has_special": "must have at least 1 special character (e.g. %)",
+  "no_plus": "can't contain '+'"
 }

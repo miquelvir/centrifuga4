@@ -1,5 +1,3 @@
-from flask import current_app, request
-from flask_principal import Permission, RoleNeed
 import centrifuga4
 from centrifuga4.models import Student, User, Guardian, Need
 from random import randint, choice

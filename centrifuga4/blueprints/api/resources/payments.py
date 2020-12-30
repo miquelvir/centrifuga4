@@ -4,7 +4,7 @@ from centrifuga4.models import Payment
 from centrifuga4.schemas.schemas import PaymentSchema
 
 
-class PaymentsRes(easy.ImplementsEasyResource,
+class PaymentsRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
                easy.ImplementsPostOne,
@@ -14,7 +14,7 @@ class PaymentsRes(easy.ImplementsEasyResource,
     permissions = {PaymentsPermission}
 
 
-class PaymentsCollectionRes(easy.ImplementsEasyResource,
+class PaymentsCollectionRes(easy.EasyResource,
                          easy.ImplementsGetCollection):
     schema = PaymentSchema
     model = Payment

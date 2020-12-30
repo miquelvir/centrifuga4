@@ -17,6 +17,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import createStyles from "@material-ui/styles/createStyles";
 import {userContext} from "../_context/user-context";
 import {authenticationService} from "../_services/auth.service";
+import {useErrorHandler} from "../_helpers/handle-response";
 
 const languageMap = {
     eng: { label: "english", dir: "ltr", active: true },
@@ -54,6 +55,7 @@ const useStyles = makeStyles(theme => (createStyles({
 export default function HomeToolbar(props){
     const changeTheme = props.changeTheme;
     const classes = useStyles();
+    const errorHandler = useErrorHandler();
 
     const selected = localStorage.getItem("i18nextLng") || "eng";
     const { t } = useTranslation();
@@ -120,7 +122,7 @@ export default function HomeToolbar(props){
                      <MenuItem
                          onClick={(event) => {
                              userCtx["setUser"]({logged: false});
-                             authenticationService.logout().then();
+                             authenticationService.logout().then(...errorHandler({})).then();
                              handleMenuClose(event);
                          }}>
                          {t("log_out")}

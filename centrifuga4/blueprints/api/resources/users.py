@@ -6,7 +6,7 @@ from centrifuga4.models import User
 from centrifuga4.schemas.schemas import UserSchema
 
 # todo not dump the password hash on api calls
-class UsersRes(easy.ImplementsEasyResource,
+class UsersRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
                easy.ImplementsPostOne,
@@ -27,7 +27,7 @@ class UsersRes(easy.ImplementsEasyResource,
         return super().post(*args, **kwargs)
 
 
-class UsersCollectionRes(easy.ImplementsEasyResource,
+class UsersCollectionRes(easy.EasyResource,
                          easy.ImplementsGetCollection):
     schema = UserSchema
     model = User

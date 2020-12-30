@@ -50,5 +50,15 @@
   "reset_password_success": "canvi de contrasenya correcte",
   "sign_up_success": "creació del nou compte correcta",
   "sign_up": "iniciar sessió",
-  "change_password": "change password"
+  "change_password": "change password",
+  "name_required": "cal el nom",
+  "surname1_required": "cal el primer cognom",
+  "surname2_required": "cal el segon congom",
+  "longer_8": "ha de tenir més de 8 caràcters",
+  "shorter_64": "ha de tenir menys de 64 caràcters",
+  "has_lowecase": "ha de tenir 1 minúscula com a mínim",
+  "has_uppercase": "ha de tenir 1 majúscula com a mínim",
+  "has_digit": "ha de tenir 1 dígit com a mínim (0-9)",
+  "has_special": "ha de tenir 1 caràcter especial (p.ex. %) com a mínim",
+  "no_plus": "no pot contenir '+'"
 }

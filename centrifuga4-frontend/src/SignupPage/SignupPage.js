@@ -14,6 +14,7 @@ import {authenticationService as signupService} from "../_services/signup.servic
 import {useSnackbar} from "notistack";
 import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
+import {password_repetition, safe_password, safe_username} from "../_data/password_regex";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,20 +60,20 @@ const SignupPage = (props) => {
             password2: ''
         },
         validationSchema: yup.object({  // todo translate
-            username: yup.string().required('Username is required').email('Enter a valid email.'),
-            email: yup.string().required('Email is required').email('Enter a valid email.'),
-            password: yup.string().required('Password is required'),  // TODO
-            password2: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required("Password is required"),
-            name: yup.string().required('Name is required'),
-            surname1: yup.string().required('First surname is required'),
-            surname2: yup.string().required('Second surname is required')
+            username: safe_username(t),
+            email: safe_username(t),
+            password: safe_password(t),
+            password2: password_repetition(t),
+            name: yup.string().required(t("name_required")),
+            surname1: yup.string().required(t("surname1_required")),
+            surname2: yup.string().required(t("surname2_required"))
         }),
         enableReinitialize: true,
         onSubmit: ({username, email, password, name, surname1, surname2, password2}, {setStatus, setSubmitting}) => {
             setStatus();
 
             signupService.signup(username, password, email, name, surname1, surname2, token)
-                .then(...errorHandler(false, true, false))  // TODO everywhere and how to
+                .then(...errorHandler({handle401: false, handle400: false}))
                 .then(
                     function (result) {
                         enqueueSnackbar(t("sign_up_success"), {variant: "success"});

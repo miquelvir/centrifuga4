@@ -22,6 +22,9 @@ class NewPasswordCollectionRes(Resource):
         except KeyError:
             return "no token found in body", 401
 
+        if not User.is_strong_enough_password(password):
+            return "password is not strong enough, must follow: ^.{8,}$, ^.{0,64}$, (?=.*[a-z]), (?=.*[A-Z]), (?=.*\d), (?=.*[ -\/:-@\[-\`{-~]{1,})", 400
+
         try:
             user = User.query.filter_by(username=username).one()
 

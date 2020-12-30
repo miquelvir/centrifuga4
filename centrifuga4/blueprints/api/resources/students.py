@@ -6,7 +6,7 @@ from centrifuga4.models import Student
 from centrifuga4.schemas.schemas import StudentSchema
 
 
-class StudentsRes(easy.ImplementsEasyResource,
+class StudentsRes(easy.EasyResource,
                   easy.ImplementsGetOne,
                   easy.ImplementsPatchOne,
                   easy.ImplementsPostOne,
@@ -45,7 +45,7 @@ class StudentsRes(easy.ImplementsEasyResource,
         return super().get(*args, **kwargs)
 
 
-class StudentsCollectionRes(easy.ImplementsEasyResource,
+class StudentsCollectionRes(easy.EasyResource,
                             easy.ImplementsGetCollection):
     schema = StudentSchema
     model = Student

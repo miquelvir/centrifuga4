@@ -4,7 +4,7 @@ from centrifuga4.models import Guardian
 from centrifuga4.schemas.schemas import GuardianSchema
 
 
-class GuardiansRes(easy.ImplementsEasyResource,
+class GuardiansRes(easy.EasyResource,
                    easy.ImplementsGetOne,
                    easy.ImplementsPatchOne,
                    easy.ImplementsPostOne,
@@ -14,7 +14,7 @@ class GuardiansRes(easy.ImplementsEasyResource,
     permissions = {GuardiansPermission}
 
 
-class GuardiansCollectionRes(easy.ImplementsEasyResource,
+class GuardiansCollectionRes(easy.EasyResource,
                              easy.ImplementsGetCollection):
     schema = GuardianSchema
     model = Guardian

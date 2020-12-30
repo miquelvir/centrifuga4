@@ -4,7 +4,7 @@ from centrifuga4.models import Course
 from centrifuga4.schemas.schemas import CourseSchema
 
 
-class CoursesRes(easy.ImplementsEasyResource,
+class CoursesRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
                easy.ImplementsPostOne,
@@ -14,7 +14,7 @@ class CoursesRes(easy.ImplementsEasyResource,
     permissions = {CoursesPermission}
 
 
-class CoursesCollectionRes(easy.ImplementsEasyResource,
+class CoursesCollectionRes(easy.EasyResource,
                          easy.ImplementsGetCollection):
     schema = CourseSchema
     model = Course

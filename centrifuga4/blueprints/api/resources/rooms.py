@@ -4,7 +4,7 @@ from centrifuga4.models import Room
 from centrifuga4.schemas.schemas import RoomSchema
 
 
-class RoomsRes(easy.ImplementsEasyResource,
+class RoomsRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
                easy.ImplementsPostOne,
@@ -14,7 +14,7 @@ class RoomsRes(easy.ImplementsEasyResource,
     permissions = {RoomsPermission}
 
 
-class RoomsCollectionRes(easy.ImplementsEasyResource,
+class RoomsCollectionRes(easy.EasyResource,
                          easy.ImplementsGetCollection):
     schema = RoomSchema
     model = Room

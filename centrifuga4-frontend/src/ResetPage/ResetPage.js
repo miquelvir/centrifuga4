@@ -13,12 +13,9 @@ import {themeContext} from "../_context/theme-context";
 import {useSnackbar} from "notistack";
 import {passwordResetService} from "../_services/password-reset.service";
 import i18next from "i18next";
-import {
-    has_digit, has_lowercase,
-    has_special,
-    has_uppercase,
-    longer_8, safe_password
-} from "../_data/password_regex";
+import { password_repetition, safe_password, safe_username } from "../_data/password_regex";
+import {authenticationService} from "../_services/auth.service";
+import {useErrorHandler} from "../_helpers/handle-response";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,6 +49,7 @@ const ResetPage = (props) => {
 
     const {t} = useTranslation();
     const query = new URLSearchParams(window.location.search);
+    const errorHandler = useErrorHandler();
     const token = query.get('token')
     const username = query.get('username')
     const formik = useFormik({
@@ -61,16 +59,17 @@ const ResetPage = (props) => {
             password2: ''
         },
         validationSchema: yup.object({
-            username: yup.string().required(t("email_required")).email(t("invalid_email")),
+            username: safe_username(t),
             password: safe_password(t),
-            password2: yup.string().oneOf([yup.ref('password'), null],
-                t("passwords_unmatched")).required(t("password_required"))
+            password2: password_repetition(t)
         }),
         enableReinitialize: true,
         onSubmit: ({username, password, password2}, {setStatus, setSubmitting}) => {
             setStatus();
 
-            passwordResetService.reset(username, password, token)
+            passwordResetService
+                .reset(username, password, token)
+                .then(...errorHandler({handle401: false}))
                 .then(
                     function (result) {
                         enqueueSnackbar(t("reset_password_success"), {variant: "success"});
@@ -100,8 +99,7 @@ const ResetPage = (props) => {
                         align="center"
                         justify="center"
                         direction="column"
-                        style={{height: "100%"}}
-                    >
+                        style={{height: "100%"}}>
                         <Grid item>
                             <Box m={2}>
                                 <Paper className={classes.paper}>

@@ -71,8 +71,9 @@ const LoginPage = (props) => {
         enableReinitialize: true,
         onSubmit: ({username, password}, {setStatus, setSubmitting}) => {
             setStatus();
-            authenticationService.login(username, password)
-                .then(...errorHandler())
+            authenticationService
+                .login(username, password)
+                .then(...errorHandler({}))
                 .then(function (success) {
                         if (success) {
                             logged();
@@ -92,8 +93,9 @@ const LoginPage = (props) => {
             return null;
         }
 
-        authenticationService.ping()
-            .then(...errorHandler())
+        authenticationService
+            .ping()
+            .then(...errorHandler({}))
             .then((success) => { if (success) logged(); });  // ignore failed ping (it is just not logged in)
     }, []);
 
@@ -102,7 +104,10 @@ const LoginPage = (props) => {
         if (username === null || username === '' || username === undefined) {
             enqueueSnackbar(t("username_required_password_reset"), { variant: "warning"});
         } else {
-            passwordResetService.startReset(username).then(r => {
+            passwordResetService
+                .startReset(username)
+                .then(...errorHandler({}))
+                .then(r => {
                 enqueueSnackbar(t("started_password_reset"), { variant: "success"});
             })
         }

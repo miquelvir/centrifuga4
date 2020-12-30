@@ -1,6 +1,6 @@
 from flask import current_app
 from flask_login import UserMixin
-
+import re
 from centrifuga4 import db
 from centrifuga4.models.person import Person
 import bcrypt
@@ -25,3 +25,11 @@ class User(Person, UserMixin):
     def hash_password(password: str):
         """ returns the hashed password """
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
+    @classmethod
+    def is_strong_enough_password(cls, password: str) -> bool:
+        return all((re.compile("^.{8,64}$").match(password) is not None,
+                   re.compile("(?=.*[a-z])$").match(password) is not None,
+                   re.compile("(?=.*[A-Z])$").match(password) is not None,
+                   re.compile("(?=.*\d)$").match(password) is not None,
+                   re.compile("(?=.*[ -\/:-@\[-\`{-~]{1,})").match(password) is not None))

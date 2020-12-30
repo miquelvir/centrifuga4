@@ -19,7 +19,7 @@ from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import BaseAutoSchema
 
 
-class ImplementsEasyResource(Resource, SwaggerView):
+class EasyResource(Resource, SwaggerView):
     def __init_subclass__(cls, **kwargs):
         try:
             cls.schema
@@ -52,7 +52,7 @@ class ImplementsEasyResource(Resource, SwaggerView):
 class EasyRequires(Requires):
     # signature mismatch is on porpoise
     # noinspection PyMethodOverriding
-    def wrapper(self, function, resource: ImplementsEasyResource, *args, **kwargs):
+    def wrapper(self, function, resource: EasyResource, *args, **kwargs):
         self.permissions = set(self.permissions).union(resource.permissions)  # add additional base permissions
         return super().wrapper(function, resource, *args, **kwargs)
 

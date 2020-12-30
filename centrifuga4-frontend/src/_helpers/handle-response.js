@@ -4,6 +4,7 @@ import {useSnackbar} from "notistack";
 import {useTranslation} from "react-i18next";
 import {Button} from "@material-ui/core";
 
+
 export function useErrorHandler() {
 
     const userCtx = React.useContext(userContext);
@@ -120,13 +121,13 @@ export function useErrorHandler() {
         return (res) => (failureHandler(res, handle401, handle403, handle400, errorOut, reportUnexpected))
     }
 
-    const handlerFactory = (handle401=true,
-                            handle403=true,
-                            handle400=true,
-                            errorOut=false,
-                            reportUnexpected=true) => {
+    return ({
+                handle401 = true,
+                handle403 = true,
+                handle400 = true,
+                errorOut = false,
+                reportUnexpected = true
+            }) => {
         return [successHandler, failureHandlerFactory(handle401, handle403, handle400, errorOut, reportUnexpected)]
-    }
-
-    return handlerFactory;
+    };
 }

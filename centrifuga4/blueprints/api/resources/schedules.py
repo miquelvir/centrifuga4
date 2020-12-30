@@ -4,7 +4,7 @@ from centrifuga4.models import Schedule
 from centrifuga4.schemas.schemas import ScheduleSchema
 
 
-class SchedulesRes(easy.ImplementsEasyResource,
+class SchedulesRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
                easy.ImplementsPostOne,
@@ -14,7 +14,7 @@ class SchedulesRes(easy.ImplementsEasyResource,
     permissions = {SchedulesPermission}
 
 
-class SchedulesCollectionRes(easy.ImplementsEasyResource,
+class SchedulesCollectionRes(easy.EasyResource,
                          easy.ImplementsGetCollection):
     schema = ScheduleSchema
     model = Schedule
