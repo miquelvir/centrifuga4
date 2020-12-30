@@ -1,13 +1,14 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import {TextField} from "@material-ui/core";
+import {Fab, TextField} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import Divider from "@material-ui/core/Divider";
 import Person from "./students.student.person.component";
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -21,13 +22,16 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: theme.spacing(1)
   },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
   composite: {display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Attendee(props) {
-  const { children, value, index, title, currentStudent, ...other } = props;
-
+function Attendee({ children, value, index, title, currentStudent, ...other }) {
   const { t } = useTranslation();
   const loading = false;
   const classes = useStyles();
@@ -52,7 +56,7 @@ function Attendee(props) {
               ?
                   (<Box>
                         <Divider variant="middle" />
-                        <Box py={1}><Skeleton variant="text" width="35%" height="45px"></Skeleton></Box>
+                        <Box py={1}><Skeleton variant="text" width="35%" height="60px"></Skeleton></Box>
                       </Box>)
                   :
                   (
@@ -71,8 +75,13 @@ function Attendee(props) {
 
                           </Box>
               )
-
               }
+
+              {/**<Box className={classes.fab}>
+                      <Fab color="primary" aria-label="add">
+                        <SaveIcon />
+                      </Fab>
+              </Box>*/}
             </Box>
         </Box>
       )}

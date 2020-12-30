@@ -59,5 +59,7 @@
   "has_uppercase": "must have at least 1 uppercase character",
   "has_digit": "must have at least 1 digit (0-9)",
   "has_special": "must have at least 1 special character (e.g. %)",
-  "no_plus": "can't contain '+'"
+  "no_plus": "can't contain '+'",
+  "reset": "reset",
+  "save": "save"
 }

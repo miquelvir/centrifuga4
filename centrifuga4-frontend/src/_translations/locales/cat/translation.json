@@ -60,5 +60,7 @@
   "has_uppercase": "ha de tenir 1 majúscula com a mínim",
   "has_digit": "ha de tenir 1 dígit com a mínim (0-9)",
   "has_special": "ha de tenir 1 caràcter especial (p.ex. %) com a mínim",
-  "no_plus": "no pot contenir '+'"
+  "no_plus": "no pot contenir '+'",
+  "reset": "descartar",
+  "save": "guardar"
 }

@@ -37,12 +37,10 @@ function Person(props) {
     const loading = false;
     const classes = useStyles();
 
-    console.log(props, currentPerson);
-
     const formik = useFormik({
         initialValues: currentPerson===null? {}:currentPerson,
         validationSchema: yup.object({
-                                email: yup.string().email('Enter a valid email.'),
+                                email: yup.string().email('Enter a valid email.'),  // todo
                                 name: yup.string().required('Required')
                             }),
         enableReinitialize: true,
@@ -50,8 +48,6 @@ function Person(props) {
           alert(JSON.stringify(values, null, 2));
         }
     });
-
-    console.log(formik.values);
 
     return (
         <Box>
@@ -226,10 +222,10 @@ function Person(props) {
                                                 onClick={formik.handleReset}
                                                 disabled={!formik.dirty || formik.isSubmitting}
                                             >
-                                                Reset
+                                                {t("reset")}
                                             </Button>
                                             <Button type="submit" disabled={formik.isSubmitting}>
-                                                Submit
+                                                {t("save")}
                                             </Button>
 
                                         </DialogActions>
