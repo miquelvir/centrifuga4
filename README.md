@@ -2,7 +2,7 @@ INSTALLING
 1. Clone this repository
 2. Install [Python 3 and pip](https://www.python.org/downloads/)
 3. Install Python requirements using `pip install -r requirements.txt`
-4. Install [npm]([npm][https://www.npmjs.com/get-npm)
+4. Install [npm](https://www.npmjs.com/get-npm)
 5. Run `npm install` inside centrifuga4-frontend to install the npm modules
 
 DEVELOPMENT
