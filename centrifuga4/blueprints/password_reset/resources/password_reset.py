@@ -24,7 +24,7 @@ class PasswordResetCollectionRes(Resource):
 
         token = jwt.encode({'username': user.username,
                     "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-                   current_app.secret_key + user.password_hash,
+                   current_app.config["PASSWORD_RESET_SECRET"], + user.password_hash,
                    algorithm='HS256')
 
         def generate_password_reset_link(_token, _username):

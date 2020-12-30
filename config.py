@@ -30,6 +30,8 @@ class ProductionConfig(Config):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Strict'
     SECRET_KEY = "super-secret"
+    INVITES_SECRET = "super-secret"
+    PASSWORD_RESET_SECRET = "super-secret"
     FRONTEND_SERVER_URL = "https://127.0.0.1:4999"
 
     SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), ".",

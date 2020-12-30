@@ -48,7 +48,7 @@ class UserInviteCollectionRes(Resource):
 
         token = jwt.encode({'userEmail': user_email,
                            "needs": clean_needs},
-                   current_app.secret_key,
+                   current_app.config["INVITES_SECRET"],
                    algorithm='HS256')
 
         job = q.enqueue_call(
