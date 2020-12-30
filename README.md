@@ -14,7 +14,8 @@ DEVELOPMENT
     3. Run development/wsgi_development.py to run the backend development server
 2. Frontend development server
     1. Run `npm start` inside centrifuga4-frontend to start the frontend development server
-    
+3. Run Redis Server and email_queue/worker.py.
+
 PRODUCTION
 1. Run `npm build` inside centrifuga4-frontend to build the React files into static files
 2. Run development/wsgi_production.py to run the server
