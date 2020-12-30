@@ -6,7 +6,7 @@ from centrifuga4 import db
 from flasgger import Schema
 
 
-class BaseAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
+class MySQLAlchemyAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
     """
     Base class for automatic Marshmallow schemas
 
@@ -37,26 +37,26 @@ class BaseAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
         :param _: ignored additional kwargs
         :return: object of type stored in model
         """
-        return self.Meta.model(**data)
+        return self.Meta.model(**data)  # init
 
 
-class RoomSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class RoomSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Room
 
 
-class CourseSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class CourseSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Course
 
 
-class ScheduleSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class ScheduleSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Schedule
 
 
-class PersonSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class PersonSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Person
 
         dump_only = (
@@ -66,8 +66,8 @@ class PersonSchema(BaseAutoSchema):
     full_name = fields.Str(dump_only=True)
 
 
-class GuardianSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class GuardianSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Guardian
 
         dump_only = (
@@ -77,8 +77,8 @@ class GuardianSchema(BaseAutoSchema):
     full_name = fields.Str(dump_only=True)
 
 
-class StudentSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class StudentSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Student
 
         dump_only = (
@@ -88,18 +88,18 @@ class StudentSchema(BaseAutoSchema):
     full_name = fields.Str(dump_only=True)
 
 
-class PeriodicDateSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class PeriodicDateSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.PeriodicDate
 
 
-class PaymentSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class PaymentSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Payment
 
 
-class UserSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class UserSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.User
 
         dump_only = (
@@ -110,8 +110,8 @@ class UserSchema(BaseAutoSchema):
     password_hash = fields.Str(load_only=True)  # due to security
 
 
-class TeacherSchema(BaseAutoSchema):
-    class Meta(BaseAutoSchema.Meta):
+class TeacherSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Teacher
 
         dump_only = (

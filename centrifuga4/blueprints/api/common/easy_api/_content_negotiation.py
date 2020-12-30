@@ -2,7 +2,7 @@ import csv
 import io
 from datetime import datetime
 
-from typing import List, Union, Tuple
+from typing import Union, Tuple
 
 from flask import request, jsonify, send_file, make_response
 

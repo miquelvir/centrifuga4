@@ -1,4 +1,4 @@
-import centrifuga4.blueprints.api.common.base_resource as easy
+import centrifuga4.blueprints.api.common.easy_api as easy
 from centrifuga4.auth_auth.resource_need import GuardiansPermission
 from centrifuga4.models import Guardian
 from centrifuga4.schemas.schemas import GuardianSchema

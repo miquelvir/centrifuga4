@@ -1,6 +1,8 @@
+Source code of centrífuga4, [Xamfrà](www.xamfra.net)'s student management platform.
+
 INSTALLING
 1. Clone this repository
-2. Install [Python 3 and pip](https://www.python.org/downloads/)
+2. Install [Python 3 and Pip](https://www.python.org/downloads/)
 3. Install Python requirements using `pip install -r requirements.txt`
 4. Install [npm](https://www.npmjs.com/get-npm)
 5. Run `npm install` inside centrifuga4-frontend to install the npm modules
@@ -16,4 +18,4 @@ DEVELOPMENT
 PRODUCTION
 1. Run `npm build` inside centrifuga4-frontend to build the React files into static files
 2. Run development/wsgi_production.py to run the server
-
+3. Run Redis Server and email_queue/worker.py.

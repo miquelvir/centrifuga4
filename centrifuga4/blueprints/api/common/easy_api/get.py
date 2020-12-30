@@ -1,73 +1,26 @@
-from functools import wraps
-from typing import List
-
-from flasgger import SwaggerView
-from flask import request, abort, current_app
-from flask_jwt_extended import jwt_required
-from flask_restful import Resource
-from flask_sqlalchemy import Model
-
+from flask import request, current_app
 from sqlalchemy.exc import InvalidRequestError
 
-from centrifuga4 import db
-from centrifuga4.auth_auth.action_need import GetPermission, PatchPermission, PostPermission, DeletePermission
-from centrifuga4.auth_auth.requires import Requires
-from centrifuga4.blueprints.api.common.content_negotiation import produces
-from centrifuga4.blueprints.api.common.errors import integrity, no_nested, safe_marshmallow, NotFound, \
-    ResourceBaseBadRequest, ResourceModelBadRequest, BaseBadRequest
+from centrifuga4.auth_auth.action_need import GetPermission
+from centrifuga4.blueprints.api.common.easy_api.content_negotiation import produces
+from centrifuga4.blueprints.api.common.easy_api._requires import EasyRequires
+from centrifuga4.blueprints.api.common.errors import NotFound, ResourceModelBadRequest, BaseBadRequest
 from centrifuga4.models._base import MyBase
-from centrifuga4.schemas.schemas import BaseAutoSchema
-
-
-class EasyResource(Resource, SwaggerView):
-    def __init_subclass__(cls, **kwargs):
-        try:
-            cls.schema
-        except AttributeError:
-            assert False, "instances of EasyResource must define field schema"
-
-        assert issubclass(cls.schema, BaseAutoSchema), "instances of EasyResource must initialise field schema with a valid Marshmallow schema, found %s" % type(
-            cls.schema).__name__
-
-        try:
-            cls.model
-        except AttributeError:
-            assert False, "instances of EasyResource must define field model"
-        assert issubclass(cls.model,
-                          Model), "instances of EasyResource must initialise field model with a valid SQLAlchemy model, found %s" % type(
-            cls.model).__name__
-
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.schema = self.schema()  # init schema
-
-        try:
-            self.permissions
-        except AttributeError:
-            self.permissions = {}
-
-
-class EasyRequires(Requires):
-    # signature mismatch is on porpoise
-    # noinspection PyMethodOverriding
-    def wrapper(self, function, resource: EasyResource, *args, **kwargs):
-        self.permissions = set(self.permissions).union(resource.permissions)  # add additional base permissions
-        return super().wrapper(function, resource, *args, **kwargs)
+from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 def safe_get(function):
+    """ a safe get is one which checks for the user permissions to get such resource """
     @EasyRequires(GetPermission)
-    @produces(("application/json", "text/csv"))  # todo if 1 res does not need it we should over
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
     return decorator
 
 
 class _ImplementsGet:
+    """ abstract class both for the Collection and the One get resources """
     model: MyBase
-    schema: BaseAutoSchema
+    schema: MySQLAlchemyAutoSchema
 
     def _parse_args(self, url_args):
         filters = []
@@ -107,6 +60,7 @@ class _ImplementsGet:
         return filters, sort, page
 
     @safe_get
+    @produces(("application/json", "text/csv"))  # content negotiation (and automatic creation of raw csv from json)
     def get(self, *args, id_=None, many=False, **kwargs):
         filters, sort, page = self._parse_args(request.args)  # todo sort
         do_pagination = True
@@ -124,6 +78,9 @@ class _ImplementsGet:
                 raise ResourceModelBadRequest(e)
 
         else:
+            if not id_:
+                raise BaseBadRequest("id_ must be given")
+
             try:
                 result = self.model.query.filter(self.model.id == id_, *filters).first()
             except InvalidRequestError as e:
@@ -177,116 +134,18 @@ class _ImplementsGet:
 
 
 class ImplementsGetOne(_ImplementsGet):
+    """ get one item of a resource with its id """
     model: MyBase
-    schema: BaseAutoSchema
+    schema: MySQLAlchemyAutoSchema
 
     def get(self, id_, *args, **kwargs):
         return super().get(*args, id_=id_, many=False, **kwargs)
 
 
 class ImplementsGetCollection(_ImplementsGet):
+    """ get all items of a resource """
     model: MyBase
-    schema: BaseAutoSchema
+    schema: MySQLAlchemyAutoSchema
 
     def get(self, *args, **kwargs):
         return super().get(*args, many=True, **kwargs)
-
-
-def safe_patch(function):
-    @jwt_required
-    @EasyRequires(PatchPermission)
-    @safe_marshmallow
-    @no_nested
-    @integrity
-    def decorator(*args, **kwargs):
-        return function(*args, **kwargs)
-    return decorator
-
-
-class ImplementsPatchOne:
-    model: MyBase
-    schema: BaseAutoSchema
-    privileges = List[str]
-
-    @safe_patch
-    def patch(self, id_):
-        body = request.get_json()
-        body["id"] = id_  # force id_
-
-        updated_student = self.schema.load(body, partial=True)
-        merged = db.session.merge(updated_student)
-        """if not result:
-                    raise NotFound("resource with the given id not found", requestedId=id_)"""
-
-        db.session.commit()
-
-        return self.schema.dump(merged)
-
-
-def safe_post(function):
-    @jwt_required
-    @EasyRequires(PostPermission)
-    @safe_marshmallow
-    @no_nested
-    def decorator(*args, **kwargs):
-        return function(*args, **kwargs)
-    return decorator
-
-
-class ImplementsPostOne:
-    model: MyBase
-    schema: BaseAutoSchema
-
-    @safe_post
-    def post(self):
-        body = request.get_json()
-        if "id" in body:
-            raise ResourceBaseBadRequest("post does not admit id argument",
-                                         messages={"id": ["Found value '%s', expects no id." % body["id"]]})
-
-        new_id = self.model.generate_new_id()
-        body["id"] = new_id
-
-        """if "guardians" in body:
-            used_uncommitted_ids = [new_id]
-            for guardian in body["guardians"]:
-                guardian_id = generate_new_person_id(db, avoid=used_uncommitted_ids)
-                guardian["id"] = guardian_id
-                used_uncommitted_ids.append(guardian_id)"""
-
-        new = self.schema.load(body)
-        db.session.add(new)
-        db.session.commit()
-
-        return {"id": new_id}
-
-
-def safe_delete(function):
-    @jwt_required
-    @EasyRequires(DeletePermission)
-    def decorator(*args, **kwargs):
-        return function(*args, **kwargs)
-    return decorator
-
-
-class ImplementsDeleteOne:
-    model: MyBase
-    schema: BaseAutoSchema
-
-    @safe_delete
-    def delete(self, id_):
-        result = db.session.query(self.model).filter_by(id=id_).first()
-
-        """delete_guardians = request.args.get('deleteGuardians')
-        if delete_guardians:
-            delete_guardians = bool(int(delete_guardians))
-            if delete_guardians:
-                for guardian in student.guardians:
-                    db.session.delete(guardian)"""
-        if not result:
-            raise NotFound("resource with the given id not found", requestedId=id_)
-
-        db.session.delete(result)
-        db.session.commit()
-
-
