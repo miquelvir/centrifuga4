@@ -21,5 +21,7 @@ PRODUCTION
 3. Run Redis Server and email_queue/worker.py.
 
 AUTHORSHIP
+
 v0 by A. Rius
+
 v1-4 by @miquelvir
