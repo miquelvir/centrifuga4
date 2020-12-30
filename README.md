@@ -1,4 +1,4 @@
-Source code of centrífuga4, [Xamfrà](https://www.xamfra.net)'s student management platform.
+Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management platform.
 
 INSTALLING
 1. Clone this repository
