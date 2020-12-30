@@ -11,9 +11,9 @@ DEVELOPMENT
     2. Use development/generate_sample_db.py to create a new database. It will contain a user 'admin@gmail.com' : 'admin'
     3. Run development/wsgi_development.py to run the backend development server
 2. Frontend development server
-    1. Run `npm start` to start the frontend development server
+    1. Run `npm start` inside centrifuga4-frontend to start the frontend development server
     
 PRODUCTION
-1. Run `npm build` to build the React files into static files
+1. Run `npm build` inside centrifuga4-frontend to build the React files into static files
 2. Run development/wsgi_production.py to run the server
 
