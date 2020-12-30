@@ -22,6 +22,6 @@ def handle(e):
 
 api = Api(emails_blueprint)
 
-api.add_resource(WelcomeEmailRes, '/welcomeEmail/<job_id>')
+api.add_resource(WelcomeEmailRes, '/queue/<job_id>')
 api.add_resource(WelcomeEmailCollectionRes, '/welcomeEmail')
 

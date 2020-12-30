@@ -1,9 +1,5 @@
 import React, {useEffect} from 'react';
-import {Formik, Field, Form, ErrorMessage, useFormik} from 'formik';
-import {authenticationService} from '../_services/auth.service';
-import {Redirect} from "react-router-dom";
-import {userContext} from "../_context/user-context";
-import report from "../_components/snackbar.report";
+import {useFormik} from 'formik';
 import * as yup from 'yup';
 import {TextField} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
@@ -14,9 +10,10 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import {themeContext} from "../_context/theme-context";
-import {func} from "prop-types";
 import {authenticationService as signupService} from "../_services/signup.service";
 import {useSnackbar} from "notistack";
+import i18next from "i18next";
+import {useErrorHandler} from "../_helpers/handle-response";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,10 +37,14 @@ const useStyles = makeStyles((theme) => ({
 const SignupPage = (props) => {
     const classes = useStyles();
     const themeCtx = React.useContext(themeContext);
-
     const {enqueueSnackbar} = useSnackbar();
 
+    useEffect(() => {
+        i18next.changeLanguage(query.get('lan')).then();
+    }, [])
+
     const {t} = useTranslation();
+    const errorHandler = useErrorHandler();
     const query = new URLSearchParams(window.location.search);
     const token = query.get('token')
     const email = query.get('email')
@@ -57,13 +58,10 @@ const SignupPage = (props) => {
             surname2: '',
             password2: ''
         },
-        validationSchema: yup.object({
+        validationSchema: yup.object({  // todo translate
             username: yup.string().required('Username is required').email('Enter a valid email.'),
             email: yup.string().required('Email is required').email('Enter a valid email.'),
-            password: yup.string().required('Password is required').matches(
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-      "Must be longer than 8 characters; including: 1 uppercase, 1 lowercase, 1 number and 1 of '@$!%*#?&'"
-    ),
+            password: yup.string().required('Password is required'),  // TODO
             password2: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required("Password is required"),
             name: yup.string().required('Name is required'),
             surname1: yup.string().required('First surname is required'),
@@ -74,8 +72,10 @@ const SignupPage = (props) => {
             setStatus();
 
             signupService.signup(username, password, email, name, surname1, surname2, token)
+                .then(...errorHandler(false, true, false))  // TODO everywhere and how to
                 .then(
                     function (result) {
+                        enqueueSnackbar(t("sign_up_success"), {variant: "success"});
                         setSubmitting(false);
                         props.history.push("/login");
                     },
@@ -208,7 +208,7 @@ const SignupPage = (props) => {
                                                 type="submit"
                                                 disabled={formik.isSubmitting}
                                                 className={classes.field}>
-                                                {t("sign up")}
+                                                {t("sign_up")}
                                             </Button>
                                         </Box>
                                     </form>

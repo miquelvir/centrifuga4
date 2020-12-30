@@ -1,15 +1,15 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 import Backend from 'i18next-xhr-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import translationEN from "./_translations/locales/en/translation.json";
+import translationEN from "./_translations/locales/eng/translation.json";
 import translationCAT from "./_translations/locales/cat/translation.json";
 
-const fallbackLng = ["en"];
-const availableLanguages = ["en", "cat"];
+const fallbackLng = ["eng"];
+const availableLanguages = ["eng", "cat"];
 
 const resources = {
-    en: {
+    eng: {
         translation: translationEN
     },
     cat: {

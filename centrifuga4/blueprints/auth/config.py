@@ -39,7 +39,7 @@ def basic_http_auth_required(f):
     return wrapper
 
 
-@auth_service.route('/login', methods=['GET'])
+@auth_service.route('/login', methods=['POST'])
 @basic_http_auth_required  # require user and password to be validated
 def get_auth_token():
     """
@@ -65,7 +65,7 @@ def get_auth_token():
     return "", 200
 
 
-@auth_service.route('/logout', methods=['GET'])
+@auth_service.route('/logout', methods=['POST'])
 @login_required
 # @error_handler
 def logout():

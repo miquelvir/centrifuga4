@@ -1,4 +1,5 @@
 import React from "react";
+
 const themeContext = React.createContext({dark: true}); // Create a context object
 
 export {

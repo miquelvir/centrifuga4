@@ -80,7 +80,7 @@ def init_app(config=DevelopmentConfig):
         @app.route('/')
         @app.route('/login')
         @app.route('/signup')
-        @app.route('/reset-password')
+        @app.route('/password-reset')
         def index():
             return render_template('index.html')  # todo sendstaticfile
 

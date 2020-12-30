@@ -1,8 +1,9 @@
+from flask import current_app
 from flask_login import UserMixin
 
 from centrifuga4 import db
 from centrifuga4.models.person import Person
-from passlib.apps import custom_app_context as pwd_context
+import bcrypt
 
 
 class User(Person, UserMixin):
@@ -18,9 +19,9 @@ class User(Person, UserMixin):
 
     def login(self, password: str) -> bool:
         """ checks if password hash matches stored patch """
-        return pwd_context.verify(password, self.password_hash)
+        return bcrypt.checkpw(password.encode("utf-8"), bytes(self.password_hash))
 
     @staticmethod
-    def hash_password(password: str) -> str:
+    def hash_password(password: str):
         """ returns the hashed password """
-        return pwd_context.encrypt(password)
+        return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())

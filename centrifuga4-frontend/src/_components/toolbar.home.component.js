@@ -19,7 +19,7 @@ import {userContext} from "../_context/user-context";
 import {authenticationService} from "../_services/auth.service";
 
 const languageMap = {
-    en: { label: "english", dir: "ltr", active: true },
+    eng: { label: "english", dir: "ltr", active: true },
     cat: { label: "català", dir: "ltr", active: false }
 };
 
@@ -55,7 +55,7 @@ export default function HomeToolbar(props){
     const changeTheme = props.changeTheme;
     const classes = useStyles();
 
-    const selected = localStorage.getItem("i18nextLng") || "en";
+    const selected = localStorage.getItem("i18nextLng") || "eng";
     const { t } = useTranslation();
 
     const title = "centrífuga4";
@@ -82,6 +82,7 @@ export default function HomeToolbar(props){
         handleLanguageMenuClose();
     }
     React.useEffect(() => {
+        console.log(languageMap, selected);
         document.body.dir = languageMap[selected].dir;
       }, [anchorElLan, selected]);
 

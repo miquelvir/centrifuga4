@@ -6,6 +6,7 @@ class StudentsDataService {
 
   getAll(searchText, download=false, page=1) {
       const res = '/students';
+      console.log(download);
       if (download){
           return new Promise(function(resolve, reject) {
               axios({
@@ -17,7 +18,8 @@ class StudentsDataService {
                       "page": page
                   },
                   headers: {...{
-                      'Accept': 'text/csv'
+                      'Accept': 'text/csv',
+                      'Cache-Control': 'no-cache'
                   }, ...authHeader()}
               }).then(response => {
                   console.log(response);
@@ -38,6 +40,7 @@ class StudentsDataService {
               });
           });
       }
+      console.log("hirooo");
       return new Promise(function(resolve, reject) {
           axios({
               method: 'get',
@@ -47,11 +50,12 @@ class StudentsDataService {
                   "page": page
               },
               headers: {...{
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                      'Cache-Control': 'no-cache'
               }, ...authHeader()}
             })
               .then(function (response) {
-                  console.log("hiro");
+                  console.log("hiro", response, response.data);
                 resolve(response.data);
               }).catch(function (err) {
                   console.log("hiro2", err);

@@ -8,15 +8,13 @@ import Avatar from "@material-ui/core/Avatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Divider from "@material-ui/core/Divider";
-import SearchBar from './/searchbar.component'
+import SearchBar from './searchbar.component'
 import Box from "@material-ui/core/Box";
 import {useTranslation} from "react-i18next";
 import {Chip, ListItemSecondaryAction} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
-import {useSnackbar} from 'notistack';
-import report from "./snackbar.report";
 import {useErrorHandler} from "../_helpers/handle-response";
 import LoadingBackdrop from "./loadingBackdrop.component";
 
@@ -51,7 +49,6 @@ const StudentsList = (props) => {
 
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
-    const [pageSize, setPageSize] = useState(3);
 
     const classes = useStyles();
 
@@ -65,30 +62,29 @@ const StudentsList = (props) => {
     };
 
     function search() {
-        StudentsDataService.getAll(searchTerm, false, page).then(...errorHandler).then(
-            function (result) {
-                console.log("1");
-                setStudents(result["data"]);
-                setCount(result["_pagination"]["totalPages"]);
-            });
+        console.log("searching...");
+        StudentsDataService
+            .getAll(searchTerm, false, page)
+            .then(...errorHandler())
+            .then(function (res) {
+                    console.log("1");
+                    console.log(res);
+                    setStudents(res["data"]);
+                    setCount(res["_pagination"]["totalPages"]);
+                });
     }
 
-    useEffect(search, [page, pageSize]);
+    useEffect(search, [page]);
 
     const handlePageChange = (event, value) => {
         setPage(value);
-    };
-
-    const handlePageSizeChange = (event) => {
-        setPageSize(event.target.value);
-        setPage(1);
     };
 
     function exportCsv() {
         setLoading(true);
         StudentsDataService
             .getAll(searchTerm, true, page)
-            .then(...errorHandler)
+            .then(...errorHandler())
             .finally(()=>{
                 setLoading(false);
             });
@@ -128,7 +124,7 @@ const StudentsList = (props) => {
             <List className={classes.list}>
                 {students && students.map((student, index) => (
                     <div>
-                        <ListItem key={index} button
+                        <ListItem key={student["id"]} button
                                   onClick={() => {
                                       setCurrentStudent(student);
                                   }}>

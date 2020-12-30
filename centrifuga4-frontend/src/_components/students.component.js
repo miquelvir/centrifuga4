@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
 import StudentsList from "./students.list.component";

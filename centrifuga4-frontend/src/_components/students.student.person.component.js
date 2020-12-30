@@ -2,14 +2,15 @@ import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import {Button, DialogActions, MenuItem, TextField} from "@material-ui/core";
 import countryList from "../_data/countries";
-import React, {useState} from "react";
+import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Skeleton} from "@material-ui/lab";
+import {Autocomplete, Skeleton} from "@material-ui/lab";
 import DirtyTextField from "./dirtytextfield.component";
-import {
-    Formik, Form, Field, ErrorMessage, useFormik,
-} from 'formik';
+import {useFormik,} from 'formik';
 import * as yup from 'yup';
+import countries from "../_data/countries";
+import ContrySelect from "./contry-select.component";
+import CountrySelect from "./contry-select.component";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -188,7 +189,7 @@ function Person(props) {
                                                 style={{flex: 1}}
                                                 formik={formik}
                                                 name="gender"
-                                            value={formik.values["gender"]}
+                                            value={formik.values["gender"] === null? '': formik.values["gender"]}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                                 select>
@@ -214,21 +215,7 @@ function Person(props) {
                                             onBlur={formik.handleBlur}
                                                 InputLabelProps={{shrink: true}}/>
 
-                                            <DirtyTextField
-                                                id="standard-basic"
-                                                label={t("country_of_origin")}
-                                                style={{flex: 1}}
-                                                name="country_of_origin"
-                                                formik={formik}
-                                            value={formik.values["country_of_origin"]}
-                                                  onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                                select>
-
-                                                {countryList.map((country, idx) => {
-                                                    return (<MenuItem value={country.code}>{country.name}</MenuItem>)
-                                                })}
-                                            </DirtyTextField>
+                                            <CountrySelect formik={formik}/>
 
                                         </Box>
 
@@ -244,7 +231,7 @@ function Person(props) {
                                             <Button type="submit" disabled={formik.isSubmitting}>
                                                 Submit
                                             </Button>
-                                            {/* <DisplayFormikState {...props} /> */}
+
                                         </DialogActions>
                                     </form>
                 )

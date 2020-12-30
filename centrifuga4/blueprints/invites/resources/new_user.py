@@ -1,15 +1,14 @@
 import jwt
 from flask import request, current_app
-from flask_principal import Need
 from flask_restful import Resource
-from centrifuga4.models import User
+from centrifuga4.models import User, Need
 from centrifuga4 import q, db
 
 
 class NewUserCollectionRes(Resource):
     def post(self):
         try:
-            user_email = request.json["email"]
+            user_email = request.json["email"].lower()
         except KeyError:
             return "no user email found in body", 400
 
@@ -19,7 +18,7 @@ class NewUserCollectionRes(Resource):
             return "no user name found in body", 400
 
         try:
-            user_surname1 = request.json["surname1"]
+            user_surname1 = request.json["surname1"]  # todo make sure everything is stored in lower
         except KeyError:
             return "no user surname1 found in body", 400
 
@@ -47,7 +46,7 @@ class NewUserCollectionRes(Resource):
             if data["userEmail"] != user_email:
                 return "token does not correspond to requested email", 401
 
-            user_id = User.generate_new_id(db)
+            user_id = User.generate_new_id()
             u = User(id=user_id,
                      name=user_name,
                      surname1=user_surname1,
@@ -56,7 +55,8 @@ class NewUserCollectionRes(Resource):
                     username=user_email,
                      password_hash=User.hash_password(user_password))
 
-            for need_name in data["needs"]:
+            for n in data["needs"]:
+                need_name = n["name"]
                 need = Need.query.filter_by(name=need_name).one_or_none()  # todo why query always is brought up by linter
                 if need:
                     u.needs.append(need)
@@ -69,6 +69,6 @@ class NewUserCollectionRes(Resource):
 
         except jwt.exceptions.ExpiredSignatureError:
             return "token expired", 401
-        except Exception as e:
+"""        except Exception as e:
             print(e)
-            return "invalid token", 401
+            return "invalid token", 401  # todo or bound this except clause"""

@@ -1,9 +1,5 @@
 import React, {useEffect} from 'react';
-import {Formik, Field, Form, ErrorMessage, useFormik} from 'formik';
-import {authenticationService} from '../_services/auth.service';
-import {Redirect} from "react-router-dom";
-import {userContext} from "../_context/user-context";
-import report from "../_components/snackbar.report";
+import {useFormik} from 'formik';
 import * as yup from 'yup';
 import {TextField} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
@@ -14,10 +10,15 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import {themeContext} from "../_context/theme-context";
-import {func} from "prop-types";
-import {authenticationService as signupService} from "../_services/signup.service";
 import {useSnackbar} from "notistack";
 import {passwordResetService} from "../_services/password-reset.service";
+import i18next from "i18next";
+import {
+    has_digit, has_lowercase,
+    has_special,
+    has_uppercase,
+    longer_8, safe_password
+} from "../_data/password_regex";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,11 +39,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
 const ResetPage = (props) => {
     const classes = useStyles();
     const themeCtx = React.useContext(themeContext);
 
     const {enqueueSnackbar} = useSnackbar();
+
+    useEffect(() => {
+        i18next.changeLanguage(query.get('lan')).then();
+    }, [])
 
     const {t} = useTranslation();
     const query = new URLSearchParams(window.location.search);
@@ -55,20 +61,19 @@ const ResetPage = (props) => {
             password2: ''
         },
         validationSchema: yup.object({
-            username: yup.string().required('Username is required').email('Enter a valid email.'),
-            password: yup.string().required('Password is required').matches(
-              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-              "Must be longer than 8 characters; including: 1 uppercase, 1 lowercase, 1 number and 1 of '@$!%*#?&'"
-            ),
-            password2: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required("Password is required")
+            username: yup.string().required(t("email_required")).email(t("invalid_email")),
+            password: safe_password(t),
+            password2: yup.string().oneOf([yup.ref('password'), null],
+                t("passwords_unmatched")).required(t("password_required"))
         }),
         enableReinitialize: true,
         onSubmit: ({username, password, password2}, {setStatus, setSubmitting}) => {
             setStatus();
 
-            passwordResetService.signup(username, password, token)
+            passwordResetService.reset(username, password, token)
                 .then(
                     function (result) {
+                        enqueueSnackbar(t("reset_password_success"), {variant: "success"});
                         setSubmitting(false);
                         props.history.push("/login");
                     },
@@ -103,7 +108,7 @@ const ResetPage = (props) => {
                                     <img src={themeCtx.theme? "logo_centrifuga4_dark.svg": "logo_centrifuga4_light.svg"} alt="Logo Centrífuga" style={{height: "85px"}}/>
 
                                      <Box m={2}>
-                                         <Typography>{t("choose your new password 🔑")}</Typography>
+                                         <Typography>{t("new_password")}</Typography>
                                     </Box>
 
                                     <form onSubmit={formik.handleSubmit}>
@@ -150,7 +155,7 @@ const ResetPage = (props) => {
                                                 type="submit"
                                                 disabled={formik.isSubmitting}
                                                 className={classes.field}>
-                                                {t("change password")}
+                                                {t("change_password")}
                                             </Button>
                                         </Box>
                                     </form>

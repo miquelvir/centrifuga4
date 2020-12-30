@@ -1,4 +1,5 @@
 import axios from "axios";
+import {authHeader} from "../_helpers/auth-header";
 
 export const passwordResetService = {
     reset,
@@ -14,7 +15,8 @@ function reset(username, password, token) {
                 username: username,
                 password: password,
                 token: token
-            }
+            },
+            headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()}
         }).then(response => {
             resolve(true);
         }).catch(function (err) {
@@ -30,7 +32,8 @@ function startReset(username) {
             method: 'POST',
             data: {
                 username: username
-            }
+            },
+            headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()}
         }).then(response => {
             resolve(true);
         }).catch(function (err) {

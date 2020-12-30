@@ -37,5 +37,17 @@
   "username_required_password_reset": "Fill in the email field to ask for a password reset!",
   "started_password_reset": "Process started. If the username is correct, you will receive an email to finish the password change!",
   "export": "export",
-  "export_results_csv": "export search results as .csv"
+  "export_results_csv": "export search results as .csv",
+  "email_required": "email is required",
+  "invalid_email": "enter a valid email",
+  "password_required": "password is required",
+  "warning_not_logged_in": "you are not logged in! \uD83D\uDC82",
+  "warning_not_enough_privileges": "you don't have enough privileges to continue! 💂",
+  "password_constraints": "must be longer than 8 characters; including: 1 uppercase, 1 lowercase, 1 number and 1 special character",
+  "passwords_unmatched": "passwords don't match",
+  "new_password": "choose your new password \uD83D\uDD11",
+  "reset_password_success": "password change successful",
+  "sign_up_success": "sign up successful",
+  "sign_up": "sign up",
+  "change_password": "change password"
 }

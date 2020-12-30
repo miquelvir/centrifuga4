@@ -16,8 +16,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Routes from "../routes";
-import {BrowserRouter, Route, Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import {BrowserRouter, Link, Route} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
 import {history} from "../_helpers/history";
 

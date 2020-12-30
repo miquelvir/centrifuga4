@@ -11,7 +11,7 @@ def check_permissions(permissions: Union[List[type(Permission)], Tuple[type(Perm
     if current_app.config["DEVELOPMENT"]:
         # session cookie does not work properly if using the front end server independently
         return True
-
+    print(permissions)
     if not all((p().can() for p in permissions)):
         return False
 
@@ -20,7 +20,7 @@ def check_permissions(permissions: Union[List[type(Permission)], Tuple[type(Perm
 
 class Requires:
     def __init__(self, *permissions):
-        self.permissions = set(permissions)
+        self.permissions = permissions
 
     def wrapper(self, function, *args, **kwargs):
         if not check_permissions(self.permissions):

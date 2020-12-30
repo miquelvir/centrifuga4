@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import {useTranslation} from "react-i18next";
 import SwipeableViews from 'react-swipeable-views';

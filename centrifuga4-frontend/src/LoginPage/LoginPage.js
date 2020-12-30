@@ -1,9 +1,7 @@
 import React, {useEffect} from 'react';
-import {Formik, Field, Form, ErrorMessage, useFormik} from 'formik';
+import {useFormik} from 'formik';
 import {authenticationService} from '../_services/auth.service';
-import {Redirect} from "react-router-dom";
 import {userContext} from "../_context/user-context";
-import report from "../_components/snackbar.report";
 import * as yup from 'yup';
 import {TextField} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
@@ -14,10 +12,10 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import {themeContext} from "../_context/theme-context";
-import {func} from "prop-types";
 import Link from "@material-ui/core/Link";
 import {passwordResetService} from "../_services/password-reset.service";
 import {useSnackbar} from "notistack";
+import {useErrorHandler} from "../_helpers/handle-response";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,10 +41,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
 const LoginPage = (props) => {
     const classes = useStyles();
     const userCtx = React.useContext(userContext);
     const themeCtx = React.useContext(themeContext);
+
+    const errorHandler = useErrorHandler();
 
     const {enqueueSnackbar} = useSnackbar();
 
@@ -64,37 +65,36 @@ const LoginPage = (props) => {
             password: ''
         },
         validationSchema: yup.object({
-            username: yup.string().required('Email is required').email('Enter a valid email.'),
-            password: yup.string().required('Password is required')
+            username: yup.string().required(t("email_required")).email(t("invalid_email")),
+            password: yup.string().required(t("password_required"))
         }),
         enableReinitialize: true,
         onSubmit: ({username, password}, {setStatus, setSubmitting}) => {
             setStatus();
             authenticationService.login(username, password)
-                .then(
-                    function (result) {
-                        logged();
-                    },
-                    function (error) {
-                        console.log(">>><<<", error);
+                .then(...errorHandler())
+                .then(function (success) {
+                        if (success) {
+                            logged();
+                        } else {
+                            setStatus(true);
+                        }
+                    })
+                .finally(() => {
                         setSubmitting(false);
-                        setStatus(error);
-                    });
+                });
         }
     });
 
     useEffect(() => {
         if (userCtx["user"]["logged"]) {
-        props.history.push('/');
-        return null;
-    }
-
-    authenticationService.ping().then(function(success){
-        if (success) {
-            logged();
+            props.history.push('/');
             return null;
         }
-    })
+
+        authenticationService.ping()
+            .then(...errorHandler())
+            .then((success) => { if (success) logged(); });  // ignore failed ping (it is just not logged in)
     }, []);
 
     const resetPassword = () => {
@@ -103,10 +103,9 @@ const LoginPage = (props) => {
             enqueueSnackbar(t("username_required_password_reset"), { variant: "warning"});
         } else {
             passwordResetService.startReset(username).then(r => {
-            enqueueSnackbar(t("started_password_reset"), { variant: "success"});
-        })
+                enqueueSnackbar(t("started_password_reset"), { variant: "success"});
+            })
         }
-
     }
 
     return (

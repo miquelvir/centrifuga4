@@ -53,7 +53,7 @@ class EasyRequires(Requires):
     # signature mismatch is on porpoise
     # noinspection PyMethodOverriding
     def wrapper(self, function, resource: ImplementsEasyResource, *args, **kwargs):
-        self.permissions = self.permissions.union(resource.permissions)  # add additional base permissions
+        self.permissions = set(self.permissions).union(resource.permissions)  # add additional base permissions
         return super().wrapper(function, resource, *args, **kwargs)
 
 
@@ -244,7 +244,7 @@ class ImplementsPostOne:
             raise ResourceBaseBadRequest("post does not admit id argument",
                                          messages={"id": ["Found value '%s', expects no id." % body["id"]]})
 
-        new_id = self.model.generate_new_id(db)
+        new_id = self.model.generate_new_id()
         body["id"] = new_id
 
         """if "guardians" in body:
