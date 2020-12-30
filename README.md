@@ -19,3 +19,7 @@ PRODUCTION
 1. Run `npm build` inside centrifuga4-frontend to build the React files into static files
 2. Run development/wsgi_production.py to run the server
 3. Run Redis Server and email_queue/worker.py.
+
+AUTHORSHIP
+v0 by A. Rius
+v1-4 by @miquelvir
