@@ -7,8 +7,6 @@ export default function serviceFactory(resource){
     return class {
         resource = resource;
 
-        constructor(){}
-
         getAll(likeSearchText=null, page = 1) {
             return new Promise(function (resolve, reject) {
                 axios({
@@ -56,7 +54,7 @@ export default function serviceFactory(resource){
                         }, ...authHeader()
                     }
                 }).then(function (response) {
-                        resolve(response);
+                        resolve(response.data);
                     }).catch(function (err) {
                         reject(err);
                 });

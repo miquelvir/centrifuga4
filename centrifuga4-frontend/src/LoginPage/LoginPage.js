@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useFormik} from 'formik';
 import {authenticationService} from '../_services/auth.service';
 import {userContext} from "../_context/user-context";
@@ -16,6 +16,7 @@ import Link from "@material-ui/core/Link";
 import {passwordResetService} from "../_services/password-reset.service";
 import {useSnackbar} from "notistack";
 import {useErrorHandler} from "../_helpers/handle-response";
+import {useOnMount} from "../_helpers/on-mount";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -87,7 +88,7 @@ const LoginPage = (props) => {
         }
     });
 
-    useEffect(() => {
+    useOnMount(() => {
         if (userCtx["user"]["logged"]) {
             props.history.push('/');
             return null;
@@ -97,7 +98,7 @@ const LoginPage = (props) => {
             .ping()
             .then(...errorHandler({}))
             .then((success) => { if (success) logged(); });  // ignore failed ping (it is just not logged in)
-    }, []);
+    });
 
     const resetPassword = () => {
         const username = formik.values["username"];

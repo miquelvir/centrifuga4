@@ -45,7 +45,7 @@ function a11yProps(index) {
 
 export default function Student(props) {
   const currentStudent = props.currentStudent;
-  const setCurrentStudent = props.setCurrentStudent;
+  const updateCurrentStudent = props.updateCurrentStudent;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -75,7 +75,7 @@ export default function Student(props) {
                   <Tab label={t("attendee")} {...a11yProps(0)} />
                   {
                   contacts && contacts.map((contact, index) => (
-                  <Tab label={t("contact ") + (index+1)} {...a11yProps(index)} />
+                  <Tab key={t("contact ") + (index+1)} label={t("contact ") + (index+1)} {...a11yProps(index)} />
                       ))}
                 </Tabs>
               </AppBar>
@@ -88,10 +88,12 @@ export default function Student(props) {
                       index={0}
                       dir={theme.direction}
                       title="attendee"
-                      currentStudent={currentStudent}/>
+                      currentStudent={currentStudent}
+                      updateCurrentStudent={updateCurrentStudent}
+            />
             {
               contacts && contacts.map((contact, index) => (
-                   <Attendee value={value} index={index+1} dir={theme.direction} title={"contact " + (index + 1)}/>
+                   <Attendee key={contact} value={value} index={index+1} dir={theme.direction} title={"contact " + (index + 1)}/>
                   ))}
 
             }

@@ -1,15 +1,10 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
-import Paper from "@material-ui/core/Paper";
-import InputBase from "@material-ui/core/InputBase";
-import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
 import React from "react";
 import {Autocomplete} from "@material-ui/lab";
 import {countries} from "../_data/countries";
-import {MenuItem, TextField} from "@material-ui/core";
-import countryList from "../_data/countries";
 import DirtyTextField from "./dirtytextfield.component";
+import TextField from "@material-ui/core/TextField";
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
@@ -37,8 +32,8 @@ export default function CountrySelect({formik, ...textFieldProps}) {
   const { t } = useTranslation();
 
   return (
-    <Autocomplete
-      id="country-select-demo"
+    <Autocomplete  // o¡todo use https://github.com/mui-org/material-ui/issues/18331
+      id="country_of_origin"
       style={{ width: 300 }}
       options={countries}
       classes={{
@@ -46,9 +41,23 @@ export default function CountrySelect({formik, ...textFieldProps}) {
       }}
       autoHighlight
       getOptionLabel={(option) => {
+          if (typeof option === 'string') {
+                console.log("h");
+                countries.filter(x => x.label.toLowerCase() === option.toLowerCase()).forEach(x => {
+                    console.log("a", x);
+                    option = x;
+                })
+            }
           console.log(option);
-          return option.label === undefined? option.name : option.label;
+          return option.label;
       }}
+      value={formik.values["country_of_origin"] === undefined? '': formik.values["country_of_origin"]}
+      onChange={(x) => {
+          console.log("onChangeeeeeeeeeeeee", x);
+          formik.handleChange(x);
+      }}  // todo initial values and DirtyAutocomplete
+        name="country_of_origin"
+      onBlur={formik.handleBlur}
       renderOption={(option) => (
         <React.Fragment>
           <span>{countryToFlag(option.code)}</span>
@@ -56,21 +65,15 @@ export default function CountrySelect({formik, ...textFieldProps}) {
         </React.Fragment>
       )}
       renderInput={(params) => (
-        <DirtyTextField
-            id="standard-basic"
-            label={t("country_of_origin")}
-            style={{flex: 1}}
-            {...params}
-            name="country_of_origin"
-            formik={formik}
-            value={formik.values["country_of_origin"] === null? '': formik.values["country_of_origin"]}
-              onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-              inputProps={{
-                ...params.inputProps,
-                autoComplete: 'new-password', // disable autocomplete and autofill
-              }}
-            {...textFieldProps}/>
+        <TextField
+          {...params}
+          label="Choose a country"
+          variant="outlined"
+          inputProps={{
+            ...params.inputProps,
+            autoComplete: 'new-password', // disable autocomplete and autofill
+          }}
+        />
       )}
     />
   );

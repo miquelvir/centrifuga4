@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import {TextField} from "@material-ui/core";
@@ -14,8 +14,8 @@ import {useSnackbar} from "notistack";
 import {passwordResetService} from "../_services/password-reset.service";
 import i18next from "i18next";
 import { password_repetition, safe_password, safe_username } from "../_data/password_regex";
-import {authenticationService} from "../_services/auth.service";
 import {useErrorHandler} from "../_helpers/handle-response";
+import {useOnMount} from "../_helpers/on-mount";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,9 +43,9 @@ const ResetPage = (props) => {
 
     const {enqueueSnackbar} = useSnackbar();
 
-    useEffect(() => {
+    useOnMount(() => {
         i18next.changeLanguage(query.get('lan')).then();
-    }, [])
+    })
 
     const {t} = useTranslation();
     const query = new URLSearchParams(window.location.search);

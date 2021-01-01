@@ -33,20 +33,6 @@ const useStyles = makeStyles(theme => (createStyles({
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
     },
-    icon: { // TODO
-        '&$focusVisible': {
-        color: theme.palette.neutral.emphasisText.medium,
-      },
-      '&$selected': {
-        color: theme.palette.neutral.emphasisText.high,
-      },
-      '&$disabled': {
-        color: theme.palette.neutral.emphasisText.medium,
-      },
-      '&': {
-          color: theme.palette.neutral.emphasisText.medium,
-      }
-    },
     grow: {
         flexGrow: 1,
     },
@@ -84,7 +70,6 @@ export default function HomeToolbar(props){
         handleLanguageMenuClose();
     }
     React.useEffect(() => {
-        console.log(languageMap, selected);
         document.body.dir = languageMap[selected].dir;
       }, [anchorElLan, selected]);
 
@@ -98,8 +83,8 @@ export default function HomeToolbar(props){
             transformOrigin={{vertical: 'top', horizontal: 'right'}}
             open={isLanguageMenuOpen}
             onClose={handleLanguageMenuClose}>
-            {Object.keys(languageMap)?.map(item => (
-              <MenuItem key={item} onClick={() => changeLanguage(item)}>{languageMap[item].label}</MenuItem>
+            {Object.keys(languageMap)?.map(key => (
+              <MenuItem key={key} onClick={() => changeLanguage(key)}>{languageMap[key].label}</MenuItem>
             ))}
         </Menu>
     );

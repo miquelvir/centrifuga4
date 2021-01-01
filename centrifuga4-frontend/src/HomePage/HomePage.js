@@ -15,7 +15,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
-import Routes from "../routes";
+import Routes from "./routes";
 import {BrowserRouter, Link, Route} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
@@ -87,17 +87,13 @@ const useStyles = makeStyles(theme => (createStyles({
         height: "100%"
     },
     icon: {
-        '&$focusVisible': {
-        color: theme.palette.neutral.emphasisText.medium,
-      },
-      '&$selected': {
-        color: theme.palette.neutral.emphasisText.high,
-      },
-      '&$disabled': {
-        color: theme.palette.neutral.emphasisText.medium,
-      },
       '&': {
           color: theme.palette.neutral.emphasisText.medium,
+      }
+    },
+    selectedIcon: {
+      '&': {
+          color: theme.palette.primary.main,
       }
     },
     grow: {
@@ -112,6 +108,7 @@ const HomePage = (props) => {
     const { t } = useTranslation();
 
     const [open, setOpen] = React.useState(false);
+    const [currentRoute, setCurrentRoute] = React.useState('/');
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -120,10 +117,9 @@ const HomePage = (props) => {
         setOpen(false);
     };
 
-    const onItemClick = title => () => {
-        // setTitle(title);
+    const onItemClick = p => {
+        setCurrentRoute(p.path);
     };
-
 
     return (
         <div className={classes.root}>
@@ -143,7 +139,6 @@ const HomePage = (props) => {
             <BrowserRouter history={history} basename={`${process.env.PUBLIC_URL}/`}>
                 <Drawer
                     variant="permanent"
-                    onItemClick={onItemClick}
                     className={clsx(classes.drawer, {
                         [classes.drawerOpen]: open,
                         [classes.drawerClose]: !open,
@@ -162,24 +157,23 @@ const HomePage = (props) => {
                     </div>
                     <Divider/>
                     <List>
-                        {Routes.map((prop, key) => {
-                            return (
-                                <ListItem button to={prop.path} component={Link} onClick={onItemClick(t(prop.title))}>
-                                    <ListItemIcon className={classes.icon}>
+                        {Routes.map((prop) =>(
+                                  <ListItem  key={prop.title} button to={prop.path} component={Link} onClick={() => onItemClick(prop)}>
+                                    <ListItemIcon className={prop.path === currentRoute? classes.selectedIcon: classes.icon}>
                                         <Tooltip title={t(prop.title)} aria-label={t(prop.title)}>
                                             {<prop.icon/>}
                                         </Tooltip>
                                     </ListItemIcon>
                                     <ListItemText primary={t(prop.title)}/>
-                                </ListItem>)
-                        })}
+                                </ListItem>
+                                ))}
                     </List>
                 </Drawer>
                 <main className={classes.content}>
-                    <div className={classes.toolbar}/> {/* space placeholder */}
+                    <div className={classes.toolbar}/>
                     {Routes.map((prop, key) => {
                         return (
-                            <Route exact path={prop.path} component={prop.component}/>)
+                            <Route key={prop.title} exact path={prop.path} component={prop.component}/>)
                     })}
                 </main>
             </BrowserRouter>

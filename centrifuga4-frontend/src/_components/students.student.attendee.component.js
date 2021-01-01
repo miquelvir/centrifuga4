@@ -1,14 +1,14 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import {Fab, TextField} from "@material-ui/core";
+import {TextField} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import Divider from "@material-ui/core/Divider";
 import Person from "./students.student.person.component";
-import SaveIcon from '@material-ui/icons/Save';
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Attendee({ children, value, index, title, currentStudent, ...other }) {
+function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, ...other }) {
   const { t } = useTranslation();
   const loading = false;
   const classes = useStyles();
@@ -50,7 +50,7 @@ function Attendee({ children, value, index, title, currentStudent, ...other }) {
             <Box px={2}>
               <h1>{title}</h1>
 
-              <Person currentPerson={currentStudent}/>
+              <Person currentPerson={currentStudent} updateCurrentStudent={updateCurrentStudent}/>
 
               {loading || currentStudent === null
               ?

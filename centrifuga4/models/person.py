@@ -26,7 +26,7 @@ class Person(MyBase):
     dni = db.Column(db.Text, nullable=True)
     gender = db.Column(db.Text, nullable=True)
     birth_date = db.Column(db.Date, nullable=True)
-    country_of_origin = db.Column(db.Date, nullable=True)
+    country_of_origin = db.Column(db.Text, nullable=True)
 
     full_name = column_property(
         case([(name != None, name + " "),], else_="") +

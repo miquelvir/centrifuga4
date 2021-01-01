@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import {TextField} from "@material-ui/core";
@@ -15,6 +15,7 @@ import {useSnackbar} from "notistack";
 import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {password_repetition, safe_password, safe_username} from "../_data/password_regex";
+import {useOnMount} from "../_helpers/on-mount";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,9 +41,9 @@ const SignupPage = (props) => {
     const themeCtx = React.useContext(themeContext);
     const {enqueueSnackbar} = useSnackbar();
 
-    useEffect(() => {
+    useOnMount(() => {
         i18next.changeLanguage(query.get('lan')).then();
-    }, [])
+    })
 
     const {t} = useTranslation();
     const errorHandler = useErrorHandler();

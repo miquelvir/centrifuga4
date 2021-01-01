@@ -15,7 +15,6 @@ import {Chip, ListItemSecondaryAction} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
-import {useErrorHandler} from "../_helpers/handle-response";
 import LoadingBackdrop from "./loadingBackdrop.component";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +41,9 @@ const useStyles = makeStyles((theme) => ({
 
 const StudentsList = (props) => {
     const setCurrentStudent = props.setCurrentStudent;
-    const [students, setStudents] = useState([]);
+    const setStudents = props.setStudents;
+    const students = props.students;
+
     const [searchTerm, setSearchTerm] = useState("");
 
     const {t} = useTranslation();
@@ -69,7 +70,7 @@ const StudentsList = (props) => {
                 });
     }
 
-    useEffect(search, [page]);
+    useEffect(search, [page, setStudents]);
 
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -117,7 +118,7 @@ const StudentsList = (props) => {
             </Box>
             <List className={classes.list}>
                 {students && students.map((student, index) => (
-                    <div>
+                    <div key={student["id"]}>
                         <ListItem key={student["id"]} button
                                   onClick={() => {
                                       setCurrentStudent(student);

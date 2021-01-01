@@ -1,17 +1,14 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import {Button, DialogActions, MenuItem, TextField} from "@material-ui/core";
-import countryList from "../_data/countries";
-import React, {useEffect} from "react";
+import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Autocomplete, Skeleton} from "@material-ui/lab";
+import {Skeleton} from "@material-ui/lab";
 import DirtyTextField from "./dirtytextfield.component";
-import {useFormik,} from 'formik';
 import * as yup from 'yup';
-import CountrySelect from "./contry-select.component";
+import DirtyCountrySelect from "./contry-select.component";
 import studentsService from "../_services/students.service"
 import {useErrorHandler} from "../_helpers/handle-response";
-import {authenticationService} from "../_services/auth.service";
 import {useNormik} from "../_helpers/normik";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,32 +31,33 @@ const useStyles = makeStyles((theme) => ({
 
 function Person(props) {
     const currentPerson = props.currentPerson;
+    const updateCurrentStudent = props.updateCurrentStudent;
     const {t} = useTranslation();
-    const loading = false;
     const classes = useStyles();
     const errorHandler = useErrorHandler();
     let initialValues = currentPerson===null? {}:currentPerson;
-    console.log(initialValues);
 
-    const formik = useNormik({
+
+    const formik = useNormik(true, {
         initialValues: initialValues,
         validationSchema: yup.object({
                                 email: yup.string().email('Enter a valid email.'),  // todo
                                 name: yup.string().required('Required')
                             }),
         enableReinitialize: true,
-        onSubmit: (values, {setStatus, setSubmitting}) => {
+        onSubmit: (changedValues, {setStatus, setSubmitting}) => {
             setStatus();
-
             studentsService.patch({
               id: initialValues["id"],
-              body: values,
+              body: changedValues,
               initial_values: initialValues
-          }).then(...errorHandler())
-                .then(function (success) {
+          }).then(...errorHandler({}))
+                .then(function (patched_body) {
+                        initialValues = patched_body;
+                        updateCurrentStudent(patched_body);
+                    }).catch(function (err){
                         setStatus(true);
-                        initialValues = values;
-                    })
+            })
                 .finally(() => {
                         setSubmitting(false);
                 });
@@ -70,15 +68,15 @@ function Person(props) {
 
     return (
         <Box>
-            {loading || currentPerson === null
+            {currentPerson === null
                 ?
                 (
 
                     <Box>
                         {
-                            ["100%", "100%", "100%", "100%", "100%", "100%"].map(value => {
+                            ["100%", "100%", "100%", "100%", "100%", "100%"].map((value, idx) => {
                                 return (
-                                    <Box py={0}><Skeleton variant="text" width={value} height="60px"></Skeleton></Box>);
+                                    <Box key={idx} py={0}><Skeleton variant="text" width={value} height="60px"></Skeleton></Box>);
                             })
                         }
                     </Box>
@@ -86,14 +84,12 @@ function Person(props) {
                 :
                 (
                         <form onSubmit={formik.handleSubmit}>
-                                        <TextField
+                                        <DirtyTextField
                                             label={t("id")}
                                             name="id"
                                             disabled
                                             className={classes.line}
-                                            value={formik.values["id"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
+                                            formik={formik}
                                             />
 
                                         <Box className={[classes.line, classes.composite]}>
@@ -101,30 +97,20 @@ function Person(props) {
                                                 label={t("name")}
                                                 style={{flex: 1}}
                                                 name="name"
-                                                value={formik.values["name"]}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
                                                 formik={formik}
                                                 helperText={formik.touched["name"] && formik.errors["name"]}
-                                                error={formik.status}
                                             />
                                             <DirtyTextField
                                                 label={t("surname1")}
                                                 style={{flex: 1}}
                                                 name="surname1"
                                                 formik={formik}
-                                                value={formik.values["surname1"]}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
                                             />
                                             <DirtyTextField
                                                 label={t("surname2")}
                                                 style={{flex: 1}}
                                                 formik={formik}
                                                 name="surname2"
-                                                value={formik.values["surname2"]}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
                                             />
                                         </Box>
 
@@ -135,11 +121,7 @@ function Person(props) {
                                             style={{flex: 1}}
                                                 formik={formik}
                                             name="email"
-                                            value={formik.values["email"]}
                                             helperText={formik.touched["email"] && formik.errors["email"]}
-                                            error={formik.errors["email"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
                                         />
                                     </Box>
 
@@ -149,9 +131,6 @@ function Person(props) {
                                                 formik={formik}
                                                 style={{flex: 4}}
                                                 name="address"
-                                                value={formik.values.address}
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
                                             />
                                             <DirtyTextField
                                                 id="standard-basic"
@@ -159,9 +138,6 @@ function Person(props) {
                                                 style={{flex: 2}}
                                                 formik={formik}
                                                 name="city"
-                                            value={formik.values.city}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
                                             />
                                             <DirtyTextField
                                                 id="standard-basic"
@@ -170,9 +146,6 @@ function Person(props) {
                                                 type="number"
                                                 style={{flex: 1}}
                                                 name="zip"
-                                            value={formik.values["zip"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
                                             />
                                         </Box>
 
@@ -183,9 +156,6 @@ function Person(props) {
                                                 style={{flex: 1}}
                                                 formik={formik}
                                                 name="dni"
-                                            value={formik.values["dni"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
                                             />
                                             <DirtyTextField
                                                 id="standard-basic"
@@ -194,9 +164,6 @@ function Person(props) {
                                                 style={{flex: 1}}
                                                 formik={formik}
                                                 name="phone"
-                                            value={formik.values["phone"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
                                             />
 
                                             <DirtyTextField
@@ -205,9 +172,10 @@ function Person(props) {
                                                 style={{flex: 1}}
                                                 formik={formik}
                                                 name="gender"
-                                            value={formik.values["gender"] === null? '': formik.values["gender"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
+                                                value={formik.values["gender"]}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        error={formik.status  || formik.errors["gender"] === true}
                                                 select>
                                                 <MenuItem value="m">male</MenuItem>
                                                 <MenuItem value="f">female</MenuItem>
@@ -226,12 +194,11 @@ function Person(props) {
                                                 type="date"
                                                 style={{flex: 1}}
                                                 name="birth_date"
-                                            value={formik.values["birth_date"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
                                                 InputLabelProps={{shrink: true}}/>
 
-                                            <CountrySelect formik={formik}/>
+                                            <DirtyCountrySelect formik={formik}/>
+                                            {// todo why not saves
+                                                 }
 
                                         </Box>
 
