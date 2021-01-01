@@ -2,16 +2,17 @@ import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import {Button, DialogActions, MenuItem, TextField} from "@material-ui/core";
 import countryList from "../_data/countries";
-import React from "react";
+import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Autocomplete, Skeleton} from "@material-ui/lab";
 import DirtyTextField from "./dirtytextfield.component";
 import {useFormik,} from 'formik';
 import * as yup from 'yup';
-import countries from "../_data/countries";
-import ContrySelect from "./contry-select.component";
 import CountrySelect from "./contry-select.component";
-
+import studentsService from "../_services/students.service"
+import {useErrorHandler} from "../_helpers/handle-response";
+import {authenticationService} from "../_services/auth.service";
+import {useNormik} from "../_helpers/normik";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -36,18 +37,36 @@ function Person(props) {
     const {t} = useTranslation();
     const loading = false;
     const classes = useStyles();
+    const errorHandler = useErrorHandler();
+    let initialValues = currentPerson===null? {}:currentPerson;
+    console.log(initialValues);
 
-    const formik = useFormik({
-        initialValues: currentPerson===null? {}:currentPerson,
+    const formik = useNormik({
+        initialValues: initialValues,
         validationSchema: yup.object({
                                 email: yup.string().email('Enter a valid email.'),  // todo
                                 name: yup.string().required('Required')
                             }),
         enableReinitialize: true,
-        onSubmit: (values) => {
-          alert(JSON.stringify(values, null, 2));
+        onSubmit: (values, {setStatus, setSubmitting}) => {
+            setStatus();
+
+            studentsService.patch({
+              id: initialValues["id"],
+              body: values,
+              initial_values: initialValues
+          }).then(...errorHandler())
+                .then(function (success) {
+                        setStatus(true);
+                        initialValues = values;
+                    })
+                .finally(() => {
+                        setSubmitting(false);
+                });
         }
     });
+
+
 
     return (
         <Box>
@@ -78,7 +97,7 @@ function Person(props) {
                                             />
 
                                         <Box className={[classes.line, classes.composite]}>
-                                            <DirtyTextField
+                                            <DirtyTextField  // todo move formik things up there
                                                 label={t("name")}
                                                 style={{flex: 1}}
                                                 name="name"
@@ -87,6 +106,7 @@ function Person(props) {
                                                 onBlur={formik.handleBlur}
                                                 formik={formik}
                                                 helperText={formik.touched["name"] && formik.errors["name"]}
+                                                error={formik.status}
                                             />
                                             <DirtyTextField
                                                 label={t("surname1")}
@@ -227,7 +247,6 @@ function Person(props) {
                                             <Button type="submit" disabled={formik.isSubmitting}>
                                                 {t("save")}
                                             </Button>
-
                                         </DialogActions>
                                     </form>
                 )

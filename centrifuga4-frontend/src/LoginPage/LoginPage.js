@@ -65,7 +65,7 @@ const LoginPage = (props) => {
             password: ''
         },
         validationSchema: yup.object({
-            username: yup.string().required(t("email_required")).email(t("invalid_email")),
+            username: yup.string().required(t("email_required")).email(t("invalid_email")),  // todo
             password: yup.string().required(t("password_required"))
         }),
         enableReinitialize: true,

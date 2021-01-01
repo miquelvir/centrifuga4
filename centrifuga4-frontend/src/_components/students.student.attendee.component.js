@@ -56,7 +56,7 @@ function Attendee({ children, value, index, title, currentStudent, ...other }) {
               ?
                   (<Box>
                         <Divider variant="middle" />
-                        <Box py={1}><Skeleton variant="text" width="35%" height="60px"></Skeleton></Box>
+                        <Box py={1}><Skeleton variant="text" width="35%" height="60px"/></Box>
                       </Box>)
                   :
                   (

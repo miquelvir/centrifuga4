@@ -22,10 +22,41 @@ export default function serviceFactory(resource){
                         ...{
                             'Content-Type': 'application/json',
                             'Cache-Control': 'no-cache'
-                        }, ...authHeader()
+                        }, ...authHeader()  // todo are auth headers needed for gets?
                     }
                 }).then(function (response) {
                         resolve(response.data);
+                    }).catch(function (err) {
+                        reject(err);
+                });
+            });
+        }
+
+        patch({id, body, initial_values = null}) {
+            if (initial_values !== null) {
+                for (const [key, value] of Object.entries(body)) {
+                  if (key in initial_values && initial_values[key] === value){
+                      delete body[key];  // unchanged value, no need to patch it
+                  }
+                }
+            }
+
+            if ("id" in body) {
+                delete body["id"];  // no id is to be sent in the body, since it is sent as url param
+            }
+            return new Promise(function (resolve, reject) {
+                axios({
+                    method: 'patch',
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    data: body,
+                    headers: {
+                        ...{
+                            'Content-Type': 'application/json',
+                            'Cache-Control': 'no-cache'
+                        }, ...authHeader()
+                    }
+                }).then(function (response) {
+                        resolve(response);
                     }).catch(function (err) {
                         reject(err);
                 });

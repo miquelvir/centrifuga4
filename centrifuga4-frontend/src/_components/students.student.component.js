@@ -59,8 +59,6 @@ export default function Student(props) {
     setValue(index);
   };
 
-  console.log(">>", currentStudent);
-
   let contacts = [1,2];
 
   return (

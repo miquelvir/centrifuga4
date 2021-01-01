@@ -52,12 +52,9 @@ const StudentsList = (props) => {
 
     const classes = useStyles();
 
-    const errorHandler = useErrorHandler();
-
     const [loading, setLoading] = useState(false);
 
     const onChangeSearchTerm = (e) => {
-        console.log(e.target.value);
         setSearchTerm(e.target.value);
     };
 

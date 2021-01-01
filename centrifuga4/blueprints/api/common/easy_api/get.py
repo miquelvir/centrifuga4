@@ -2,7 +2,7 @@ from flask import request, current_app
 from sqlalchemy.exc import InvalidRequestError
 
 from centrifuga4.auth_auth.action_need import GetPermission
-from centrifuga4.blueprints.api.common.easy_api.content_negotiation import produces
+from centrifuga4.blueprints.api.common.easy_api._content_negotiation import produces
 from centrifuga4.blueprints.api.common.easy_api._requires import EasyRequires
 from centrifuga4.blueprints.api.common.errors import NotFound, ResourceModelBadRequest, BaseBadRequest
 from centrifuga4.models._base import MyBase
