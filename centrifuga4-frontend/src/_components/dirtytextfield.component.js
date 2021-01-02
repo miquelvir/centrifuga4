@@ -6,9 +6,9 @@ import createStyles from "@material-ui/styles/createStyles";
 
 const useStyles = makeStyles(theme => (createStyles({
   root: dirty => ({
-    '& label.Mui-focused':  {color: dirty? '#ffcf3d': theme.palette.primary.main},
-    '& .MuiInput-underline:after': {borderBottomColor: dirty? '#ffcf3d': theme.palette.primary.main},
-      '& label':  {color: dirty? '#ffcf3d': "white"}}
+    '& label.Mui-focused':  {color: dirty? theme.palette.neutral.status.dirty: theme.palette.primary.main},
+    '& .MuiInput-underline:after': {borderBottomColor: dirty? theme.palette.neutral.status.dirty: theme.palette.primary.main},
+      '& label':  {color: dirty? theme.palette.neutral.status.dirty: theme.palette.neutral.emphasisText.medium}}
   )})));
 
 
@@ -23,8 +23,6 @@ const DirtyTextField = (props) => {
         onBlur: formik.handleBlur,
         error: formik.status  || formik.errors[name] === true
     }
-
-    console.log(formik.values, formik.values[name]);
 
     if ('InputLabelProps' in props ){
         return <TextField className={classes.root} {...props} {...formikProps}/>;

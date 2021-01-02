@@ -17,6 +17,7 @@ import {passwordResetService} from "../_services/password-reset.service";
 import {useSnackbar} from "notistack";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
+import {safe_username} from "../_yup/validators";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -66,7 +67,7 @@ const LoginPage = (props) => {
             password: ''
         },
         validationSchema: yup.object({
-            username: yup.string().required(t("email_required")).email(t("invalid_email")),  // todo
+            username: safe_username(t),
             password: yup.string().required(t("password_required"))
         }),
         enableReinitialize: true,

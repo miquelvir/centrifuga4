@@ -1,4 +1,4 @@
-from marshmallow import post_load, validates_schema, ValidationError, RAISE
+from marshmallow import post_load, validates_schema, ValidationError, RAISE, pre_load
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, fields, auto_field
 from marshmallow import fields
 import centrifuga4.models as models

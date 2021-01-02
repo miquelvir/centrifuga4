@@ -14,8 +14,8 @@ import {authenticationService as signupService} from "../_services/signup.servic
 import {useSnackbar} from "notistack";
 import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
-import {password_repetition, safe_password, safe_username} from "../_data/password_regex";
 import {useOnMount} from "../_helpers/on-mount";
+import {safe_password_repetition, safe_email, safe_password, safe_username} from "../_yup/validators";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,9 +62,9 @@ const SignupPage = (props) => {
         },
         validationSchema: yup.object({  // todo translate
             username: safe_username(t),
-            email: safe_username(t),
+            email: safe_email(t),
             password: safe_password(t),
-            password2: password_repetition(t),
+            password2: safe_password_repetition(t),
             name: yup.string().required(t("name_required")),
             surname1: yup.string().required(t("surname1_required")),
             surname2: yup.string().required(t("surname2_required"))

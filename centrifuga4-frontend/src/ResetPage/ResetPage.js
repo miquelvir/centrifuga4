@@ -13,9 +13,9 @@ import {themeContext} from "../_context/theme-context";
 import {useSnackbar} from "notistack";
 import {passwordResetService} from "../_services/password-reset.service";
 import i18next from "i18next";
-import { password_repetition, safe_password, safe_username } from "../_data/password_regex";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
+import {safe_password, safe_password_repetition, safe_username} from "../_yup/validators";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,7 +61,7 @@ const ResetPage = (props) => {
         validationSchema: yup.object({
             username: safe_username(t),
             password: safe_password(t),
-            password2: password_repetition(t)
+            password2: safe_password_repetition(t)
         }),
         enableReinitialize: true,
         onSubmit: ({username, password, password2}, {setStatus, setSubmitting}) => {

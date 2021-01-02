@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import useTheme from "@material-ui/core/styles/useTheme";
 import Attendee from "./students.student.attendee.component";
+import Contact from "./students.student.contact.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,7 +76,7 @@ export default function Student(props) {
                   <Tab label={t("attendee")} {...a11yProps(0)} />
                   {
                   contacts && contacts.map((contact, index) => (
-                  <Tab key={t("contact ") + (index+1)} label={t("contact ") + (index+1)} {...a11yProps(index)} />
+                  <Tab key={t("contact") + " " + (index+1)} label={t("contact") + " " + (index+1)} {...a11yProps(index)} />
                       ))}
                 </Tabs>
               </AppBar>
@@ -87,13 +88,22 @@ export default function Student(props) {
             <Attendee value={value}
                       index={0}
                       dir={theme.direction}
-                      title="attendee"
+                      title={t("attendee")}
                       currentStudent={currentStudent}
                       updateCurrentStudent={updateCurrentStudent}
             />
             {
               contacts && contacts.map((contact, index) => (
-                   <Attendee key={contact} value={value} index={index+1} dir={theme.direction} title={"contact " + (index + 1)}/>
+                  <Contact value={value}
+                      index={index+1}
+                            key={index
+                            // todo use id
+                            }
+                      dir={theme.direction}
+                            title={t("contact") + " " + (index + 1)}
+                      currentStudent={currentStudent}
+                      updateCurrentStudent={updateCurrentStudent}
+            />
                   ))}
 
             }

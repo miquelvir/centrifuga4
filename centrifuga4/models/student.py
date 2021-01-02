@@ -29,5 +29,3 @@ class Student(Person):
     guardians = db.relationship("Guardian",
                                 secondary="student_guardian",
                                 back_populates="students")
-
-

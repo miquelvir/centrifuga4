@@ -23,7 +23,7 @@ export default function Students() {
   const updateCurrentStudent = (new_body) => {
     console.log("updating", students, currentStudent, new_body);
     setCurrentStudent(new_body);
-    setStudents(students.map(student => student.id === new_body.id? new_body: student))
+    setStudents(students.map(student => student.id === new_body.id? new_body: student))  // todo use filter
   }
 
   return (

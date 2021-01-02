@@ -61,5 +61,10 @@
   "has_special": "must have at least 1 special character (e.g. %)",
   "no_plus": "can't contain '+'",
   "reset": "reset",
-  "save": "save"
+  "save": "save",
+  "birthdate": "birthdate",
+  "attendee": "student",
+  "contact": "contact",
+  "price_term": "price per term (€)",
+  "success": "success"
 }

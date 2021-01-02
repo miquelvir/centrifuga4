@@ -21,7 +21,7 @@ class Person(MyBase):
     email = db.Column(db.Text, nullable=True)
     phone = db.Column(db.Text, nullable=True)
     address = db.Column(db.Text, nullable=True)
-    zip = db.Column(db.Text, nullable=True)
+    zip = db.Column(db.Integer, nullable=True)
     city = db.Column(db.Text, nullable=True)
     dni = db.Column(db.Text, nullable=True)
     gender = db.Column(db.Text, nullable=True)
@@ -35,10 +35,17 @@ class Person(MyBase):
     # todo full_name no accents with collate https://docs.sqlalchemy.org/en/13/core/sqlelement.html#sqlalchemy.sql.expression.collate
 
 
-    def __init__(self, *args, **kwargs):
-        print("initing")
-        print(args, kwargs)
-        super().__init__(*args, **kwargs)
+    @validates('name', 'surname1', 'surname2', 'email', 'address', 'zip', 'gender', 'city')
+    def cleaner1(self, key, value):
+        return value.lower().strip()
+
+    @validates('dni', 'country_of_origin')
+    def cleaner2(self, key, value):
+        return value.upper().strip()
+
+    @validates('phone')
+    def cleaner3(self, key, value):
+        return value.lower().replace(' ', '')
 
     """@validates('name')
     def _validate_name(self, key, name):

@@ -41,26 +41,31 @@ function Person(props) {
     const formik = useNormik(true, {
         initialValues: initialValues,
         validationSchema: yup.object({
-                                email: yup.string().email('Enter a valid email.'),  // todo
-                                name: yup.string().required('Required')
+                                email: yup.string().email(t("invalid_email")),  // todo
+                                name: yup.string().required(t("name_required"))
                             }),
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
-            setStatus();
-            studentsService.patch({
-              id: initialValues["id"],
-              body: changedValues,
-              initial_values: initialValues
-          }).then(...errorHandler({}))
-                .then(function (patched_body) {
-                        initialValues = patched_body;
-                        updateCurrentStudent(patched_body);
-                    }).catch(function (err){
-                        setStatus(true);
-            })
-                .finally(() => {
-                        setSubmitting(false);
-                });
+            if (Object.keys(changedValues).length > 0){
+                setStatus();
+                    studentsService.patch({
+                      id: initialValues["id"],
+                      body: changedValues,
+                      initial_values: initialValues
+                  }).then(...errorHandler({snackbarSuccess:true}))
+                        .then(function (patched_body) {
+                                formik.resetForm(patched_body);
+                                updateCurrentStudent(patched_body);
+                            }).catch(function (err){
+                                setStatus(true);
+                    })
+                        .finally(() => {
+                                setSubmitting(false);
+                        });
+                    } else {
+                setSubmitting(false);
+            }
+
         }
     });
 
@@ -76,7 +81,9 @@ function Person(props) {
                         {
                             ["100%", "100%", "100%", "100%", "100%", "100%"].map((value, idx) => {
                                 return (
-                                    <Box key={idx} py={0}><Skeleton variant="text" width={value} height="60px"></Skeleton></Box>);
+                                    <Box key={idx} py={0}>
+                                        <Skeleton variant="text" width={value} height="60px"/>
+                                    </Box>);
                             })
                         }
                     </Box>
@@ -93,7 +100,7 @@ function Person(props) {
                                             />
 
                                         <Box className={[classes.line, classes.composite]}>
-                                            <DirtyTextField  // todo move formik things up there
+                                            <DirtyTextField
                                                 label={t("name")}
                                                 style={{flex: 1}}
                                                 name="name"
@@ -119,7 +126,7 @@ function Person(props) {
                                             label={t("email")}
                                             type="email"
                                             style={{flex: 1}}
-                                                formik={formik}
+                                            formik={formik}
                                             name="email"
                                             helperText={formik.touched["email"] && formik.errors["email"]}
                                         />
@@ -172,10 +179,6 @@ function Person(props) {
                                                 style={{flex: 1}}
                                                 formik={formik}
                                                 name="gender"
-                                                value={formik.values["gender"]}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        error={formik.status  || formik.errors["gender"] === true}
                                                 select>
                                                 <MenuItem value="m">male</MenuItem>
                                                 <MenuItem value="f">female</MenuItem>
@@ -196,9 +199,11 @@ function Person(props) {
                                                 name="birth_date"
                                                 InputLabelProps={{shrink: true}}/>
 
-                                            <DirtyCountrySelect formik={formik}/>
-                                            {// todo why not saves
-                                                 }
+                                            <DirtyCountrySelect
+                                                formik={formik}
+                                                name={"country_of_origin"}
+                                                label={t("country_of_origin")}
+                                            />
 
                                         </Box>
 
@@ -211,7 +216,7 @@ function Person(props) {
                                             >
                                                 {t("reset")}
                                             </Button>
-                                            <Button type="submit" disabled={formik.isSubmitting}>
+                                            <Button type="submit" disabled={!formik.dirty || formik.isSubmitting}>
                                                 {t("save")}
                                             </Button>
                                         </DialogActions>

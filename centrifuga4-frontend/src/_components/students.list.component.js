@@ -63,8 +63,6 @@ const StudentsList = (props) => {
         StudentsDataService
             .getAll(searchTerm, page)
             .then(function (res) {
-                    console.log("1");
-                    console.log(res);
                     setStudents(res["data"]);
                     setCount(res["_pagination"]["totalPages"]);
                 });
@@ -126,11 +124,10 @@ const StudentsList = (props) => {
                             <ListItemAvatar>
                                 <Avatar>{student.name.charAt(0).toUpperCase()}</Avatar>
                             </ListItemAvatar>
-                            <ListItemText id="name" primary={student.name}/>
-                            <Tooltip title={t("export .csv")}
-                                     aria-label={t("export student as .csv")}>
+                            <ListItemText id="name" primary={student.full_name}/>
+                            <Tooltip title={t("export") + " .csv"}>
                                 <ListItemSecondaryAction>
-                                    <IconButton edge="end" aria-label="export">
+                                    <IconButton edge="end" aria-label={t("export")}>
                                         <GetAppIcon/>
                                     </IconButton>
                                 </ListItemSecondaryAction>

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, ...other }) {
+function Contact({ children, value, index, title, currentStudent, updateCurrentStudent, ...other }) {
   const { t } = useTranslation();
   const loading = false;
   const classes = useStyles();
@@ -52,36 +52,6 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
 
               <Person currentPerson={currentStudent} updateCurrentStudent={updateCurrentStudent}/>
 
-              {loading || currentStudent === null
-              ?
-                  (<Box>
-                        <Divider variant="middle" />
-                        <Box py={1}><Skeleton variant="text" width="35%" height="60px"/></Box>
-                      </Box>)
-                  :
-                  (
-
-                          <Box py={2}>
-                            <Divider variant="middle" />
-                            <Box className={classes.line}>
-              <TextField
-                  id="standard-basic"
-                  label={t("price_term")}
-                  type="number"
-                  className={classes.sizeSmall}
-                  value={currentStudent["price_term"]}
-              />
-                          </Box>
-
-                          </Box>
-              )
-              }
-
-              {/**<Box className={classes.fab}>
-                      <Fab color="primary" aria-label="add">
-                        <SaveIcon />
-                      </Fab>
-              </Box>*/}
             </Box>
         </Box>
       )}
@@ -89,10 +59,10 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
   );
 }
 
-Attendee.propTypes = {
+Contact.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
 
-export default Attendee;
+export default Contact;

@@ -23,6 +23,9 @@ export const lightTheme = createMuiTheme({
         medium: '#00000098',
         low: '#0000005E',
       },
+      status: {
+        dirty: '#ffcf3d'
+      }
     }
   }
 })
@@ -50,6 +53,9 @@ export const darkTheme = createMuiTheme({
         medium: '#ffffff98',
         low: '#ffffff5E',
       },
+      status: {
+        dirty: '#ffcf3d'
+      }
     }
   }
 })

@@ -62,5 +62,10 @@
   "has_special": "ha de tenir 1 caràcter especial (p.ex. %) com a mínim",
   "no_plus": "no pot contenir '+'",
   "reset": "descartar",
-  "save": "guardar"
+  "save": "guardar",
+  "birthdate": "data de naixement",
+  "attendee": "estudiant",
+  "contact": "contacte",
+  "price_term": "preu per trimestre (€)",
+  "success": "fet"
 }

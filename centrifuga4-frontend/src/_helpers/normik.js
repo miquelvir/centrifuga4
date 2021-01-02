@@ -23,7 +23,8 @@ export function useNormik(onlyChangedValuesOnSubmit, props) {
             let normalizedValues = {};
             for (const [key, value] of Object.entries(values)) {  // todo how to make clean
                 const normalizedValue = value === ''? null : value;
-                if (!onlyChangedValuesOnSubmit || (onlyChangedValuesOnSubmit && normalizedValue !== originalInitialValues[key])){
+                if (!onlyChangedValuesOnSubmit ||
+                    (onlyChangedValuesOnSubmit && normalizedValue !== originalInitialValues[key] && !Array.isArray(originalInitialValues[key]))){
                   normalizedValues[key] = normalizedValue;
                 }
 

@@ -11,8 +11,13 @@ export function useErrorHandler() {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const {t} = useTranslation();
 
-    const successHandler = (res) => {
+    const successHandler = (res, snackbarSuccess) => {
+        if (snackbarSuccess) enqueueSnackbar(t("success"), {variant: "success"});
         return Promise.resolve(res);
+    }
+
+    const successHandlerFactory = (snackbarSuccess) => {
+        return (res) => successHandler(res, snackbarSuccess)
     }
 
     const failureHandler401 = (res) => {
@@ -126,8 +131,10 @@ export function useErrorHandler() {
                 handle403 = true,
                 handle400 = true,
                 errorOut = false,
-                reportUnexpected = true
+                reportUnexpected = true,
+                snackbarSuccess = false
             }) => {
-        return [successHandler, failureHandlerFactory(handle401, handle403, handle400, errorOut, reportUnexpected)]
+        return [successHandlerFactory(snackbarSuccess),
+                failureHandlerFactory(handle401, handle403, handle400, errorOut, reportUnexpected)]
     };
 }
