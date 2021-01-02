@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme) => ({
 
 function Person(props) {
     const currentPerson = props.currentPerson;
-    const updateCurrentStudent = props.updateCurrentStudent;
+    const patchService = props.patchService;
+    const updateCurrentPerson = props.updateCurrentStudent;
     const {t} = useTranslation();
     const classes = useStyles();
     const errorHandler = useErrorHandler();
@@ -48,20 +49,22 @@ function Person(props) {
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
             if (Object.keys(changedValues).length > 0){
                 setStatus();
-                    studentsService.patch({
+                    patchService.patch({
                       id: initialValues["id"],
                       body: changedValues,
                       initial_values: initialValues
                   }).then(...errorHandler({snackbarSuccess:true}))
                         .then(function (patched_body) {
                                 formik.resetForm(patched_body);
-                                updateCurrentStudent(patched_body);
+                                updateCurrentPerson(patched_body);
                             }).catch(function (err){
                                 setStatus(true);
                     })
                         .finally(() => {
                                 setSubmitting(false);
                         });
+
+
                     } else {
                 setSubmitting(false);
             }

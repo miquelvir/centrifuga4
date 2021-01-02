@@ -66,7 +66,7 @@ def add_students():
                          name="maria%s-%s" % (idx, idx2),
                          surname1="lópez%s-%s" % (idx, idx2),
                          surname2="suárez%s-%s" % (idx, idx2),
-                         email="mls%s_%sgmail.com" % (idx, idx2),
+                         email="mls%s_%s@gmail.com" % (idx, idx2),
                         relation=choice(("mother", "father", "grandmother", "grandfather", "tutor")))
             s.guardians.append(g)
             centrifuga4.db.session.add(g)

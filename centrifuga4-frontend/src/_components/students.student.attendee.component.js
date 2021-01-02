@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, ...other }) {
+function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, patchService, ...other }) {
   const { t } = useTranslation();
   const loading = false;
   const classes = useStyles();
@@ -50,7 +50,7 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
             <Box px={2}>
               <h1>{title}</h1>
 
-              <Person currentPerson={currentStudent} updateCurrentStudent={updateCurrentStudent}/>
+              <Person currentPerson={currentStudent} updateCurrentStudent={updateCurrentStudent} patchService={patchService}/>
 
               {loading || currentStudent === null
               ?

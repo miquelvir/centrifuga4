@@ -64,7 +64,7 @@
   "save": "save",
   "birthdate": "birthdate",
   "attendee": "student",
-  "contact": "contact",
+  "contact": "guardian",
   "price_term": "price per term (€)",
   "success": "success"
 }

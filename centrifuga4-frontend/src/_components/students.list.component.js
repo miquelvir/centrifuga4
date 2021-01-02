@@ -16,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
 import LoadingBackdrop from "./loadingBackdrop.component";
+import {useErrorHandler} from "../_helpers/handle-response";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,6 +51,7 @@ const StudentsList = (props) => {
 
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
+    const errorHandler = useErrorHandler();
 
     const classes = useStyles();
 
@@ -62,6 +64,7 @@ const StudentsList = (props) => {
     function search() {
         StudentsDataService
             .getAll(searchTerm, page)
+            .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
                     setStudents(res["data"]);
                     setCount(res["_pagination"]["totalPages"]);

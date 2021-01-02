@@ -8,7 +8,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import useTheme from "@material-ui/core/styles/useTheme";
 import Attendee from "./students.student.attendee.component";
-import Contact from "./students.student.contact.component";
+import Guardian from "./students.student.guardian.component";
+import StudentsDataService from "../_services/students.service";
+import GuardiansDataService from "../_services/guardians.service";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,7 +62,7 @@ export default function Student(props) {
     setValue(index);
   };
 
-  let contacts = [1,2];
+  const guardians = currentStudent === null? []: currentStudent.guardians;
 
   return (
     <Paper elevation={3} square className={classes.contentPanel}>
@@ -75,7 +77,7 @@ export default function Student(props) {
                 >
                   <Tab label={t("attendee")} {...a11yProps(0)} />
                   {
-                  contacts && contacts.map((contact, index) => (
+                  guardians && guardians.map((contact, index) => (
                   <Tab key={t("contact") + " " + (index+1)} label={t("contact") + " " + (index+1)} {...a11yProps(index)} />
                       ))}
                 </Tabs>
@@ -90,19 +92,18 @@ export default function Student(props) {
                       dir={theme.direction}
                       title={t("attendee")}
                       currentStudent={currentStudent}
+                      patchService={StudentsDataService}
                       updateCurrentStudent={updateCurrentStudent}
             />
             {
-              contacts && contacts.map((contact, index) => (
-                  <Contact value={value}
-                      index={index+1}
-                            key={index
-                            // todo use id
-                            }
-                      dir={theme.direction}
+              guardians && guardians.map((guardian, index) => (
+                  <Guardian value={value}
+                            index={index+1}
+                            key={guardian}
+                            dir={theme.direction}
                             title={t("contact") + " " + (index + 1)}
-                      currentStudent={currentStudent}
-                      updateCurrentStudent={updateCurrentStudent}
+                            guardianId={guardian}
+                            patchService={GuardiansDataService}
             />
                   ))}
 
