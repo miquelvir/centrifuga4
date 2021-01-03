@@ -7,14 +7,15 @@ export default function serviceFactory(resource){
     return class {
         resource = resource;
 
-        getAll(likeSearchText=null, page = 1) {
+        getAll(likeSearchText=null, page = 1, include=null) {
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'get',
                     url: `${BACKEND_URL}/api/${API_VERSION}/${resource}`,
                     params: {
                         "filter.full_name.like": likeSearchText === null? null: `%${likeSearchText}%`,
-                        "page": page
+                        "page": page,
+                        "include": include === null? null: JSON.stringify(include)
                     },
                     headers: {
                         ...{
@@ -30,11 +31,14 @@ export default function serviceFactory(resource){
             });
         }
 
-        getOne(id) {
+        getOne(id, include=null) {
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'get',
                     url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    params: {
+                        "include": include === null? null: JSON.stringify(include)
+                    },
                     headers: {
                         ...{
                             'Content-Type': 'application/json',

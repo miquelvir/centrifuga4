@@ -17,12 +17,13 @@ import {useErrorHandler} from "../_helpers/handle-response";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    flexGrow: 1,
+    flexGrow: 1
   },
   contentPanel: {
     flex: 1,
     overflow: "auto",
-    boxSizing: "border-box"
+    boxSizing: "border-box",
+      height: '80vh' // todo proper
   },
   fullWidth: {
     width: "100%"

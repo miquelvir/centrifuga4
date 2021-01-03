@@ -1,5 +1,6 @@
 from flask import request, current_app
 from sqlalchemy.exc import InvalidRequestError
+import json
 
 from centrifuga4.auth_auth.action_need import GetPermission
 from centrifuga4.blueprints.api.common.easy_api._content_negotiation import produces
@@ -25,6 +26,7 @@ class _ImplementsGet:
     def _parse_args(self, url_args):
         filters = []
         sort = None
+        include = None
         page = 1
         for k, v in url_args.items():
             k = k.split('.', 2)
@@ -45,47 +47,62 @@ class _ImplementsGet:
                 except KeyError:
                     raise BaseBadRequest("Uknown field '%s'" % field)
 
-            elif k == "sort":
+            elif k[0] == "sort":
                 sort = self.model.get_field(v)  # todo
             elif k[0] == "page":
                 try:
                     page = int(v)
                 except ValueError:
                     raise BaseBadRequest("Page is not a valid integer")
+            elif k[0] == "include":
+                if include is None:
+                    include = [self.model.get_field(f) for f in json.loads(v)]  # todo to json?
+                else:
+                    raise BaseBadRequest("include can only appear once, an does not take a dot parameter")
             else:
                 raise BaseBadRequest("Invalid query element found.", **{k[0]: "Query item not accepted."})
-        return filters, sort, page
+        return filters if len(filters) > 0 else None, sort, page, include
 
     @safe_get
     @produces(("application/json", "text/csv"))  # content negotiation (and automatic creation of raw csv from json)
     def get(self, *args, id_=None, many=False, **kwargs):
-        filters, sort, page = self._parse_args(request.args)  # todo sort
+        filters, sort, page, include = self._parse_args(request.args)
         do_pagination = True
 
         if many:
             try:
+                query = self.model.query
+
+                if include:
+                    query = query.with_entities(*include)
+
+                if filters:
+                    query = query.filter(*filters)
+
+                if sort:
+                    query = query.order_by(sort)
+
                 if do_pagination:
-                    if sort:
-                        pagination = self.model.query.filter(*filters).sort_by(sort).paginate(page,
-                                                                                per_page=current_app.config[
-                                                                                    "API_PAGINATION"],
-                                                                                error_out=True)
-                    else:
-                        pagination = self.model.query.filter(*filters).paginate(page,
-                                                                            per_page=current_app.config["API_PAGINATION"],
-                                                                            error_out=True)
+                    pagination = query.paginate(page, per_page=current_app.config["API_PAGINATION"], error_out=True)
                     result = pagination.items
-                else:  # todo sort
-                    result = self.model.query.filter(*filters).all()
+                else:
+                    query.all()
+
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
-        else:
+        else:  # todo include
             if not id_:
                 raise BaseBadRequest("id_ must be given")
 
             try:
-                result = self.model.query.filter(self.model.id == id_, *filters).first()
+                query = self.model.query.filter(self.model.id == id_,
+                                                *(filters if filters else []))
+
+                if include:
+                    query = query.with_entities(*include)
+
+                result = query.first()
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 

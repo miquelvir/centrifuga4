@@ -2,6 +2,7 @@ import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import SendIcon from '@material-ui/icons/Send';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from 'clsx';
 import EmailIcon from '@material-ui/icons/Email';
@@ -151,7 +152,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment }) {
         </Tooltip>
         <Tooltip title={t("send_receipt")} aria-label={t("send_receipt")}>
           <IconButton aria-label={t("send_receipt")}>
-            <EmailIcon />
+            <SendIcon />
           </IconButton>
         </Tooltip>
         <IconButton

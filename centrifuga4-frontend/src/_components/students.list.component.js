@@ -37,11 +37,16 @@ const useStyles = makeStyles((theme) => ({
     },
     pagination: {
         margin: '30px'
+    },
+    avatar: {},
+    selectedAvatar: {
+        backgroundColor: theme.palette.primary.dark
     }
 }));
 
 const StudentsList = (props) => {
-    const setCurrentStudent = props.setCurrentStudent;
+    const setCurrentStudentId = props.setCurrentStudentId;
+    const currentStudentId = props.currentStudentId;
 
     const [students, setStudents] = useState([]);
 
@@ -63,7 +68,7 @@ const StudentsList = (props) => {
 
     function search() {
         StudentsDataService
-            .getAll(searchTerm, page)
+            .getAll(searchTerm, page, ['id', 'full_name'])
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
                     setStudents(res["data"]);
@@ -122,10 +127,10 @@ const StudentsList = (props) => {
                     <div key={student["id"]}>
                         <ListItem key={student["id"]} button
                                   onClick={() => {
-                                      setCurrentStudent(student['id']);
+                                      setCurrentStudentId(student['id']);
                                   }}>
                             <ListItemAvatar>
-                                <Avatar>{student.name.charAt(0).toUpperCase()}</Avatar>
+                                <Avatar className={student["id"] === currentStudentId? classes.selectedAvatar: classes.avatar}>{student['full_name'].charAt(0).toUpperCase()}</Avatar>
                             </ListItemAvatar>
                             <ListItemText id="name" primary={student.full_name}/>
                             <Tooltip title={t("export") + " .csv"}>

@@ -25,7 +25,9 @@ export default function Students() {
         <Grid item xs={4}>
           <h1>{t("students")}</h1>
           <StudentsList
-            setCurrentStudent={setCurrentStudentId}/>
+            setCurrentStudentId={setCurrentStudentId}
+            currentStudentId={currentStudentId}
+          />
         </Grid>
 
         <Grid item xs={8}>
