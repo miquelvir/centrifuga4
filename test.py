@@ -31,3 +31,6 @@ https://flask-smorest.readthedocs.io/en/latest/openapi.html
 
 # todo csrf token in post/patch/etc
 
+# todo maybe remove content negotiation as we know it and create proper csv resources
+
+# todo primary accent on student selected home page

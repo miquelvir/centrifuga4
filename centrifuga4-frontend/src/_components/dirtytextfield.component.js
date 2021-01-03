@@ -6,10 +6,11 @@ import createStyles from "@material-ui/styles/createStyles";
 
 const useStyles = makeStyles(theme => (createStyles({
   root: dirty => ({
-    '& label.Mui-focused':  {color: dirty? theme.palette.neutral.status.dirty: theme.palette.primary.main},
-    '& .MuiInput-underline:after': {borderBottomColor: dirty? theme.palette.neutral.status.dirty: theme.palette.primary.main},
-      '& label':  {color: dirty? theme.palette.neutral.status.dirty: theme.palette.neutral.emphasisText.medium}}
-  )})));
+          '& label.Mui-focused':  {color: dirty? theme.palette.neutral.status.dirty: theme.palette.primary.main},
+          '& .MuiInput-underline:after': {borderBottomColor: dirty? theme.palette.neutral.status.dirty: theme.palette.primary.main},
+          '& label':  {color: dirty? theme.palette.neutral.status.dirty: theme.palette.neutral.emphasisText.medium}
+  })
+})));
 
 
 const DirtyTextField = (props) => {
@@ -21,13 +22,15 @@ const DirtyTextField = (props) => {
         value: formik.values[name] === undefined? '': formik.values[name],  // todo why is this being called with undefined tho
         onChange: formik.handleChange,
         onBlur: formik.handleBlur,
-        error: formik.status  || formik.errors[name] === true
+        error: formik.status  || formik.errors[name] === true,
+        helperText: formik.touched[name] && formik.errors[name]
     }
 
     if ('InputLabelProps' in props ){
         return <TextField className={classes.root} {...props} {...formikProps}/>;
     } else {
         return <TextField className={classes.root}
+                          textareaStyle={props.multiline !== null? classes.root:null}
                           InputLabelProps={{shrink: formik.values[name] !== ''}}
                           {...props}
                             {...formikProps}/>;

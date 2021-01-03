@@ -36,3 +36,10 @@ const safe_username_email = (t) => (
 
 export const safe_username = safe_username_email;
 export const safe_email = safe_username_email;
+
+export const one_of = (t, options) => yup.string()
+                                .test(
+                                  'oneOfRequired',
+                                  `${t("one_of")}: ${options.toString()}`,
+                                  v => options.includes(v)
+                                )

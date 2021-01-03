@@ -8,6 +8,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import Divider from "@material-ui/core/Divider";
 import Person from "./students.student.person.component";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,6 +71,9 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
                   type="number"
                   className={classes.sizeSmall}
                   value={currentStudent["price_term"]}
+                  InputProps={{
+                                                    endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                                                  }}
               />
                           </Box>
 

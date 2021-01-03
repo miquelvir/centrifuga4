@@ -108,7 +108,6 @@ function Person(props) {
                                                 style={{flex: 1}}
                                                 name="name"
                                                 formik={formik}
-                                                helperText={formik.touched["name"] && formik.errors["name"]}
                                             />
                                             <DirtyTextField
                                                 label={t("surname1")}
@@ -183,10 +182,9 @@ function Person(props) {
                                                 formik={formik}
                                                 name="gender"
                                                 select>
-                                                <MenuItem value="m">male</MenuItem>
-                                                <MenuItem value="f">female</MenuItem>
-                                                <MenuItem value="nb">non binary / not represented by any of the
-                                                    above</MenuItem>
+                                                <MenuItem value="m">{t("male")}</MenuItem>
+                                                <MenuItem value="f">{t("female")}</MenuItem>
+                                                <MenuItem value="nb">{t("nb")}</MenuItem>
                                             </DirtyTextField>
 
                                         </Box>

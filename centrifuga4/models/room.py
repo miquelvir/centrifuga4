@@ -1,7 +1,8 @@
 from centrifuga4 import db
+from centrifuga4.models._base import MyBase
 
 
-class Room(db.Model):
+class Room(MyBase):
     __tablename__ = "room"
 
     id = db.Column(db.Text,

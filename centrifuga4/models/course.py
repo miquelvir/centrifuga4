@@ -1,4 +1,5 @@
 from centrifuga4 import db
+from centrifuga4.models._base import MyBase
 
 db.Table("teacher_course",
          db.Column("teacher_id", db.Text, db.ForeignKey('teacher.id')),
@@ -15,7 +16,7 @@ db.Table("room_course",
          db.Column("course_id", db.Text, db.ForeignKey('course.id')))
 
 
-class Course(db.Model):
+class Course(MyBase):
     __tablename__ = "course"
     __mapper_args__ = {
         'polymorphic_identity': "course"

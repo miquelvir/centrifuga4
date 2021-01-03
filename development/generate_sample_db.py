@@ -1,5 +1,7 @@
+import datetime
+
 import centrifuga4
-from centrifuga4.models import Student, User, Guardian, Need
+from centrifuga4.models import Student, User, Guardian, Need, Payment
 from random import randint, choice
 
 
@@ -70,6 +72,14 @@ def add_students():
                         relation=choice(("mother", "father", "grandmother", "grandfather", "tutor")))
             s.guardians.append(g)
             centrifuga4.db.session.add(g)
+
+        for idx2 in range(randint(0, 3)):
+            p = Payment(id=Payment.generate_new_id(),
+                        quantity=randint(0, 150),
+                        method=choice(('cash', 'bank-transfer')),
+                        date=datetime.date(randint(2019, 2020), randint(1, 12), randint(1, 28)),
+                        concept=choice(("violin payment", "new payment", "recurring payment", "love ya")))
+            s.payments.append(p)
 
         centrifuga4.db.session.add(s)
 

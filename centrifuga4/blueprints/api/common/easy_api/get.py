@@ -24,7 +24,7 @@ class _ImplementsGet:
 
     def _parse_args(self, url_args):
         filters = []
-        sort = {}
+        sort = None
         page = 1
         for k, v in url_args.items():
             k = k.split('.', 2)
@@ -45,11 +45,8 @@ class _ImplementsGet:
                 except KeyError:
                     raise BaseBadRequest("Uknown field '%s'" % field)
 
-            elif k[0] == "sort":
-                try:
-                    sort[k[1]] = v  # todo
-                except IndexError:
-                    raise BaseBadRequest("Sort not used properly")  # todo
+            elif k == "sort":
+                sort = self.model.get_field(v)  # todo
             elif k[0] == "page":
                 try:
                     page = int(v)
@@ -68,11 +65,17 @@ class _ImplementsGet:
         if many:
             try:
                 if do_pagination:
-                    pagination = self.model.query.filter(*filters).paginate(page,
+                    if sort:
+                        pagination = self.model.query.filter(*filters).sort_by(sort).paginate(page,
+                                                                                per_page=current_app.config[
+                                                                                    "API_PAGINATION"],
+                                                                                error_out=True)
+                    else:
+                        pagination = self.model.query.filter(*filters).paginate(page,
                                                                             per_page=current_app.config["API_PAGINATION"],
                                                                             error_out=True)
                     result = pagination.items
-                else:
+                else:  # todo sort
                     result = self.model.query.filter(*filters).all()
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)

@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 
 const StudentsList = (props) => {
     const setCurrentStudent = props.setCurrentStudent;
-    const setStudents = props.setStudents;
-    const students = props.students;
+
+    const [students, setStudents] = useState([]);
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -122,7 +122,7 @@ const StudentsList = (props) => {
                     <div key={student["id"]}>
                         <ListItem key={student["id"]} button
                                   onClick={() => {
-                                      setCurrentStudent(student);
+                                      setCurrentStudent(student['id']);
                                   }}>
                             <ListItemAvatar>
                                 <Avatar>{student.name.charAt(0).toUpperCase()}</Avatar>

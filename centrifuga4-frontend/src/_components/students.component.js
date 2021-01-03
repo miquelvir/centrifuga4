@@ -17,13 +17,7 @@ export default function Students() {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const [students, setStudents] = useState([]);
-  const [currentStudent, setCurrentStudent] = useState(null);
-
-  const updateCurrentStudent = (new_body) => {
-    setCurrentStudent(new_body);
-    setStudents(students.map(student => student.id === new_body.id? new_body: student))  // todo use filter
-  }
+  const [currentStudentId, setCurrentStudentId] = useState(null);
 
   return (
     <div className={classes.root}>
@@ -31,15 +25,12 @@ export default function Students() {
         <Grid item xs={4}>
           <h1>{t("students")}</h1>
           <StudentsList
-            setCurrentStudent={setCurrentStudent}
-            students={students}
-            setStudents={setStudents}/>
+            setCurrentStudent={setCurrentStudentId}/>
         </Grid>
 
         <Grid item xs={8}>
           <Student
-            currentStudent={currentStudent}
-            updateCurrentStudent={updateCurrentStudent}
+            currentStudentId={currentStudentId}
           />
         </Grid>
       </Grid>

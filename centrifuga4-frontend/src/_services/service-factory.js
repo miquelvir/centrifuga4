@@ -49,6 +49,27 @@ export default function serviceFactory(resource){
             });
         }
 
+        getSome(ids, sortOn=null) {
+            let params = {};
+            if (sortOn !== null) params["sort"] = sortOn;
+            return Promise.all(ids.map(id => (new Promise(function (resolve, reject) {
+                axios({
+                    method: 'get',
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    params: params,
+                    headers: {
+                        ...{
+                            'Content-Type': 'application/json',
+                            'Cache-Control': 'no-cache'
+                        }, ...authHeader()  // todo are auth headers needed for gets?
+                    }
+                }).then(function (response) {
+                    resolve(response.data);
+                }).catch(function (err) {
+                    reject(err);
+                });
+            }))));
+        }
         patch({id, body, initial_values = null}) {
             if (initial_values !== null) {
                 for (const [key, value] of Object.entries(body)) {
@@ -74,6 +95,25 @@ export default function serviceFactory(resource){
                     }
                 }).then(function (response) {
                         resolve(response.data);
+                    }).catch(function (err) {
+                        reject(err);
+                });
+            });
+        }
+
+        delete(id) {
+            return new Promise(function (resolve, reject) {
+                axios({
+                    method: 'delete',
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    headers: {
+                        ...{
+                            'Content-Type': 'application/json',
+                            'Cache-Control': 'no-cache'
+                        }, ...authHeader()
+                    }
+                }).then(function (response) {
+                        resolve(response);
                     }).catch(function (err) {
                         reject(err);
                 });
