@@ -7,9 +7,15 @@ import {makeStyles} from "@material-ui/core/styles";
 import PaymentsDataService from "../_services/payments.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import PaymentCard from "./students.student.payments.payment.component";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from '@material-ui/icons/Add';
+import {Skeleton} from "@material-ui/lab";
 
+const getDefaultValues = () => {
+    const date = new Date();
+    const dd = date.getDate();
+    const mm = date.getMonth() + 1; //Month from 0 to 11
+    const yyyy = date.getFullYear();
+    return {'id': null, 'date': `${yyyy}-${mm<=9 ? '0' + mm : mm}-${dd <= 9 ? '0' + dd : dd}`, 'quantity': null, 'concept': null, 'method': null}
+}
 const useStyles = makeStyles((theme) => ({
   root: {
 
@@ -24,22 +30,30 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: theme.spacing(1)
   },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-    backgroundColor: theme.palette.primary.main
-  },
   composite: {display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Payments({ children, value, index, title, paymentIds, deletePaymentFromStudent, ...other }) {
+function Payments({ children, value, index, title, paymentIds, deletePaymentFromStudent, newPayment, addPaymentId, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
+  const loading = paymentIds === null;
 
-  const [payments, setPayments] = useState([])
+  const [payments, setPayments] = useState([]);
+  const [newPaymentCard, setNewPaymentCard] = useState(false);
+
+  useEffect(() => {
+    if (newPayment === 0) {
+      setNewPaymentCard(false);
+    } else {
+      setNewPaymentCard(true);
+    }
+  }, [newPayment]);
+
+  useEffect(()=>{
+    setNewPaymentCard(false);
+  }, [payments])
 
   const updatePayment = (id, body) => {
     setPayments(payments.map(payment => {
@@ -53,21 +67,20 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
         .then(...errorHandler({snackbarSuccess:true}))
         .then(function (r) {
              deletePaymentFromStudent(id);
-             // setPayments(payments.filter(payment => payment.id !== id));  // todo why needed
         });
   }
 
   useEffect(() => {
-    console.log("changeeeed!", paymentIds);
+    if (paymentIds === null) return;
+
     if (paymentIds.length === 0){
       setPayments([]);
     } else {
-      console.log(paymentIds);
       PaymentsDataService
             .getSome(paymentIds)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
-                    setPayments(res.map(res => res["data"]).sort((p1, p2) => p1.date.localeCompare(p2.date)));
+                    setPayments(res.map(res => res["data"]["data"]).sort((p1, p2) => p1.date.localeCompare(p2.date)));
                 });
     }
   }, [paymentIds])
@@ -92,13 +105,22 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
                 )
               }
 
-              {payments.length === 0 &&
-                <Typography>{t("no_payments")}</Typography>
+              {newPaymentCard &&
+                <PaymentCard payment={getDefaultValues()}
+                             updatePayment={updatePayment}
+                             deletePayment={(_) => {setNewPaymentCard(false)}}
+                            newPayment={true}
+                             student_id={student_id}
+                addPaymentId={addPaymentId}/>
               }
 
-              <Fab className={classes.fab}>
-              <AddIcon/>
-            </Fab>
+              {loading &&
+                <Skeleton width="100%" height="250px"/>  // todo we can do better
+              }
+
+              {!loading && payments.length === 0 && !newPaymentCard &&
+                <Typography>{t("no_payments")}</Typography>
+              }
             </Box>
         </Box>
       )}

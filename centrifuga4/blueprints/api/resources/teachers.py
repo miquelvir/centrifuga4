@@ -7,7 +7,6 @@ from centrifuga4.schemas.schemas import TeacherSchema
 class TeachersRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
-               easy.ImplementsPostOne,
                easy.ImplementsDeleteOne):
     schema = TeacherSchema
     model = Teacher
@@ -15,6 +14,8 @@ class TeachersRes(easy.EasyResource,
 
 
 class TeachersCollectionRes(easy.EasyResource,
+
+                            easy.ImplementsPostOne,
                          easy.ImplementsGetCollection):
     schema = TeacherSchema
     model = Teacher

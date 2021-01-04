@@ -142,14 +142,12 @@ function Person(props) {
                                                 name="address"
                                             />
                                             <DirtyTextField
-                                                id="standard-basic"
                                                 label={t("city")}
                                                 style={{flex: 2}}
                                                 formik={formik}
                                                 name="city"
                                             />
                                             <DirtyTextField
-                                                id="standard-basic"
                                                 label={t("zip")}
                                                 formik={formik}
                                                 type="number"
@@ -160,14 +158,12 @@ function Person(props) {
 
                                         <Box className={[classes.line, classes.composite]}>
                                             <DirtyTextField
-                                                id="standard-basic"
                                                 label={t("dni")}
                                                 style={{flex: 1}}
                                                 formik={formik}
                                                 name="dni"
                                             />
                                             <DirtyTextField
-                                                id="standard-basic"
                                                 label={t("phone")}
                                                 type="tel"
                                                 style={{flex: 1}}
@@ -176,7 +172,6 @@ function Person(props) {
                                             />
 
                                             <DirtyTextField
-                                                id="standard-basic"
                                                 label={t("gender")}
                                                 style={{flex: 1}}
                                                 formik={formik}
@@ -192,7 +187,6 @@ function Person(props) {
                                         <Box className={[classes.line, classes.composite]}>
 
                                             <DirtyTextField
-                                                id="standard-basic"
                                                 label={t("birthdate")}
                                                 formik={formik}
                                                 type="date"

@@ -3,9 +3,10 @@ import {API_VERSION, BACKEND_URL} from "../config";
 
 const axios = require('axios');  // todo default headers
 
-export default function serviceFactory(resource){
+export default function serviceFactory(resource, subresource=null){  // todo subresource for all methods?
     return class {
         resource = resource;
+        subresource = subresource;
 
         getAll(likeSearchText=null, page = 1, include=null) {
             return new Promise(function (resolve, reject) {
@@ -68,7 +69,7 @@ export default function serviceFactory(resource){
                         }, ...authHeader()  // todo are auth headers needed for gets?
                     }
                 }).then(function (response) {
-                    resolve(response.data);
+                    resolve(response);
                 }).catch(function (err) {
                     reject(err);
                 });
@@ -99,6 +100,28 @@ export default function serviceFactory(resource){
                     }
                 }).then(function (response) {
                         resolve(response.data);
+                    }).catch(function (err) {
+                        reject(err);
+                });
+            });
+        }
+
+        post(body, subresourcId=null) {
+            if ("id" in body) delete body["id"];  // no id is to be sent in the body, since it is sent as url param
+
+            return new Promise(function (resolve, reject) {
+                axios({
+                    method: 'post',
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}${subresource !== null? `/${subresourcId}/${subresource}`: ''}`,
+                    data: body,
+                    headers: {
+                        ...{
+                            'Content-Type': 'application/json',
+                            'Cache-Control': 'no-cache'
+                        }, ...authHeader()
+                    }
+                }).then(function (res) {
+                        resolve(res.data);
                     }).catch(function (err) {
                         reject(err);
                 });

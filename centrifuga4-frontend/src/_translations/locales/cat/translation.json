@@ -83,7 +83,12 @@
   "cash": "efectiu",
   "method": "mètode",
   "import": "import",
-  "import_required": "import is required",
+  "import_required": "cal l'import",
   "date": "data",
-  "concept": "concepte"
+  "concept": "concepte",
+  "new_payment": "nou pagament",
+  "create": "crear",
+  "field_required": "cal omplir el camp",
+  "date_required": "cal la data",
+  "new_guardian": "nou contacte"
 }

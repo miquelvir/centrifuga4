@@ -7,7 +7,6 @@ from centrifuga4.schemas.schemas import ScheduleSchema
 class SchedulesRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
-               easy.ImplementsPostOne,
                easy.ImplementsDeleteOne):
     schema = ScheduleSchema
     model = Schedule
@@ -15,6 +14,8 @@ class SchedulesRes(easy.EasyResource,
 
 
 class SchedulesCollectionRes(easy.EasyResource,
+
+                             easy.ImplementsPostOne,
                          easy.ImplementsGetCollection):
     schema = ScheduleSchema
     model = Schedule

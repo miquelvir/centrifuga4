@@ -1,36 +1,28 @@
 import {useTranslation} from "react-i18next";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SendIcon from '@material-ui/icons/Send';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from 'clsx';
-import EmailIcon from '@material-ui/icons/Email';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import EuroIcon from '@material-ui/icons/Euro';
-import PaymentsDataService from '../_services/payments.service'
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+import PaymentsDataService from '../_services/payments.service';
+import StudentsPaymentsDataService from '../_services/student_payment.service';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import Box from "@material-ui/core/Box";
 import {Skeleton} from "@material-ui/lab";
 import DirtyTextField from "./dirtytextfield.component";
 import {Button, DialogActions, MenuItem} from "@material-ui/core";
-import DirtyCountrySelect from "./contry-select.component";
 import {useNormik} from "../_helpers/normik";
 import * as yup from "yup";
 import {one_of} from "../_yup/validators";
@@ -74,28 +66,43 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function PaymentCard({ payment, updatePayment, deletePayment }) {
+export default function PaymentCard({ payment, updatePayment, deletePayment, newPayment=false, addPaymentId, student_id} ) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(newPayment);
   const errorHandler = useErrorHandler();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const formik = useNormik(true, {
+  const formik = useNormik(!newPayment, {
         initialValues: payment,
         validationSchema: yup.object({method: one_of(t, ['bank-transfer', 'cash']),
-                                        quantity: yup.number().required(t("import_required"))}),  // todo
+                                        quantity: yup.number().required(t("import_required")),
+                                        date: yup.date().required(t("date_required"))}),  // todo
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
+            console.log("submitting", changedValues);
             if (Object.keys(changedValues).length > 0){
                 setStatus();
+
+                if (newPayment) {
+                    StudentsPaymentsDataService.post(changedValues, student_id).then(...errorHandler({snackbarSuccess:true}))
+                        .then(function (id) {
+                            console.log("post successful", id);
+                            addPaymentId(id);
+                            }).catch(function (err){
+                                setStatus(true);
+                    })
+                        .finally(() => {
+                                setSubmitting(false);
+                        });
+                } else {
                     PaymentsDataService.patch({
                       id: payment["id"],    // id
                       body: changedValues,
-                      initial_values: payment
+                      initial_values: payment  // todo doesnt normik do this?
                   }).then(...errorHandler({snackbarSuccess:true}))
                         .then(function (patched_body) {
                                 formik.resetForm(patched_body);
@@ -107,6 +114,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment }) {
                                 setSubmitting(false);
                         });
 
+                }
 
                     } else {
                 setSubmitting(false);
@@ -141,10 +149,11 @@ export default function PaymentCard({ payment, updatePayment, deletePayment }) {
           </IconButton>
         </Tooltip>
         }
-        title={`${t("has_paid")} ${payment['quantity']}€`}
+        title={newPayment? t('new_payment') : `${t("has_paid")} ${payment['quantity']}€`}
         subheader={payment['date']}
       />
-      <CardActions disableSpacing>
+
+        {!newPayment && <CardActions disableSpacing>
         <Tooltip title={t("export_receipt")} aria-label={t("export_receipt")}>
           <IconButton aria-label={t("export_receipt")}>
             <ReceiptIcon />
@@ -165,7 +174,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment }) {
         >
           <ExpandMoreIcon />
         </IconButton>
-      </CardActions>
+      </CardActions>}
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Box>
@@ -246,7 +255,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment }) {
                                                 {t("reset")}
                                             </Button>
                                             <Button type="submit" disabled={!formik.dirty || formik.isSubmitting}>
-                                                {t("save")}
+                                                {newPayment? t("create"): t("save")}
                                             </Button>
                                         </DialogActions>
                                     </form>

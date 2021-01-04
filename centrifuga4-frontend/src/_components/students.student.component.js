@@ -13,18 +13,34 @@ import StudentsDataService from "../_services/students.service";
 import GuardiansDataService from "../_services/guardians.service";
 import Payments from "./students.student.payments.component";
 import {useErrorHandler} from "../_helpers/handle-response";
+import AddIcon from "@material-ui/icons/Add";
+import Fab from "@material-ui/core/Fab";
+import Zoom from "@material-ui/core/Zoom";
+import Tooltip from "@material-ui/core/Tooltip";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    flexGrow: 1
+    flexGrow: 1,
+
+  },
+    fab: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+    backgroundColor: theme.palette.primary.main
+  }, fab_placeholder: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2)
   },
   contentPanel: {
     //flex: 1,
+      position: 'relative', // todo proper scrollbar AND fab
     overflow: "auto",
     boxSizing: "border-box",
-      height: '80vh', // todo proper,
-      position: 'relative', // todo proper scrollbar AND fab
+      height: '100%', // todo proper,
     minHeight: 200,
 
   },
@@ -53,19 +69,25 @@ function a11yProps(index) {
 
 export default function Student(props) {
   const currentStudentId = props.currentStudentId;
+  const loading = currentStudentId === null;
 
   const errorHandler = useErrorHandler();
 
-  const [currentStudent, setCurrentStudent] = useState(null);  // todo rename to student
+  const [student, setStudent] = useState(null);  // todo rename to student
+
+  const [newPayment, setNewPayment] = useState(0);
+
+  const addPaymentId = (payment_id) => {
+    setStudent({...student, payments: [...student.payments, payment_id]})
+  }
 
   useEffect(() => {
-      console.log("id changed");
     if (currentStudentId === null) return;
     StudentsDataService
             .getOne(currentStudentId)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
-                    setCurrentStudent(res["data"]);
+                    setStudent(res["data"]);
                 });
   }, [currentStudentId])
 
@@ -77,6 +99,11 @@ export default function Student(props) {
     setValue(newValue);
   };
 
+  const transitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
+
    useEffect(()=>{
     setValue(0);
   }, [currentStudentId])
@@ -85,7 +112,7 @@ export default function Student(props) {
     setValue(index);
   };
 
-  const guardians = currentStudent === null? []: currentStudent.guardians;
+  const guardians = student === null? []: student.guardians;
     // todo maybe tabs with or only with icons
   return (
     <Paper elevation={3} square className={classes.contentPanel}>
@@ -119,25 +146,28 @@ export default function Student(props) {
                       index={0}
                       dir={theme.direction}
                       title={t("attendee")}
-                      currentStudent={currentStudent}
+                      currentStudent={student}
                       patchService={StudentsDataService}
-                      updateCurrentStudent={setCurrentStudent}
+                      updateCurrentStudent={setStudent}
             />
             <Attendee value={value}
                       index={1}
                       dir={theme.direction}
                       title={t("attendee")}
-                      currentStudent={currentStudent}
+                      currentStudent={student}
                       patchService={StudentsDataService}
-                      updateCurrentStudent={setCurrentStudent}
+                      updateCurrentStudent={setStudent}
             />
             <Payments value={value}
                       index={2}
-                      paymentIds={currentStudent === null? []: currentStudent.payments}
-                      key={currentStudent}
+                      paymentIds={student === null? null: student.payments}
+                      key={student}
+                      addPaymentId={addPaymentId}
+                      student_id={currentStudentId}
+                      newPayment={newPayment}
                       deletePaymentFromStudent={(payment_id) => {
-                        setCurrentStudent({...currentStudent,
-                            payments: currentStudent.payments.filter((p) => p !== payment_id)});
+                        setStudent({...student,
+                            payments: student.payments.filter((p) => p !== payment_id)});
                       }}
             />
             {
@@ -154,6 +184,45 @@ export default function Student(props) {
 
             }
           </SwipeableViews>
+      {// use skeletons when loading
+         }
+
+        {value === 0?
+            loading? <Skeleton variant="circle" className={classes.fab_placeholder}><Fab/> </Skeleton>:
+               <Zoom
+                  in={value === 0}
+                  timeout={transitionDuration}
+                  style={{
+                    transitionDelay: `${value === 0 ? transitionDuration.exit : 0}ms`,
+                  }}
+                  unmountOnExit
+                >
+                  <Tooltip title={t("new_guardian")}>
+                 <Fab className={classes.fab} onClick={() => null}>
+                  <AddIcon/>
+                 </Fab></Tooltip>
+               </Zoom>
+            : null
+        }
+
+        {value === 2?
+            loading? <Skeleton variant="circle" className={classes.fab_placeholder}><Fab/> </Skeleton>:
+               <Zoom
+                  in={value === 2}
+                  timeout={transitionDuration}
+                  style={{
+                    transitionDelay: `${value === 2 ? transitionDuration.exit : 0}ms`,
+                  }}
+                  unmountOnExit
+                >
+                  <Tooltip title={t("new_payment")}>
+                 <Fab className={classes.fab} onClick={() => setNewPayment(newPayment+1)}>
+                  <AddIcon/>
+                 </Fab></Tooltip>
+               </Zoom>
+            : null
+        }
+
     </Paper>
   );
 }

@@ -7,7 +7,6 @@ from centrifuga4.schemas.schemas import RoomSchema
 class RoomsRes(easy.EasyResource,
                easy.ImplementsGetOne,
                easy.ImplementsPatchOne,
-               easy.ImplementsPostOne,
                easy.ImplementsDeleteOne):
     schema = RoomSchema
     model = Room
@@ -15,6 +14,7 @@ class RoomsRes(easy.EasyResource,
 
 
 class RoomsCollectionRes(easy.EasyResource,
+                         easy.ImplementsPostOne,
                          easy.ImplementsGetCollection):
     schema = RoomSchema
     model = Room

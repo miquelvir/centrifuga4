@@ -84,5 +84,10 @@
   "import": "amount",
   "import_required": "amount is required",
   "date": "date",
-  "concept": "concept"
+  "concept": "concept",
+  "new_payment": "new payment",
+  "create": "create",
+  "field_required": "this field is required",
+  "date_required": "date is required",
+  "new_guardian": "new guardian"
 }

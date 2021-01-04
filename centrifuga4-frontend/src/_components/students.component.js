@@ -13,9 +13,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%'
-  },
-  right: {
-    height: '100%'
   }
 }));
 

@@ -7,7 +7,6 @@ from centrifuga4.schemas.schemas import StudentSchema
 class StudentsRes(easy.EasyResource,
                   easy.ImplementsGetOne,
                   easy.ImplementsPatchOne,
-                  easy.ImplementsPostOne,
                   easy.ImplementsDeleteOne):
     schema = StudentSchema
     model = Student
@@ -44,7 +43,10 @@ class StudentsRes(easy.EasyResource,
 
 
 class StudentsCollectionRes(easy.EasyResource,
+                            easy.ImplementsPostOne,
                             easy.ImplementsGetCollection):
     schema = StudentSchema
     model = Student
     permissions = {StudentsPermission}
+
+

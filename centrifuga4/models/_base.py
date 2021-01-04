@@ -13,9 +13,7 @@ class MyBase(db.Model):
 
     @classmethod
     def get_field(cls, item):
-        print(item, cls.__dict__)
         field = cls.__dict__[item]
-        print(field)
 
         if not isinstance(field, (InstrumentedAttribute, hybrid_property)):
             raise KeyError("protected field '%s' can't be accessed" % item)

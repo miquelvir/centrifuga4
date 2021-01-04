@@ -91,11 +91,11 @@ class _ImplementsGet:
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
-        else:  # todo include
+        else:
             if not id_:
                 raise BaseBadRequest("id_ must be given")
 
-            try:
+            try:  # todo are filters actually needed?
                 query = self.model.query.filter(self.model.id == id_,
                                                 *(filters if filters else []))
 
