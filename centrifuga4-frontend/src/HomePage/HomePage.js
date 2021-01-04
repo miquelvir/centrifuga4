@@ -25,7 +25,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
     root: {
         display: 'flex',
-        height: '100%'
+        height: '100vh'
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -82,9 +82,15 @@ const useStyles = makeStyles(theme => (createStyles({
         ...theme.mixins.toolbar,
     },
     content: {
-        flexGrow: 1,
+        display: 'flex',
+        flexFlow: 'column',
+        height: "100%",
+        width: "100%",
+    },
+    main: {
+        flex: 1,
         padding: theme.spacing(3),
-        height: "100%"
+        overflow: 'auto'
     },
     icon: {
       '&': {
@@ -169,13 +175,16 @@ const HomePage = (props) => {
                                 ))}
                     </List>
                 </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.toolbar}/>
-                    {Routes.map((prop, key) => {
-                        return (
-                            <Route key={prop.title} exact path={prop.path} component={prop.component}/>)
-                    })}
-                </main>
+                <div className={classes.content}>
+                        <div className={classes.toolbar}/>
+                        <main className={classes.main}>
+
+                            {Routes.map((prop) => {
+                                return (
+                                    <Route key={prop.title} exact path={prop.path} component={prop.component}/>)
+                            })}
+                        </main>
+                    </div>
             </BrowserRouter>
         </div>
     );

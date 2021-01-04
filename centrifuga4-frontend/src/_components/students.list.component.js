@@ -20,7 +20,8 @@ import {useErrorHandler} from "../_helpers/handle-response";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxHeight: "70vh",
+        flex: 1,
+        overflow: 'auto',
         display: "flex",
         flexDirection: "column"
     },
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
         flex: 1,
+        minHeight: '150px'
     },
     box: {
         display: "flex",
@@ -83,7 +85,7 @@ const StudentsList = (props) => {
     };
 
     function exportCsv() {
-        setLoading(true);
+        setLoading(true);  // todo clean this and the loading background
         StudentsDataService
             .downloadAllCsv(searchTerm, page)
             .finally(()=>{

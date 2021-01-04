@@ -20,10 +20,13 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1
   },
   contentPanel: {
-    flex: 1,
+    //flex: 1,
     overflow: "auto",
     boxSizing: "border-box",
-      height: '80vh' // todo proper
+      height: '80vh', // todo proper,
+      position: 'relative', // todo proper scrollbar AND fab
+    minHeight: 200,
+
   },
   fullWidth: {
     width: "100%"
@@ -83,7 +86,7 @@ export default function Student(props) {
   };
 
   const guardians = currentStudent === null? []: currentStudent.guardians;
-
+    // todo maybe tabs with or only with icons
   return (
     <Paper elevation={3} square className={classes.contentPanel}>
             <AppBar position="static" color="default">
@@ -151,6 +154,6 @@ export default function Student(props) {
 
             }
           </SwipeableViews>
-          </Paper>
+    </Paper>
   );
 }

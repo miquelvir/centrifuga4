@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Guardian({ children, value, index, title, guardianId, patchService, ...other }) {
   const { t } = useTranslation();
-  const loading = false;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
 
@@ -63,7 +62,6 @@ function Guardian({ children, value, index, title, guardianId, patchService, ...
         <Box p={3}>
           <Typography>{children}</Typography>
             <Box px={2}>
-              <h1>{title}</h1>
 
               <Person currentPerson={guardian} updateCurrentStudent={setGuardian} patchService={patchService}/>
 

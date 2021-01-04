@@ -49,7 +49,6 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
         <Box p={3}>
           <Typography>{children}</Typography>
             <Box px={2}>
-              <h1>{title}</h1>
 
               <Person currentPerson={currentStudent} updateCurrentStudent={updateCurrentStudent} patchService={patchService}/>
 

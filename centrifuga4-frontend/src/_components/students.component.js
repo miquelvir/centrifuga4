@@ -7,8 +7,15 @@ import Student from "./students.student.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexGrow: 1,
+    height: '100%'
+  },
+  left: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  right: {
+    height: '100%'
   }
 }));
 
@@ -20,9 +27,8 @@ export default function Students() {
   const [currentStudentId, setCurrentStudentId] = useState(null);
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={4}>
+      <Grid container spacing={3} className={classes.root}>
+        <Grid item xs={4} className={classes.left}>
           <h1>{t("students")}</h1>
           <StudentsList
             setCurrentStudentId={setCurrentStudentId}
@@ -30,12 +36,11 @@ export default function Students() {
           />
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid item xs={8} className={classes.right}>
           <Student
             currentStudentId={currentStudentId}
           />
         </Grid>
       </Grid>
-    </div>
   );
 }

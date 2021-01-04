@@ -11,7 +11,9 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
 
+  },
   fullWidth: {
     width: "100%"
   },
@@ -23,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1)
   },
   fab: {
-    // position: 'absolute',
-    // bottom: theme.spacing(2),
-    // right: theme.spacing(2),
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
     backgroundColor: theme.palette.primary.main
   },
   composite: {display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
@@ -76,13 +78,13 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
+      className={classes.root}
       {...other}
     >
       {value === index && (
         <Box p={3}>
           <Typography>{children}</Typography>
             <Box px={2}>
-              <h1>{t("payments")}</h1>
 
               {
                 payments && payments.map(payment =>
