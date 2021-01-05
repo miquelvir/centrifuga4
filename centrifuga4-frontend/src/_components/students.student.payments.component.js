@@ -8,6 +8,10 @@ import PaymentsDataService from "../_services/payments.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import PaymentCard from "./students.student.payments.payment.component";
 import {Skeleton} from "@material-ui/lab";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const getDefaultValues = () => {
     const date = new Date();
@@ -19,6 +23,12 @@ const getDefaultValues = () => {
 const useStyles = makeStyles((theme) => ({
   root: {
 
+  },
+  newLine: {
+    width: '100%',
+       marginTop: theme.spacing(1),
+        display: "flex",
+    flexDirection: "column"
   },
   fullWidth: {
     width: "100%"
@@ -34,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Payments({ children, value, index, title, paymentIds, deletePaymentFromStudent, newPayment, addPaymentId, student_id, ...other }) {
+function Payments({ children, value, index, title, paymentIds, deletePaymentFromStudent, addPaymentId, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
@@ -42,14 +52,6 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
 
   const [payments, setPayments] = useState([]);
   const [newPaymentCard, setNewPaymentCard] = useState(false);
-
-  useEffect(() => {
-    if (newPayment === 0) {
-      setNewPaymentCard(false);
-    } else {
-      setNewPaymentCard(true);
-    }
-  }, [newPayment]);
 
   useEffect(()=>{
     setNewPaymentCard(false);
@@ -85,7 +87,6 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
     }
   }, [paymentIds])
 
-
   return (
     <div
       role="tabpanel"
@@ -96,9 +97,20 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-            <Box px={2}>
+        <Box p={3}>  {// todo simplify everywhere
+        } <Box px={2}>
+
+              {loading?
+                  <Skeleton style={{float: 'right'}}><AddCircleIcon/></Skeleton>
+              :
+              <Tooltip style={{float: 'right'}} title={t("new_payment")} aria-label={t("new_payment")}>
+                <IconButton onClick={(e) => { setNewPaymentCard(true); }}>
+                  <AddCircleIcon />
+                </IconButton>
+              </Tooltip>
+              }
+
+              <div className={classes.newLine}>
 
               {
                 payments && payments.map(payment =>
@@ -122,6 +134,7 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
               {!loading && payments.length === 0 && !newPaymentCard &&
                 <Typography>{t("no_payments")}</Typography>
               }
+              </div>
             </Box>
         </Box>
       )}

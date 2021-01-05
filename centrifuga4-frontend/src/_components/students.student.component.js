@@ -76,8 +76,6 @@ export default function Student(props) {
 
   const [student, setStudent] = useState(null);  // todo rename to student
 
-  const [newPayment, setNewPayment] = useState(0);
-
   const addPaymentId = (payment_id) => {
     setStudent({...student, payments: [...student.payments, payment_id]})
   }
@@ -168,7 +166,6 @@ export default function Student(props) {
                       key={student}
                       addPaymentId={addPaymentId}
                       student_id={currentStudentId}
-                      newPayment={newPayment}
                       deletePaymentFromStudent={(payment_id) => {
                         setStudent({...student,
                             payments: student.payments.filter((p) => p !== payment_id)});
@@ -192,44 +189,6 @@ export default function Student(props) {
 
             }
           </SwipeableViews>
-      {// use skeletons when loading
-         }
-
-        {value === 0?
-            loading? <Skeleton variant="circle" className={classes.fab_placeholder}><Fab/> </Skeleton>:
-               <Zoom
-                  in={value === 0}
-                  timeout={transitionDuration}
-                  style={{
-                    transitionDelay: `${value === 0 ? transitionDuration.exit : 0}ms`,
-                  }}
-                  unmountOnExit
-                >
-                  <Tooltip title={t("new_guardian")}>
-                 <Fab className={classes.fab} onClick={() => null}>
-                  <AddIcon/>
-                 </Fab></Tooltip>
-               </Zoom>
-            : null
-        }
-
-        {value === 2?
-            loading? <Skeleton variant="circle" className={classes.fab_placeholder}><Fab/> </Skeleton>:
-               <Zoom
-                  in={value === 2}
-                  timeout={transitionDuration}
-                  style={{
-                    transitionDelay: `${value === 2 ? transitionDuration.exit : 0}ms`,
-                  }}
-                  unmountOnExit
-                >
-                  <Tooltip title={t("new_payment")}>
-                 <Fab className={classes.fab} onClick={() => setNewPayment(newPayment+1)}>
-                  <AddIcon/>
-                 </Fab></Tooltip>
-               </Zoom>
-            : null
-        }
 
     </Paper>
   );

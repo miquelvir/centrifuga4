@@ -1,6 +1,7 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import {MenuItem, TextField} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React from "react";
@@ -117,6 +118,18 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
         <Box p={3}>
             <Box px={2}>
               {loading?
+                  <Skeleton style={{float: 'right'}}><PersonAddIcon/></Skeleton>
+              :
+              <Tooltip style={{float: 'right'}} title={t("new_guardian")} aria-label={t("new_guardian")}>
+                <IconButton onClick={(e) => {
+                  // todo
+                }}>
+                  <PersonAddIcon />
+                </IconButton>
+              </Tooltip>
+              }
+
+              {loading?
                   <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
               :
               <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
@@ -125,7 +138,10 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
                 }}>
                   <DeleteIcon />
                 </IconButton>
-              </Tooltip>}
+              </Tooltip>
+              }
+
+
 
               <Person currentPerson={currentStudent}
                       updateCurrentStudent={updateCurrentStudent}
