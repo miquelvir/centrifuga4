@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
 const StudentsList = (props) => {
     const setCurrentStudentId = props.setCurrentStudentId;
     const currentStudentId = props.currentStudentId;
-
-    const [students, setStudents] = useState([]);
+    const students = props.students;
+    const setStudents = props.setStudents;
 
     const [searchTerm, setSearchTerm] = useState("");
 

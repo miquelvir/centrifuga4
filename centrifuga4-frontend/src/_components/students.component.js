@@ -21,6 +21,7 @@ export default function Students() {
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const [students, setStudents] = useState([]);
   const [currentStudentId, setCurrentStudentId] = useState(null);
 
   return (
@@ -30,12 +31,22 @@ export default function Students() {
           <StudentsList
             setCurrentStudentId={setCurrentStudentId}
             currentStudentId={currentStudentId}
+            students={students}
+            setStudents={setStudents}
           />
         </Grid>
 
         <Grid item xs={8} className={classes.right}>
           <Student
             currentStudentId={currentStudentId}
+            deleteStudent={(studentId) => {
+                console.log(studentId, currentStudentId);
+                if (studentId === currentStudentId) {
+                    console.log("to null");
+                    setCurrentStudentId(null);
+                }
+                setStudents(students.filter((s) => s['id'] !== studentId));
+            }}
           />
         </Grid>
       </Grid>

@@ -69,6 +69,7 @@ function a11yProps(index) {
 
 export default function Student(props) {
   const currentStudentId = props.currentStudentId;
+  const deleteStudent = props.deleteStudent;
   const loading = currentStudentId === null;
 
   const errorHandler = useErrorHandler();
@@ -82,7 +83,8 @@ export default function Student(props) {
   }
 
   useEffect(() => {
-    if (currentStudentId === null) return;
+    if (currentStudentId === null) return setStudent(null);
+    console.log(currentStudentId);
     StudentsDataService
             .getOne(currentStudentId)
             .then(...errorHandler({}))  // todo everywhere
@@ -149,6 +151,7 @@ export default function Student(props) {
                       currentStudent={student}
                       patchService={StudentsDataService}
                       updateCurrentStudent={setStudent}
+                      deleteStudent={deleteStudent}
             />
             <Attendee value={value}
                       index={1}
@@ -157,6 +160,7 @@ export default function Student(props) {
                       currentStudent={student}
                       patchService={StudentsDataService}
                       updateCurrentStudent={setStudent}
+                      deleteStudent={deleteStudent}
             />
             <Payments value={value}
                       index={2}
@@ -179,6 +183,10 @@ export default function Student(props) {
                             title={t("contact") + " " + (index + 1)}
                             guardianId={guardian}
                             patchService={GuardiansDataService}
+                            deleteGuardianId={(id) => {
+                              setStudent({...student, guardians: student['guardians'].filter((gId) => gId !== id)});
+                              setValue(0);
+                            }}
             />
                   ))}
 

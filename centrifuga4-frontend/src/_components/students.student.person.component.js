@@ -7,10 +7,13 @@ import {Skeleton} from "@material-ui/lab";
 import DirtyTextField from "./dirtytextfield.component";
 import * as yup from 'yup';
 import DirtyCountrySelect from "./contry-select.component";
-import studentsService from "../_services/students.service"
+import RestorePageIcon from '@material-ui/icons/RestorePage';
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useNormik} from "../_helpers/normik";
-
+import SaveIcon from '@material-ui/icons/Save';
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import RestoreIcon from '@material-ui/icons/Restore';
 const useStyles = makeStyles((theme) => ({
 
     fullWidth: {
@@ -81,7 +84,11 @@ function Person(props) {
                 (
 
                     <Box>
+                        <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
+                        <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
+
                         {
+
                             ["100%", "100%", "100%", "100%", "100%", "100%"].map((value, idx) => {
                                 return (
                                     <Box key={idx} py={0}>
@@ -94,6 +101,27 @@ function Person(props) {
                 :
                 (
                         <form onSubmit={formik.handleSubmit}>
+
+
+                <IconButton style={{float: 'right'}}
+                            onClick={formik.handleReset}
+                            disabled={!formik.dirty || formik.isSubmitting}>
+ <Tooltip  title={t("reset")} aria-label={t("reset")}>
+                  <RestoreIcon />
+                  </Tooltip>
+                </IconButton>
+
+
+
+                <IconButton style={{float: 'right'}} type="submit" disabled={!formik.dirty || formik.isSubmitting}>
+<Tooltip title={t("save")} aria-label={t("save")}>
+                  <SaveIcon />
+                  </Tooltip>
+                </IconButton>
+
+
+
+
                                         <DirtyTextField
                                             label={t("id")}
                                             name="id"
@@ -202,19 +230,7 @@ function Person(props) {
 
                                         </Box>
 
-                                        <DialogActions>
-                                            <Button
-                                                type="button"
-                                                className="outline"
-                                                onClick={formik.handleReset}
-                                                disabled={!formik.dirty || formik.isSubmitting}
-                                            >
-                                                {t("reset")}
-                                            </Button>
-                                            <Button type="submit" disabled={!formik.dirty || formik.isSubmitting}>
-                                                {t("save")}
-                                            </Button>
-                                        </DialogActions>
+                                        {props.children}
                                     </form>
                 )
 

@@ -54,26 +54,8 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             });
         }
 
-        getSome(ids, sortOn=null) {
-            let params = {};
-            if (sortOn !== null) params["sort"] = sortOn;
-            return Promise.all(ids.map(id => (new Promise(function (resolve, reject) {
-                axios({
-                    method: 'get',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
-                    params: params,
-                    headers: {
-                        ...{
-                            'Content-Type': 'application/json',
-                            'Cache-Control': 'no-cache'
-                        }, ...authHeader()  // todo are auth headers needed for gets?
-                    }
-                }).then(function (response) {
-                    resolve(response);
-                }).catch(function (err) {
-                    reject(err);
-                });
-            }))));
+        getMany(ids) {
+            return Promise.all(ids.map(id => (this.getOne(id))));
         }
         patch({id, body, initial_values = null}) {
             if (initial_values !== null) {
@@ -145,6 +127,10 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
                         reject(err);
                 });
             });
+        }
+
+        deleteMany(ids) {
+            return Promise.all(ids.map(id => (this.delete(id))));
         }
 
         downloadAllCsv(likeSearchText=null, page = 1) {

@@ -90,5 +90,12 @@
   "create": "crear",
   "field_required": "cal omplir el camp",
   "date_required": "cal la data",
-  "new_guardian": "nou contacte"
+  "new_guardian": "nou contacte",
+  "action_cant_undone": "aquesta acció no es pot desfer",
+  "delete_guardian_question": "vols eliminar aquest contacte?",
+  "cancel": "cancelar",
+  "delete_guardian": "eliminar el contacte",
+  "delete_student": "eliminar l'estudiant",
+  "delete_student_question": "vols eliminar aquest estudiant?",
+  "student_also_deletes": "aquesta acció no es pot desfer; també s'eliminaran els contactes associats, pagaments i horaris"
 }

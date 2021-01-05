@@ -77,13 +77,14 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
       setPayments([]);
     } else {
       PaymentsDataService
-            .getSome(paymentIds)
+            .getMany(paymentIds)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
-                    setPayments(res.map(res => res["data"]["data"]).sort((p1, p2) => p1.date.localeCompare(p2.date)));
+                    setPayments(res.map(res => res["data"]).sort((p1, p2) => p1.date.localeCompare(p2.date)));
                 });
     }
   }, [paymentIds])
+
 
   return (
     <div

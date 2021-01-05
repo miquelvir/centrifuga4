@@ -66,7 +66,7 @@
   "attendee": "student",
   "contact": "guardian",
   "price_term": "price per term",
-  "success": "success",
+  "success": "done",
   "send_receipt": "send confirmation email to student",
   "export_receipt": "export receipt as pdf",
   "no_payments": "there are no payments",
@@ -89,5 +89,13 @@
   "create": "create",
   "field_required": "this field is required",
   "date_required": "date is required",
-  "new_guardian": "new guardian"
+  "new_guardian": "new guardian",
+  "action_cant_undone": "this action can not be undone",
+  "delete_guardian_question": "do you want to delete this guardian?",
+  "cancel": "cancel",
+  "delete_guardian": "delete this guardian",
+  "delete_student": "delete this student",
+  "delete_student_question": "do you want to delete this student?",
+  "student_also_deletes": "this action can not be undone; it will also delete the associated guardians, payments and schedules"
+
 }
