@@ -1,13 +1,13 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import {TextField} from "@material-ui/core";
+import {MenuItem, TextField} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React from "react";
 import StudentsDataService from "../_services/students.service";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
-import Divider from "@material-ui/core/Divider";
+import * as yup from 'yup';
 import Person from "./students.student.person.component";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -23,6 +23,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Tooltip from "@material-ui/core/Tooltip";
 import DirtyTextField from "./dirtytextfield.component";
+import {education_years} from "../_data/education";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -129,31 +130,70 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
               <Person currentPerson={currentStudent}
                       updateCurrentStudent={updateCurrentStudent}
                       patchService={patchService}
-                      additionalFields={[]}
-              >
-                {/*{loading
-              ?
-                  (<Box>
-                        <Box py={1}><Skeleton variant="text" width="35%" height="60px"/></Box>
-                      </Box>)
-                  :
-                  (
-
-                          <Box py={2}>
-                            <Box className={classes.line}>
-                              <DirtyTextField
+                      additionalValidation={{
+                        is_early_unenrolled: yup.boolean().required(t("is_early_unenrolled_required")).when('is_enrolled',
+                            {is: true,
+                            then: yup.boolean().test(
+                                  'enrolledUnenrolledCollision2',
+                                  t('enrolled_unenrolled'),
+                                  v => !v
+                                )}),
+                        is_enrolled: yup.boolean().required(t("is_enrolled_required"))
+                      }}
+                      additionalFields={
+                        [[<DirtyTextField
                                 label={t("price_term")}
                                 style={{flex: 1}}
                                 name="price_term"
                                 type="number"
-                                className={classes.sizeSmall}
                                 InputProps={{endAdornment: <InputAdornment position="end">€</InputAdornment>,}}
-                            />
-                          </Box>
+                            />,
+                            <DirtyTextField
+                                label={t("default_payment_method")}
+                                style={{flex: 1}}
+                                name="default_payment_method"
+                                select>
+                                <MenuItem value="bank-transfer">{t("bank_transfer")}</MenuItem>
+                                <MenuItem value="cash">{t("cash")}</MenuItem>
+                            </DirtyTextField>],
+                            <DirtyTextField
+                                label={t("payment_comments")}
+                                style={{flex: 1}}
+                                multiline
+                                rowsMax={8}
+                                name="payment_comments"
+                            />,
+                          [<DirtyTextField
+                              label={t("years_in_xamfra")}
+                              type="number"
+                              style={{flex: 1}}
+                              name="years_in_xamfra"/>,
+                              <DirtyTextField
+                                label={t("is_enrolled")}
+                                style={{flex: 1}}
+                                name="is_enrolled"
+                                select>
+                                <MenuItem value={true}>{t("yes")}</MenuItem>
+                                <MenuItem value={false}>{t("no")}</MenuItem>
+                            </DirtyTextField>,
+                              <DirtyTextField
+                                label={t("is_early_unenrolled")}
+                                style={{flex: 1}}
+                                name="is_early_unenrolled"
+                                select>
+                                <MenuItem value={true}>{t("yes")}</MenuItem>
+                                <MenuItem value={false}>{t("no")}</MenuItem>
+                            </DirtyTextField>
+                          ],
+                        <DirtyTextField
+                                label={t("other_comments")}
+                                style={{flex: 1}}
+                                multiline
+                                rowsMax={8}
+                                name="other_comments"
+                            />]}
+              >
 
-                          </Box>
-              )
-              }*/}
               </Person>
 
             </Box>

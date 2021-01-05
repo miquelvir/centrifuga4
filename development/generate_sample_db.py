@@ -61,7 +61,12 @@ def add_students():
                     surname1="stuart%s" % idx,
                     surname2="mill%s" % idx,
                     price_term=23,
-                    email="msm%s@gmail.com" % idx)
+                    email="msm%s@gmail.com" % idx,
+                    is_studying=choice((True, True, True, False)),
+                    is_working=choice((True, False, False, False)),
+                    is_enrolled=choice((True, False, False, False)),
+                    is_early_unenrolled=False,
+                    years_in_xamfra=randint(0, 15))
 
         for idx2 in range(randint(0,3)):
             g = Guardian(id=Guardian.generate_new_id(),
@@ -69,7 +74,10 @@ def add_students():
                          surname1="lópez%s-%s" % (idx, idx2),
                          surname2="suárez%s-%s" % (idx, idx2),
                          email="mls%s_%s@gmail.com" % (idx, idx2),
-                        relation=choice(("mother", "father", "grandmother", "grandfather", "tutor")))
+                        relation=choice(("mother", "father", "grandmother", "grandfather", "tutor")),
+                         is_working=choice((True, True, True, False)),
+                         is_studying=choice((True, False, False, False))
+                         )
             s.guardians.append(g)
             centrifuga4.db.session.add(g)
 

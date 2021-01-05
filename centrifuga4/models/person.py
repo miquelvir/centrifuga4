@@ -28,33 +28,31 @@ class Person(MyBase):
     birth_date = db.Column(db.Date, nullable=True)
     country_of_origin = db.Column(db.Text, nullable=True)
 
+    is_studying = db.Column(db.Boolean, nullable=False)
+    education_year = db.Column(db.Text, nullable=True)
+    education_entity = db.Column(db.Text, nullable=True)
+
+    is_working = db.Column(db.Boolean, nullable=False)
+    career = db.Column(db.Text, nullable=True)
+
     full_name = column_property(
         case([(name != None, name + " "),], else_="") +
         case([(surname1 != None, surname1 + " "), ], else_="") +
         case([(surname2 != None, surname2), ], else_=""))
     # todo full_name no accents with collate https://docs.sqlalchemy.org/en/13/core/sqlelement.html#sqlalchemy.sql.expression.collate
 
-
-    @validates('name', 'surname1', 'surname2', 'email', 'address', 'zip', 'gender', 'city')
+    @validates('name', 'surname1', 'surname2', 'email', 'address', 'zip', 'gender', 'city',
+               'education_year', 'education_entity', 'career')
     def cleaner1(self, key, value):
-        return value.lower().strip()
+        return value.lower().strip() if value else value
 
     @validates('dni', 'country_of_origin')
     def cleaner2(self, key, value):
-        return value.upper().strip()
+        return value.upper().strip() if value else value
 
     @validates('phone')
     def cleaner3(self, key, value):
-        return value.lower().replace(' ', '')
-
-    """@validates('name')
-    def _validate_name(self, key, name):
-        print("val", key, name)
-        if name == "papa":
-            raise ModelFieldValidationError({
-                "name": ["Found '%s', can't be papa."]
-            })
-        return "mama"""
+        return value.lower().replace(' ', '') if value else value
 
     def __repr__(self):
         return '<Person - %s | %s>' % (type(self).__name__, self.id)

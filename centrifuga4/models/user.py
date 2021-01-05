@@ -1,21 +1,39 @@
 from flask import current_app
 from flask_login import UserMixin
 import re
+
+from sqlalchemy import case
+from sqlalchemy.orm import validates, column_property
+
 from centrifuga4 import db
+from centrifuga4.models._base import MyBase
 from centrifuga4.models.person import Person
 import bcrypt
 
 
-class User(Person, UserMixin):
+class User(MyBase, UserMixin):
     __tablename__ = "user"
     __mapper_args__ = {
         'polymorphic_identity': "user"
     }
 
-    id = db.Column(db.Text, db.ForeignKey('person.id'), primary_key=True)
+    id = db.Column(db.Text, primary_key=True)
+    name = db.Column(db.Text, nullable=False)
+    surname1 = db.Column(db.Text, nullable=True)
+    surname2 = db.Column(db.Text, nullable=True)
+    email = db.Column(db.Text, nullable=True)
     username = db.Column(db.Text, unique=True, nullable=False)
     password_hash = db.Column(db.Text, nullable=False)
     needs = db.relationship("Need", secondary="user_need")
+
+    full_name = column_property(
+        case([(name != None, name + " "), ], else_="") +
+        case([(surname1 != None, surname1 + " "), ], else_="") +
+        case([(surname2 != None, surname2), ], else_=""))
+
+    @validates('name', 'surname1', 'surname2')
+    def cleaner1(self, key, value):
+        return value.lower().strip() if value else value
 
     def login(self, password: str) -> bool:
         """ checks if password hash matches stored patch """
@@ -33,3 +51,4 @@ class User(Person, UserMixin):
                    re.compile("(?=.*[A-Z])$").match(password) is not None,
                    re.compile("(?=.*\d)$").match(password) is not None,
                    re.compile("(?=.*[ -\/:-@\[-\`{-~]{1,})").match(password) is not None))
+
