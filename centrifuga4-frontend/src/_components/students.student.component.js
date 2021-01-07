@@ -75,6 +75,7 @@ export default function Student(props) {
   const errorHandler = useErrorHandler();
 
   const [student, setStudent] = useState(null);  // todo rename to student
+  const [newGuardian, setNewGuardian] = useState(false);
 
   const addPaymentId = (payment_id) => {
     setStudent({...student, payments: [...student.payments, payment_id]})
@@ -129,10 +130,18 @@ export default function Student(props) {
                   <Tab label={t("attendee")} {...a11yProps(0)} />
                   <Tab label={t("schedule")} {...a11yProps(1)} />
                   <Tab label={t("payments")} {...a11yProps(2)} />
+
                   {
                   guardians && guardians.map((contact, index) => (
                   <Tab key={t("contact") + " " + (index+1)} label={t("contact") + " " + (index+1)} {...a11yProps(index+3)} />
                       ))}
+
+
+                  {
+                    newGuardian &&
+                        <Tab key={t("new_guardian")} label={t("new_guardian")} {...a11yProps(3+guardians.length)} />
+                  }
+
 
 
                 </Tabs>
@@ -150,6 +159,10 @@ export default function Student(props) {
                       patchService={StudentsDataService}
                       updateCurrentStudent={setStudent}
                       deleteStudent={deleteStudent}
+                      addNewGuardian={() => {
+                        setNewGuardian(true);
+                        setValue(3+guardians.length);
+                      }}
             />
             <Attendee value={value}
                       index={1}
@@ -171,21 +184,42 @@ export default function Student(props) {
                             payments: student.payments.filter((p) => p !== payment_id)});
                       }}
             />
+
+
             {
               guardians && guardians.map((guardian, index) => (
                   <Guardian value={value}
                             index={index+3}
                             key={guardian}
                             dir={theme.direction}
-                            title={t("contact") + " " + (index + 1)}
                             guardianId={guardian}
-                            patchService={GuardiansDataService}
                             deleteGuardianId={(id) => {
                               setStudent({...student, guardians: student['guardians'].filter((gId) => gId !== id)});
                               setValue(0);
                             }}
             />
                   ))}
+
+                  <Guardian value={value}
+                        index={3+guardians.length}
+                        dir={theme.direction}
+                        newGuardian={true}
+                        deleteNewGuardian={() => {
+                            setNewGuardian(false);
+                            setValue(0);
+                        }}
+                            studentId={currentStudentId}
+                        addGuardianId={(id) => {
+                            setNewGuardian(false);
+                            setStudent({...student, guardians: [...student.guardians, id]});
+                            setValue(3+guardians.length);
+                        }
+                        }
+                        deleteGuardianId={(id) => {
+                            setStudent({...student, guardians: student['guardians'].filter((gId) => gId !== id)});
+                            setValue(0);
+                        }}
+              />
 
             }
           </SwipeableViews>

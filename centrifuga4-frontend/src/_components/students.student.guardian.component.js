@@ -1,14 +1,16 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import {TextField} from "@material-ui/core";
+import {MenuItem, TextField} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import Divider from "@material-ui/core/Divider";
+import {student_guardian_relations} from "../_data/relations"
 import Person from "./students.student.person.component";
 import GuardiansDataService from "../_services/guardians.service";
+import StudentsGuardiansDataService from "../_services/student_guardian.service"
 import {useErrorHandler} from "../_helpers/handle-response";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -19,6 +21,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
+import * as yup from "yup";
+import DirtyTextField from "./dirtytextfield.component";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import {education_years} from "../_data/education";
 
 // here
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Guardian({ children, value, index, title, guardianId, patchService, deleteGuardianId, ...other }) {
+function Guardian({ children, value, index, studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
@@ -53,6 +59,8 @@ function Guardian({ children, value, index, title, guardianId, patchService, del
 
 
   useEffect(() => {
+    if (newGuardian) return;
+
     GuardiansDataService
             .getOne(guardianId)
             .then(...errorHandler({}))  // todo everywhere
@@ -106,7 +114,8 @@ function Guardian({ children, value, index, title, guardianId, patchService, del
 
 
           <IconButton style={{float: 'right'}}  onClick={(e) => {
-            setOpenConfirmDeleteDialog(true);
+            if (!newGuardian) return setOpenConfirmDeleteDialog(true);
+            deleteNewGuardian();
           }}>
             <Tooltip title={t("delete")} aria-label={t("delete")}>
             <DeleteIcon />
@@ -114,7 +123,50 @@ function Guardian({ children, value, index, title, guardianId, patchService, del
           </IconButton>
 
 
-              <Person currentPerson={guardian} updateCurrentStudent={setGuardian} patchService={patchService}/>
+              <Person currentPerson={newGuardian? {
+                name: null,
+                surname1: null,
+                surname2: null,
+                email: null,
+                address: null,
+                city: null,
+                zip: null,
+                dni: null,
+                phone: null,
+                gender: null,
+                birth_date: null,
+                country_of_origin: null,
+                is_studying: null,
+                education_entity: null,
+                education_year: null,
+                is_working: null,
+                career: null,
+                relation: null
+
+              }: guardian}
+                      studentId={studentId}
+                      newPerson={newGuardian}
+                      updateCurrentStudent={(x) => {
+                        if (!newGuardian) return setGuardian(x);
+                        addGuardianId(x);
+                      }}
+                      patchService={newGuardian? StudentsGuardiansDataService: GuardiansDataService}
+                      additionalValidation={{
+                        relation: yup.string().required(t("relation_required"))}}
+                      additionalFields={
+                        [[<DirtyTextField
+                                label={t("relation")}
+                                style={{flex: 1}}
+                                name="relation"
+                                select
+                            >
+                          {student_guardian_relations.map((r) => (
+                                   <MenuItem key={r} value={r}>{t(r)}</MenuItem>
+                                ))}
+                                ))}
+
+                        </DirtyTextField>]]}
+              />
 
             </Box>
         </Box>

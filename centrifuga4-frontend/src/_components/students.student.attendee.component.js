@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, ...other }) {
+function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
@@ -122,7 +122,7 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
               :
               <Tooltip style={{float: 'right'}} title={t("new_guardian")} aria-label={t("new_guardian")}>
                 <IconButton onClick={(e) => {
-                  // todo
+                  addNewGuardian();
                 }}>
                   <PersonAddIcon />
                 </IconButton>

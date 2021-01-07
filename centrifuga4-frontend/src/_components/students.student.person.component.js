@@ -38,10 +38,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Person(props) {
     const currentPerson = props.currentPerson;
-    const patchService = props.patchService;
+    const dataService = props.patchService;
+    const newPerson = props.newPerson;
     const updateCurrentPerson = props.updateCurrentStudent;
     const additionalFields = props.additionalFields;
     const additionalValidation = props.additionalValidation === undefined? {}: props.additionalValidation;
+    const studentId = props.studentId;
 
     const {t} = useTranslation();
     const classes = useStyles();
@@ -49,7 +51,7 @@ function Person(props) {
     let initialValues = currentPerson === null ? {} : currentPerson;
 
 
-    const formik = useNormik(true, {
+    const formik = useNormik(!newPerson, {
         initialValues: initialValues,
         validationSchema: yup.object({...{
             email: yup.string().email(t("invalid_email")),  // todo
@@ -71,9 +73,23 @@ function Person(props) {
         }, ...additionalValidation}),
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
-            if (Object.keys(changedValues).length > 0) {
+            console.log("xxxxxxxxxxxxxxxxxxxx");
+            if (newPerson) {
                 setStatus();
-                patchService.patch({
+                console.log("mmmmmmmmmmmmmmmmmmmmmm", changedValues);
+                dataService.post(changedValues, studentId)
+                    .then(...errorHandler({snackbarSuccess: true}))
+                    .then(function (new_id) {
+                        updateCurrentPerson(new_id);
+                    }).catch(function (err) {
+                    setStatus(true);
+                }).finally(() => {
+                    setSubmitting(false);
+                });
+            } else {
+                if (Object.keys(changedValues).length > 0) {
+                setStatus();
+                dataService.patch({
                     id: initialValues["id"],
                     body: changedValues,
                     initial_values: initialValues
@@ -92,7 +108,7 @@ function Person(props) {
             } else {
                 setSubmitting(false);
             }
-
+            }
         }
     });
 
@@ -153,7 +169,7 @@ function Person(props) {
 
 
                         <IconButton style={{float: 'right'}} type="submit"
-                                    disabled={!formik.dirty || formik.isSubmitting}>
+                                    disabled={!newPerson && (!formik.dirty || formik.isSubmitting)}>
                             <Tooltip title={t("save")} aria-label={t("save")}>
                                 <SaveIcon/>
                             </Tooltip>

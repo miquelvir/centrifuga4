@@ -140,5 +140,17 @@
   "career_required": "cal la professió",
   "education_entity_required": "cal l'entitat",
   "education_year_required": "cal el curs",
-  "enrolled_unenrolled": "no pot estar matriculat i desmatriculat"
+  "enrolled_unenrolled": "no pot estar matriculat i desmatriculat",
+  "relation": "relació",
+  "relation_required": "cal la relació",
+  "father":  "pare",
+    "mother":  "mare",
+    "grandfather":  "avi",
+    "grandmother":  "àvia",
+    "brother":  "germà",
+    "sister":  "germana",
+    "uncle":  "oncle",
+    "aunt": "tieta",
+    "cousin": "cosí/ina",
+    "legal_guardian": "tutor legal"
 }

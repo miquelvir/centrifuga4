@@ -139,5 +139,17 @@
   "career_required": "career is required",
   "education_entity_required": "entity is required",
   "education_year_required": "year is required",
-  "enrolled_unenrolled": "can't be enrolled and unenrolled"
+  "enrolled_unenrolled": "can't be enrolled and unenrolled",
+  "relation": "relation",
+  "relation_required": "relation is required",
+  "father":  "father",
+    "mother":  "mother",
+    "grandfather":  "grandfather",
+    "grandmother":  "grandmother",
+    "brother":  "brother",
+    "sister":  "sister",
+    "uncle":  "uncle",
+    "aunt": "aunt",
+    "cousin": "cousin",
+    "legal_guardian": "legal guardian"
 }

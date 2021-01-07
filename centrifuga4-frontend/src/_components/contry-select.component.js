@@ -40,6 +40,7 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
   }
 
   const [option, _setOption] = React.useState(getInitialOption(formik.values[name]));
+
   React.useEffect(() => {
     _setOption(getInitialOption(formik.values[name]));
   }, [formik.values[name]]);
@@ -65,7 +66,7 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
         option: classes.option,
       }}
       autoHighlight
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option) => option.label }
       value={option}
         onChange={(event, newValue) => {
           setOption(newValue);
