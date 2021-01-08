@@ -17,6 +17,7 @@ from centrifuga4.blueprints.api.common.easy_api.get import safe_get
 from centrifuga4.blueprints.api.common.errors import NotFound
 from centrifuga4.models import Payment, Student
 from centrifuga4.schemas.schemas import PaymentSchema
+from pdfs.payment_recipe import generate_payment_recipe_pdf
 
 
 class PaymentsRes(easy.EasyResource,
@@ -50,58 +51,22 @@ class StudentPaymentsRes(easy.EasyResource,
 class PaymentsRecipesRes(Resource, SwaggerView):  # todo documented class higher up
     @Requires(GetPermission, PaymentsPermission, PaymentsRecipesPermission)
     def get(self, id_):
-
-        def unix_time_millis():
-            epoch = datetime.utcfromtimestamp(0)
-            return int((datetime.now() - epoch).total_seconds() * 1000.0)
-
         query = Payment.query.filter_by(id=id_)
-        result: Payment = query.first()
+        payment: Payment = query.first()
 
-        if not result:
+        if not payment:
             raise NotFound("resource with the given id not found",
                            requestedId=id_)
 
-        config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
-
-        signing_at = unix_time_millis()
-        try:
-            student = result.student[0]
-            student_name = student.full_name.title()
-            student_id = student.id
-        except IndexError:
-            raise
-
-        token = jwt.encode({'studentId': student_id,
-                            'paymentId': result.id,
-                            'studentName': student_name,
-                            'paymentMethod': result.method,
-                            'paymentDate': str(result.date),
-                            'paymentQuantity': result.quantity,
-                            "iat": signing_at},
-                   current_app.config["PUBLIC_VALIDATION_SECRET"],
-                   algorithm='HS256')
-
-        pdf_content = render_template("payment_recipe.html",
-                                      server_address=current_app.config["BACKEND_SERVER_URL"],
-                                      full_name=student_name,
-                                      quantity=result.quantity,
-                                      date=result.date,
-                                      method=result.method,
-                                      today=datetime.date(datetime.now()),
-                                      today_extended=signing_at,
-                                      payment_id=result.id,
-                                      verification_link="%s/validation/v1/%s" % (current_app.config["BACKEND_SERVER_URL"],
-                                                                              token.decode('utf-8')))
-
-        pdf = pdfkit.from_string(pdf_content, False,
-                                 configuration=config)
+        pdf = generate_payment_recipe_pdf(current_app.config["PUBLIC_VALIDATION_SECRET"],
+                                          payment,
+                                          current_app.config["BACKEND_SERVER_URL"])
 
         r = make_response(send_file(
             io.BytesIO(pdf),
             as_attachment=True,
             mimetype='application/pdf',
-            attachment_filename='resulting.pdf'))
+            attachment_filename='%s.pdf' % id_))
         r.headers["Access-Control-Expose-Headers"] = "content-disposition"
 
         return r

@@ -89,6 +89,23 @@ class EmailSender:
 
         return part
 
+    @staticmethod
+    def get_attachment_part_f(attachment, filename) -> base.MIMEBase:
+        """ given a filepath and its final filename, return a MIMEBase part for it """
+        part = base.MIMEBase("application", "octet-stream")  # create octet-stream MIME part for the attachment
+        part.set_payload(attachment.read())
+
+        # Encode file in ASCII characters to send by email
+        encoders.encode_base64(part)
+
+        # Add header as key/value pair to attachment part
+        part.add_header(
+            "Content-Disposition",
+            f"attachment; filename={filename}",
+        )
+
+        return part
+
     def send(self, email: Email):
         """ send a message using the server """
 
@@ -121,7 +138,10 @@ class EmailSender:
         # add attachments if given
         if email.files:
             for filepath, filename in email.files:
-                message.attach(self.get_attachment_part(filepath, filename))
+                if type(filepath) is str:
+                    message.attach(self.get_attachment_part(filepath, filename))
+                else:
+                    message.attach(self.get_attachment_part_f(filepath, filename))
 
         # send message using server
         if not config.DEBUGGING_MODE or config.DEBUGGING_SEND_EMAILS:
