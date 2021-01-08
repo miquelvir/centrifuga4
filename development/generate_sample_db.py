@@ -19,9 +19,10 @@ need_rooms = Need(id=10, name="rooms", description="can use rooms resource", typ
 need_schedules = Need(id=11, name="schedules", description="can use schedules resource", type="res")
 need_teachers = Need(id=12, name="teachers", description="can use teachers resource", type="res")
 need_users = Need(id=13, name="users", description="can use users resource", type="res")
+need_recipes = Need(id=14, name="payments-recipes", description="can use the recipes of payments", type="res")
 all_needs = (need_get, need_patch, need_delete, need_post, need_send_email, need_invite_users,
              need_students, need_courses, need_guardians, need_payments, need_rooms, need_schedules,
-             need_teachers, need_users)
+             need_teachers, need_users, need_recipes)
 
 
 def add_needs():

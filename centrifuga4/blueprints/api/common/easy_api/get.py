@@ -20,7 +20,7 @@ def safe_get(function):
 
 class _ImplementsGet:
     """ abstract class both for the Collection and the One get resources """
-    model: MyBase
+    model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
 
     def _parse_args(self, url_args):

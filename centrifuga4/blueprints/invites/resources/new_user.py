@@ -69,6 +69,6 @@ class NewUserCollectionRes(Resource):
 
         except jwt.exceptions.ExpiredSignatureError:
             return "token expired", 401
-"""        except Exception as e:
+        except Exception as e:
             print(e)
-            return "invalid token", 401  # todo or bound this except clause"""
+            return "invalid token", 401  # todo or bound this except clause

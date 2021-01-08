@@ -20,6 +20,13 @@ class Config(object):
     REMEMBER_COOKIE_SECURE = True
     REMEMBER_COOKIE_HTTPONLY = True
 
+    BACKEND_SERVER_PORT = "4999"
+    BACKEND_SERVER_HOST = "127.0.0.1"
+    BACKEND_SERVER_URL = "https://%s:%s" % (BACKEND_SERVER_HOST, BACKEND_SERVER_PORT)
+
+    SSL_CERT = "cert.pem"
+    SSL_KEY = "key.pem"
+
 
 class ProductionConfig(Config):
     CSRF_COOKIE_SAMESITE = 'Strict'
@@ -27,9 +34,12 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Strict'
+
     SECRET_KEY = "super-secret"
     INVITES_SECRET = "super-secret"
     PASSWORD_RESET_SECRET = "super-secret"
+    PUBLIC_VALIDATION_SECRET = "super-secret"
+
     FRONTEND_SERVER_URL = "https://127.0.0.1:4999"
 
     SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), ".",
@@ -44,8 +54,12 @@ class DevelopmentConfig(Config):
 
     CSRF_DISABLE = True
 
+    SECRET_KEY = "super-secret"  # todo
+    INVITES_SECRET = "super-secret"
+    PASSWORD_RESET_SECRET = "super-secret"
+    PUBLIC_VALIDATION_SECRET = "super-secret"
+
     CSRF_COOKIE_SAMESITE = 'Lax'  # allow development frontend server
-    SECRET_KEY = "super-secret"
     FRONTEND_SERVER_URL = "https://127.0.0.1:3000"
 
     SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), ".", "people.db")

@@ -5,7 +5,8 @@ from flask_restful import Api as Api
 from centrifuga4.blueprints.api.common.errors import Unauthorized, Forbidden
 from centrifuga4.blueprints.api.resources.courses import CoursesRes, CoursesCollectionRes
 from centrifuga4.blueprints.api.resources.guardians import GuardiansRes, GuardiansCollectionRes, StudentGuardiansRes
-from centrifuga4.blueprints.api.resources.payments import PaymentsRes, PaymentsCollectionRes, StudentPaymentsRes
+from centrifuga4.blueprints.api.resources.payments import PaymentsRes, PaymentsCollectionRes, StudentPaymentsRes, \
+    PaymentsRecipesRes
 from centrifuga4.blueprints.api.resources.rooms import RoomsRes, RoomsCollectionRes
 from centrifuga4.blueprints.api.resources.schedules import SchedulesRes, SchedulesCollectionRes
 from centrifuga4.blueprints.api.resources.students import StudentsRes, StudentsCollectionRes
@@ -13,7 +14,7 @@ from centrifuga4.blueprints.api.resources.teachers import TeachersRes, TeachersC
 from centrifuga4.blueprints.api.resources.users import UsersCollectionRes, UsersRes
 from centrifuga4.errors.authorization import Forbidden as RawForbidden
 
-api_blueprint = Blueprint('api', __name__)
+api_blueprint = Blueprint('api', __name__, template_folder="templates")
 
 
 @api_blueprint.errorhandler(NoAuthorizationError)
@@ -44,6 +45,7 @@ api.add_resource(CoursesRes, '/courses/<string:id_>')
 api.add_resource(CoursesCollectionRes, '/courses')
 
 api.add_resource(PaymentsRes, '/payments/<string:id_>')
+api.add_resource(PaymentsRecipesRes, '/payments/<string:id_>/recipe')
 api.add_resource(PaymentsCollectionRes, '/payments')
 
 api.add_resource(SchedulesRes, '/schedules/<string:id_>')

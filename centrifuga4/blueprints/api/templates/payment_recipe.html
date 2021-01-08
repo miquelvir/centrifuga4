@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .aligncenter {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div class="aligncenter">
+    <span style="font-size: small">
+        <p style="text-align: center">Xamfrà | C. de les Tàpies, 9, 08001 Barcelona | xamfra@xamfra.net | (+34) 934 439 151</p>
+        <p style="text-align: center">L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA</p>
+    </span>
+</div>
+
+<div class="aligncenter" style="margin-top: 75px; margin-bottom: 50px">
+    <a href="http://xamfra.net/">
+        <img src="{{server_address}}/logo_xamfra_baseline.png" width="150" />
+    </a>
+</div>
+
+<p style="margin-left: 100px; margin-right: 100px; text-align: justify">
+    <span style="font-size: x-small; font-weight: bold">CAT</span><br>
+    L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA ha rebut el pagament de l'estudiant '{{full_name}}',
+    de {{quantity}}€ (EUR) a data de {{date}}
+    ({% if method == 'bank-transfer' %}mitjançant una transferència bancària{% elif method == 'cash' %}en efectiu{% else %} mitjançant un mètode de pagament no especificat{% endif %}).
+    <br><br>
+
+    <span style="font-size: x-small; font-weight: bold">ESP</span><br>
+    L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA ha recibido el pago del estudiante '{{full_name}}',
+    de {{quantity}}€ (EUR) a fecha de {{date}}
+    ({% if method == 'bank-transfer' %}mediante una transferencia bancaria{% elif method == 'cash' %}en efectivo{% else %}mediante un método de pago no especificado{% endif %}).
+    <br><br>
+
+    <span style="font-size: x-small; font-weight: bold">ENG</span><br>
+    L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA has received the payment for student '{{full_name}}'
+    of {{quantity}}€ (EUR) on the following date: {{date}}
+    ({% if method == 'bank-transfer' %}through a bank transfer{% elif method == 'cash' %}in cash{% else %} through an unspecified payment method{% endif %}).
+    <br><br>
+
+    <br>
+    {{today}}, Barcelona
+    <br><br><br><br><br><br>
+
+    <span style="font-size: x-small">
+        <span style="font-weight: bold">id/ </span>{{payment_id}}<br>
+    <span style="font-weight: bold">epoch/ </span>{{today_extended}}<br>
+   l'autenticitat del contingut d'aquest document es pot verificar <a href="{{verification_link}}">aquí</a><br>
+        la autenticidad del contenido de este documento se puede verificar <a href="{{verification_link}}">aquí</a><br>
+            the authenticity of the content of this document can be verified <a href="{{verification_link}}">here</a><br>
+
+</span>
+
+</p>
+
+
+
+</body>
+
+</html>

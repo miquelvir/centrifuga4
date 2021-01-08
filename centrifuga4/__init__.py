@@ -71,7 +71,7 @@ def init_app(config=DevelopmentConfig):
         cors.init_app(app)
 
     with app.app_context():
-        from .blueprints import api, dashboard, auth_service, emails_service, invites_service, password_reset_service
+        from .blueprints import api, dashboard, auth_service, emails_service, invites_service, password_reset_service, validation_blueprint
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
         import centrifuga4.auth_auth
@@ -99,7 +99,7 @@ def init_app(config=DevelopmentConfig):
         app.register_blueprint(emails_service, url_prefix='/emails/v1')
         app.register_blueprint(invites_service, url_prefix='/invites/v1')
         app.register_blueprint(password_reset_service, url_prefix='/password-reset/v1')
-
+        app.register_blueprint(validation_blueprint, url_prefix='/validation/v1')
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app
