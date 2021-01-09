@@ -5,6 +5,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SendIcon from '@material-ui/icons/Send';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from 'clsx';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import Card from '@material-ui/core/Card';
@@ -17,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EuroIcon from '@material-ui/icons/Euro';
 import PaymentsDataService from '../_services/payments.service';
 import StudentsPaymentsDataService from '../_services/student_payment.service';
+import {sendReceiptEmail} from '../_services/emailsReceipts.service';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Tooltip from "@material-ui/core/Tooltip";
 import Box from "@material-ui/core/Box";
@@ -28,7 +30,7 @@ import * as yup from "yup";
 import {one_of} from "../_yup/validators";
 import {useErrorHandler} from "../_helpers/handle-response";
 import InputAdornment from "@material-ui/core/InputAdornment";
-
+import {payment_methods} from "../_data/payment_methods"
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '100%',
@@ -78,7 +80,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
 
   const formik = useNormik(!newPayment, {
         initialValues: payment,
-        validationSchema: yup.object({method: one_of(t, ['bank-transfer', 'cash']),
+        validationSchema: yup.object({method: one_of(t, payment_methods),
                                         quantity: yup.number().required(t("import_required")),
                                         date: yup.date().required(t("date_required"))}),  // todo
         enableReinitialize: true,
@@ -130,12 +132,14 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
       <CardHeader
         avatar={
           <Tooltip title={payment["method"] === 'cash'? t('has_paid_cash'):
-                payment["method"] === 'bank-transfer'? t('bank-transfer'):
-                    t('other-payment-method')
+                payment["method"] === 'bank-transfer' ? t('tooltip-bank-transfer'):
+                    payment["method"] === 'bank-direct-debit'? t('tooltip-bank-direct-debit'):
+                        t('other-payment-method')
             }>
           <Avatar aria-label="recipe" className={classes.avatar}>
             {payment["method"] === 'cash'? <EuroIcon/>:
-                payment["method"] === 'bank-transfer'? <AccountBalanceIcon/>:
+                payment["method"] === 'bank-transfer'? <AccountBalanceWalletIcon/>:
+                    payment["method"] === 'bank-direct-debit'? <AccountBalanceIcon/>:
                     <MoreHorizIcon/>
             }
           </Avatar>
@@ -155,12 +159,21 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
 
         {!newPayment && <CardActions disableSpacing>
         <Tooltip title={t("export_receipt")} aria-label={t("export_receipt")}>
-          <IconButton aria-label={t("export_receipt")}>
+          <IconButton aria-label={t("export_receipt")} onClick={(e) => {
+              PaymentsDataService
+                  .downloadSubresource(payment["id"], 'receipt')
+                  .then(...errorHandler({snackbarSuccess:true}))
+                  .then(()=>null)
+          }}>
             <ReceiptIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title={t("send_receipt")} aria-label={t("send_receipt")}>
-          <IconButton aria-label={t("send_receipt")}>
+          <IconButton aria-label={t("send_receipt")} onClick={(e) => {
+              sendReceiptEmail(payment["id"])
+                  .then(...errorHandler({snackbarSuccess:true}))
+                  .then(()=>null);
+          }}>
             <SendIcon />
           </IconButton>
         </Tooltip>
@@ -211,8 +224,12 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
                                                 formik={formik}
                                                 name="method"
                                                 select>
-                                                <MenuItem value="bank-transfer">{t("bank_transfer")}</MenuItem>
-                                                <MenuItem value="cash">{t("cash")}</MenuItem>
+                                                { payment_methods.map(
+                                                    (method) => (
+                                                        <MenuItem key={method} value={method}>{t(method)}</MenuItem>
+                                                    )
+                                                )
+                                                }
                                             </DirtyTextField>
                                             <DirtyTextField
                                                 label={t("import")}

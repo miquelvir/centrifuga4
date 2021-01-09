@@ -20,5 +20,6 @@ export const education_years = [
     "FP_higher",
     "undergraduate",
     "master",
-    "phd"
+    "phd",
+    "other"
 ];

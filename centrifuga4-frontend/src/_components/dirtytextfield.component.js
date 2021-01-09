@@ -22,7 +22,7 @@ const DirtyTextField = (props) => {
         value: formik.values[name] === undefined? '': formik.values[name],  // todo why is this being called with undefined tho
         onChange: formik.handleChange,
         onBlur: formik.handleBlur,
-        error: formik.status  || formik.errors[name] === true,
+        error: formik.status  || formik.errors[name] !== undefined,
         helperText: formik.touched[name] && formik.errors[name]
     }
 

@@ -10,3 +10,4 @@ from .student import Student
 from .teacher import Teacher
 from .user import User
 from .need import Need
+from .label import Label

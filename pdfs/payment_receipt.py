@@ -6,9 +6,7 @@ import jwt
 import pdfkit
 
 from jinja_utils.template_renderer import TemplateRenderer
-
-
-TEMPLATES_PATH = os.path.join(pathlib.Path(__file__).parent.absolute(), 'templates')
+from pdfs import TEMPLATES_PATH
 
 
 def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=TEMPLATES_PATH):
@@ -20,7 +18,7 @@ def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=T
 
     signing_at = unix_time_millis()
     try:
-        student = payment.student[0]
+        student = payment.student
         student_name = student.full_name.title()
         student_id = student.id
     except IndexError:
@@ -37,7 +35,7 @@ def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=T
                        algorithm='HS256')
 
     templater = TemplateRenderer(templates_folder=templates_folder)
-    pdf_content = templater.render_template("payment_recipe.html",
+    pdf_content = templater.render_template("payment_receipt.html",
                                             server_address=backend_url,
                                             full_name=student_name,
                                             quantity=payment.quantity,
@@ -47,8 +45,7 @@ def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=T
                                             today_extended=signing_at,
                                             payment_id=payment.id,
                                             verification_link="%s/validation/v1/%s" % (
-                                            backend_url,
-                                            token.decode('utf-8')))
+                                                backend_url, token.decode('utf-8')))
 
     pdf = pdfkit.from_string(pdf_content, False,
                              configuration=config)

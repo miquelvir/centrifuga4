@@ -1,5 +1,5 @@
 import centrifuga4
-from config import ProductionConfig
+from development.config import ProductionConfig
 
 app = centrifuga4.init_app(ProductionConfig)
 

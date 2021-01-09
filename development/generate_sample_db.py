@@ -1,9 +1,11 @@
 import datetime
+from typing import List
 
 import centrifuga4
-from centrifuga4.models import Student, User, Guardian, Need, Payment
-from random import randint, choice
+from centrifuga4.models import Student, User, Guardian, Need, Payment, Course, Teacher, Label, Room, Schedule
+from random import randint, choice, sample
 
+from centrifuga4.models.raw_person import RawPerson
 
 need_get = Need(id=0, name="get", description="can perform get operations", type="action")
 need_patch = Need(id=1, name="patch", description="can perform patch operations", type="action")
@@ -33,21 +35,21 @@ def add_needs():
 def add_users():
     for idx in range(20):
         u = User(id=User.generate_new_id(),
-                    name="john%s" % idx,
-                    surname1="marques%s" % idx,
-                    surname2="brownlee%s" % idx,
-                    email="jmb%s@gmail.com" % idx,
-                    username="jmb%s@gmail.com" % idx,
+                 name="john%s" % idx,
+                 surname1="marques%s" % idx,
+                 surname2="brownlee%s" % idx,
+                 email="jmb%s@gmail.com" % idx,
+                 username="jmb%s@gmail.com" % idx,
                  password_hash=User.hash_password("john%s" % idx))
         centrifuga4.db.session.add(u)
 
     admin = User(id=User.generate_new_id(),
-             name="admin",
-             surname1="admin",
-             surname2="admin",
-             email="admin@gmail.com",
-             username="admin@gmail.com",
-             password_hash=User.hash_password("admin"))
+                 name="admin",
+                 surname1="admin",
+                 surname2="admin",
+                 email="admin@gmail.com",
+                 username="admin@gmail.com",
+                 password_hash=User.hash_password("admin"))
 
     for need in all_needs:
         admin.needs.append(need)
@@ -55,9 +57,63 @@ def add_users():
     centrifuga4.db.session.add(admin)
 
 
+def add_teachers():
+    teachers = []
+    for idx in range(20):
+        t = Teacher(id=RawPerson.generate_new_id(),  # todo id collision check
+                    name="ester%s" % idx,
+                    surname1="bonal%s" % idx,
+                    surname2="vivé%s" % idx,
+                    email="ebv%s@gmail.com" % idx)
+        centrifuga4.db.session.add(t)
+        teachers.append(t)
+    return teachers
+
+
+def add_rooms():
+    rooms = []
+    for idx in range(20):
+        r = Room(id=Room.generate_new_id(),  # todo id collision check
+                 name="ester%s" % idx,
+                 capacity=randint(1, 50))
+        centrifuga4.db.session.add(r)
+        rooms.append(r)
+    return rooms
+
+
+def add_courses(students: List[Student], teachers: List[Teacher], labels: List[Label], rooms: List[Room]):
+    for idx in range(100):
+        course_id = Course.generate_new_id()
+        c = Course(id=course_id,
+                   name="course %s" % idx,
+                   description=choice(("course description %s" % idx, None)))
+
+        for student in sample(students, randint(0, 50)):
+            c.students.append(student)
+
+        for teacher in sample(teachers, randint(0, 4)):
+            c.teachers.append(teacher)
+
+        for label in sample(labels, randint(0, 10)):
+            c.labels.append(label)
+
+        c.rooms.append(choice(rooms))
+
+        for idx2 in range(randint(1, 3)):
+            c.schedules.append(Schedule(Schedule.generate_new_id(),
+                                        choice(('weekly', 'yearly', 'monthly', 'daily')),
+                                        None,
+                                        None,
+                                        choice(rooms).id,
+                                        course_id))
+
+        centrifuga4.db.session.add(c)
+
+
 def add_students():
+    students = []
     for idx in range(500):
-        s = Student(id=Student.generate_new_id(),
+        s = Student(id=RawPerson.generate_new_id(),
                     name="mark%s" % idx,
                     surname1="stuart%s" % idx,
                     surname2="mill%s" % idx,
@@ -65,17 +121,17 @@ def add_students():
                     email="msm%s@gmail.com" % idx,
                     is_studying=choice((True, True, True, False)),
                     is_working=choice((True, False, False, False)),
-                    is_enrolled=choice((True, False, False, False)),
-                    is_early_unenrolled=False,
-                    years_in_xamfra=randint(0, 15))
+                    enrollment_status=choice(('enrolled', 'early-unenrolled', 'pre-enrolled')),
+                    years_in_xamfra=randint(0, 15),
+                    image_agreement=choice((True, False)))
 
-        for idx2 in range(randint(0,3)):
-            g = Guardian(id=Guardian.generate_new_id(),
+        for idx2 in range(randint(0, 3)):
+            g = Guardian(id=RawPerson.generate_new_id(),
                          name="maria%s-%s" % (idx, idx2),
                          surname1="lópez%s-%s" % (idx, idx2),
                          surname2="suárez%s-%s" % (idx, idx2),
                          email="mls%s_%s@gmail.com" % (idx, idx2),
-                        relation=choice(("mother", "father", "grandmother", "grandfather", "tutor")),
+                         relation=choice(("mother", "father", "grandmother", "grandfather", "legal_guardian")),
                          is_working=choice((True, True, True, False)),
                          is_studying=choice((True, False, False, False))
                          )
@@ -85,12 +141,45 @@ def add_students():
         for idx2 in range(randint(0, 3)):
             p = Payment(id=Payment.generate_new_id(),
                         quantity=randint(0, 150),
-                        method=choice(('cash', 'bank-transfer')),
+                        method=choice(('cash', 'bank-transfer', 'bank-direct-debit')),
                         date=datetime.date(randint(2019, 2020), randint(1, 12), randint(1, 28)),
                         concept=choice(("violin payment", "new payment", "recurring payment", "love ya")))
             s.payments.append(p)
 
         centrifuga4.db.session.add(s)
+        students.append(s)
+    return students
+
+
+def add_labels():
+    labels = []
+    for label_name in ("kindergarten_p1",
+                       "kindergarten_p2",
+                       "kindergarten_p3",
+                       "kindergarten_p4",
+                       "kindergarten_p5",
+                       "primary_1",
+                       "primary_2",
+                       "primary_3",
+                       "primary_4",
+                       "primary_5",
+                       "primary_6",
+                       "eso_1",
+                       "eso_2",
+                       "eso_3",
+                       "eso_4",
+                       "baccalaureate_1",
+                       "baccalaureate_2",
+                       "FP_lower",
+                       "FP_higher",
+                       "undergraduate",
+                       "master",
+                       "phd",
+                       "other"):
+        l = Label(name=label_name)
+        centrifuga4.db.session.add(l)
+        labels.append(l)
+    return labels
 
 
 if __name__ == "__main__":
@@ -101,7 +190,10 @@ if __name__ == "__main__":
 
         add_needs()
         add_users()
-        add_students()
+        students = add_students()
+        teachers = add_teachers()
+        labels = add_labels()
+        rooms = add_rooms()
+        add_courses(students, teachers, labels, rooms)
 
         centrifuga4.db.session.commit()
-

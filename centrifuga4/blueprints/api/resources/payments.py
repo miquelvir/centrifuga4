@@ -8,7 +8,7 @@ from flask import make_response, send_file, render_template, current_app
 from flask_restful import Resource
 
 import centrifuga4.blueprints.api.common.easy_api as easy
-from centrifuga4.auth_auth.action_need import GetPermission
+from centrifuga4.auth_auth.action_need import GetPermission, PostPermission
 from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.auth_auth.resource_need import PaymentsPermission, StudentsPermission, PaymentsRecipesPermission
 from centrifuga4.blueprints.api.common.easy_api._content_negotiation import produces
@@ -17,7 +17,7 @@ from centrifuga4.blueprints.api.common.easy_api.get import safe_get
 from centrifuga4.blueprints.api.common.errors import NotFound
 from centrifuga4.models import Payment, Student
 from centrifuga4.schemas.schemas import PaymentSchema
-from pdfs.payment_recipe import generate_payment_recipe_pdf
+from pdfs.payment_receipt import generate_payment_recipe_pdf
 
 
 class PaymentsRes(easy.EasyResource,
@@ -49,8 +49,8 @@ class StudentPaymentsRes(easy.EasyResource,
 
 
 class PaymentsRecipesRes(Resource, SwaggerView):  # todo documented class higher up
-    @Requires(GetPermission, PaymentsPermission, PaymentsRecipesPermission)
-    def get(self, id_):
+    @Requires(PostPermission, PaymentsPermission, PaymentsRecipesPermission)
+    def post(self, id_):
         query = Payment.query.filter_by(id=id_)
         payment: Payment = query.first()
 

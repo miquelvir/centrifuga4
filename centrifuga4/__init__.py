@@ -8,9 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
 from flask_talisman import Talisman
 from flask_login import LoginManager
-
-
-from config import DevelopmentConfig
+from development.config import ProductionConfig
 from rq import Queue
 from email_queue.worker import conn
 
@@ -43,7 +41,7 @@ temp = {
 swagger = Swagger(template=temp)
 
 
-def init_app(config=DevelopmentConfig):
+def init_app(config=ProductionConfig):
     # app creation
     app = Flask(__name__,
                 static_folder='../centrifuga4-frontend/build',
@@ -55,12 +53,12 @@ def init_app(config=DevelopmentConfig):
     # plugin initialization
     db.init_app(app)
     login.init_app(app)
-    man.init_app(app, content_security_policy={
+    """man.init_app(app, content_security_policy={
             "style-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.googleapis.com'],  # todo production
             "font-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.gstatic.com'],
             "img-src": "'self' data:",
             "script-src":  ["\'self\'", "'unsafe-inline'"],
-        })  #  content_security_policy_nonce_in=['script-src', 'style-src']
+        }) """  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
     swagger.init_app(app)
     principal.init_app(app)
     csrf.init_app(app)

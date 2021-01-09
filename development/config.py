@@ -42,7 +42,7 @@ class ProductionConfig(Config):
 
     FRONTEND_SERVER_URL = "https://127.0.0.1:4999"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), ".",
+    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), "..",
                                                             "people.db")
 
 
@@ -62,11 +62,11 @@ class DevelopmentConfig(Config):
     CSRF_COOKIE_SAMESITE = 'Lax'  # allow development frontend server
     FRONTEND_SERVER_URL = "https://127.0.0.1:3000"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), ".", "people.db")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "people.db")
 
 
 class TestingConfig(DevelopmentConfig):
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), ".", "people_test.db")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "people_test.db")
 

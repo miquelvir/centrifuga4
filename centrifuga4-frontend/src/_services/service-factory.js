@@ -110,6 +110,25 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             });
         }
 
+        postWithId(id) {
+            return new Promise(function (resolve, reject) {
+                axios({
+                    method: 'post',
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    headers: {
+                        ...{
+                            'Content-Type': 'application/json',
+                            'Cache-Control': 'no-cache'
+                        }, ...authHeader()
+                    }
+                }).then(function (res) {
+                        resolve(res);
+                    }).catch(function (err) {
+                        reject(err);
+                });
+            });
+        }
+
         delete(id) {
             return new Promise(function (resolve, reject) {
                 axios({
@@ -153,6 +172,35 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
                     let filename = response.headers["content-disposition"].split("filename=")[1];
                     if (filename === null) filename = "export.csv";
 
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', filename);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    resolve();
+                }).catch(function (err) {
+                    reject(err);
+                });
+
+            });
+        }
+
+
+        downloadSubresource(id, subresource) {
+            return new Promise(function (resolve, reject) {
+                axios({
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}/${subresource}`,
+                    method: 'POST',
+                    responseType: 'blob', // important
+                    headers: {
+                        ...{
+                            'Cache-Control': 'no-cache'
+                        }, ...authHeader()
+                    }
+                }).then(response => {
+                    let filename = response.headers["content-disposition"].split("filename=")[1];
                     const url = window.URL.createObjectURL(new Blob([response.data]));
                     const link = document.createElement('a');
                     link.href = url;

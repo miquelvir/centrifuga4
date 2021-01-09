@@ -1,4 +1,7 @@
+from sqlalchemy.orm import validates
+
 from centrifuga4 import db
+from centrifuga4.models._base import MyBase
 
 db.Table("teacher_schedule",
          db.Column("teacher_id", db.Text, db.ForeignKey('teacher.id')),
@@ -9,19 +12,22 @@ db.Table("student_schedule",
          db.Column("schedule_id", db.Text, db.ForeignKey('schedule.id')))
 
 
-class Schedule(db.Model):
+class Schedule(MyBase):
     __tablename__ = "schedule"
 
     id = db.Column(db.Integer,
                    primary_key=True)
     periodicity = db.Column(db.Text,
                             nullable=False)
+
     start_date_id = db.Column(db.Integer,
                               db.ForeignKey('periodic_date.id'),
                               nullable=True)
+
     end_date_id = db.Column(db.Integer,
                             db.ForeignKey('periodic_date.id'),
                             nullable=True)
+
     room_id = db.Column(db.Text,
                         db.ForeignKey('room.id'),
                         nullable=True)
@@ -45,6 +51,11 @@ class Schedule(db.Model):
     teachers = db.relationship("Teacher",
                                secondary="teacher_schedule",
                                back_populates="schedules")
+
+    @validates('periodicity')
+    def validates(self, key, value):
+        assert value in ('weekly', 'yearly', 'monthly', 'daily')
+        return value
 
     def __repr__(self):
         return '<Schedule | %s - %s>' % (self.id, self.course_id)

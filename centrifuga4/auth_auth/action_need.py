@@ -17,8 +17,8 @@ GetNeed = partial(ActionNeed, 'get')  # correlates to the HTTP GET verb
 PatchNeed = partial(ActionNeed, 'patch')  # correlates to the HTTP PATCH verb
 PostNeed = partial(ActionNeed, 'post')  # correlates to the HTTP POST verb
 DeleteNeed = partial(ActionNeed, 'delete')  # correlates to the HTTP DELETE verb
-EmailNeed = partial(ActionNeed, 'email')
-InviteNeed = partial(ActionNeed, 'invite')
+EmailNeed = partial(ActionNeed, 'send_email')
+InviteNeed = partial(ActionNeed, 'invite_users')
 
 
 """

@@ -35,7 +35,7 @@ class MyBase(db.Model):
         attempts = 0
         while True:
             id_ = str(uuid.uuid4())
-            exists = db.session.query(cls.id).filter_by(id=id_).scalar() is not None
+            exists = db.session.query(cls.id).filter_by(id=id_).scalar() is not None  # todo check
             if not exists and id_ not in avoid:
                 return id_
 

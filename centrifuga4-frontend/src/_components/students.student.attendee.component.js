@@ -24,7 +24,13 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Tooltip from "@material-ui/core/Tooltip";
 import DirtyTextField from "./dirtytextfield.component";
-import {education_years} from "../_data/education";
+import SendIcon from "@material-ui/icons/Send";
+import {sendEnrollmentEmail} from "../_services/emailsEnrollment.service";
+import ReceiptIcon from "@material-ui/icons/Receipt";
+import Divider from "@material-ui/core/Divider";
+import {sendGrantEmail} from "../_services/emailsGrants.service";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import {payment_methods} from "../_data/payment_methods";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,21 +38,25 @@ const useStyles = makeStyles((theme) => ({
   fullWidth: {
     width: "100%"
   },
-
+  button: {
+    margin: theme.spacing(1),
+  },
   sizeSmall: {
     width: "25ch"
   },
-  line: {
-    width: "100%",
-    marginTop: theme.spacing(1)
-  },
+    line: {
+        width: "100%",
+        marginTop: theme.spacing(1)
+    },
+    composite: {
+        display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
+        gap: theme.spacing(1), width: "100%"
+    },
   fab: {
     position: 'absolute',
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
-  composite: {display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
-    gap: theme.spacing(1), width: "100%"}
 }));
 
 function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
@@ -80,6 +90,14 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
 
                 deleteStudent(currentStudent['id']);
               });
+  }
+  const sendGrantLetter = () => {
+      sendGrantEmail(currentStudent['id'])
+          .then(...errorHandler({snackbarSuccess: true}));
+  }
+  const sendEnrollmentAgreement = () => {
+      sendEnrollmentEmail(currentStudent['id'])
+          .then(...errorHandler({snackbarSuccess: true}));
   }
   return (
     <div
@@ -129,6 +147,7 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
               </Tooltip>
               }
 
+
               {loading?
                   <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
               :
@@ -146,15 +165,14 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
               <Person currentPerson={currentStudent}
                       updateCurrentStudent={updateCurrentStudent}
                       patchService={patchService}
+                      onUpdate={(changedBody) => {
+                        if ("status" in changedBody && changedBody["status"] === "enrolled"){
+                          sendGrantLetter();
+                        }
+                      }}
                       additionalValidation={{
-                        is_early_unenrolled: yup.boolean().required(t("is_early_unenrolled_required")).when('is_enrolled',
-                            {is: true,
-                            then: yup.boolean().test(
-                                  'enrolledUnenrolledCollision2',
-                                  t('enrolled_unenrolled'),
-                                  v => !v
-                                )}),
-                        is_enrolled: yup.boolean().required(t("is_enrolled_required"))
+                        enrollment_status: yup.string().required(t("status_required")),
+                        image_agreement: yup.boolean().required(t("image_required"))
                       }}
                       additionalFields={
                         [[<DirtyTextField
@@ -169,8 +187,12 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
                                 style={{flex: 1}}
                                 name="default_payment_method"
                                 select>
-                                <MenuItem value="bank-transfer">{t("bank_transfer")}</MenuItem>
-                                <MenuItem value="cash">{t("cash")}</MenuItem>
+                                { payment_methods.map(
+                                                    (method) => (
+                                                        <MenuItem key={method} value={method}>{t(method)}</MenuItem>
+                                                    )
+                                                )
+                                                }
                             </DirtyTextField>],
                             <DirtyTextField
                                 label={t("payment_comments")}
@@ -185,17 +207,18 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
                               style={{flex: 1}}
                               name="years_in_xamfra"/>,
                               <DirtyTextField
-                                label={t("is_enrolled")}
+                                label={t("status")}
                                 style={{flex: 1}}
-                                name="is_enrolled"
+                                name="enrollment_status"
                                 select>
-                                <MenuItem value={true}>{t("yes")}</MenuItem>
-                                <MenuItem value={false}>{t("no")}</MenuItem>
+                                {['enrolled', 'early-unenrolled', 'pre-enrolled'].map((s) => (
+                                    <MenuItem key={s} value={s}>{t(s)}</MenuItem>
+                                ))}
                             </DirtyTextField>,
                               <DirtyTextField
-                                label={t("is_early_unenrolled")}
+                                label={t("image_agreement")}
                                 style={{flex: 1}}
-                                name="is_early_unenrolled"
+                                name="image_agreement"
                                 select>
                                 <MenuItem value={true}>{t("yes")}</MenuItem>
                                 <MenuItem value={false}>{t("no")}</MenuItem>
@@ -212,6 +235,87 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
 
               </Person>
 
+              <Box my={3}>
+            <Divider />
+            </Box>
+
+              <Box className={[classes.line, classes.composite]}>
+                {loading?
+                      <Skeleton style={{flex: 1}}><Button/></Skeleton>
+                      :
+                          <Tooltip style={{flex: 1}} title={t("send_grant_letter")} aria-label={t("send_grant_letter")}>
+                           <Button
+                          variant="contained"
+                          color="default"
+                          className={classes.button}
+                          startIcon={<SendIcon />}
+                          onClick={(e) => {
+                               sendGrantLetter();
+                            }}
+                        >
+                          {t("grant_letter")}
+                        </Button>
+                </Tooltip>
+                      }
+
+                {loading? <Skeleton style={{float: 'right'}}><Button/></Skeleton>
+                :
+                <Tooltip style={{flex: 1}} title={t("export_grant_letter")} aria-label={t("export_grant_letter")}>
+            <Button
+                          variant="contained"
+                          color="default"
+                          className={classes.button}
+                          startIcon={<GetAppIcon />}
+                          onClick={(e) => {
+                               StudentsDataService
+                    .downloadSubresource(currentStudent["id"], 'grantLetter')
+                    .then(...errorHandler({snackbarSuccess:true}))
+                    .then(()=>null)
+                            }}
+                        >
+                          {t("grant_letter")}
+                        </Button>
+          </Tooltip>}
+              </Box>
+
+              <Box className={[classes.line, classes.composite]}>
+                {loading?
+                      <Skeleton style={{flex: 1}}><Button/></Skeleton>
+                      :
+                          <Tooltip style={{flex: 1}} title={t("send_enrollment_agreement")} aria-label={t("enrollment_agreement")}>
+                           <Button
+                          variant="contained"
+                          color="default"
+                          className={classes.button}
+                          startIcon={<SendIcon />}
+                          onClick={(e) => {
+                               sendEnrollmentAgreement();
+                            }}
+                        >
+                          {t("enrollment_agreement")}
+                        </Button>
+                </Tooltip>
+                      }
+
+                {loading? <Skeleton style={{float: 'right'}}><Button/></Skeleton>
+                :
+                <Tooltip style={{flex: 1}} title={t("export_enrollment_agreement")} aria-label={t("export_enrollment_agreement")}>
+            <Button
+                          variant="contained"
+                          color="default"
+                          className={classes.button}
+                          startIcon={<GetAppIcon />}
+                          onClick={(e) => {
+                               StudentsDataService
+                    .downloadSubresource(currentStudent["id"], 'enrollmentAgreement')
+                    .then(...errorHandler({snackbarSuccess:true}))
+                    .then(()=>null)
+                            }}
+                        >
+                          {t("enrollment_agreement")}
+                        </Button>
+          </Tooltip>}
+              </Box>
             </Box>
         </Box>
       )}

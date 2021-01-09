@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     gap: theme.spacing(1), width: "100%"}
 }));
 
-function Guardian({ children, value, index, studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
+function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
@@ -56,7 +56,7 @@ function Guardian({ children, value, index, studentId, title, guardianId, delete
   const [guardian, setGuardian] = useState(null);
 
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
-
+  console.log(guardianId, guardian);
 
   useEffect(() => {
     if (newGuardian) return;

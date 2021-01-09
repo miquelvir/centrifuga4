@@ -4,9 +4,10 @@ from flask_restful import Api as Api
 
 from centrifuga4.blueprints.api.common.errors import Unauthorized, Forbidden
 from centrifuga4.errors.authorization import Forbidden as RawForbidden
+from .resources.enrollment_email import EnrollmentEmailCollectionRes
+from .resources.grant_email import GrantEmailCollectionRes
+from .resources.job_queue import JobQueueRes
 from .resources.payment_receipt_email import PaymentReceiptEmailCollectionRes
-
-from .resources.welcome_email import WelcomeEmailCollectionRes, WelcomeEmailRes
 
 emails_blueprint = Blueprint('emails', __name__)
 
@@ -23,7 +24,8 @@ def handle(e):
 
 api = Api(emails_blueprint)
 
-api.add_resource(WelcomeEmailRes, '/queue/<job_id>')
-api.add_resource(WelcomeEmailCollectionRes, '/welcomeEmail')
+api.add_resource(JobQueueRes, '/queue/<job_id>')
+api.add_resource(EnrollmentEmailCollectionRes, '/enrollmentEmail/<student_id>')
+api.add_resource(GrantEmailCollectionRes, '/grantEmail/<student_id>')
 api.add_resource(PaymentReceiptEmailCollectionRes, '/paymentReceipt/<payment_id>')
 

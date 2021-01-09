@@ -1,22 +1,21 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
-import {Button, DialogActions, MenuItem, TextField} from "@material-ui/core";
+import {MenuItem} from "@material-ui/core";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import DirtyTextField from "./dirtytextfield.component";
 import * as yup from 'yup';
 import DirtyCountrySelect from "./contry-select.component";
-import RestorePageIcon from '@material-ui/icons/RestorePage';
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useNormik} from "../_helpers/normik";
 import SaveIcon from '@material-ui/icons/Save';
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import RestoreIcon from '@material-ui/icons/Restore';
-import {element} from "prop-types";
 import {education_years} from "../_data/education";
 import Divider from "@material-ui/core/Divider";
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -44,6 +43,7 @@ function Person(props) {
     const additionalFields = props.additionalFields;
     const additionalValidation = props.additionalValidation === undefined? {}: props.additionalValidation;
     const studentId = props.studentId;
+    const onUpdate = props.onUpdate;
 
     const {t} = useTranslation();
     const classes = useStyles();
@@ -73,17 +73,18 @@ function Person(props) {
         }, ...additionalValidation}),
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
-            console.log("xxxxxxxxxxxxxxxxxxxx");
             if (newPerson) {
                 setStatus();
-                console.log("mmmmmmmmmmmmmmmmmmmmmm", changedValues);
                 dataService.post(changedValues, studentId)
                     .then(...errorHandler({snackbarSuccess: true}))
                     .then(function (new_id) {
                         updateCurrentPerson(new_id);
+
+
+                        if (typeof onUpdate === 'function') onUpdate(changedValues);
                     }).catch(function (err) {
                     setStatus(true);
-                }).finally(() => {
+                    }).finally(() => {
                     setSubmitting(false);
                 });
             } else {
@@ -97,10 +98,11 @@ function Person(props) {
                     .then(function (patched_body) {
                         formik.resetForm(patched_body);
                         updateCurrentPerson(patched_body);
+
+                        if (typeof onUpdate === 'function') onUpdate(changedValues);
                     }).catch(function (err) {
-                    setStatus(true);
-                })
-                    .finally(() => {
+                        setStatus(true);
+                    }).finally(() => {
                         setSubmitting(false);
                     });
 

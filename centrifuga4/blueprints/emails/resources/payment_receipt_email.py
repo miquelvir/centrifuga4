@@ -7,14 +7,11 @@ from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.auth_auth.resource_need import PaymentsRecipesPermission, PaymentsPermission
 from centrifuga4.blueprints.api.common.errors import NotFound
 from centrifuga4.models import Payment
-from email_queue.emails.payment_recipe_email import my_job
-from email_queue.worker import conn
+from email_queue.emails.payment_receipt_email import my_job
 from centrifuga4 import q
 
 
 class PaymentReceiptEmailCollectionRes(Resource):  # todo check
-
-    # @jwt_required
     @Requires(EmailPermission, PaymentsRecipesPermission, PaymentsPermission)
     def post(self, payment_id):
         query = Payment.query.filter_by(id=payment_id)
@@ -25,9 +22,12 @@ class PaymentReceiptEmailCollectionRes(Resource):  # todo check
                            requestedId=payment_id)
 
         job = q.enqueue_call(
-            func=my_job, args=(payment, [guardian.email for guardian in payment.student[0].guardians if guardian.email], current_app.config["PUBLIC_VALIDATION_SECRET"], current_app.config["BACKEND_SERVER_URL"]), result_ttl=5000
+            func=my_job,
+            args=(payment,
+                  [guardian.email for guardian in payment.student[0].guardians if guardian.email]
+                  + [payment.student[0].email],
+                  current_app.config["PUBLIC_VALIDATION_SECRET"], current_app.config["BACKEND_SERVER_URL"]),
+            result_ttl=5000
         )
-        print(job.get_id())
+
         return job.get_id()
-
-

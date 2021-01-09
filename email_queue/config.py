@@ -1,12 +1,10 @@
 import os
-
-from config import Config
-from . import secrets
+from email_queue import email_secrets
 
 SMTP_TLS_PORT = 465
 SMTP_DOMAIN = "smtp.xamfra.net"
 SMTP_USER = "xamfra@xamfra.net"  # user
-SMTP_PASSWORD = secrets.SMTP_PASSWORD  # password
+SMTP_PASSWORD = email_secrets.SMTP_PASSWORD  # password
 SMTP_FROM_EMAIL = SMTP_USER  # email which will be shown in the 'from' field
 SMTP_REPLY_TO = SMTP_FROM_EMAIL
 BCC_ADMIN = False

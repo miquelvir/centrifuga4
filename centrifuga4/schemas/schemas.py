@@ -64,6 +64,7 @@ class PersonSchema(MySQLAlchemyAutoSchema):
         )
 
     full_name = fields.Str(dump_only=True)
+    age = fields.Int(dump_only=True)
 
 
 class GuardianSchema(MySQLAlchemyAutoSchema):
@@ -86,6 +87,7 @@ class StudentSchema(MySQLAlchemyAutoSchema):
         )
 
     full_name = fields.Str(dump_only=True)
+    age = fields.Int(dump_only=True)
 
 
 class PeriodicDateSchema(MySQLAlchemyAutoSchema):

@@ -1,15 +1,15 @@
 from centrifuga4 import db
-from centrifuga4.models.person import Person
+from centrifuga4.models.raw_person import RawPerson
 
 
-class Teacher(Person):
+class Teacher(RawPerson):
     __tablename__ = "teacher"
     __mapper_args__ = {
         'polymorphic_identity': "teacher"
     }
 
     id = db.Column(db.Text,
-                   db.ForeignKey('person.id'),
+                   db.ForeignKey('raw_person.id'),
                    primary_key=True)
 
     courses = db.relationship("Course",

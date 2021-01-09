@@ -127,6 +127,8 @@ class EmailSender:
         elif config.BCC_ADMIN:
             message[_BCC] = config.DEBUGGING_EMAIL
 
+        print(message[_TO])
+
         # add plain text to the body if given
         if email.plain_body:
             message.attach(text.MIMEText(email.plain_body, _PLAIN))
@@ -145,7 +147,9 @@ class EmailSender:
 
         # send message using server
         if not config.DEBUGGING_MODE or config.DEBUGGING_SEND_EMAILS:
+            print("sending")
             result = self._server.send_message(message)
+            print(result)
         else:
             result = {}
             log.debug(
