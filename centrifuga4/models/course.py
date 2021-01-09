@@ -30,6 +30,9 @@ class Course(MyBase):
                      nullable=False)
     description = db.Column(db.Text,
                             nullable=True)
+    price_term = db.Column(db.Text,
+                           nullable=False,
+                           default=60)
 
     rooms = db.relationship("Room",
                             secondary="room_course",
