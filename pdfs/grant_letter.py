@@ -19,7 +19,7 @@ def generate_grant_letter_pdf(student_id, backend_server_address, templates_fold
     student = Student.query.filter(Student.id == student_id).one_or_none()
     if not student:
         return
-    total_price = sum([c.price for c in student.courses])
+    total_price = sum([c.price_term for c in student.courses])
     cs = CourseSchema()
     pdf_content = templater.render_template("grant_letter.html",
                                             server_address=backend_server_address,
@@ -29,7 +29,7 @@ def generate_grant_letter_pdf(student_id, backend_server_address, templates_fold
                                             anual_paid_price=student.price_term*3,
                                             total_price=total_price,
                                             grant=total_price > student.price_term,
-                                            grant_percentage=round(student.price_term/total_price*100, 2) if total_price != 0 else 0,
+                                            grant_percentage=round((total_price-student.price_term)/total_price*100, 2) if total_price != 0 else 0,
                                             datetime=datetime.date(datetime.now()))
 
     pdf = pdfkit.from_string(pdf_content, False,

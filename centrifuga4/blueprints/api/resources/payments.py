@@ -11,9 +11,6 @@ import centrifuga4.blueprints.api.common.easy_api as easy
 from centrifuga4.auth_auth.action_need import GetPermission, PostPermission
 from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.auth_auth.resource_need import PaymentsPermission, StudentsPermission, PaymentsRecipesPermission
-from centrifuga4.blueprints.api.common.easy_api._content_negotiation import produces
-from centrifuga4.blueprints.api.common.easy_api._requires import EasyRequires
-from centrifuga4.blueprints.api.common.easy_api.get import safe_get
 from centrifuga4.blueprints.api.common.errors import NotFound
 from centrifuga4.models import Payment, Student
 from centrifuga4.schemas.schemas import PaymentSchema
@@ -66,7 +63,7 @@ class PaymentsRecipesRes(Resource, SwaggerView):  # todo documented class higher
             io.BytesIO(pdf),
             as_attachment=True,
             mimetype='application/pdf',
-            attachment_filename='%s.pdf' % id_))
+            attachment_filename='receipt-%s.pdf' % id_))
         r.headers["Access-Control-Expose-Headers"] = "content-disposition"
 
         return r

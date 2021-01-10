@@ -40,11 +40,6 @@ class MySQLAlchemyAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
         return self.Meta.model(**data)  # init
 
 
-class RoomSchema(MySQLAlchemyAutoSchema):
-    class Meta(MySQLAlchemyAutoSchema.Meta):
-        model = models.Room
-
-
 class CourseSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Course
@@ -54,10 +49,19 @@ class ScheduleSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Schedule
 
+    course = fields.Nested(CourseSchema(only=("id", "name")), many=False)
 
-class PersonSchema(MySQLAlchemyAutoSchema):
+
+class RoomSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
-        model = models.Person
+        model = models.Room
+
+    schedules = fields.Pluck(ScheduleSchema, "id", many=True)
+
+
+class RawPersonSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
+        model = models.RawPerson
 
         dump_only = (
             model.full_name.key,
@@ -65,6 +69,11 @@ class PersonSchema(MySQLAlchemyAutoSchema):
 
     full_name = fields.Str(dump_only=True)
     age = fields.Int(dump_only=True)
+
+
+class PersonSchema(RawPersonSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
+        model = models.Person
 
 
 class GuardianSchema(MySQLAlchemyAutoSchema):
@@ -78,21 +87,11 @@ class GuardianSchema(MySQLAlchemyAutoSchema):
     full_name = fields.Str(dump_only=True)
 
 
-class StudentSchema(MySQLAlchemyAutoSchema):
+class StudentSchema(PersonSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Student
 
-        dump_only = (
-            model.full_name.key,
-        )
-
-    full_name = fields.Str(dump_only=True)
-    age = fields.Int(dump_only=True)
-
-
-class PeriodicDateSchema(MySQLAlchemyAutoSchema):
-    class Meta(MySQLAlchemyAutoSchema.Meta):
-        model = models.PeriodicDate
+    schedules = fields.Pluck(ScheduleSchema, "id", many=True)
 
 
 class PaymentSchema(MySQLAlchemyAutoSchema):
@@ -112,14 +111,10 @@ class UserSchema(MySQLAlchemyAutoSchema):
     password_hash = fields.Str(load_only=True)  # due to security
 
 
-class TeacherSchema(MySQLAlchemyAutoSchema):
+class TeacherSchema(RawPersonSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Teacher
 
-        dump_only = (
-            model.full_name.key,
-        )
-
-    full_name = fields.Str(dump_only=True)
     # courses = fields.Nested(CourseSchema, many=True) for nesting
+    schedules = fields.Pluck(ScheduleSchema, "id", many=True)
 

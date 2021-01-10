@@ -31,6 +31,7 @@ import Divider from "@material-ui/core/Divider";
 import {sendGrantEmail} from "../_services/emailsGrants.service";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import {payment_methods} from "../_data/payment_methods";
+import {emptyAttendee, emptyGuardian} from "../_data/empty_objects";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Attendee({ children, value, index, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
+function Attendee({ children, addStudentId, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
@@ -136,9 +137,9 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
         <Box p={3}>
             <Box px={2}>
               {loading?
-                  <Skeleton style={{float: 'right'}}><PersonAddIcon/></Skeleton>
+                  !newStudent && <Skeleton style={{float: 'right'}}><PersonAddIcon/></Skeleton>
               :
-              <Tooltip style={{float: 'right'}} title={t("new_guardian")} aria-label={t("new_guardian")}>
+              !newStudent && <Tooltip style={{float: 'right'}} title={t("new_guardian")} aria-label={t("new_guardian")}>
                 <IconButton onClick={(e) => {
                   addNewGuardian();
                 }}>
@@ -148,10 +149,10 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
               }
 
 
-              {loading?
-                  <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
+              {loading ?
+                  !newStudent && <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
               :
-              <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
+               !newStudent && <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
                   setOpenConfirmDeleteDialog(true);
                 }}>
@@ -160,19 +161,23 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
               </Tooltip>
               }
 
-
-
-              <Person currentPerson={currentStudent}
-                      updateCurrentStudent={updateCurrentStudent}
+              <Person
+                      currentPerson={newStudent? emptyAttendee: currentStudent}
+                      newPerson={newStudent}
+                      updateCurrentStudent={(x) => {
+                        if (!newStudent) return updateCurrentStudent(x);
+                        addStudentId(x);
+                      }}
                       patchService={patchService}
                       onUpdate={(changedBody) => {
                         if ("status" in changedBody && changedBody["status"] === "enrolled"){
-                          sendGrantLetter();
+                          // sendGrantLetter(); todo ask
                         }
                       }}
                       additionalValidation={{
                         enrollment_status: yup.string().required(t("status_required")),
-                        image_agreement: yup.boolean().required(t("image_required"))
+                        image_agreement: yup.boolean().required(t("image_required")),
+                        birth_date: yup.date().required(t("birthdate_required"))
                       }}
                       additionalFields={
                         [[<DirtyTextField
@@ -201,11 +206,18 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
                                 rowsMax={8}
                                 name="payment_comments"
                             />,
-                          [<DirtyTextField
+                            [<DirtyTextField
+                                label={t("birthdate")}
+                                type="date"
+                                style={{flex: 1}}
+                                name="birth_date"
+                                InputLabelProps={{shrink: true}}/>,
+                            <DirtyTextField
                               label={t("years_in_xamfra")}
                               type="number"
                               style={{flex: 1}}
-                              name="years_in_xamfra"/>,
+                              name="years_in_xamfra"/>],
+                          [
                               <DirtyTextField
                                 label={t("status")}
                                 style={{flex: 1}}
@@ -235,15 +247,15 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
 
               </Person>
 
-              <Box my={3}>
+              {!newStudent && <Box my={3}>
             <Divider />
-            </Box>
+            </Box>}
 
               <Box className={[classes.line, classes.composite]}>
-                {loading?
-                      <Skeleton style={{flex: 1}}><Button/></Skeleton>
+                {loading ?
+                      !newStudent && <Skeleton style={{flex: 1}}><Button/></Skeleton>
                       :
-                          <Tooltip style={{flex: 1}} title={t("send_grant_letter")} aria-label={t("send_grant_letter")}>
+                        !newStudent &&   <Tooltip style={{flex: 1}} title={t("send_grant_letter")} aria-label={t("send_grant_letter")}>
                            <Button
                           variant="contained"
                           color="default"
@@ -258,9 +270,9 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
                 </Tooltip>
                       }
 
-                {loading? <Skeleton style={{float: 'right'}}><Button/></Skeleton>
+                {loading? !newStudent && <Skeleton style={{float: 'right'}}><Button/></Skeleton>
                 :
-                <Tooltip style={{flex: 1}} title={t("export_grant_letter")} aria-label={t("export_grant_letter")}>
+               !newStudent &&  <Tooltip style={{flex: 1}} title={t("export_grant_letter")} aria-label={t("export_grant_letter")}>
             <Button
                           variant="contained"
                           color="default"
@@ -280,9 +292,9 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
 
               <Box className={[classes.line, classes.composite]}>
                 {loading?
-                      <Skeleton style={{flex: 1}}><Button/></Skeleton>
+                     !newStudent &&  <Skeleton style={{flex: 1}}><Button/></Skeleton>
                       :
-                          <Tooltip style={{flex: 1}} title={t("send_enrollment_agreement")} aria-label={t("enrollment_agreement")}>
+                        !newStudent &&   <Tooltip style={{flex: 1}} title={t("send_enrollment_agreement")} aria-label={t("enrollment_agreement")}>
                            <Button
                           variant="contained"
                           color="default"
@@ -297,9 +309,9 @@ function Attendee({ children, value, index, title, currentStudent, updateCurrent
                 </Tooltip>
                       }
 
-                {loading? <Skeleton style={{float: 'right'}}><Button/></Skeleton>
+                {loading? !newStudent && <Skeleton style={{float: 'right'}}><Button/></Skeleton>
                 :
-                <Tooltip style={{flex: 1}} title={t("export_enrollment_agreement")} aria-label={t("export_enrollment_agreement")}>
+              !newStudent &&   <Tooltip style={{flex: 1}} title={t("export_enrollment_agreement")} aria-label={t("export_enrollment_agreement")}>
             <Button
                           variant="contained"
                           color="default"

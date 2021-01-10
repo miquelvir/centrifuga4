@@ -78,9 +78,7 @@ function Person(props) {
                 dataService.post(changedValues, studentId)
                     .then(...errorHandler({snackbarSuccess: true}))
                     .then(function (new_id) {
-                        updateCurrentPerson(new_id);
-
-
+                        updateCurrentPerson(new_id['id']);
                         if (typeof onUpdate === 'function') onUpdate(changedValues);
                     }).catch(function (err) {
                     setStatus(true);
@@ -259,7 +257,21 @@ function Person(props) {
                                 name="phone"
                             />
 
-                            <DirtyTextField
+
+
+                        </Box>
+
+
+
+                        <Box className={[classes.line, classes.composite]}>
+
+                            <DirtyCountrySelect
+                                formik={formik}
+                                style={{flex: 1}}
+                                name={"country_of_origin"}
+                                label={t("country_of_origin")}
+                            />
+<DirtyTextField
                                 label={t("gender")}
                                 style={{flex: 1}}
                                 formik={formik}
@@ -269,27 +281,6 @@ function Person(props) {
                                 <MenuItem value="f">{t("female")}</MenuItem>
                                 <MenuItem value="nb">{t("nb")}</MenuItem>
                             </DirtyTextField>
-
-                        </Box>
-
-
-
-                        <Box className={[classes.line, classes.composite]}>
-
-                            <DirtyTextField
-                                label={t("birthdate")}
-                                formik={formik}
-                                type="date"
-                                style={{flex: 1}}
-                                name="birth_date"
-                                InputLabelProps={{shrink: true}}/>
-
-                            <DirtyCountrySelect
-                                formik={formik}
-                                name={"country_of_origin"}
-                                label={t("country_of_origin")}
-                            />
-
                         </Box>
 <Box my={3}>
             <Divider />

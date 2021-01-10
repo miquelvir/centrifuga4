@@ -18,7 +18,7 @@ def generate_enrollment_agreement_pdf(student_id, backend_server_address, templa
     if not student:
         return
     templater = TemplateRenderer(templates_folder=templates_folder)
-    total_price = sum([c.price for c in student.courses])
+    total_price = sum([c.price_term for c in student.courses])
     gs = GuardianSchema()
     cs = CourseSchema()
     pdf_content = templater.render_template("enrollment.html",

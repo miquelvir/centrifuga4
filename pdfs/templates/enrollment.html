@@ -74,7 +74,7 @@
              <b>{{label}}</b>
             <br>
             {{value if value else "-"}}
-            <br>
+            <br><br>
              {% endfor %}
             {% for guardian in guardians %}
 
@@ -108,12 +108,16 @@
             {% endif %}
 
         {% if course.id in schedules %}
-            horari / horario / schedule:
+            <i>horari / horario / schedule</i><br>
+            {% if schedules[course.id]|length > 0 %}
             {% for schedule in schedules[course.id] %}
-            {{ schedule }}
-            <br><br>
+            {{ schedule }}<br>
              {% endfor %}
+            {% else %}
+            a det. / unspecified
+    {% endif %}
         {% endif %}
+    <br><br>
         {% endfor %}
 
         <h5>PAGAMENT | PAGO | PAYMENT</h5>

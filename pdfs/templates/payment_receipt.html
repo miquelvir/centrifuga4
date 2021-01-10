@@ -34,19 +34,19 @@
     <span style="font-size: x-small; font-weight: bold">CAT</span><br>
     L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA ha rebut el pagament de l'estudiant '{{full_name}}',
     de {{quantity}}€ (EUR) a data de {{date}}
-    ({% if method == 'bank-transfer' %}mitjançant una transferència bancària{% elif method == 'cash' %}en efectiu{% else %} mitjançant un mètode de pagament no especificat{% endif %}).
+    ({% if method == 'bank-transfer' %}mitjançant una transferència bancària{% elif method == 'cash' %}en efectiu{% elif method == 'bank-direct-debit' %}mitjançant la domiciliació bancària{% else %}mitjançant un mètode de pagament no especificat{% endif %}).
     <br><br>
 
     <span style="font-size: x-small; font-weight: bold">ESP</span><br>
     L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA ha recibido el pago del estudiante '{{full_name}}',
     de {{quantity}}€ (EUR) a fecha de {{date}}
-    ({% if method == 'bank-transfer' %}mediante una transferencia bancaria{% elif method == 'cash' %}en efectivo{% else %}mediante un método de pago no especificado{% endif %}).
+    ({% if method == 'bank-transfer' %}mediante una transferencia bancaria{% elif method == 'cash' %}en efectivo{% elif method == 'bank-direct-debit' %}mediante la domiciliación bancaria{% else %}mediante un método de pago no especificado{% endif %}).
     <br><br>
 
     <span style="font-size: x-small; font-weight: bold">ENG</span><br>
     L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA has received the payment for student '{{full_name}}'
     of {{quantity}}€ (EUR) on the following date: {{date}}
-    ({% if method == 'bank-transfer' %}through a bank transfer{% elif method == 'cash' %}in cash{% else %} through an unspecified payment method{% endif %}).
+    ({% if method == 'bank-transfer' %}through a bank transfer{% elif method == 'cash' %}in cash{% elif method == 'bank-direct-debit' %}through the direct debit payment{% else %}through an unspecified payment method{% endif %}).
     <br><br>
 
     <br>

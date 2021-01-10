@@ -16,5 +16,5 @@ def my_job(payment, to, secret, backend_url):
         "Xamfrà - rebut | recibo | receipt",
         to=to,
         plain_body="Rebut del pagament adjunt ({quantity}€)\nRecibo del pago adjunto ({quantity}€)\nPayment receipt attached ({quantity}€)".format(quantity=payment.quantity),
-        files=[(io.BytesIO(pdf), "%s.pdf" % payment.id)]
+        files=[(io.BytesIO(pdf), "receipt-%s.pdf" % payment.id)]
     ))

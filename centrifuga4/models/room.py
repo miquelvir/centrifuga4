@@ -1,3 +1,5 @@
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from centrifuga4 import db
 from centrifuga4.models._base import MyBase
 
@@ -15,9 +17,15 @@ class Room(MyBase):
     courses = db.relationship("Course",
                               secondary="room_course",
                               back_populates="rooms")
-    schedules = db.relationship("Schedule",
-                                back_populates="room")
 
     def __repr__(self):
         return '<Room | %s - %s>' % (self.id, self.name)
 
+    @hybrid_property
+    def schedules(self):
+        if self.courses:
+            for course in self.courses:
+                for schedule in course.schedules:
+                    yield schedule
+        else:
+            return []

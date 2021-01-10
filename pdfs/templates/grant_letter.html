@@ -34,9 +34,9 @@
         <br>
         <p>Benvolguts/udes,</p>
         <br>
-        <p>Aquest curts, {{student_name}} s'ha matriculat als següents tallers de Xamfrà:</p>
+        <p>Aquest curs, {{student_name}} s'ha matriculat als següents tallers de Xamfrà:</p>
         {% for course in courses %}
-        <p>+ {{course}}</p>
+        <p>+ {{course.name}} {% if course.description %} ({{course.description}}) {% endif %}</p>
         {% endfor %}
         <br>
         <p>La vostra aportació trimestral és de {{paid_price}}€, que pels tres trimestres fa un total de
@@ -85,7 +85,7 @@
     <br>
     <p>Este curso, {{student_name}} se ha matriculado a los siguientes talleres de Xamfrà:</p>
     {% for course in courses %}
-    <p>+ {{course}}</p>
+    <p>+ {{course.name}}  {% if course.description %} ({{course.description}}) {% endif %}</p>
     {% endfor %}
     <br>
     <p>Vuestra aportación trimestral es de {{paid_price}}€, que por los tres trimestres hace un total de
@@ -95,7 +95,7 @@
         {% if grant %}
 
 
-           por tanto, Xamfrà se hace cargo de cubrir el {{grant_percentage}} del importe.
+           por tanto, Xamfrà se hace cargo de cubrir el {{grant_percentage}}% del importe.
          Dicha ayuda es posible gracias a la aportación de la Fundación L'ARC Música, de las cuotas de la Campaña de
         <a href="https://xamfra.net/com-col%c2%b7laborar-hi/amics-de-xamfra/">Amigos de Xamfrà</a> y de la
         <a href="https://www.teaming.net/xamfra">Campaña de Teaming</a>, de las aportaciones extras de algunas

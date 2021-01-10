@@ -25,6 +25,7 @@ import * as yup from "yup";
 import DirtyTextField from "./dirtytextfield.component";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {education_years} from "../_data/education";
+import {emptyGuardian} from "../_data/empty_objects";
 
 // here
 const useStyles = makeStyles((theme) => ({
@@ -123,27 +124,7 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
           </IconButton>
 
 
-              <Person currentPerson={newGuardian? {
-                name: null,
-                surname1: null,
-                surname2: null,
-                email: null,
-                address: null,
-                city: null,
-                zip: null,
-                dni: null,
-                phone: null,
-                gender: null,
-                birth_date: null,
-                country_of_origin: null,
-                is_studying: null,
-                education_entity: null,
-                education_year: null,
-                is_working: null,
-                career: null,
-                relation: null
-
-              }: guardian}
+              <Person currentPerson={newGuardian? emptyGuardian: guardian}
                       studentId={studentId}
                       newPerson={newGuardian}
                       updateCurrentStudent={(x) => {

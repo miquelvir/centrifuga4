@@ -30,7 +30,7 @@ class Course(MyBase):
                      nullable=False)
     description = db.Column(db.Text,
                             nullable=True)
-    price_term = db.Column(db.Text,
+    price_term = db.Column(db.Integer,
                            nullable=False,
                            default=60)
 

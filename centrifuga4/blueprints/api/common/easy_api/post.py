@@ -50,4 +50,4 @@ class ImplementsPostOne:
         db.session.add(new)
         db.session.commit()
 
-        return new_id
+        return self.schema.dump(new)

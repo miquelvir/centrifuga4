@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
 import StudentsList from "./students.list.component";
 import Student from "./students.student.component";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import {Tooltip} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,7 +15,13 @@ const useStyles = makeStyles((theme) => ({
   left: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100%'
+    height: '100%',
+      position: 'relative',
+
+  },fab: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
   }
 }));
 
@@ -22,7 +31,12 @@ export default function Students() {
   const { t } = useTranslation();
 
   const [students, setStudents] = useState([]);
+  const [newStudent, setNewStudent] = useState(false);
   const [currentStudentId, setCurrentStudentId] = useState(null);
+
+  useEffect(() => {
+      if (currentStudentId !== null) setNewStudent(false);
+  }, [currentStudentId])
 
   return (
       <Grid container spacing={3} className={classes.root}>
@@ -34,17 +48,26 @@ export default function Students() {
             students={students}
             setStudents={setStudents}
           />
+          <Tooltip title={t("new_student")}>
+              <Fab className={classes.fab} color="primary" onClick={(e) => {
+                  setCurrentStudentId(null);
+                 setNewStudent(true);
+              }}>
+                <AddIcon />
+              </Fab>
+          </Tooltip>
         </Grid>
 
         <Grid item xs={8} className={classes.right}>
           <Student
             currentStudentId={currentStudentId}
+            newStudent={newStudent}
+            addStudentId={(id) =>{
+                setCurrentStudentId(id);
+            }}
             deleteStudent={(studentId) => {
-                console.log(studentId, currentStudentId);
-                if (studentId === currentStudentId) {
-                    console.log("to null");
-                    setCurrentStudentId(null);
-                }
+                if (studentId === currentStudentId) setCurrentStudentId(null);
+
                 setStudents(students.filter((s) => s['id'] !== studentId));
             }}
           />

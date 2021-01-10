@@ -42,7 +42,8 @@ class Person(RawPerson):
 
     @validates('education_year')
     def cleaner_ed_year(self, key, value):
-        assert value in ("kindergarten_p1",
+        assert value in (None, # todo assert breaks, so we should raise an exception everywhere
+                         "kindergarten_p1",
                          "kindergarten_p2",
                          "kindergarten_p3",
                          "kindergarten_p4",

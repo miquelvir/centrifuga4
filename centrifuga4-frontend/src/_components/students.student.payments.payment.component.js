@@ -91,9 +91,8 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
 
                 if (newPayment) {
                     StudentsPaymentsDataService.post(changedValues, student_id).then(...errorHandler({snackbarSuccess:true}))
-                        .then(function (id) {
-                            console.log("post successful", id);
-                            addPaymentId(id);
+                        .then(function (res) {
+                            addPaymentId(res['id']);
                             }).catch(function (err){
                                 setStatus(true);
                     })

@@ -168,5 +168,11 @@
   "export_enrollment_agreement": "descarregar full de matrícula",
   "status_required": "cal l'estat de matrícula",
   "image_required": "cal l'ús d'imatge",
-  "image_agreement": "ús d'imatge"
+  "image_agreement": "ús d'imatge",
+  "cant_remove_schedule": "no es poden eliminar horaris comuns d'un taller",
+  "continue": "seguir",
+  "cancelled": "cancelat",
+  "sure_delete_event": "Segur? Si segueixes eliminaràs l'esdeveniment de l'estudiant.",
+  "new_student": "nou estudiant",
+  "birthdate_required": "cal la data de naixement"
 }

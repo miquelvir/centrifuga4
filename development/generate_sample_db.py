@@ -74,11 +74,22 @@ def add_rooms():
     rooms = []
     for idx in range(20):
         r = Room(id=Room.generate_new_id(),  # todo id collision check
-                 name="ester%s" % idx,
+                 name="monpou %s" % idx,
                  capacity=randint(1, 50))
         centrifuga4.db.session.add(r)
         rooms.append(r)
     return rooms
+
+
+def generate_schedule(course_id, is_base):
+    start_h = randint(0, 22)
+    start_m = choice((0, 15, 30, 45))
+    return Schedule(id=Schedule.generate_new_id(),
+                    day_week=randint(0, 6),
+                    is_base=is_base,
+                    start_time=datetime.time(start_h, start_m),
+                    end_time=datetime.time(randint(start_h, start_h + 23 if start_h + 23 < 23 else 23), start_m),
+                    course_id=course_id)
 
 
 def add_courses(students: List[Student], teachers: List[Teacher], labels: List[Label], rooms: List[Room]):
@@ -90,6 +101,10 @@ def add_courses(students: List[Student], teachers: List[Teacher], labels: List[L
 
         for student in sample(students, randint(0, 50)):
             c.students.append(student)
+            if choice((True, False, False)):
+                s = generate_schedule(course_id, is_base=False)
+                s.student_id = student.id
+                centrifuga4.db.session.add(s)
 
         for teacher in sample(teachers, randint(0, 4)):
             c.teachers.append(teacher)
@@ -97,15 +112,11 @@ def add_courses(students: List[Student], teachers: List[Teacher], labels: List[L
         for label in sample(labels, randint(0, 10)):
             c.labels.append(label)
 
-        c.rooms.append(choice(rooms))
+        if choice((True, False, False)):
+            c.rooms.append(choice(rooms))
 
-        for idx2 in range(randint(1, 3)):
-            c.schedules.append(Schedule(Schedule.generate_new_id(),
-                                        choice(('weekly', 'yearly', 'monthly', 'daily')),
-                                        None,
-                                        None,
-                                        choice(rooms).id,
-                                        course_id))
+        for idx2 in range(randint(0, 3)):
+            c.schedules.append(generate_schedule(course_id, is_base=True))
 
         centrifuga4.db.session.add(c)
 
@@ -117,8 +128,9 @@ def add_students():
                     name="mark%s" % idx,
                     surname1="stuart%s" % idx,
                     surname2="mill%s" % idx,
-                    price_term=23,
+                    price_term=randint(0, 300),
                     email="msm%s@gmail.com" % idx,
+                    birth_date=datetime.date(randint(1970, 2019), randint(1, 12), randint(1, 28)),
                     is_studying=choice((True, True, True, False)),
                     is_working=choice((True, False, False, False)),
                     enrollment_status=choice(('enrolled', 'early-unenrolled', 'pre-enrolled')),

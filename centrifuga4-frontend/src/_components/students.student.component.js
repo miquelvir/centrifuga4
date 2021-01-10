@@ -18,6 +18,7 @@ import Fab from "@material-ui/core/Fab";
 import Zoom from "@material-ui/core/Zoom";
 import Tooltip from "@material-ui/core/Tooltip";
 import Skeleton from "@material-ui/lab/Skeleton";
+import Schedule from "./students.student.schedule.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,6 +71,8 @@ function a11yProps(index) {
 export default function Student(props) {
   const currentStudentId = props.currentStudentId;
   const deleteStudent = props.deleteStudent;
+  const newStudent = props.newStudent;
+  const addStudentId = props.addStudentId;
   const loading = currentStudentId === null;
 
   const errorHandler = useErrorHandler();
@@ -82,8 +85,7 @@ export default function Student(props) {
   }
 
   useEffect(() => {
-    if (currentStudentId === null) return setStudent(null);
-    console.log(currentStudentId);
+    if (loading) return setStudent(null);
     StudentsDataService
             .getOne(currentStudentId)
             .then(...errorHandler({}))  // todo everywhere
@@ -98,11 +100,6 @@ export default function Student(props) {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const transitionDuration = {
-    enter: theme.transitions.duration.enteringScreen,
-    exit: theme.transitions.duration.leavingScreen,
   };
 
    useEffect(()=>{
@@ -128,20 +125,21 @@ export default function Student(props) {
                   aria-label="full width tabs example"
                 >
                   <Tab label={t("attendee")} {...a11yProps(0)} />
-                  <Tab label={t("schedule")} {...a11yProps(1)} />
-                  <Tab label={t("payments")} {...a11yProps(2)} />
+
+                    { !newStudent &&
+                  <Tab label={t("schedule")} {...a11yProps(1)} />}
+                 { !newStudent && <Tab label={t("payments")} {...a11yProps(2)} />}
 
                   {
-                  guardians && guardians.map((contact, index) => (
+                  (!newStudent && guardians) && guardians.map((contact, index) => (
                   <Tab key={t("contact") + " " + (index+1)} label={t("contact") + " " + (index+1)} {...a11yProps(index+3)} />
                       ))}
 
 
                   {
-                    newGuardian &&
+                    (!newStudent && newGuardian) &&
                         <Tab key={t("new_guardian")} label={t("new_guardian")} {...a11yProps(3+guardians.length)} />
                   }
-
 
 
                 </Tabs>
@@ -154,8 +152,10 @@ export default function Student(props) {
             <Attendee value={value}
                       index={0}
                       dir={theme.direction}
+                      newStudent={newStudent}
                       title={t("attendee")}
                       currentStudent={student}
+                      addStudentId={addStudentId}
                       patchService={StudentsDataService}
                       updateCurrentStudent={setStudent}
                       deleteStudent={deleteStudent}
@@ -164,14 +164,13 @@ export default function Student(props) {
                         setValue(3+guardians.length);
                       }}
             />
-            <Attendee value={value}
+
+            <Schedule value={value}
                       index={1}
                       dir={theme.direction}
                       title={t("attendee")}
-                      currentStudent={student}
-                      patchService={StudentsDataService}
-                      updateCurrentStudent={setStudent}
-                      deleteStudent={deleteStudent}
+                      scheduleIds={student === null? null: student['schedules']}
+                      student_id={currentStudentId}
             />
             <Payments value={value}
                       index={2}
