@@ -1,4 +1,5 @@
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import CoursesPermission
 from centrifuga4.models._base import MyBase
 
 db.Table("teacher_course",
@@ -23,6 +24,7 @@ class Course(MyBase):
     __mapper_args__ = {
         'polymorphic_identity': "course"
     }
+    permissions = {CoursesPermission}
 
     id = db.Column(db.Text,
                    primary_key=True)

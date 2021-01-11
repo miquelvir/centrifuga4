@@ -1,11 +1,13 @@
 from sqlalchemy.orm import validates
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import SchedulesPermission
 from centrifuga4.models._base import MyBase
 
 
 class Schedule(MyBase):
     __tablename__ = "schedule"
+    permissions = {SchedulesPermission}
 
     id = db.Column(db.Text,
                    primary_key=True)

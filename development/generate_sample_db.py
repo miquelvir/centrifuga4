@@ -2,26 +2,25 @@ import datetime
 from typing import List
 
 import centrifuga4
-from centrifuga4.models import Student, User, Guardian, Need, Payment, Course, Teacher, Label, Room, Schedule
+from centrifuga4.models import Student, RawPerson, User, Guardian, Need, Payment, Course, Teacher, Label, Room, Schedule
 from random import randint, choice, sample
 
-from centrifuga4.models.raw_person import RawPerson
 
-need_get = Need(id=0, name="get", description="can perform get operations", type="action")
-need_patch = Need(id=1, name="patch", description="can perform patch operations", type="action")
-need_delete = Need(id=2, name="delete", description="can perform delete operations", type="action")
-need_post = Need(id=3, name="post", description="can perform post operations", type="action")
-need_send_email = Need(id=4, name="send_email", description="can send emails", type="action")
-need_invite_users = Need(id=5, name="invite_users", description="can invite users", type="action")
-need_students = Need(id=6, name="students", description="can use students resource", type="res")
-need_courses = Need(id=7, name="courses", description="can use courses resource", type="res")
-need_guardians = Need(id=8, name="guardians", description="can use guardians resource", type="res")
-need_payments = Need(id=9, name="payments", description="can use payments resource", type="res")
-need_rooms = Need(id=10, name="rooms", description="can use rooms resource", type="res")
-need_schedules = Need(id=11, name="schedules", description="can use schedules resource", type="res")
-need_teachers = Need(id=12, name="teachers", description="can use teachers resource", type="res")
-need_users = Need(id=13, name="users", description="can use users resource", type="res")
-need_recipes = Need(id=14, name="payments-recipes", description="can use the recipes of payments", type="res")
+need_get = Need(name="get", description="can perform get operations", type="action")
+need_patch = Need(name="patch", description="can perform patch operations", type="action")
+need_delete = Need(name="delete", description="can perform delete operations", type="action")
+need_post = Need(name="post", description="can perform post operations", type="action")
+need_send_email = Need(name="send_email", description="can send emails", type="action")
+need_invite_users = Need(name="invite_users", description="can invite users", type="action")
+need_students = Need(name="students", description="can use students resource", type="res")
+need_courses = Need(name="courses", description="can use courses resource", type="res")
+need_guardians = Need(name="guardians", description="can use guardians resource", type="res")
+need_payments = Need(name="payments", description="can use payments resource", type="res")
+need_rooms = Need(name="rooms", description="can use rooms resource", type="res")
+need_schedules = Need(name="schedules", description="can use schedules resource", type="res")
+need_teachers = Need(name="teachers", description="can use teachers resource", type="res")
+need_users = Need(name="users", description="can use users resource", type="res")
+need_recipes = Need(name="payments-receipts", description="can use the recipes of payments", type="res")
 all_needs = (need_get, need_patch, need_delete, need_post, need_send_email, need_invite_users,
              need_students, need_courses, need_guardians, need_payments, need_rooms, need_schedules,
              need_teachers, need_users, need_recipes)

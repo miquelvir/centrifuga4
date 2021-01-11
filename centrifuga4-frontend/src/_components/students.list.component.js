@@ -200,6 +200,7 @@ const StudentsList = (props) => {
                                       }}/>
                             </Tooltip>
                     ))}
+
 </Box>
         </AccordionDetails>
       </Accordion>

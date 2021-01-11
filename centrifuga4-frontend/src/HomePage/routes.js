@@ -12,9 +12,14 @@ import {useTranslation} from "react-i18next";
 
 const Courses = () => {
   const { t } = useTranslation();
-
+  const query = new URLSearchParams(window.location.search);
+  const id = query.get('id')
   return (
-    <h1>{t("courses")}</h1>
+      <div>
+        <h1>{t("courses")}</h1>
+      <h2>{id}</h2>
+      </div>
+
   );
 };
 

@@ -72,7 +72,8 @@ def init_app(config=ProductionConfig):
         from .blueprints import api, dashboard, auth_service, emails_service, invites_service, password_reset_service, validation_blueprint
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
-        import centrifuga4.auth_auth
+
+        from centrifuga4.auth_auth.login_user_loader import user_loader
 
         # serve the frontend
         @app.route('/')

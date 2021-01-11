@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
 function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -67,17 +66,17 @@ function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
 
    const eventFromSchedule = (schedule) => {
        return {
-                            daysOfWeek: [schedule['day_week']],
-                            title: schedule['course']['name'],
-                            groupId: [schedule['id']],
-                            startTime: schedule['start_time'],
-                            endTime: schedule['end_time'],
-                            color: schedule["is_base"]? theme.palette.secondary.main: theme.palette.secondary.light,
-                            textColor: schedule["is_base"]? theme.palette.secondary.contrastText: theme.palette.secondary.contrastText,
-                            extendedProps: {
-                                schedule: schedule
-                            },
-                        }
+            daysOfWeek: [schedule['day_week']],
+            title: schedule['course']['name'],
+            groupId: [schedule['id']],
+            startTime: schedule['start_time'],
+            endTime: schedule['end_time'],
+            color: schedule["is_base"]? theme.palette.secondary.main: theme.palette.secondary.light,
+            textColor: schedule["is_base"]? theme.palette.secondary.contrastText: theme.palette.secondary.contrastText,
+            extendedProps: {
+                schedule: schedule
+            },
+        }
    }
 
    useEffect(() => {

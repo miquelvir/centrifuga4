@@ -191,6 +191,7 @@ export default function Student(props) {
 
             <Courses value={value}
                       index={3}
+                     history={props.history}
                       courseIds={student === null? null: student['courses']}
                       addCourseId={(course_id) => {
                         setStudent({...student,

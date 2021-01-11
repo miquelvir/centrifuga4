@@ -4,7 +4,7 @@ from centrifuga4.auth_auth.resource_need import ResourceNeed
 
 db.Table("user_need",
          db.Column("user_id", db.Text, db.ForeignKey('user.id')),
-         db.Column("need_id", db.Integer, db.ForeignKey('need.id')))
+         db.Column("need_name", db.Integer, db.ForeignKey('need.name')))
 
 
 class Need(db.Model):
@@ -12,10 +12,10 @@ class Need(db.Model):
     __mapper_args__ = {
         'polymorphic_identity': "need"
     }
+    permissions = {}
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.Text, unique=False, nullable=False)
-    name = db.Column(db.Text, unique=True, nullable=False)
+    name = db.Column(db.Text, unique=True, nullable=False, primary_key=True)
     type = db.Column(db.Text, unique=False, nullable=False)
 
     @property

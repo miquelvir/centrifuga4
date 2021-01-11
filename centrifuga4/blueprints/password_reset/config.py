@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
-from centrifuga4.blueprints.api.common.errors import Unauthorized, Forbidden
+from centrifuga4.blueprints.api.errors import Unauthorized, Forbidden
 from centrifuga4.blueprints.password_reset.resources.new_password import NewPasswordCollectionRes
 from centrifuga4.blueprints.password_reset.resources.password_reset import PasswordResetCollectionRes
 from centrifuga4.errors.authorization import Forbidden as RawForbidden

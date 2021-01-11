@@ -1,8 +1,6 @@
 from centrifuga4 import db
-from centrifuga4.auth_auth.action_need import DeletePermission
-from centrifuga4.blueprints.api.common.easy_api._requires import EasyRequires
-from centrifuga4.blueprints.api.common.easy_api.delete import safe_delete
-from centrifuga4.blueprints.api.common.errors import NotFound
+from centrifuga4.blueprints.api.easy_api.delete import safe_delete
+from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
@@ -18,7 +16,7 @@ class ImplementsDeleteOneSubresource:
     parent_field: str
 
     @safe_delete
-    def delete(self, id_, id2):
+    def delete(self, id_, nested_id):
         parent = self.parent_model.query.filter(self.parent_model.id == id_).one_or_none()
 
         if not parent:
@@ -26,9 +24,9 @@ class ImplementsDeleteOneSubresource:
 
         field = getattr(parent, self.parent_field)  # todo secure as get field
 
-        index = next(i for i, v in enumerate(field) if v.id == id2)
-        if not index:
-            raise NotFound("id '%s' not found in parent resource" % id2)
+        index = next(i for i, v in enumerate(field) if v.id == nested_id)
+        if index is None:
+            raise NotFound("id '%s' not found in parent resource" % nested_id)
 
         field.pop(index)
 

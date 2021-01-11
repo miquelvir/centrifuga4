@@ -45,6 +45,16 @@ class CourseSchema(MySQLAlchemyAutoSchema):
         model = models.Course
 
 
+class NeedSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
+        model = models.Need
+
+
+class LabelSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
+        model = models.Label
+
+
 class ScheduleSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Schedule

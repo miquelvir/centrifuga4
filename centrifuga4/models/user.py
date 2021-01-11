@@ -6,6 +6,7 @@ from sqlalchemy import case
 from sqlalchemy.orm import validates, column_property
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import UsersPermission
 from centrifuga4.models._base import MyBase
 from centrifuga4.models.person import Person
 import bcrypt
@@ -16,6 +17,7 @@ class User(MyBase, UserMixin):
     __mapper_args__ = {
         'polymorphic_identity': "user"
     }
+    permissions = {UsersPermission}
 
     id = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)

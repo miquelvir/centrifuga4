@@ -10,7 +10,12 @@ class MyBase(db.Model):
     __abstract__ = True
 
     id: str
-
+    resource_name: str  # todo checks
+    """
+    def __init_subclass__(cls, **kwargs):
+        if not hasattr(cls, 'resource_name'):
+            cls.resource_name = cls.__name__.lower()+'s'  # todo warnings
+    """
     @classmethod
     def get_field(cls, item):
         field = cls.__dict__[item]

@@ -2,6 +2,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import column_property
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import TeachersPermission
 from centrifuga4.models.raw_person import RawPerson
 
 
@@ -10,6 +11,7 @@ class Teacher(RawPerson):
     __mapper_args__ = {
         'polymorphic_identity': "teacher"
     }
+    permissions = {TeachersPermission}
 
     id = db.Column(db.Text,
                    db.ForeignKey('raw_person.id'),

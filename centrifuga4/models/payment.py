@@ -1,11 +1,13 @@
 from sqlalchemy.orm import validates
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import PaymentsPermission
 from centrifuga4.models._base import MyBase
 
 
 class Payment(MyBase):
     __tablename__ = "payment"
+    permissions = {PaymentsPermission}
 
     id = db.Column(db.Text,
                    primary_key=True)

@@ -6,7 +6,7 @@ from typing import Union, Tuple
 
 from flask import request, jsonify, send_file, make_response
 
-from centrifuga4.blueprints.api.common.errors import BaseBadRequest
+from centrifuga4.blueprints.api.errors import BaseBadRequest
 from centrifuga4.constants import SHORT_NAME
 
 

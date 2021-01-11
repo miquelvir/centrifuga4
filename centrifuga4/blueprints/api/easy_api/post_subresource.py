@@ -1,11 +1,8 @@
-from flask import request, jsonify, abort
+from flask import abort
 
 from centrifuga4 import db
-from centrifuga4.auth_auth.action_need import PostPermission
 
-from centrifuga4.blueprints.api.common.easy_api._requires import EasyRequires
-from centrifuga4.blueprints.api.common.easy_api.post import safe_post
-from centrifuga4.blueprints.api.common.errors import no_nested, safe_marshmallow, ResourceBaseBadRequest
+from centrifuga4.blueprints.api.easy_api.post import safe_post
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
@@ -21,7 +18,7 @@ class ImplementsPostOneSubresource:
     parent_field: str
 
     @safe_post
-    def post(self, id_, id2):  # todo test completeness
+    def post(self, id_, nested_id):  # todo test completeness
         # find the parent so that it can be added there
         query = self.parent_model.query.filter(self.parent_model.id == id_)
         parent = query.one_or_none()
@@ -31,10 +28,10 @@ class ImplementsPostOneSubresource:
 
         field = getattr(parent, self.parent_field)  # todo secure as get field
 
-        added = self.model.query.filter(self.model.id == id2).one_or_none()
+        added = self.model.query.filter(self.model.id == nested_id).one_or_none()
 
         if not added:
-            abort(404, "no child resource for id '%s' found" % id2)
+            abort(404, "no child resource for id '%s' found" % nested_id)
 
         field.append(added)
 

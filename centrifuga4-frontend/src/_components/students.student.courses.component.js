@@ -1,40 +1,29 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import StudentsCourseDataService from "../_services/student_courses.service";
 import CoursesDataService from "../_services/courses.service"
 import {useErrorHandler} from "../_helpers/handle-response";
-import PaymentCard from "./students.student.payments.payment.component";
 import {Skeleton} from "@material-ui/lab";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    AppBar, Chip,
+    AppBar,
     Dialog,
     ListItemSecondaryAction,
     Slide
 } from "@material-ui/core";
-import StudentsDataService from "../_services/students.service";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchBar from "./searchbar.component";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Pagination from "@material-ui/lab/Pagination";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -47,11 +36,9 @@ const useStyles = makeStyles((theme) => ({
 
   },list: {
         overflow: "auto",
-        // maxHeight: "60vh",
         display: "flex",
         flexDirection: "column",
-        flex: 1,
-        minHeight: '150px'
+        flex: 1
     },
     box: {
         display: "flex",
@@ -92,7 +79,7 @@ class CloseIcon extends React.Component {
     }
 }
 
-function Courses({ children, value, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
+function Courses({ children, history, value, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
@@ -254,8 +241,9 @@ const onChangeSearchTerm = (e) => {
                   <List className={classes.list}>
                 {courses && courses.map((course) => (
                     <div key={course["id"]}>
-                        <ListItem key={course["id"]} button>  {// todo onclic router
-                        }
+                        <ListItem key={course["id"]} button onClick={(e) => {
+                            history.push('/courses?id='+course['id']);
+                        }}>
                             <ListItemText id="name" primary={course.name} secondary={course.description}/>
                             <ListItemSecondaryAction>
                                 <IconButton onClick={(e) => {

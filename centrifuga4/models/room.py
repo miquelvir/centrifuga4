@@ -1,11 +1,13 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import RoomsPermission
 from centrifuga4.models._base import MyBase
 
 
 class Room(MyBase):
     __tablename__ = "room"
+    permissions = {RoomsPermission}
 
     id = db.Column(db.Text,
                    primary_key=True)

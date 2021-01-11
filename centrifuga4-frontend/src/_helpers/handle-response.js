@@ -130,7 +130,7 @@ export function useErrorHandler() {
                 handle401 = true,
                 handle403 = true,
                 handle400 = true,
-                errorOut = false,
+                errorOut = true,
                 reportUnexpected = true,
                 snackbarSuccess = false
             }) => {

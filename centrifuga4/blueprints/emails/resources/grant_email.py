@@ -3,7 +3,7 @@ from flask_restful import Resource
 from centrifuga4.auth_auth.action_need import EmailPermission
 from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.auth_auth.resource_need import StudentsPermission
-from centrifuga4.blueprints.api.common.errors import NotFound
+from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models import Student
 from email_queue.emails.grant_letter_email import my_job
 from centrifuga4 import q

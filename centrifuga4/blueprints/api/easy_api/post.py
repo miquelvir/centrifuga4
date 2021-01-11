@@ -1,12 +1,11 @@
-from flask import request, jsonify
+from flask import request
 
 from centrifuga4 import db
 from centrifuga4.auth_auth.action_need import PostPermission
 
-from centrifuga4.blueprints.api.common.easy_api._requires import EasyRequires
-from centrifuga4.blueprints.api.common.errors import no_nested, safe_marshmallow, ResourceBaseBadRequest
+from centrifuga4.blueprints.api.easy_api._requires import EasyRequires
+from centrifuga4.blueprints.api.errors import no_nested, safe_marshmallow, ResourceBaseBadRequest
 from centrifuga4.models._base import MyBase
-from centrifuga4.models.raw_person import RawPerson
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
 

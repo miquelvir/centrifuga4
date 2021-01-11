@@ -1,11 +1,10 @@
 from flask import current_app
 from flask_restful import Resource
-from rq.job import Job
 
 from centrifuga4.auth_auth.action_need import EmailPermission
 from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.auth_auth.resource_need import PaymentsRecipesPermission, PaymentsPermission
-from centrifuga4.blueprints.api.common.errors import NotFound
+from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models import Payment
 from email_queue.emails.payment_receipt_email import my_job
 from centrifuga4 import q

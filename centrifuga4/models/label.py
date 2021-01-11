@@ -4,6 +4,7 @@ from centrifuga4.models._base import MyBase
 
 class Label(MyBase):
     __tablename__ = "label"
+    permissions = {}
 
     name = db.Column(db.Text,
                      primary_key=True)

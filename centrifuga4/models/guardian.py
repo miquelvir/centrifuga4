@@ -1,4 +1,5 @@
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import GuardiansPermission
 from centrifuga4.models.person import Person
 
 db.Table("student_guardian",
@@ -11,6 +12,7 @@ class Guardian(Person):
     __mapper_args__ = {
         'polymorphic_identity': "guardian"
     }
+    permissions = {GuardiansPermission}
 
     id = db.Column(db.Text,
                    db.ForeignKey('person.id'),

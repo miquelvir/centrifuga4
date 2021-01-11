@@ -26,13 +26,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Students() {
+export default function Students({history, ...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
 
   const [students, setStudents] = useState([]);
   const [newStudent, setNewStudent] = useState(false);
   const [currentStudentId, setCurrentStudentId] = useState(null);
+
+  const query = new URLSearchParams(window.location.search);
+  const id = query.get('id');
+  useEffect(() => {
+      if (id !== null && id !== undefined) setCurrentStudentId(id);
+  }, [id])
 
   useEffect(() => {
       if (currentStudentId !== null) setNewStudent(false);
@@ -47,6 +53,7 @@ export default function Students() {
             currentStudentId={currentStudentId}
             students={students}
             setStudents={setStudents}
+
           />
           <Tooltip title={t("new_student")}>
               <Fab className={classes.fab} color="primary" onClick={(e) => {
@@ -62,6 +69,7 @@ export default function Students() {
           <Student
             currentStudentId={currentStudentId}
             newStudent={newStudent}
+            history={history}
             addStudentId={(id) =>{
                 setCurrentStudentId(id);
             }}

@@ -1,8 +1,9 @@
-from sqlalchemy import cast, String, case
+from sqlalchemy import cast, String, case, func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import column_property, validates
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.resource_need import StudentsPermission
 from centrifuga4.models.person import Person
 
 
@@ -11,6 +12,7 @@ class Student(Person):
     __mapper_args__ = {
         'polymorphic_identity': "student"
     }
+    permissions = {StudentsPermission}
 
     id = db.Column(db.Text,
                    db.ForeignKey('person.id'),
