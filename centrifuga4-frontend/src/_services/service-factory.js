@@ -8,16 +8,27 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
         resource = resource;
         subresource = subresource;
 
-        getAll(likeSearchText=null, page = 1, include=null) {
+        getAll(likeSearchText=null, page = 1, include=null, filters=null) {
             return new Promise(function (resolve, reject) {
+
+                let myFilters = {
+                        "page": page,
+                        "include": include === null? null: JSON.stringify(include)
+                    };
+                if (likeSearchText !== null) {
+                    myFilters[`filter.${likeSearchText.name}.like`] = '%' + likeSearchText.value + '%';
+                }
+
+                if (filters !== null) {
+                    Object.keys(filters).forEach((key) => {
+                    myFilters[`filter.${key}.eq`] = filters[key];
+                })
+                }
+
                 axios({
                     method: 'get',
                     url: `${BACKEND_URL}/api/${API_VERSION}/${resource}`,
-                    params: {
-                        "filter.full_name.like": likeSearchText === null? null: `%${likeSearchText}%`,
-                        "page": page,
-                        "include": include === null? null: JSON.stringify(include)
-                    },
+                    params: myFilters,
                     headers: {
                         ...{
                             'Content-Type': 'application/json',
@@ -110,11 +121,12 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             });
         }
 
-        postWithId(id) {
+        postWithId(id, subresourceid=null) {
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'post',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}${subresourceid === null?
+                    '': `/${subresource}/${subresourceid}`}`,
                     headers: {
                         ...{
                             'Content-Type': 'application/json',
@@ -129,11 +141,11 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             });
         }
 
-        delete(id) {
+        delete(id, subresourceId=null) {
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'delete',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}${subresource !== null? `/${subresource}/${subresourceId}`: ''}`,
                     headers: {
                         ...{
                             'Content-Type': 'application/json',
@@ -152,16 +164,23 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return Promise.all(ids.map(id => (this.delete(id))));
         }
 
-        downloadAllCsv(likeSearchText=null, page = 1) {
+        downloadAllCsv(likeSearchText=null, page = 1, filters=null) {
             return new Promise(function (resolve, reject) {
+                let myFilters = {
+                       "filter.full_name.like": likeSearchText === null? null: `%${likeSearchText}%`,
+                        "page": page
+                    };
+                if (filters !== null){
+                    Object.keys(filters).forEach((key) => {
+                    myFilters[`filter.${key}.eq`] = filters[key];
+                })
+                }
+
                 axios({
                     url: `${BACKEND_URL}/api/${API_VERSION}/${resource}`,
                     method: 'GET',
                     responseType: 'blob', // important
-                    params: {
-                        "filter.full_name.like": likeSearchText === null? null: `%${likeSearchText}%`,
-                        "page": page
-                    },
+                    params: myFilters,
                     headers: {
                         ...{
                             'Accept': 'text/csv',
@@ -169,6 +188,53 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
                         }, ...authHeader()
                     }
                 }).then(response => {
+                    let filename = response.headers["content-disposition"].split("filename=")[1];
+                    if (filename === null) filename = "export.csv";
+
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', filename);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    resolve();
+                }).catch(function (err) {
+                    reject(err);
+                });
+
+            });
+        }
+
+
+        downloadOneCsv(id) {
+            return new Promise(function (resolve, reject) {
+                axios({
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    method: 'GET',
+                    responseType: 'blob', // important
+                    headers: {
+                        ...{
+                            'Accept': 'text/csv',
+                            'Cache-Control': 'no-cache'
+                        }, ...authHeader()
+                    }
+                }).then(response => {
+                    /*
+                    _download(response){
+                let filename = response.headers["content-disposition"].split("filename=")[1];
+                if (filename === null) filename = "export.csv";
+
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                resolve();
+        }
+                    **/
                     let filename = response.headers["content-disposition"].split("filename=")[1];
                     if (filename === null) filename = "export.csv";
 

@@ -11,12 +11,14 @@ import Divider from "@material-ui/core/Divider";
 import SearchBar from './searchbar.component'
 import Box from "@material-ui/core/Box";
 import {useTranslation} from "react-i18next";
-import {Chip, ListItemSecondaryAction} from "@material-ui/core";
+import {Accordion, AccordionDetails, AccordionSummary, Chip, ListItemSecondaryAction} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
 import LoadingBackdrop from "./loadingBackdrop.component";
 import {useErrorHandler} from "../_helpers/handle-response";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,9 +42,22 @@ const useStyles = makeStyles((theme) => ({
     pagination: {
         margin: '30px'
     },
+    chip: {
+        margin: theme.spacing(2)
+    },
     avatar: {},
     selectedAvatar: {
         backgroundColor: theme.palette.primary.dark
+    },
+    chips: {
+        flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
     }
 }));
 
@@ -53,6 +68,14 @@ const StudentsList = (props) => {
     const setStudents = props.setStudents;
 
     const [searchTerm, setSearchTerm] = useState("");
+    const [filters, setFilters] = useState({
+        onlyEnrolled: false,
+        onlyEarlyUnenrolled: false,
+        onlyPreEnrolled: false,
+        onlyCash: false,
+        onlyBankTransfer: false,
+        onlyDirectDebit: false
+    });
 
     const {t} = useTranslation();
 
@@ -62,15 +85,38 @@ const StudentsList = (props) => {
 
     const classes = useStyles();
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);  // todo
 
     const onChangeSearchTerm = (e) => {
         setSearchTerm(e.target.value);
     };
 
+    function getFilters(fs){
+        let myFilters = {};
+
+        if (fs.onlyEnrolled) {
+            myFilters['enrollment_status'] = 'enrolled';
+        } else if (fs.onlyEarlyUnenrolled) {
+            myFilters['enrollment_status'] = 'early-unenrolled';
+        } else if (fs.onlyPreEnrolled) {
+            myFilters['enrollment_status'] = 'pre-enrolled'
+        }
+
+        if (fs.onlyCash) {
+            myFilters['default_payment_method'] = 'cash';
+        } else if (fs.onlyBankTransfer) {
+            myFilters['default_payment_method'] = 'bank-transfer';
+        } else if (fs.onlyDirectDebit) {
+            myFilters['default_payment_method'] = 'bank-direct-debit';
+        }
+
+        return myFilters;
+    }
+
     function search() {
+
         StudentsDataService
-            .getAll(searchTerm, page, ['id', 'full_name'])
+            .getAll({name: 'full_name', value: searchTerm}, page, ['id', 'full_name'], getFilters(filters))
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
                     setStudents(res["data"]);
@@ -78,7 +124,7 @@ const StudentsList = (props) => {
                 });
     }
 
-    useEffect(search, [page, setStudents]);
+    useEffect(search, [page, setStudents, filters]);
 
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -87,7 +133,7 @@ const StudentsList = (props) => {
     function exportCsv() {
         setLoading(true);  // todo clean this and the loading background
         StudentsDataService
-            .downloadAllCsv(searchTerm, page)
+            .downloadAllCsv(searchTerm, page, getFilters(filters))
             .finally(()=>{
                 setLoading(false);
             });
@@ -95,7 +141,6 @@ const StudentsList = (props) => {
 
     return (
         <Box className={classes.root}>
-            <LoadingBackdrop loading={loading}/>
             <Box className={classes.box}>
                 <SearchBar
                     label={t("students")}
@@ -103,12 +148,64 @@ const StudentsList = (props) => {
                     onChange={onChangeSearchTerm}
                     onSearch={search}
                 />
-                <Box my={1}>
-                    <Tooltip title={t("export_results_csv")} aria-label={t("export_results_csv")}>
-                        <Chip variant="outlined" size="small" avatar={<Avatar>csv</Avatar>} label={t("export")}
+
+                    <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+        >
+          <Typography className={classes.heading}>{t("filters_actions")}</Typography>
+        </AccordionSummary>
+        <AccordionDetails><Box className={classes.chips}>
+          <Tooltip title={t("export_results_csv")} aria-label={t("export_results_csv")}>
+                        <Chip variant="outlined"
+                              color="primary"
+                              size="small"
+                              avatar={<Avatar>csv</Avatar>}
+                              label={t("export")}
                               onClick={exportCsv}/>
-                    </Tooltip>
-                </Box>
+                        </Tooltip>
+
+                    { [{label: "enrolled", tooltip: "only_enrolled", value: 'onlyEnrolled'},
+                        {label: "pre-enrolled", tooltip: "only_preenrolled", value: 'onlyPreEnrolled'},
+                        {label: "early-unenrolled", tooltip: "only_earlyunenrolled", value: 'onlyEarlyUnenrolled'},
+                    {label: "cash", tooltip: "only_cash", value: 'onlyCash'},
+                    {label: "bank-transfer", tooltip: "only_banktransfer", value: 'onlyBankTransfer'},
+                    {label: "bank-direct-debit", tooltip: "only_bankdirectdebit", value: 'onlyDirectDebit'}].map(x => (
+                            <Tooltip key={x.label} title={t(x.tooltip)} aria-label={t(x.tooltip)}>
+                                <Chip size="small"
+                                      color={filters[x.value]? "primary": "normal"}
+                                      label={t(x.label)}
+                                      onClick={(e) => {
+                                          let newFilters = {...filters};
+                                          if (x.value === 'onlyEnrolled' ||
+                                              x.value === 'onlyPreEnrolled' ||
+                                              x.value === 'onlyEarlyUnenrolled'
+                                          ) {
+                                              newFilters['onlyEnrolled'] = false;
+                                              newFilters['onlyPreEnrolled'] = false;
+                                              newFilters['onlyEarlyUnenrolled'] = false;
+                                          }
+
+                                          if (x.value === 'onlyBankTransfer' ||
+                                              x.value === 'onlyCash' ||
+                                              x.value === 'onlyDirectDebit'
+                                          ) {
+                                              newFilters['onlyBankTransfer'] = false;
+                                              newFilters['onlyCash'] = false;
+                                              newFilters['onlyDirectDebit'] = false;
+                                          }
+
+                                          newFilters[x.value] = !filters[x.value];
+                                          setFilters(newFilters);
+                                      }}/>
+                            </Tooltip>
+                    ))}
+</Box>
+        </AccordionDetails>
+      </Accordion>
+
+
+
                 <Box my={2}>
                     <Pagination
                         className="pagination"
@@ -135,13 +232,19 @@ const StudentsList = (props) => {
                                 <Avatar className={student["id"] === currentStudentId? classes.selectedAvatar: classes.avatar}>{student['full_name'].charAt(0).toUpperCase()}</Avatar>
                             </ListItemAvatar>
                             <ListItemText id="name" primary={student.full_name}/>
-                            <Tooltip title={t("export") + " .csv"}>
+
                                 <ListItemSecondaryAction>
-                                    <IconButton edge="end" aria-label={t("export")}>
+                                    <Tooltip title={t("export") + " .csv"}>
+                                    <IconButton edge="end" aria-label={t("export")} onClick={(e) => {
+                                        StudentsDataService
+                                            .downloadOneCsv(currentStudentId)
+                                            .then(...errorHandler({}));
+                                    }}>
                                         <GetAppIcon/>
                                     </IconButton>
+                                        </Tooltip>
                                 </ListItemSecondaryAction>
-                            </Tooltip>
+
                         </ListItem>
                         <Divider/>
                     </div>

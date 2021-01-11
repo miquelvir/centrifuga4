@@ -75,7 +75,7 @@ function Person(props) {
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
             if (newPerson) {
                 setStatus();
-                dataService.post(changedValues, studentId)
+                dataService.post({...changedValues})
                     .then(...errorHandler({snackbarSuccess: true}))
                     .then(function (new_id) {
                         updateCurrentPerson(new_id['id']);

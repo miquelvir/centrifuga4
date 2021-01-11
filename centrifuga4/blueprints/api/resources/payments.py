@@ -34,15 +34,6 @@ class PaymentsCollectionRes(easy.EasyResource,
     permissions = {PaymentsPermission}
 
 
-class StudentPaymentsRes(easy.EasyResource,
-                        easy.ImplementsPostOneSubresource):  # todo others if ok
-    schema = PaymentSchema
-    model = Payment
-
-    parent_model = Student
-    parent_field = 'payments'
-
-    permissions = {PaymentsPermission, StudentsPermission}
 
 
 class PaymentsRecipesRes(Resource, SwaggerView):  # todo documented class higher up

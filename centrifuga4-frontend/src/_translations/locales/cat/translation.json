@@ -174,5 +174,17 @@
   "cancelled": "cancelat",
   "sure_delete_event": "Segur? Si segueixes eliminaràs l'esdeveniment de l'estudiant.",
   "new_student": "nou estudiant",
-  "birthdate_required": "cal la data de naixement"
+  "birthdate_required": "cal la data de naixement",
+  "no_courses": "no hi ha cap classe",
+  "only_enrolled": "mostrar només estudiants matriculats",
+  "only_preenrolled": "mostrar només estudiants prematriculats",
+  "only_earlyunenrolled": "mostrar només estudiants desmatriculats",
+  "only_cash": "mostrar només alumnes amb efectiu com a mètode de pagament per defecte",
+  "only_banktransfer": "mostrar només alumnes amb transferència bancària com a mètode de pagament per defecte",
+  "only_bankdirectdebit": "mostrar només alumnes amb domiciliació bancària com a mètode de pagament per defecte",
+  "filters_actions": "filtres i accions",
+  "enroll_to_course": "matricular al curs",
+  "confirm_enroll_to_course": "Segur que vols matricular l'estudiant seleccionat a aquest curs?",
+  "confirm_unenroll_to_course": "Segur que vols desmatricular l'estudiant seleccionat a aquest curs?",
+  "search_courses": "cercar cursos"
 }

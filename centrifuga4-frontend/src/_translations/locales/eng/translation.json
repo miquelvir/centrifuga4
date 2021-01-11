@@ -173,5 +173,17 @@
   "cancelled": "cancelled",
   "sure_delete_event": "Are you sure? This will delete this schedule from the student.",
   "new_student": "new student",
-  "birthdate_required": "birth date is required"
+  "birthdate_required": "birth date is required",
+  "no_courses": "there are no courses",
+  "only_enrolled": "show only enrolled students",
+  "only_preenrolled": "show only pre-enrolled students",
+  "only_earlyunenrolled": "show only early unenrolled students",
+  "only_cash": "show only students with cash as the default payment method",
+  "only_banktransfer": "show only students with bank transfer as the default payment method",
+  "only_bankdirectdebit": "show only students with direct debit as the default payment method",
+  "filters_actions": "filters & actions",
+  "enroll_to_course": "enroll to course",
+  "confirm_enroll_to_course": "Are you sure you want to enroll this student to the selected course?",
+  "confirm_unenroll_to_course": "Are you sure you want to unenroll this student to the selected course?",
+  "search_courses": "search courses"
 }

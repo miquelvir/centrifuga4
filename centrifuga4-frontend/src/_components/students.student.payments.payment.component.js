@@ -17,7 +17,6 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import EuroIcon from '@material-ui/icons/Euro';
 import PaymentsDataService from '../_services/payments.service';
-import StudentsPaymentsDataService from '../_services/student_payment.service';
 import {sendReceiptEmail} from '../_services/emailsReceipts.service';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Tooltip from "@material-ui/core/Tooltip";
@@ -90,12 +89,14 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
                 setStatus();
 
                 if (newPayment) {
-                    StudentsPaymentsDataService.post(changedValues, student_id).then(...errorHandler({snackbarSuccess:true}))
+                    PaymentsDataService
+                        .post({...changedValues, student_id: student_id})
+                        .then(...errorHandler({snackbarSuccess:true}))
                         .then(function (res) {
                             addPaymentId(res['id']);
                             }).catch(function (err){
                                 setStatus(true);
-                    })
+                            })
                         .finally(() => {
                                 setSubmitting(false);
                         });

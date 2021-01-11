@@ -9,7 +9,7 @@ const newPerson = {
                 dni: null,
                 phone: null,
                 gender: null,
-                birth_date: null,
+
                 country_of_origin: null,
                 is_studying: null,
                 education_entity: null,
@@ -21,6 +21,7 @@ export const emptyGuardian = {...newPerson, relation: null};
 export const emptyAttendee = {...newPerson,
     price_term: null,
     payment_comments: null,
+    birth_date: null,
     other_comments: null,
     image_agreement: null,
     enrollment_status: null,

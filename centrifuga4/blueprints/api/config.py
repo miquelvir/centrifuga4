@@ -3,9 +3,9 @@ from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
 from centrifuga4.blueprints.api.common.errors import Unauthorized, Forbidden
-from centrifuga4.blueprints.api.resources.courses import CoursesRes, CoursesCollectionRes
+from centrifuga4.blueprints.api.resources.courses import CoursesRes, CoursesCollectionRes, StudentCourseRes
 from centrifuga4.blueprints.api.resources.guardians import GuardiansRes, GuardiansCollectionRes, StudentGuardiansRes
-from centrifuga4.blueprints.api.resources.payments import PaymentsRes, PaymentsCollectionRes, StudentPaymentsRes, \
+from centrifuga4.blueprints.api.resources.payments import PaymentsRes, PaymentsCollectionRes, \
     PaymentsRecipesRes
 from centrifuga4.blueprints.api.resources.rooms import RoomsRes, RoomsCollectionRes
 from centrifuga4.blueprints.api.resources.schedules import SchedulesRes, SchedulesCollectionRes
@@ -32,8 +32,8 @@ def handle(e):
 api = Api(api_blueprint)
 
 api.add_resource(StudentsRes, '/students/<string:id_>')
-api.add_resource(StudentPaymentsRes, '/students/<string:id_>/payments')
-api.add_resource(StudentGuardiansRes, '/students/<string:id_>/guardians')
+api.add_resource(StudentCourseRes, '/students/<string:id_>/courses/<string:id2>')
+api.add_resource(StudentGuardiansRes, '/students/<string:id_>/guardians/<string:id2>')
 api.add_resource(StudentsGrantLettersRes, '/students/<string:id_>/grantLetter')
 api.add_resource(StudentsEnrollmentAgreementRes, '/students/<string:id_>/enrollmentAgreement')
 api.add_resource(StudentsCollectionRes, '/students')

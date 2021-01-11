@@ -12,6 +12,7 @@ import Guardian from "./students.student.guardian.component";
 import StudentsDataService from "../_services/students.service";
 import GuardiansDataService from "../_services/guardians.service";
 import Payments from "./students.student.payments.component";
+import Courses from "./students.student.courses.component";
 import {useErrorHandler} from "../_helpers/handle-response";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
@@ -19,6 +20,7 @@ import Zoom from "@material-ui/core/Zoom";
 import Tooltip from "@material-ui/core/Tooltip";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Schedule from "./students.student.schedule.component";
+import * as PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +70,7 @@ function a11yProps(index) {
   };
 }
 
+
 export default function Student(props) {
   const currentStudentId = props.currentStudentId;
   const deleteStudent = props.deleteStudent;
@@ -80,9 +83,7 @@ export default function Student(props) {
   const [student, setStudent] = useState(null);  // todo rename to student
   const [newGuardian, setNewGuardian] = useState(false);
 
-  const addPaymentId = (payment_id) => {
-    setStudent({...student, payments: [...student.payments, payment_id]})
-  }
+
 
   useEffect(() => {
     if (loading) return setStudent(null);
@@ -110,6 +111,8 @@ export default function Student(props) {
     setValue(index);
   };
 
+
+
   const guardians = student === null? []: student.guardians;
     // todo maybe tabs with or only with icons
   return (
@@ -129,16 +132,17 @@ export default function Student(props) {
                     { !newStudent &&
                   <Tab label={t("schedule")} {...a11yProps(1)} />}
                  { !newStudent && <Tab label={t("payments")} {...a11yProps(2)} />}
+                 { !newStudent && <Tab label={t("courses")} {...a11yProps(3)} />}
 
                   {
                   (!newStudent && guardians) && guardians.map((contact, index) => (
-                  <Tab key={t("contact") + " " + (index+1)} label={t("contact") + " " + (index+1)} {...a11yProps(index+3)} />
+                  <Tab key={t("contact") + " " + (index+1)} label={t("contact") + " " + (index+1)} {...a11yProps(index+4)} />
                       ))}
 
 
                   {
                     (!newStudent && newGuardian) &&
-                        <Tab key={t("new_guardian")} label={t("new_guardian")} {...a11yProps(3+guardians.length)} />
+                        <Tab key={t("new_guardian")} label={t("new_guardian")} {...a11yProps(4+guardians.length)} />
                   }
 
 
@@ -161,7 +165,7 @@ export default function Student(props) {
                       deleteStudent={deleteStudent}
                       addNewGuardian={() => {
                         setNewGuardian(true);
-                        setValue(3+guardians.length);
+                        setValue(4+guardians.length);
                       }}
             />
 
@@ -175,8 +179,9 @@ export default function Student(props) {
             <Payments value={value}
                       index={2}
                       paymentIds={student === null? null: student.payments}
-                      key={student}
-                      addPaymentId={addPaymentId}
+                      addPaymentId={(payment_id) => {
+                        setStudent({...student, payments: [...student.payments, payment_id]})
+                      }}
                       student_id={currentStudentId}
                       deletePaymentFromStudent={(payment_id) => {
                         setStudent({...student,
@@ -184,11 +189,25 @@ export default function Student(props) {
                       }}
             />
 
+            <Courses value={value}
+                      index={3}
+                      courseIds={student === null? null: student['courses']}
+                      addCourseId={(course_id) => {
+                        setStudent({...student,
+                            courses: [...student['courses'], course_id]})
+                      }}
+                      student_id={currentStudentId}
+                      deleteCourseFromStudent={(course_id) => {
+                        setStudent({...student,
+                            courses: student['courses'].filter((c) => c !== course_id)});
+                      }}
+            />
+
 
             {
               guardians && guardians.map((guardian, index) => (
                   <Guardian value={value}
-                            index={index+3}
+                            index={index+4}
                             key={guardian}
                             dir={theme.direction}
                             guardianId={guardian}
@@ -200,7 +219,7 @@ export default function Student(props) {
                   ))}
 
                   <Guardian value={value}
-                        index={3+guardians.length}
+                        index={4+guardians.length}
                         dir={theme.direction}
                         newGuardian={true}
                         deleteNewGuardian={() => {
@@ -211,7 +230,7 @@ export default function Student(props) {
                         addGuardianId={(id) => {
                             setNewGuardian(false);
                             setStudent({...student, guardians: [...student.guardians, id]});
-                            setValue(3+guardians.length);
+                            setValue(4+guardians.length);
                         }
                         }
                         deleteGuardianId={(id) => {
@@ -220,7 +239,6 @@ export default function Student(props) {
                         }}
               />
 
-            }
           </SwipeableViews>
 
     </Paper>

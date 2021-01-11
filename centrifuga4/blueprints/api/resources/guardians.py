@@ -14,7 +14,7 @@ class GuardiansRes(easy.EasyResource,
 
 
 class GuardiansCollectionRes(easy.EasyResource,
-easy.ImplementsPostOne,
+                             easy.ImplementsPostOne,
                              easy.ImplementsGetCollection):
     schema = GuardianSchema
     model = Guardian
@@ -22,7 +22,7 @@ easy.ImplementsPostOne,
 
 
 class StudentGuardiansRes(easy.EasyResource,
-                        easy.ImplementsPostOneSubresource):  # todo others if ok
+                          easy.ImplementsPostOneSubresource):
     schema = GuardianSchema
     model = Guardian
 

@@ -15,35 +15,29 @@ class ImplementsPostOneSubresource:
 
     given an id, it posts with the given body
     """
-    model: MyBase
+    model: type(MyBase)  # todo add type everywhere
     schema: MySQLAlchemyAutoSchema
-    parent_model: MyBase
+    parent_model: type(MyBase)
     parent_field: str
 
     @safe_post
-    def post(self, id_):  # todo test completeness
-        body = request.get_json()
-        if "id" in body:
-            raise ResourceBaseBadRequest("post does not admit id argument",
-                                         messages={"id": ["Found value '%s', expects no id." % body["id"]]})
-
+    def post(self, id_, id2):  # todo test completeness
         # find the parent so that it can be added there
         query = self.parent_model.query.filter(self.parent_model.id == id_)
-        parent = query.first()
+        parent = query.one_or_none()
 
         if not parent:
             abort(404, "no parent resource for id '%s' found" % id_)
 
         field = getattr(parent, self.parent_field)  # todo secure as get field
 
-        new_id = self.model.generate_new_id()
-        body["id"] = new_id
+        added = self.model.query.filter(self.model.id == id2).one_or_none()
 
-        new = self.schema.load(body)
+        if not added:
+            abort(404, "no child resource for id '%s' found" % id2)
 
-        field.append(new)
+        field.append(added)
 
-        db.session.add(new)
         db.session.commit()
 
-        return new_id
+        return None  # todo formalize

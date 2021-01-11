@@ -7,10 +7,10 @@ import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import Divider from "@material-ui/core/Divider";
+import StudentGuardianDataService from "../_services/student_guardians.service"
 import {student_guardian_relations} from "../_data/relations"
 import Person from "./students.student.person.component";
 import GuardiansDataService from "../_services/guardians.service";
-import StudentsGuardiansDataService from "../_services/student_guardian.service"
 import {useErrorHandler} from "../_helpers/handle-response";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -129,9 +129,13 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
                       newPerson={newGuardian}
                       updateCurrentStudent={(x) => {
                         if (!newGuardian) return setGuardian(x);
-                        addGuardianId(x);
+                        StudentGuardianDataService.postWithId(studentId, x)
+                          .then(...errorHandler({snackbarSuccess: true}))
+                          .then(() => {
+                          addGuardianId(x);
+                        });
                       }}
-                      patchService={newGuardian? StudentsGuardiansDataService: GuardiansDataService}
+                      patchService={GuardiansDataService}
                       additionalValidation={{
                         relation: yup.string().required(t("relation_required"))}}
                       additionalFields={

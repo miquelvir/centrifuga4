@@ -50,7 +50,8 @@ class Student(Person):
 
     @validates('default_payment_method')
     def cleaner1(self, key, value):
-        assert value in (None, 'bank-direct-debit', 'cash', 'bank-transfer'), 'method must be either cash or bank-transfer, found %s' % value
+        assert value in (None, 'bank-direct-debit', 'cash',
+                         'bank-transfer'), 'method must be either cash or bank-transfer, found %s' % value
         return value
 
     @validates('status')
@@ -82,11 +83,13 @@ class Student(Person):
         for course in self.courses:
             current = []
             for schedule in course.schedules:
-                if self in schedule.students or schedule.is_base:
+                if self.id == schedule.student_id or schedule.is_base:
                     current.append("%s, %s - %s (%s)" % (to_literal(schedule.day_week),
                                                          schedule.start_time,
-                                                     schedule.end_time,
+                                                         schedule.end_time,
 
-                                                     ', '.join([r.name if r.name else 'Xamfrà' for r in schedule.course.rooms]) if len(schedule.course.rooms) > 0 else 'Xamfrà'))
+                                                         ', '.join([r.name if r.name else 'Xamfrà' for r in
+                                                                    schedule.course.rooms]) if len(
+                                                             schedule.course.rooms) > 0 else 'Xamfrà'))
             result[course.id] = current
         return result

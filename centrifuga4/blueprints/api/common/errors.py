@@ -105,15 +105,16 @@ def integrity(function):
 
 def no_nested(function):
     def function_wrapper(*args, **kwargs):
-        for key, value in request.get_json().items():
-            if type(value) not in (str, int, float, bool, type(None)):
-                print(request.args, request.access_route, request.view_args, )
-                raise NestedNotAllowedBadRequest(
-                    "use proper sub resource instead of nested objects",
-                    {key:
-                         ["No nesting is allowed.",
-                          "You might want to %s at '%s%s/%s/...'." %
-                          (request.method, request.host_url, request.path[1:], key)]})
+        if request.get_json():
+            for key, value in request.get_json().items():
+                if type(value) not in (str, int, float, bool, type(None)):
+                    print(request.args, request.access_route, request.view_args, )
+                    raise NestedNotAllowedBadRequest(
+                        "use proper sub resource instead of nested objects",
+                        {key:
+                             ["No nesting is allowed.",
+                              "You might want to %s at '%s%s/%s/...'." %
+                              (request.method, request.host_url, request.path[1:], key)]})
 
         try:
             return function(*args, **kwargs)
