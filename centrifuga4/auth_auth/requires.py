@@ -1,6 +1,7 @@
 from typing import Union, List, Tuple, Iterable, Callable
 
 from flask import g, current_app
+from flask_login import login_required
 from flask_principal import Permission
 
 from centrifuga4.errors.authorization import Forbidden
@@ -35,6 +36,7 @@ class Requires:
         """ store all permissions passed as *args in a tuple """
         self.permissions = permissions
 
+    @login_required
     def wrapper(self, function: Callable, *args, **kwargs):
         """ function wrapper, raises Forbidden exception if permissions are not met """
         if not check_permissions(self.permissions):

@@ -24,7 +24,7 @@ class EasyRequires(Requires):
     and then any other additional arguments.
     """
     # noinspection PyMethodOverriding
-    def wrapper(self, function: Callable, resource: EasyResource, *args, **kwargs):
+    def wrappr(self, function: Callable, resource: EasyResource, *args, **kwargs):
         if not self.loaded:  # merge the permissions just once
             self.permissions = set(self.permissions).union(resource.permissions)
             self.loaded = True  # not load again
