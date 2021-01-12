@@ -55,7 +55,7 @@ const LoginPage = (props) => {
 
     const logged = () => {
         const setLogged = userCtx["setUser"];
-        setLogged({logged: true});
+        setLogged({logged: true, ping: true});
         const {from} = props.location.state || {from: {pathname: "/"}};
         props.history.push(from);
     }
@@ -95,10 +95,13 @@ const LoginPage = (props) => {
             return null;
         }
 
-        authenticationService
+        if (userCtx["user"]["ping"] !== false){
+             authenticationService
             .ping()
             .then(...errorHandler({errorOut: false}))
             .then((success) => { if (success) logged(); });  // ignore failed ping (it is just not logged in)
+        }
+
     });
 
     const resetPassword = () => {

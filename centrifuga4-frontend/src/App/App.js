@@ -23,7 +23,7 @@ function App() {
         setTheme(!theme);
     }
 
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({logged: false, ping: true});
 
 
     return (

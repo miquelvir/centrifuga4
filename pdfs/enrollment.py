@@ -9,10 +9,11 @@ from centrifuga4.models import Student
 from centrifuga4.schemas.schemas import StudentSchema, GuardianSchema, CourseSchema
 from jinja_utils.template_renderer import TemplateRenderer
 from pdfs import TEMPLATES_PATH
+from pdfs.wkhtmltopdf import get_config
 
 
 def generate_enrollment_agreement_pdf(student_id, backend_server_address, templates_folder=TEMPLATES_PATH):
-    config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
+    config = pdfkit.configuration(wkhtmltopdf=get_config())
 
     student = Student.query.filter(Student.id == student_id).one_or_none()
     if not student:

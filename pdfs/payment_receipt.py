@@ -7,6 +7,7 @@ import pdfkit
 
 from jinja_utils.template_renderer import TemplateRenderer
 from pdfs import TEMPLATES_PATH
+from pdfs.wkhtmltopdf import get_config
 
 
 def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=TEMPLATES_PATH):
@@ -14,7 +15,7 @@ def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=T
         epoch = datetime.utcfromtimestamp(0)
         return int((datetime.now() - epoch).total_seconds() * 1000.0)
 
-    config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
+    config = pdfkit.configuration(wkhtmltopdf=get_config())
 
     signing_at = unix_time_millis()
     try:

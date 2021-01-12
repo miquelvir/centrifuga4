@@ -16,16 +16,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Routes from "./routes";
-import {BrowserRouter, Link, Route, Router} from "react-router-dom";
+import {BrowserRouter, Link, Route} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
 import {history} from "../_helpers/history";
-import {themeContext} from "../_context/theme-context";
-import PrivateRoute from "../_components/PrivateRoute";
-import LoginPage from "../LoginPage/LoginPage";
-import SignupPage from "../SignupPage/SignupPage";
-import ResetPage from "../ResetPage/ResetPage";
-import {userContext} from "../_context/user-context";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({

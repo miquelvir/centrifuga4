@@ -106,8 +106,12 @@ export default function HomeToolbar(props){
 
                      <MenuItem
                          onClick={(event) => {
-                             userCtx["setUser"]({logged: false});
-                             authenticationService.logout().then(...errorHandler({})).then();
+                             authenticationService
+                                 .logout()
+                                 .then(...errorHandler({}))
+                                 .then(() => {
+                                     userCtx["setUser"]({logged: false, ping: false});
+                                 });
                              handleMenuClose(event);
                          }}>
                          {t("log_out")}

@@ -22,7 +22,7 @@ export function useErrorHandler() {
 
     const failureHandler401 = (res) => {
         // auto logout if 401 unauthenticated
-        userCtx["setUser"]({logged: false});
+        userCtx["setUser"]({logged: false, ping: false});
 
         enqueueSnackbar(t("warning_not_logged_in"), {variant: "warning"});
 
