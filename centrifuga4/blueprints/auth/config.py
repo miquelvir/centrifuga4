@@ -78,7 +78,7 @@ def logout():
     for key in ('identity.name', 'identity.auth_type'):  # todo refractor function
         session.pop(key, None)
 
-    del g.user
+    g.pop('user', None)
 
     # Tell Flask-Principal the user is anonymous
     identity_changed.send(current_app._get_current_object(),
