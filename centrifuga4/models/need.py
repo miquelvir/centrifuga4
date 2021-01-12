@@ -4,7 +4,7 @@ from centrifuga4.auth_auth.resource_need import ResourceNeed
 
 db.Table("user_need",
          db.Column("user_id", db.Text, db.ForeignKey('user.id')),
-         db.Column("need_name", db.Integer, db.ForeignKey('need.name')))
+         db.Column("need_name", db.Text, db.ForeignKey('need.name')))
 
 
 class Need(db.Model):

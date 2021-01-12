@@ -193,18 +193,22 @@ def add_labels():
     return labels
 
 
+def add_all():
+    centrifuga4.db.drop_all()  # drop previous schemas
+    centrifuga4.db.create_all()  # load new schemas
+
+    add_needs()
+    add_users()
+    students = add_students()
+    teachers = add_teachers()
+    labels = add_labels()
+    rooms = add_rooms()
+    add_courses(students, teachers, labels, rooms)
+
+    centrifuga4.db.session.commit()
+
+
 if __name__ == "__main__":
     app = centrifuga4.init_app("config.DevelopmentConfig")
     with app.app_context():
-        centrifuga4.db.drop_all()  # drop previous schemas
-        centrifuga4.db.create_all()  # load new schemas
-
-        add_needs()
-        add_users()
-        students = add_students()
-        teachers = add_teachers()
-        labels = add_labels()
-        rooms = add_rooms()
-        add_courses(students, teachers, labels, rooms)
-
-        centrifuga4.db.session.commit()
+        add_all()

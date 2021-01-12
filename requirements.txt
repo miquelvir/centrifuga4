@@ -34,10 +34,12 @@ mistune==0.8.4
 passlib==1.7.4
 pdfkit==0.6.1
 Pillow==8.1.0
+psycopg2-binary==2.8.6
 pycparser==2.20
 PyJWT==1.7.1
 Pyphen==0.10.0
 pyrsistent==0.17.3
+python-dotenv==0.15.0
 pytz==2020.4
 PyYAML==5.3.1
 redis==3.5.3

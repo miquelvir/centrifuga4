@@ -1,5 +1,6 @@
 import axios from "axios";
 import {authHeader} from "../_helpers/auth-header";
+import {BACKEND_URL} from "../config";
 
 export const authenticationService = {
     login,
@@ -9,7 +10,7 @@ export const authenticationService = {
 
 function login(username, password) {
     return new Promise(function(resolve, reject) {
-        axios({url: 'https://127.0.0.1:4999/auth/v1/login',  // todo server url
+        axios({url: `${BACKEND_URL}/auth/v1/login`,  // todo server url
             method: 'POST',
             auth: {
                 username: username,
@@ -27,7 +28,7 @@ function login(username, password) {
 
 function logout() {
     return new Promise(function(resolve, reject) {
-        axios({url: 'https://127.0.0.1:4999/auth/v1/logout',
+        axios({url: `${BACKEND_URL}/auth/v1/logout`,
             method: 'POST',
             headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()}
         }).then(response => {
@@ -39,7 +40,7 @@ function logout() {
 
 function ping() {
     return new Promise(function(resolve, reject) {
-        axios({url: 'https://127.0.0.1:4999/auth/v1/ping',
+        axios({url: `${BACKEND_URL}/auth/v1/ping`,
             method: 'GET',
             headers: {'Cache-Control': 'no-cache'}
         }).then(res => {

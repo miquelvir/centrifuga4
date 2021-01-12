@@ -1,5 +1,6 @@
 import axios from "axios";
 import {authHeader} from "../_helpers/auth-header";
+import {BACKEND_URL} from "../config";
 
 export const authenticationService = {
     signup
@@ -8,7 +9,7 @@ export const authenticationService = {
 function signup(username, password, email, name, surname1, surname2, token) {
 
     return new Promise(function(resolve, reject) {
-        axios({url: 'https://127.0.0.1:4999/invites/v1/newUser',
+        axios({url: `${BACKEND_URL}/invites/v1/newUser`,
             method: 'POST',
             data: {
                 username: username,
