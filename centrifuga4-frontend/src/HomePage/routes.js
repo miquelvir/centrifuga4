@@ -7,6 +7,7 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Students from "../_components/students.component";
+import Users from "../_components/users.component";
 import {useTranslation} from "react-i18next";
 
 
@@ -44,14 +45,6 @@ const Rooms = () => {
 
   return (
     <h1>{t("rooms")}</h1>
-  );
-};
-
-const Users = () => {
-  const { t } = useTranslation();
-
-  return (
-    <h1>{t("users")}</h1>
   );
 };
 

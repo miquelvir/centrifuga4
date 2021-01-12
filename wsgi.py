@@ -1,7 +1,7 @@
 import centrifuga4
-from config import HerokuProductionConfig
+from config import ProductionConfig
 
-app = centrifuga4.init_app(HerokuProductionConfig)
+app = centrifuga4.init_app(ProductionConfig)
 
 
 if __name__ == "__main__":

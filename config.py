@@ -33,7 +33,7 @@ class Config(object):
     PUBLIC_VALIDATION_SECRET = SECRET_KEY
 
 
-class ProductionConfig(Config):
+class DevelopmentBuiltConfig(Config):
     CSRF_COOKIE_SAMESITE = 'Strict'
     SESSION_PROTECTION = "strong"
     SESSION_COOKIE_SECURE = True
@@ -46,7 +46,7 @@ class ProductionConfig(Config):
                                                             "people.db")
 
 
-class HerokuProductionConfig(ProductionConfig):
+class ProductionConfig(DevelopmentBuiltConfig):
     BACKEND_SERVER_PORT = "443"
     BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
     BACKEND_SERVER_URL = "https://%s:%s" % (BACKEND_SERVER_HOST, BACKEND_SERVER_PORT)

@@ -238,7 +238,7 @@ const StudentsList = (props) => {
                                     <Tooltip title={t("export") + " .csv"}>
                                     <IconButton edge="end" aria-label={t("export")} onClick={(e) => {
                                         StudentsDataService
-                                            .downloadOneCsv(currentStudentId)
+                                            .downloadOneCsv(student['id'])
                                             .then(...errorHandler({}));
                                     }}>
                                         <GetAppIcon/>

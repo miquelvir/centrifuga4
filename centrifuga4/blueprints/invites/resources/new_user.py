@@ -56,12 +56,11 @@ class NewUserCollectionRes(Resource):
                      password_hash=User.hash_password(user_password))
 
             for n in data["needs"]:
-                need_name = n["name"]
-                need = Need.query.filter_by(name=need_name).one_or_none()  # todo why query always is brought up by linter
+                need = Need.query.filter_by(name=n).one_or_none()  # todo why query always is brought up by linter
                 if need:
                     u.needs.append(need)
                 else:
-                    raise ValueError("invalid need name '%s'" % need_name)
+                    raise ValueError("invalid need name '%s'" % n)
 
             db.session.add(u)
             db.session.commit()

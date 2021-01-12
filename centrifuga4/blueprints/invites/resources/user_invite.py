@@ -13,9 +13,10 @@ from email_queue.url_utils import merge_url_query_params
 
 def generate_signup_link(_token, _email, frontend_url=None):
     return merge_url_query_params(
-        "%s/signup" % frontend_url if frontend_url else current_app.config["FRONTEND_SERVER_URL"],
-        {"token": _token, "email": _email, "lan": "cat"}), merge_url_query_params(
-        "%s/signup" % frontend_url if frontend_url else current_app.config["FRONTEND_SERVER_URL"],
+        "%s/signup" % (frontend_url if frontend_url else current_app.config["FRONTEND_SERVER_URL"]),
+        {"token": _token, "email": _email, "lan": "cat"}), \
+           merge_url_query_params(
+        "%s/signup" % (frontend_url if frontend_url else current_app.config["FRONTEND_SERVER_URL"]),
         {"token": _token, "email": _email, "lan": "eng"})
 
 
@@ -26,25 +27,19 @@ class UserInviteCollectionRes(Resource):
         try:
             user_email = request.json["userEmail"].lower()
         except KeyError:
-            abort(400, "no user email found in body")
+            abort(400)
 
         try:
             needs = request.json["needs"]
         except KeyError:
-            abort(400, "no needs found in body")
+            abort(400)
 
         clean_needs = []
         for need in needs:
-            if type(need) is not list:
-                abort(400, "incorrect format")  # todo formalize
-            try:
-                clean_needs.append({"type": need["type"],
-                                    "name": need["name"]})
-            except KeyError:
-                abort(400, "incorrect format")
+            clean_needs.append(need)  # todo check is a valid legitimate need
 
         if User.query.filter_by(username=user_email).count() > 0:
-            abort(400, "user already exists")
+            abort(400)
 
         token = jwt.encode({'userEmail': user_email,
                            "needs": clean_needs},

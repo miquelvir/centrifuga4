@@ -1,8 +1,8 @@
 import os
-from config import HerokuProductionConfig
+from config import ProductionConfig
 
 
-class HerokuManualLiveConfig(HerokuProductionConfig):
+class HerokuManualLiveConfig(ProductionConfig):
 
     SECRET_KEY = "super-secret"
     INVITES_SECRET = "super-secret"
