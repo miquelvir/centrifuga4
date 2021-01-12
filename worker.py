@@ -3,14 +3,14 @@ from os.path import join, dirname
 
 from dotenv import load_dotenv
 
-load_dotenv(join(dirname(__file__), '.env'))
+load_dotenv(join(dirname(__file__), 'email_queue/.env'))
 
 import redis
 from rq import Worker, Queue, Connection
 
 listen = ['default']
 
-redis_url = os.getenv('REDISTOGO_URL', 'redis://127.0.0.1:6379')
+redis_url = os.getenv('REDIS_TLS_URL', os.getenv('REDIS_URL'))
 conn = redis.from_url(redis_url)
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from rq.job import Job
 
-from email_queue.worker import conn
+from worker import conn
 
 
 class JobQueueRes(Resource):

@@ -10,7 +10,7 @@ from flask_talisman import Talisman
 from flask_login import LoginManager
 from development.config import ProductionConfig
 from rq import Queue
-from email_queue.worker import conn
+from worker import conn
 
 db = SQLAlchemy()
 man = Talisman()
