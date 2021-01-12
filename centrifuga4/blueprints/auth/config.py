@@ -54,7 +54,7 @@ def get_auth_token():
     remember = request.args.get('remember')
     remember = remember == "1" if remember else False
 
-    login_user(user, remember=remember)
+    login_user(user, remember=False)
     identity_changed.send(current_app._get_current_object(),
                           identity=Identity(user.id))
 
@@ -72,8 +72,6 @@ def logout():
     # do just that.
     """
     logout_user()
-
-    current_user = None
 
     # Remove session keys set by Flask-Principal
     for key in ('identity.name', 'identity.auth_type', '_user_id', '_id'):  # todo refractor function
