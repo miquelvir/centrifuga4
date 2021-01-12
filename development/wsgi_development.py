@@ -1,3 +1,8 @@
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+load_dotenv(join(dirname(__file__), '.env'))
+
 import centrifuga4
 from development.config import DevelopmentConfig
 
