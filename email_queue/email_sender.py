@@ -5,6 +5,7 @@ from email.mime import base
 from email.mime import multipart
 from email.mime import text
 import logging as log
+from email.mime.application import MIMEApplication
 
 from . import config
 from .my_email import Email
@@ -92,16 +93,17 @@ class EmailSender:
     @staticmethod
     def get_attachment_part_f(attachment, filename) -> base.MIMEBase:
         """ given a filepath and its final filename, return a MIMEBase part for it """
-        part = base.MIMEBase("application", "octet-stream")  # create octet-stream MIME part for the attachment
+        """part = base.MIMEBase("application", "octet-stream")  # create octet-stream MIME part for the attachment
         part.set_payload(attachment.read())
 
         # Encode file in ASCII characters to send by email
-        encoders.encode_base64(part)
+        encoders.encode_base64(part)"""
+
+        part = MIMEApplication(attachment.read(), "pdf")
 
         # Add header as key/value pair to attachment part
         part.add_header(
-            "Content-Disposition",
-            f"attachment; filename={filename}",
+            "Content-Disposition", "attachment", filename=filename
         )
 
         return part
