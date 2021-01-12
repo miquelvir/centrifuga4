@@ -34,3 +34,4 @@ https://flask-smorest.readthedocs.io/en/latest/openapi.html
 # todo maybe remove content negotiation as we know it and create proper csv resources
 
 # todo primary accent on student selected home page
+# todo unbuffered

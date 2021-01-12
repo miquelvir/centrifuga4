@@ -1,5 +1,5 @@
 import os
-from development.config import HerokuProductionConfig
+from config import HerokuProductionConfig
 
 
 class HerokuManualLiveConfig(HerokuProductionConfig):

@@ -1,7 +1,6 @@
 import io
 
 import centrifuga4
-from development.config import DevelopmentConfig
 from email_queue.my_email import Email
 from email_queue.email_sender import EmailSender
 from pdfs.enrollment import generate_enrollment_agreement_pdf

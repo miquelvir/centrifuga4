@@ -1,5 +1,5 @@
 import centrifuga4
-from development.config import HerokuProductionConfig
+from config import HerokuProductionConfig
 
 app = centrifuga4.init_app(HerokuProductionConfig)
 

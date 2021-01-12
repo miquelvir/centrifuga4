@@ -4,10 +4,9 @@ from dotenv import load_dotenv
 load_dotenv(join(dirname(__file__), '.env'))
 
 import centrifuga4
+from config import DevelopmentConfig
 
-from development.config import ProductionConfig
-
-app = centrifuga4.init_app(ProductionConfig)
+app = centrifuga4.init_app(DevelopmentConfig)
 
 
 if __name__ == "__main__":

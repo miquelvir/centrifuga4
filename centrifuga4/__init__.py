@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
 from flask_talisman import Talisman
 from flask_login import LoginManager
-from development.config import ProductionConfig
+from config import ProductionConfig
 from rq import Queue
 from worker import conn
 
@@ -53,19 +53,22 @@ def init_app(config=ProductionConfig):
     # plugin initialization
     db.init_app(app)
     login.init_app(app)
-    man.init_app(app, content_security_policy={
-            "style-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.googleapis.com'],  # todo production
-            "font-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.gstatic.com'],
-            "default-src":  ["\'self\'", "'unsafe-inline'"],
-        })  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
-    swagger.init_app(app)
-    principal.init_app(app)
-    csrf.init_app(app)
-
+    print(app.config["DEVELOPMENT"])
     if app.config["DEVELOPMENT"]:
         # allow cors only during development (due to the front end development server)
         cors = CORS()
         cors.init_app(app)
+    else:
+        man.init_app(app, content_security_policy={
+                "style-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.googleapis.com'],  # todo production
+                "font-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.gstatic.com'],
+                "default-src":  ["\'self\'", "'unsafe-inline'"],
+            })  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
+    swagger.init_app(app)
+    principal.init_app(app)
+    csrf.init_app(app)
+
+
 
     with app.app_context():
         from .blueprints import api, dashboard, auth_service, emails_service, invites_service, password_reset_service, validation_blueprint

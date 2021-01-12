@@ -8,8 +8,8 @@ from centrifuga4.models import User, Need
 
 if __name__ == "__main__":
     import centrifuga4
-    from development import manual_heroku_config as config
-    from development.generate_sample_db import all_needs
+    import manual_heroku_config as config
+    from generate_sample_db import all_needs
 
     app = centrifuga4.init_app(config.HerokuManualLiveConfig)
     with app.app_context():

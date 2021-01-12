@@ -1,10 +1,6 @@
 import io
 
-from sqlalchemy import create_engine
-
 import centrifuga4
-from centrifuga4 import db
-from development.config import DevelopmentConfig
 from email_queue.my_email import Email
 from email_queue.email_sender import EmailSender
 from pdfs.grant_letter import generate_grant_letter_pdf
