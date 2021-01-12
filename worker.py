@@ -10,7 +10,7 @@ from rq import Worker, Queue, Connection
 
 listen = ['default']
 
-redis_url = os.getenv('REDIS_TLS_URL', os.getenv('REDIS_URL'))
+redis_url = os.getenv('REDIS_URL', os.getenv('REDIS_URL'))
 conn = redis.from_url(redis_url)
 
 if __name__ == '__main__':
