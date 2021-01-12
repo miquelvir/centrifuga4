@@ -48,7 +48,7 @@ class ProductionConfig(Config):
 
 class HerokuProductionConfig(ProductionConfig):
     BACKEND_SERVER_PORT = "443"
-    BACKEND_SERVER_HOST = "centrifuga4.xamfra.net"
+    BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
     BACKEND_SERVER_URL = "https://%s:%s" % (BACKEND_SERVER_HOST, BACKEND_SERVER_PORT)
     FRONTEND_SERVER_URL = BACKEND_SERVER_URL
 
