@@ -11,4 +11,4 @@ def get_config():
         os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)
         wkhtmltopdfcmd = subprocess.Popen(['which', os.environ.get('wkhtmltopdf')],
                                            stdout=subprocess.PIPE).communicate()[0].strip()
-        return pdfkit.configuration(wkhtmltopdf=wkhtmltopdfcmd)
+        return pdfkit.configuration(wkhtmltopdf=os.environ.get('wkhtmltopdf'))
