@@ -63,6 +63,7 @@ class StudentsGrantLettersRes(Resource, SwaggerView):  # todo documented class h
                            requestedId=id_)
 
         pdf = generate_grant_letter_pdf(student.id, backend_server_address=current_app.config['BACKEND_SERVER_URL'])
+        print("pdf", pdf)
         r = make_response(send_file(
             io.BytesIO(pdf),
             as_attachment=True,
