@@ -29,7 +29,7 @@ function login(username, password) {
 function logout() {
     return new Promise(function(resolve, reject) {
         axios({url: `${BACKEND_URL}/auth/v1/logout`,
-            method: 'POST',
+            method: 'GET',
             headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()}
         }).then(response => {
             resolve(false);

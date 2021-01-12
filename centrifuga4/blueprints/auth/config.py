@@ -61,7 +61,7 @@ def get_auth_token():
     return "", 200
 
 
-@auth_service.route('/logout', methods=['POST'])
+@auth_service.route('/logout', methods=['GET'])
 @login_required
 def logout():
     """
