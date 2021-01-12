@@ -13,7 +13,7 @@ from pdfs.wkhtmltopdf import get_config
 
 
 def generate_grant_letter_pdf(student_id, backend_server_address, templates_folder=TEMPLATES_PATH):
-    config = pdfkit.configuration(wkhtmltopdf=get_config())
+    config = get_config()
 
 
     templater = TemplateRenderer(templates_folder=templates_folder)

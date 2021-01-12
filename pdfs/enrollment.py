@@ -13,7 +13,7 @@ from pdfs.wkhtmltopdf import get_config
 
 
 def generate_enrollment_agreement_pdf(student_id, backend_server_address, templates_folder=TEMPLATES_PATH):
-    config = pdfkit.configuration(wkhtmltopdf=get_config())
+    config = get_config()
 
     student = Student.query.filter(Student.id == student_id).one_or_none()
     if not student:
