@@ -100,6 +100,8 @@ class EmailSender:
         encoders.encode_base64(part)"""
 
         part = MIMEApplication(attachment.read(), "pdf")
+        print("att", attachment)
+        print("att_read", attachment.read())
 
         # Add header as key/value pair to attachment part
         part.add_header(
