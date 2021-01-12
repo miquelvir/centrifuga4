@@ -19,7 +19,8 @@ def generate_grant_letter_pdf(student_id, backend_server_address, templates_fold
     templater = TemplateRenderer(templates_folder=templates_folder)
     student = Student.query.filter(Student.id == student_id).one_or_none()
     if not student:
-        return
+        print(student)
+        raise ValueError("student %s not found" % student_id)
     total_price = sum([c.price_term for c in student.courses])
     cs = CourseSchema()
     pdf_content = templater.render_template("grant_letter.html",
