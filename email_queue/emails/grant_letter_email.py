@@ -9,14 +9,11 @@ from pdfs.grant_letter import generate_grant_letter_pdf
 def my_job(student, to, backend_server_address):
     emailer = EmailSender()
 
-    print(0)
     app = centrifuga4.init_app()
-    print(1)
+
     with app.app_context():
-        print("pdf, -")
         pdf = generate_grant_letter_pdf(student.id, backend_server_address=backend_server_address)
-        print("pdf", pdf)
-    print(2)
+
     emailer.send(Email(
         "Xamfrà - beques | becas | grants",
         to=to,

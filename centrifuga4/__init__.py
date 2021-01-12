@@ -1,5 +1,7 @@
 __version__ = '4.0.1'
 
+import os
+
 from flasgger import Swagger
 from flask_cors import CORS
 from flask_principal import Principal, identity_loaded
@@ -8,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
 from flask_talisman import Talisman
 from flask_login import LoginManager
-from config import ProductionConfig
+from config import ProductionConfig, HerokuProductionConfig, DevelopmentConfig
 from rq import Queue
 from worker import conn
 
@@ -41,7 +43,18 @@ temp = {
 swagger = Swagger(template=temp)
 
 
-def init_app(config=ProductionConfig):
+def init_app(config=None):
+    if config is None:
+        env = os.getenv('ENVIRONMENT')
+        if env == 'production':
+            config = HerokuProductionConfig
+        elif env == 'development-built':
+            config = ProductionConfig
+        elif env == 'development':
+            config = DevelopmentConfig
+        else:
+            raise ValueError("no environment variable found")
+
     # app creation
     app = Flask(__name__,
                 static_folder='../centrifuga4-frontend/build',
