@@ -19,8 +19,6 @@ def basic_http_auth_required(f):
     def verify_password(username: str, password: str) -> bool:
         """ Given a username and optionally a password, verify its validity. """
 
-        print(username, password)
-
         user = User.query.filter_by(username=username).first()
         if user is None:
             return False  # user not registered

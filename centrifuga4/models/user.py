@@ -39,8 +39,8 @@ class User(MyBase, UserMixin):
 
     def login(self, password: str) -> bool:
         """ checks if password hash matches stored patch """
-        encoded_password: bytes = password.encode("utf-8")
-        stored_hash = self.password_hash
+        encoded_password: bytes = bytes(password, encoding="utf-8")
+        stored_hash: bytes = bytes(self.password_hash, encoding="utf-8")
         return bcrypt.checkpw(encoded_password, stored_hash)
 
     @staticmethod
