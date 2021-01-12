@@ -63,7 +63,6 @@ def get_auth_token():
 
 @auth_service.route('/logout', methods=['POST'])
 @login_required
-# @error_handler
 def logout():
     """
     # Because the JWTs are stored in an httponly cookie now, we cannot
@@ -74,8 +73,10 @@ def logout():
     """
     logout_user()
 
+    current_user = None
+
     # Remove session keys set by Flask-Principal
-    for key in ('identity.name', 'identity.auth_type'):  # todo refractor function
+    for key in ('identity.name', 'identity.auth_type', '_user_id', '_id'):  # todo refractor function
         session.pop(key, None)
 
     g.pop('user', None)

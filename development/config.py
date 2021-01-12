@@ -27,6 +27,11 @@ class Config(object):
     SSL_CERT = "cert.pem"
     SSL_KEY = "key.pem"
 
+    SECRET_KEY = os.environ['SECRET']
+    INVITES_SECRET = os.environ['SECRET']
+    PASSWORD_RESET_SECRET = os.environ['SECRET']
+    PUBLIC_VALIDATION_SECRET = os.environ['SECRET']
+
 
 class ProductionConfig(Config):
     CSRF_COOKIE_SAMESITE = 'Strict'
@@ -34,11 +39,6 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Strict'
-
-    SECRET_KEY = "super-secret"
-    INVITES_SECRET = "super-secret"
-    PASSWORD_RESET_SECRET = "super-secret"
-    PUBLIC_VALIDATION_SECRET = "super-secret"
 
     FRONTEND_SERVER_URL = "https://127.0.0.1:4999"
 
@@ -48,10 +48,7 @@ class ProductionConfig(Config):
 
 class HerokuProductionConfig(ProductionConfig):
 
-    SECRET_KEY = "super-secret"
-    INVITES_SECRET = "super-secret"
-    PASSWORD_RESET_SECRET = "super-secret"
-    PUBLIC_VALIDATION_SECRET = "super-secret"
+
 
     FRONTEND_SERVER_URL = "https://centrifuga4.herokuapp.com"
     BACKEND_SERVER_PORT = "443"
@@ -67,11 +64,6 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ECHO = False
 
     CSRF_DISABLE = True
-
-    SECRET_KEY = "super-secret"  # todo
-    INVITES_SECRET = "super-secret"
-    PASSWORD_RESET_SECRET = "super-secret"
-    PUBLIC_VALIDATION_SECRET = "super-secret"
 
     CSRF_COOKIE_SAMESITE = 'Lax'  # allow development frontend server
     FRONTEND_SERVER_URL = "https://127.0.0.1:3000"
