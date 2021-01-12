@@ -1,2 +1,2 @@
-export const API_VERSION = 'v1';
-export const BACKEND_URL = 'https://127.0.0.1:4999'
+export const API_VERSION = process.env.REACT_APP_API_VERSION;
+export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
