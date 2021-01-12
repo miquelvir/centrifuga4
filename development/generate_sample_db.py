@@ -33,6 +33,7 @@ def add_needs():
 
 def add_users():
     for idx in range(20):
+        print("    user %s" % idx)
         u = User(id=User.generate_new_id(),
                  name="john%s" % idx,
                  surname1="marques%s" % idx,
@@ -59,6 +60,7 @@ def add_users():
 def add_teachers():
     teachers = []
     for idx in range(20):
+        print("    teacher %s" % idx)
         t = Teacher(id=RawPerson.generate_new_id(),  # todo id collision check
                     name="ester%s" % idx,
                     surname1="bonal%s" % idx,
@@ -72,6 +74,7 @@ def add_teachers():
 def add_rooms():
     rooms = []
     for idx in range(20):
+        print("    room %s" % idx)
         r = Room(id=Room.generate_new_id(),  # todo id collision check
                  name="monpou %s" % idx,
                  capacity=randint(1, 50))
@@ -93,6 +96,7 @@ def generate_schedule(course_id, is_base):
 
 def add_courses(students: List[Student], teachers: List[Teacher], labels: List[Label], rooms: List[Room]):
     for idx in range(100):
+        print("    course %s" % idx)
         course_id = Course.generate_new_id()
         c = Course(id=course_id,
                    name="course %s" % idx,
@@ -123,6 +127,7 @@ def add_courses(students: List[Student], teachers: List[Teacher], labels: List[L
 def add_students():
     students = []
     for idx in range(500):
+        print("    student %s" % idx)
         s = Student(id=RawPerson.generate_new_id(),
                     name="mark%s" % idx,
                     surname1="stuart%s" % idx,
@@ -194,17 +199,25 @@ def add_labels():
 
 
 def add_all():
+    print("dropping... [1]")
     centrifuga4.db.drop_all()  # drop previous schemas
+    print("creating... [2]")
     centrifuga4.db.create_all()  # load new schemas
-
+    print("adding needs... [3]")
     add_needs()
+    print("adding users... [4]")
     add_users()
+    print("adding students... [5]")
     students = add_students()
+    print("adding teachers... [6]")
     teachers = add_teachers()
+    print("adding labels... [7]")
     labels = add_labels()
+    print("adding rooms... [8]")
     rooms = add_rooms()
+    print("adding courses... [9]")
     add_courses(students, teachers, labels, rooms)
-
+    print("commiting... [10]")
     centrifuga4.db.session.commit()
 
 
