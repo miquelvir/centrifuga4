@@ -22,7 +22,7 @@ def generate_signup_link(_token, _email, frontend_url=None):
 
 class UserInviteCollectionRes(Resource):
 
-    @Requires({InvitePermission, UsersPermission})
+    @Requires(InvitePermission, UsersPermission)
     def post(self):
         try:
             user_email = request.json["userEmail"].lower()
