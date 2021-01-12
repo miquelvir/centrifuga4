@@ -50,8 +50,6 @@ def get_auth_token():
     The client must store it for future calls.
     """
 
-    print("here")
-
     user = g.user
     remember = request.args.get('remember')
     remember = remember == "1" if remember else False
@@ -79,6 +77,9 @@ def logout():
     # Remove session keys set by Flask-Principal
     for key in ('identity.name', 'identity.auth_type'):  # todo refractor function
         session.pop(key, None)
+
+    del g.user
+
     # Tell Flask-Principal the user is anonymous
     identity_changed.send(current_app._get_current_object(),
                           identity=AnonymousIdentity())
