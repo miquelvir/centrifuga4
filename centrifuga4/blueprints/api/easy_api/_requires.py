@@ -14,10 +14,6 @@ class EasyRequires(Requires):
     only the ones used when calling
     """
 
-    def __init__(self, *permissions: type(Permission)):
-        super().__init__(*permissions)
-        self.loaded = False  # just load the easy resource permissions once   # todo better way?
-
     """
     signature mismatch with super is on porpoise, since the wrapper will be called
     with the current factory self, the function it is being called on, the self of the EasyResource
@@ -25,7 +21,5 @@ class EasyRequires(Requires):
     """
     # noinspection PyMethodOverriding
     def wrapper(self, function: Callable, resource: EasyResource, *args, **kwargs):
-        if not self.loaded:  # merge the permissions just once
-            self.permissions = set(self.permissions).union(resource.permissions)
-            self.loaded = True  # not load again
-        return super().wrapper(function, resource, *args, **kwargs)
+        return super().wrapper(function, resource, *args, **kwargs, _additional_permisions=resource.permissions)
+

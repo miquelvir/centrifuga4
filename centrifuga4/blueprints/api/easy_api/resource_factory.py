@@ -50,6 +50,7 @@ def get_resources(model, individual=True, collection=True, nested=True) -> List[
                             "model": model,
                             "permissions": model.permissions
                         })
+
         resources.append((resource, "/%s" % resource_name))
 
     if individual:

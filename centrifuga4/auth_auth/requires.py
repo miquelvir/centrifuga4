@@ -18,7 +18,6 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
         # session cookie does not work properly if using the front end server independently
         return True
 
-    print(required_permissions)
     # check if used provides enough needs to pass all permissions
     if not all((p().can() for p in required_permissions)):
         return False
@@ -33,17 +32,19 @@ class Requires:
     creates decorators which only call the function if all needed permissions are meet,
     otherwise it raises a Forbidden exception
     """
-    def __init__(self, *permissions: type(Permission)):
+    def __init__(self, *method_permissions: type(Permission)):
         """ store all permissions passed as *args in a tuple """
-        self.permissions = permissions
+        self.method_permissions: set = set(method_permissions)
 
     @login_required
-    def wrapper(self, function: Callable, *args, **kwargs):
+    def wrapper(self, function: Callable, *args, _additional_permisions=None, **kwargs):
         """ function wrapper, raises Forbidden exception if permissions are not met """
-        if not check_permissions(self.permissions):
+        if _additional_permisions is None:
+            _additional_permisions = {}
+        if not check_permissions(self.method_permissions.union(_additional_permisions)):
             raise Forbidden("Insufficient privileges for requested action.",
                             receivedPrivileges=[str(p) for p in g.identity.provides],
-                            expectedPrivileges=[p.__name__ for p in self.permissions])
+                            expectedPrivileges=[p.__name__ for p in self.method_permissions.union(_additional_permisions)])
         return function(*args, **kwargs)
 
     def __call__(self, function: Callable):
