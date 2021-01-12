@@ -18,6 +18,7 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
         # session cookie does not work properly if using the front end server independently
         return True
 
+    print(required_permissions)
     # check if used provides enough needs to pass all permissions
     if not all((p().can() for p in required_permissions)):
         return False

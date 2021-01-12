@@ -93,7 +93,7 @@ export default function Users({history, ...other}) {
             setSubmitting(true);
             invitationsService
                 .inviteUser(values['email'], allNeeds.map(n => (n.name)).filter(name => values[name]))
-                .then(...errorHandler({}))
+                .then(...errorHandler({snackbarSuccess: true}))
                 .then(res => {
                     handleClose();
                 }).catch(_ => {
