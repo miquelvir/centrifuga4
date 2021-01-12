@@ -57,8 +57,7 @@ class HerokuProductionConfig(ProductionConfig):
     BACKEND_SERVER_PORT = "443"
     BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), "..",
-                                                            "people.db")
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
 
 class DevelopmentConfig(Config):

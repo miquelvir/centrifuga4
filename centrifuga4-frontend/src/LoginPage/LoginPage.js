@@ -97,7 +97,7 @@ const LoginPage = (props) => {
 
         authenticationService
             .ping()
-            .then(...errorHandler({}))
+            .then(...errorHandler({errorOut: false}))
             .then((success) => { if (success) logged(); });  // ignore failed ping (it is just not logged in)
     });
 
@@ -108,7 +108,7 @@ const LoginPage = (props) => {
         } else {
             passwordResetService
                 .startReset(username)
-                .then(...errorHandler({}))
+                .then(...errorHandler({errorOut: false}))
                 .then(r => {
                 enqueueSnackbar(t("started_password_reset"), { variant: "success"});
             })
