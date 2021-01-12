@@ -32,7 +32,7 @@ def generate_grant_letter_pdf(student_id, backend_server_address, templates_fold
                                             grant=total_price > student.price_term,
                                             grant_percentage=round((total_price-student.price_term)/total_price*100, 2) if total_price != 0 else 0,
                                             datetime=datetime.date(datetime.now()))
-
+    print("content", pdf_content)
     pdf = pdfkit.from_string(pdf_content, False,
                              configuration=config)
 
