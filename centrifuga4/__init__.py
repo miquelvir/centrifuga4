@@ -53,12 +53,11 @@ def init_app(config=ProductionConfig):
     # plugin initialization
     db.init_app(app)
     login.init_app(app)
-    """man.init_app(app, content_security_policy={
+    man.init_app(app, content_security_policy={
             "style-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.googleapis.com'],  # todo production
             "font-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.gstatic.com'],
-            "img-src": "'self' data:",
-            "script-src":  ["\'self\'", "'unsafe-inline'"],
-        }) """  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
+            "default-src":  ["\'self\'", "'unsafe-inline'"],
+        })  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
     swagger.init_app(app)
     principal.init_app(app)
     csrf.init_app(app)
