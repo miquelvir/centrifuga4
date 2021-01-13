@@ -1,4 +1,4 @@
-__version__ = '4.0.1'
+__version__ = "4.0.1"
 
 import os
 
@@ -23,91 +23,103 @@ csrf = SeaSurf()
 q = Queue(connection=conn)  # todo here
 
 temp = {
-        "swagger": "2.0",
-        "info": {
-            "title": "centrífuga4 API",
-            "description": "RESTful API for access to centrifuga4 data",
-            "contact": {
-                "responsibleOrganization": "Xamfrà (Fundació l'Arc Música)",
-                "responsibleDeveloper": "mvr"
-            },
-            "version": "0.0.1"
+    "swagger": "2.0",
+    "info": {
+        "title": "centrífuga4 API",
+        "description": "RESTful API for access to centrifuga4 data",
+        "contact": {
+            "responsibleOrganization": "Xamfrà (Fundació l'Arc Música)",
+            "responsibleDeveloper": "mvr",
         },
-        # "host": "mysite.com",  # overrides localhost:500
-        "basePath": "/api/v1",  # base bash for blueprint registration
-        "schemes": [
-            "https"
-        ]
-    }
+        "version": "0.0.1",
+    },
+    # "host": "mysite.com",  # overrides localhost:500
+    "basePath": "/api/v1",  # base bash for blueprint registration
+    "schemes": ["https"],
+}
 
 swagger = Swagger(template=temp)
 
 
 def init_app(config=None):
     if config is None:
-        env = os.getenv('ENVIRONMENT')
-        if env == 'production':
+        env = os.getenv("ENVIRONMENT")
+        if env == "production":
             config = ProductionConfig
-        elif env == 'development-built':
+        elif env == "development-built":
             config = DevelopmentBuiltConfig
-        elif env == 'development':
+        elif env == "development":
             config = DevelopmentConfig
         else:
             raise ValueError("no environment variable found")
 
     # app creation
-    app = Flask(__name__,
-                static_folder='../centrifuga4-frontend/build',
-                static_url_path='/',
-                template_folder='../centrifuga4-frontend/build',)
+    app = Flask(
+        __name__,
+        static_folder="../centrifuga4-frontend/build",
+        static_url_path="/",
+        template_folder="../centrifuga4-frontend/build",
+    )
 
     app.config.from_object(config)
 
     # plugin initialization
     db.init_app(app)
     login.init_app(app)
-    print(app.config["DEVELOPMENT"])
+
     if app.config["DEVELOPMENT"]:
         # allow cors only during development (due to the front end development server)
         cors = CORS()
         cors.init_app(app)
     else:
-        man.init_app(app, content_security_policy={
-                "style-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.googleapis.com'],  # todo production
-                "font-src": ["\'self\'", "'unsafe-inline'", 'https://fonts.gstatic.com'],
-                "default-src":  ["\'self\'", "'unsafe-inline'"],
-            })  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
+        man.init_app(
+            app,
+            content_security_policy={
+                "style-src": [
+                    "'self'",
+                    "'unsafe-inline'",
+                    "https://fonts.googleapis.com",
+                ],  # todo production
+                "font-src": ["'self'", "'unsafe-inline'", "https://fonts.gstatic.com"],
+                "default-src": ["'self'", "'unsafe-inline'"],
+            },
+        )  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
     swagger.init_app(app)
     principal.init_app(app)
     csrf.init_app(app)
 
-
-
     with app.app_context():
-        from .blueprints import api, auth_service, emails_service, invites_service, password_reset_service, validation_blueprint
+        from .blueprints import (
+            api,
+            auth_service,
+            emails_service,
+            invites_service,
+            password_reset_service,
+            validation_blueprint,
+        )
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
 
         from centrifuga4.auth_auth.login_user_loader import user_loader
 
         # serve the react frontend
-        @app.route('/')
-        @app.route('/login')
-        @app.route('/signup')
-        @app.route('/password-reset')
+        @app.route("/")
+        @app.route("/login")
+        @app.route("/signup")
+        @app.route("/password-reset")
         def index():
-            return render_template('index.html')  # todo sendstaticfile
+            return render_template("index.html")  # todo sendstaticfile
 
         # add identity loader for Flask Principal
         identity_loaded.connect_via(app)(on_identity_loaded)
 
         # load blueprints for the different parts
-        app.register_blueprint(api, url_prefix='/api/v1')
-        app.register_blueprint(auth_service, url_prefix='/auth/v1')
-        app.register_blueprint(emails_service, url_prefix='/emails/v1')
-        app.register_blueprint(invites_service, url_prefix='/invites/v1')
-        app.register_blueprint(password_reset_service, url_prefix='/password-reset/v1')
-        app.register_blueprint(validation_blueprint, url_prefix='/validation/v1')
+        app.register_blueprint(api, url_prefix="/api/v1")
+        app.register_blueprint(auth_service, url_prefix="/auth/v1")
+        app.register_blueprint(emails_service, url_prefix="/emails/v1")
+        app.register_blueprint(invites_service, url_prefix="/invites/v1")
+        app.register_blueprint(password_reset_service, url_prefix="/password-reset/v1")
+        app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app

@@ -22,20 +22,32 @@ class PasswordResetCollectionRes(Resource):
         if user is None:
             return 200
 
-        token = jwt.encode({'username': user.username,
-                    "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-                   current_app.config["PASSWORD_RESET_SECRET"], + user.password_hash,
-                   algorithm='HS256')
+        token = jwt.encode(
+            {
+                "username": user.username,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+            },
+            current_app.config["PASSWORD_RESET_SECRET"],
+            +user.password_hash,
+            algorithm="HS256",
+        )
 
         def generate_password_reset_link(_token, _username):
             return merge_url_query_params(
                 "%s/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
-                {"token": _token, "username": _username, "lan": "cat"}), merge_url_query_params(
+                {"token": _token, "username": _username, "lan": "cat"},
+            ), merge_url_query_params(
                 "%s/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
-                {"token": _token, "username": _username, "lan": "eng"})
+                {"token": _token, "username": _username, "lan": "eng"},
+            )
 
         job = q.enqueue_call(
-            func=my_job, args=(*generate_password_reset_link(token, username), user.email, ), result_ttl=5000
+            func=my_job,
+            args=(
+                *generate_password_reset_link(token, username),
+                user.email,
+            ),
+            result_ttl=5000,
         )
 
         return job.get_id()

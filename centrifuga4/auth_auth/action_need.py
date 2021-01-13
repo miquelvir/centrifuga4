@@ -11,14 +11,14 @@ can or can not perform.
 """
 
 
-ActionNeed = namedtuple('action_need', ['action'])
+ActionNeed = namedtuple("action_need", ["action"])
 
-GetNeed = partial(ActionNeed, 'get')  # correlates to the HTTP GET verb
-PatchNeed = partial(ActionNeed, 'patch')  # correlates to the HTTP PATCH verb
-PostNeed = partial(ActionNeed, 'post')  # correlates to the HTTP POST verb
-DeleteNeed = partial(ActionNeed, 'delete')  # correlates to the HTTP DELETE verb
-EmailNeed = partial(ActionNeed, 'send_email')
-InviteNeed = partial(ActionNeed, 'invite_users')
+GetNeed = partial(ActionNeed, "get")  # correlates to the HTTP GET verb
+PatchNeed = partial(ActionNeed, "patch")  # correlates to the HTTP PATCH verb
+PostNeed = partial(ActionNeed, "post")  # correlates to the HTTP POST verb
+DeleteNeed = partial(ActionNeed, "delete")  # correlates to the HTTP DELETE verb
+EmailNeed = partial(ActionNeed, "send_email")
+InviteNeed = partial(ActionNeed, "invite_users")
 
 
 """
@@ -58,4 +58,3 @@ class EmailPermission(Permission):
 class InvitePermission(Permission):
     def __init__(self):
         super().__init__(InviteNeed())
-

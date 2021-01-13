@@ -6,10 +6,12 @@ from centrifuga4.models import User
 from centrifuga4.schemas.schemas import UserSchema
 
 
-class UsersRes(easy.EasyResource,
-               easy.ImplementsGetOne,
-               easy.ImplementsPatchOne,
-               easy.ImplementsDeleteOne):
+class UsersRes(
+    easy.EasyResource,
+    easy.ImplementsGetOne,
+    easy.ImplementsPatchOne,
+    easy.ImplementsDeleteOne,
+):
     schema = UserSchema
     model = User
     permissions = {UsersPermission}

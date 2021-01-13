@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="deploy to production - Heroku" type="CompoundRunConfigurationType">
-    <toRun name="buildHeroku" type="js.build_tools.npm" />
-    <toRun name="push to heroku" type="ShConfigurationType" />
+  <configuration default="false" name="deploy to production - Heroku" type="Multirun" factoryName="Multirun" separateTabs="false" reuseTabsWithFailures="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="true" delayTime="0.0">
+    <runConfiguration name="black" type="Shell Script" />
+    <runConfiguration name="buildHeroku" type="npm" />
+    <runConfiguration name="push to heroku" type="Shell Script" />
     <method v="2" />
   </configuration>
 </component>

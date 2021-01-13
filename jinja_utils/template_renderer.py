@@ -1,4 +1,11 @@
-from jinja2 import Environment, FileSystemLoader, select_autoescape, StrictUndefined, UndefinedError, TemplateError
+from jinja2 import (
+    Environment,
+    FileSystemLoader,
+    select_autoescape,
+    StrictUndefined,
+    UndefinedError,
+    TemplateError,
+)
 import email_queue.config as config
 import logging as log
 
@@ -15,8 +22,10 @@ class TemplateRenderer:
         """
         self._env = Environment(
             loader=FileSystemLoader(templates_folder),  # from templates directory path
-            autoescape=select_autoescape(['html', 'xml']),  # recommended by DOC since it might be automatic soon
-            undefined=StrictUndefined  # don't allow undeclared variables
+            autoescape=select_autoescape(
+                ["html", "xml"]
+            ),  # recommended by DOC since it might be automatic soon
+            undefined=StrictUndefined,  # don't allow undeclared variables
         )
 
         log.debug("environment created at '%s'" % templates_folder)

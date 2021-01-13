@@ -5,7 +5,7 @@ from centrifuga4.easy_api import EasyResource
 
 
 class EasyRequires(Requires):
-    """ Requires, but includes the permissions of the easy resource permission field
+    """Requires, but includes the permissions of the easy resource permission field
 
     port of the Requires permission decorator factory which uses also the
     default permissions inherited from the class it is being used in, and not
@@ -19,5 +19,10 @@ class EasyRequires(Requires):
     """
     # noinspection PyMethodOverriding
     def wrapper(self, function: Callable, resource: EasyResource, *args, **kwargs):
-        return super().wrapper(function, resource, *args, **kwargs, _additional_permisions=resource.permissions)
-
+        return super().wrapper(
+            function,
+            resource,
+            *args,
+            **kwargs,
+            _additional_permisions=resource.permissions
+        )

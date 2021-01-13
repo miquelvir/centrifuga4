@@ -11,17 +11,17 @@ ResourceNeed is, in the context of this project, a need which defines an API res
 can or can not access.
 """
 
-ResourceNeed = namedtuple('resource_need', ['resource'])
+ResourceNeed = namedtuple("resource_need", ["resource"])
 
-CoursesNeed = partial(ResourceNeed, 'courses')
-GuardiansNeed = partial(ResourceNeed, 'guardians')
-PaymentsNeed = partial(ResourceNeed, 'payments')
-PaymentsRecipesNeed = partial(ResourceNeed, 'payments-recipes')
-RoomsNeed = partial(ResourceNeed, 'rooms')
-SchedulesNeed = partial(ResourceNeed, 'schedules')
-StudentsNeed = partial(ResourceNeed, 'students')
-TeachersNeed = partial(ResourceNeed, 'teachers')
-UsersNeed = partial(ResourceNeed, 'users')
+CoursesNeed = partial(ResourceNeed, "courses")
+GuardiansNeed = partial(ResourceNeed, "guardians")
+PaymentsNeed = partial(ResourceNeed, "payments")
+PaymentsRecipesNeed = partial(ResourceNeed, "payments-recipes")
+RoomsNeed = partial(ResourceNeed, "rooms")
+SchedulesNeed = partial(ResourceNeed, "schedules")
+StudentsNeed = partial(ResourceNeed, "students")
+TeachersNeed = partial(ResourceNeed, "teachers")
+UsersNeed = partial(ResourceNeed, "users")
 
 
 """

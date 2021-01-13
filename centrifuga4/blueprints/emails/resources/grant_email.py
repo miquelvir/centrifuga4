@@ -16,18 +16,19 @@ class GrantEmailCollectionRes(Resource):
         student: Student = query.first()
 
         if not student:
-            raise NotFound("resource with the given id not found",
-                           requestedId=student_id)
+            raise NotFound(
+                "resource with the given id not found", requestedId=student_id
+            )
 
         job = q.enqueue_call(
             func=my_job,
-            args=(student,
-                  [guardian.email for guardian in student.guardians if guardian.email]
-                  + [student.email],
-                  current_app.config['BACKEND_SERVER_URL']),
-            result_ttl=5000
+            args=(
+                student,
+                [guardian.email for guardian in student.guardians if guardian.email]
+                + [student.email],
+                current_app.config["BACKEND_SERVER_URL"],
+            ),
+            result_ttl=5000,
         )
 
         return job.get_id()
-
-

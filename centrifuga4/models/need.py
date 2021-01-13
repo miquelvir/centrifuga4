@@ -2,16 +2,16 @@ from centrifuga4 import db
 from centrifuga4.auth_auth.action_need import ActionNeed
 from centrifuga4.auth_auth.resource_need import ResourceNeed
 
-db.Table("user_need",
-         db.Column("user_id", db.Text, db.ForeignKey('user.id')),
-         db.Column("need_name", db.Text, db.ForeignKey('need.name')))
+db.Table(
+    "user_need",
+    db.Column("user_id", db.Text, db.ForeignKey("user.id")),
+    db.Column("need_name", db.Text, db.ForeignKey("need.name")),
+)
 
 
 class Need(db.Model):
     __tablename__ = "need"
-    __mapper_args__ = {
-        'polymorphic_identity': "need"
-    }
+    __mapper_args__ = {"polymorphic_identity": "need"}
     permissions = {}
 
     description = db.Column(db.Text, unique=False, nullable=False)

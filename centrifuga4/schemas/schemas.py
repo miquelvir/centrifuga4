@@ -23,6 +23,7 @@ class MySQLAlchemyAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
         sqla_session the session to be used, includes relationships,
         model is to be implemented in children
         """
+
         sqla_session = db.Session
         include_relationships = True
         include_fk = True
@@ -73,9 +74,7 @@ class RawPersonSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.RawPerson
 
-        dump_only = (
-            model.full_name.key,
-        )
+        dump_only = (model.full_name.key,)
 
     full_name = fields.Str(dump_only=True)
     age = fields.Int(dump_only=True)
@@ -90,9 +89,7 @@ class GuardianSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Guardian
 
-        dump_only = (
-            model.full_name.key,
-        )
+        dump_only = (model.full_name.key,)
 
     full_name = fields.Str(dump_only=True)
 
@@ -113,9 +110,7 @@ class UserSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.User
 
-        dump_only = (
-            model.full_name.key,
-        )
+        dump_only = (model.full_name.key,)
 
     full_name = fields.Str(dump_only=True)
     password_hash = fields.Str(load_only=True)  # due to security
@@ -127,4 +122,3 @@ class TeacherSchema(RawPersonSchema):
 
     # courses = fields.Nested(CourseSchema, many=True) for nesting
     schedules = fields.Pluck(ScheduleSchema, "id", many=True)
-

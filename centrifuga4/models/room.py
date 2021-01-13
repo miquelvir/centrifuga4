@@ -9,19 +9,14 @@ class Room(MyBase):
     __tablename__ = "room"
     permissions = {RoomsPermission}
 
-    id = db.Column(db.Text,
-                   primary_key=True)
-    name = db.Column(db.Text,
-                     nullable=False)
-    capacity = db.Column(db.Integer,
-                         nullable=True)
+    id = db.Column(db.Text, primary_key=True)
+    name = db.Column(db.Text, nullable=False)
+    capacity = db.Column(db.Integer, nullable=True)
 
-    courses = db.relationship("Course",
-                              secondary="room_course",
-                              back_populates="rooms")
+    courses = db.relationship("Course", secondary="room_course", back_populates="rooms")
 
     def __repr__(self):
-        return '<Room | %s - %s>' % (self.id, self.name)
+        return "<Room | %s - %s>" % (self.id, self.name)
 
     @hybrid_property
     def schedules(self):

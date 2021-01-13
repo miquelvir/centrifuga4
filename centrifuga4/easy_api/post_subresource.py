@@ -8,10 +8,11 @@ from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 class ImplementsPostOneSubresource:
-    """ when used on an EasyResource, it implements the post endpoint
+    """when used on an EasyResource, it implements the post endpoint
 
     given an id, it posts with the given body
     """
+
     model: type(MyBase)  # todo add type everywhere
     schema: MySQLAlchemyAutoSchema
     parent_model: type(MyBase)

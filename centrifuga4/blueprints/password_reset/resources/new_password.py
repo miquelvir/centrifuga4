@@ -23,12 +23,17 @@ class NewPasswordCollectionRes(Resource):
             return "no token found in body", 401
 
         if not User.is_strong_enough_password(password):
-            return "password is not strong enough, must follow: ^.{8,}$, ^.{0,64}$, (?=.*[a-z]), (?=.*[A-Z]), (?=.*\d), (?=.*[ -\/:-@\[-\`{-~]{1,})", 400
+            return (
+                "password is not strong enough, must follow: ^.{8,}$, ^.{0,64}$, (?=.*[a-z]), (?=.*[A-Z]), (?=.*\d), (?=.*[ -\/:-@\[-\`{-~]{1,})",
+                400,
+            )
 
         try:
             user = User.query.filter_by(username=username).one()
 
-            data = jwt.decode(token, current_app.secret_key + user.password_hash, algorithms=['HS256'])
+            data = jwt.decode(
+                token, current_app.secret_key + user.password_hash, algorithms=["HS256"]
+            )
 
             if data["username"] != user.username:
                 return "invalid token for current username", 401

@@ -15,6 +15,7 @@ class Email:
     plain_body: str, the plain text body for the email or None
     html_body: str, the html body for the email or None
     """
+
     subject: str
     to: List[str] = None
     cc: List[str] = None

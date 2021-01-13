@@ -18,7 +18,9 @@ class NewUserCollectionRes(Resource):
             return "no user name found in body", 400
 
         try:
-            user_surname1 = request.json["surname1"]  # todo make sure everything is stored in lower
+            user_surname1 = request.json[
+                "surname1"
+            ]  # todo make sure everything is stored in lower
         except KeyError:
             return "no user surname1 found in body", 400
 
@@ -38,25 +40,31 @@ class NewUserCollectionRes(Resource):
             return "no token found in body", 401
 
         try:
-            data = jwt.decode(token, current_app.secret_key, algorithms=['HS256'])
+            data = jwt.decode(token, current_app.secret_key, algorithms=["HS256"])
 
-            if User.query.filter_by(username=user_email).count() > 0:  # todo maybe wait or integrity error and then return?
+            if (
+                User.query.filter_by(username=user_email).count() > 0
+            ):  # todo maybe wait or integrity error and then return?
                 return "user already exists", 400
 
             if data["userEmail"] != user_email:
                 return "token does not correspond to requested email", 401
 
             user_id = User.generate_new_id()
-            u = User(id=user_id,
-                     name=user_name,
-                     surname1=user_surname1,
-                     surname2=user_surname2,
-                     email=user_email,
-                    username=user_email,
-                     password_hash=User.hash_password(user_password))
+            u = User(
+                id=user_id,
+                name=user_name,
+                surname1=user_surname1,
+                surname2=user_surname2,
+                email=user_email,
+                username=user_email,
+                password_hash=User.hash_password(user_password),
+            )
 
             for n in data["needs"]:
-                need = Need.query.filter_by(name=n).one_or_none()  # todo why query always is brought up by linter
+                need = Need.query.filter_by(
+                    name=n
+                ).one_or_none()  # todo why query always is brought up by linter
                 if need:
                     u.needs.append(need)
                 else:

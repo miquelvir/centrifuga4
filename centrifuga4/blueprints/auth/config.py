@@ -1,18 +1,14 @@
 from functools import wraps
 
-from flask import Blueprint, g, jsonify, request, current_app, session, abort
+from flask import Blueprint, g, request, current_app, session, abort
 
 # initialise the blueprint
-from flask_httpauth import HTTPBasicAuth
-from flask_jwt_extended import create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies, \
-    get_jwt_identity, unset_jwt_cookies, jwt_refresh_token_required, get_csrf_token, get_jwt_claims
 from flask_login import login_user, logout_user, login_required
 from flask_principal import identity_changed, Identity, AnonymousIdentity
-from werkzeug.datastructures import Authorization
 
 from centrifuga4.models import User
 
-auth_service = Blueprint('auth', __name__)
+auth_service = Blueprint("auth", __name__)
 
 
 def basic_http_auth_required(f):
@@ -34,10 +30,11 @@ def basic_http_auth_required(f):
         if not (auth and verify_password(auth.username, auth.password)):
             abort(401)
         return f(*args, **kwargs)
+
     return wrapper
 
 
-@auth_service.route('/login', methods=['POST'])
+@auth_service.route("/login", methods=["POST"])
 @basic_http_auth_required  # require user and password to be validated
 def get_auth_token():
     """
@@ -51,17 +48,16 @@ def get_auth_token():
     """
 
     user = g.user
-    remember = request.args.get('remember')
+    remember = request.args.get("remember")
     remember = remember == "1" if remember else False
 
     login_user(user, remember=False)
-    identity_changed.send(current_app._get_current_object(),
-                          identity=Identity(user.id))
+    identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
 
     return "", 200
 
 
-@auth_service.route('/logout', methods=['GET'])
+@auth_service.route("/logout", methods=["GET"])
 @login_required
 def logout():
     """
@@ -74,25 +70,29 @@ def logout():
     logout_user()
 
     # Remove session keys set by Flask-Principal
-    for key in ('identity.name', 'identity.auth_type', '_user_id', '_id'):  # todo refractor function
+    for key in (
+        "identity.name",
+        "identity.auth_type",
+        "_user_id",
+        "_id",
+    ):  # todo refractor function
         session.pop(key, None)
 
-    g.pop('user', None)
-
+    g.pop("user", None)
 
     current_app.login_manager._update_request_context_with_user()
 
     # Tell Flask-Principal the user is anonymous
-    identity_changed.send(current_app._get_current_object(),
-                          identity=AnonymousIdentity())
-
+    identity_changed.send(
+        current_app._get_current_object(), identity=AnonymousIdentity()
+    )
 
     session.clear()
 
     return "", 200
 
 
-@auth_service.route('/ping', methods=['GET'])
+@auth_service.route("/ping", methods=["GET"])
 @login_required
 def ping():
     return "pong"

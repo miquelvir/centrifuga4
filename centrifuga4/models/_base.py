@@ -16,6 +16,7 @@ class MyBase(db.Model):
         if not hasattr(cls, 'resource_name'):
             cls.resource_name = cls.__name__.lower()+'s'  # todo warnings
     """
+
     @classmethod
     def get_field(cls, item):
         field = cls.__dict__[item]
@@ -40,12 +41,16 @@ class MyBase(db.Model):
         attempts = 0
         while True:
             id_ = str(uuid.uuid4())
-            exists = db.session.query(cls.id).filter_by(id=id_).scalar() is not None  # todo check
+            exists = (
+                db.session.query(cls.id).filter_by(id=id_).scalar() is not None
+            )  # todo check
             if not exists and id_ not in avoid:
                 return id_
 
             attempts += 1
-            log.debug("generated a uuid4 identifier which collided with an existing id; retying now.")
+            log.debug(
+                "generated a uuid4 identifier which collided with an existing id; retying now."
+            )
 
             if attempts > 10:
                 raise ValueError("multiple collisions in a row when creating uuids")

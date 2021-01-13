@@ -17,10 +17,9 @@ class ApiException(HTTPException):
             "utcTimestamp": datetime.utcnow().isoformat(),
             "requestBody": request.get_json(),
             "detail": kwargs,
-            "requestUrl": request.url
+            "requestUrl": request.url,
         }
-        super().__init__(response=make_response(jsonify({"error": body}),
-                                                self.code))
+        super().__init__(response=make_response(jsonify({"error": body}), self.code))
 
 
 class Unauthorized(ApiException):
@@ -53,11 +52,7 @@ class BaseBadRequest(ApiException):
 
 class NestedNotAllowedBadRequest(BaseBadRequest):
     def __init__(self, message, messages):
-        body = {
-            "fields": {
-                field: messages[field] for field in messages
-            }
-        }
+        body = {"fields": {field: messages[field] for field in messages}}
         super().__init__(message, **body)
 
 
@@ -65,22 +60,23 @@ class ResourceBaseBadRequest(BaseBadRequest):
     def __init__(self, message, messages=None):
         if messages is None:
             messages = {}
-        body = {
-            "fields": messages
-        }
+        body = {"fields": messages}
         super().__init__(message, **body)
 
 
 class ResourceMarshmallowBadRequest(ResourceBaseBadRequest):
     def __init__(self, exception: ValidationError):
-        super().__init__("Invalid field when trying to load with Schema.",
-                         messages=exception.messages)
+        super().__init__(
+            "Invalid field when trying to load with Schema.",
+            messages=exception.messages,
+        )
 
 
 class ResourceModelBadRequest(ResourceBaseBadRequest):
     def __init__(self, exception: InvalidRequestError):
-        super().__init__("Invalid field when trying to fit to Model.",
-                         messages=str(exception))
+        super().__init__(
+            "Invalid field when trying to fit to Model.", messages=str(exception)
+        )
 
 
 def safe_marshmallow(function):
@@ -91,6 +87,7 @@ def safe_marshmallow(function):
             return function(*args, **kwargs)
         except ValidationError as e:
             raise ResourceMarshmallowBadRequest(e)
+
     return function_wrapper
 
 
@@ -100,6 +97,7 @@ def integrity(function):
             return function(*args, **kwargs)
         except IntegrityError as e:
             raise BaseBadRequest(e.args)
+
     return function_wrapper
 
 
@@ -108,16 +106,25 @@ def no_nested(function):
         if request.get_json():
             for key, value in request.get_json().items():
                 if type(value) not in (str, int, float, bool, type(None)):
-                    print(request.args, request.access_route, request.view_args, )
                     raise NestedNotAllowedBadRequest(
                         "use proper sub resource instead of nested objects",
-                        {key:
-                             ["No nesting is allowed.",
-                              "You might want to %s at '%s%s/%s/...'." %
-                              (request.method, request.host_url, request.path[1:], key)]})
+                        {
+                            key: [
+                                "No nesting is allowed.",
+                                "You might want to %s at '%s%s/%s/...'."
+                                % (
+                                    request.method,
+                                    request.host_url,
+                                    request.path[1:],
+                                    key,
+                                ),
+                            ]
+                        },
+                    )
 
         try:
             return function(*args, **kwargs)
         except IntegrityError as e:
             raise BaseBadRequest(e.args)
+
     return function_wrapper

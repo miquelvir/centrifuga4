@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="development with built files" type="CompoundRunConfigurationType">
-    <toRun name="buildHeroku" type="js.build_tools.npm" />
-    <toRun name="push to heroku" type="ShConfigurationType" />
+    <toRun name="start" type="js.build_tools.npm" />
+    <toRun name="wsgi_development" type="PythonConfigurationType" />
     <method v="2" />
   </configuration>
 </component>

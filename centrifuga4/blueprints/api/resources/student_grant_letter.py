@@ -59,19 +59,20 @@ class StudentsGrantLettersRes(Resource, SwaggerView):  # todo documented class h
         student: Student = query.first()
 
         if not student:
-            raise NotFound("resource with the given id not found",
-                           requestedId=id_)
+            raise NotFound("resource with the given id not found", requestedId=id_)
 
-        pdf = generate_grant_letter_pdf(student.id, backend_server_address=current_app.config['BACKEND_SERVER_URL'])
+        pdf = generate_grant_letter_pdf(
+            student.id, backend_server_address=current_app.config["BACKEND_SERVER_URL"]
+        )
 
-        r = make_response(send_file(
-            io.BytesIO(pdf),
-            as_attachment=True,
-            mimetype='application/pdf',
-            attachment_filename='grants-%s.pdf' % id_))
+        r = make_response(
+            send_file(
+                io.BytesIO(pdf),
+                as_attachment=True,
+                mimetype="application/pdf",
+                attachment_filename="grants-%s.pdf" % id_,
+            )
+        )
         r.headers["Access-Control-Expose-Headers"] = "content-disposition"
 
         return r
-
-
-

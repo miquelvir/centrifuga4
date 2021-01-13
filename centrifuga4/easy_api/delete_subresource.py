@@ -6,10 +6,11 @@ from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 class ImplementsDeleteOneSubresource:
-    """ when used on an EasyResource, it implements the delete endpoint
+    """when used on an EasyResource, it implements the delete endpoint
 
     given an id, it deletes that entry
     """
+
     model: MyBase
     schema: MySQLAlchemyAutoSchema
     parent_model: type(MyBase)
@@ -17,7 +18,9 @@ class ImplementsDeleteOneSubresource:
 
     @safe_delete
     def delete(self, id_, nested_id):
-        parent = self.parent_model.query.filter(self.parent_model.id == id_).one_or_none()
+        parent = self.parent_model.query.filter(
+            self.parent_model.id == id_
+        ).one_or_none()
 
         if not parent:
             raise NotFound("resource with the given id not found", requestedId=id_)
@@ -31,4 +34,3 @@ class ImplementsDeleteOneSubresource:
         field.pop(index)
 
         db.session.commit()
-

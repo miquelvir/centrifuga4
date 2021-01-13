@@ -9,14 +9,10 @@ from centrifuga4.models.person import Person
 
 class Student(Person):
     __tablename__ = "student"
-    __mapper_args__ = {
-        'polymorphic_identity': "student"
-    }
+    __mapper_args__ = {"polymorphic_identity": "student"}
     permissions = {StudentsPermission}
 
-    id = db.Column(db.Text,
-                   db.ForeignKey('person.id'),
-                   primary_key=True)
+    id = db.Column(db.Text, db.ForeignKey("person.id"), primary_key=True)
 
     price_term = db.Column(db.Float, nullable=True)
     years_in_xamfra = db.Column(db.Integer, nullable=True)
@@ -28,17 +24,16 @@ class Student(Person):
 
     enrollment_status = db.Column(db.Text, nullable=False)
 
-    courses = db.relationship("Course",
-                              secondary="student_course",
-                              back_populates="students")
-    payments = db.relationship("Payment",
-                               back_populates="student")
+    courses = db.relationship(
+        "Course", secondary="student_course", back_populates="students"
+    )
+    payments = db.relationship("Payment", back_populates="student")
     """schedules = db.relationship("Schedule",
                                 secondary="student_schedule",
                                 back_populates="students")"""
-    guardians = db.relationship("Guardian",
-                                secondary="student_guardian",
-                                back_populates="students")
+    guardians = db.relationship(
+        "Guardian", secondary="student_guardian", back_populates="students"
+    )
 
     @hybrid_property
     def schedules(self):
@@ -50,16 +45,20 @@ class Student(Person):
         else:
             return []
 
-    @validates('default_payment_method')
+    @validates("default_payment_method")
     def cleaner1(self, key, value):
-        assert value in (None, 'bank-direct-debit', 'cash',
-                         'bank-transfer'), 'method must be either cash or bank-transfer, found %s' % value
+        assert value in (None, "bank-direct-debit", "cash", "bank-transfer"), (
+            "method must be either cash or bank-transfer, found %s" % value
+        )
         return value
 
-    @validates('status')
+    @validates("status")
     def cleaner2(self, key, value):
-        assert value in ('enrolled', 'early-unenrolled', 'pre-enrolled'), \
-            "status must be either 'enrolled', 'early-unenrolled', 'pre-enrolled'"
+        assert value in (
+            "enrolled",
+            "early-unenrolled",
+            "pre-enrolled",
+        ), "status must be either 'enrolled', 'early-unenrolled', 'pre-enrolled'"
         return value
 
     def get_course_schedules(self):
@@ -86,12 +85,21 @@ class Student(Person):
             current = []
             for schedule in course.schedules:
                 if self.id == schedule.student_id or schedule.is_base:
-                    current.append("%s, %s - %s (%s)" % (to_literal(schedule.day_week),
-                                                         schedule.start_time,
-                                                         schedule.end_time,
-
-                                                         ', '.join([r.name if r.name else 'Xamfrà' for r in
-                                                                    schedule.course.rooms]) if len(
-                                                             schedule.course.rooms) > 0 else 'Xamfrà'))
+                    current.append(
+                        "%s, %s - %s (%s)"
+                        % (
+                            to_literal(schedule.day_week),
+                            schedule.start_time,
+                            schedule.end_time,
+                            ", ".join(
+                                [
+                                    r.name if r.name else "Xamfrà"
+                                    for r in schedule.course.rooms
+                                ]
+                            )
+                            if len(schedule.course.rooms) > 0
+                            else "Xamfrà",
+                        )
+                    )
             result[course.id] = current
         return result

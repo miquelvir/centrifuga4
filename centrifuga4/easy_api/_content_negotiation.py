@@ -15,7 +15,7 @@ def to_file(function):
         proxy = io.StringIO()
         _ = function(*args, **kwargs, proxy=proxy)  # writes to proxy
         f = io.BytesIO()
-        f.write(proxy.getvalue().encode('utf-8'))
+        f.write(proxy.getvalue().encode("utf-8"))
         f.seek(0)
         proxy.close()
         return f
@@ -59,7 +59,11 @@ class Flattener:
                 _ = self._flatten_row(value, key, result)
         elif type(src) is dict:
             for local_key, value in src.items():
-                key = "%s_%s" % (upper_key, local_key) if upper_key is not None else local_key
+                key = (
+                    "%s_%s" % (upper_key, local_key)
+                    if upper_key is not None
+                    else local_key
+                )
                 _ = self._flatten_row(value, key, result)
         else:
             result[upper_key] = src
@@ -71,16 +75,22 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
         def function_wrapper(*args, **kwargs):
             # check content type is ok
             requested_mimetypes = request.accept_mimetypes
-            accepted_mimetypes = _accepted_mimetypes if _accepted_mimetypes else ["application/json"]
+            accepted_mimetypes = (
+                _accepted_mimetypes if _accepted_mimetypes else ["application/json"]
+            )
 
             if len(requested_mimetypes) == 0:
-                match = accepted_mimetypes[0]  # default to the first mimetype of the accepted ones
+                match = accepted_mimetypes[
+                    0
+                ]  # default to the first mimetype of the accepted ones
             else:
                 match = requested_mimetypes.best_match(accepted_mimetypes)
                 if not match:
-                    raise BaseBadRequest("unsupported accept mimeType header",
-                                         expected=[accepted_mimetypes],
-                                         received=requested_mimetypes)
+                    raise BaseBadRequest(
+                        "unsupported accept mimeType header",
+                        expected=[accepted_mimetypes],
+                        received=requested_mimetypes,
+                    )
 
             # call the actual endpoint
             result = function(*args, **kwargs)
@@ -90,18 +100,23 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
                 return jsonify(result)
             elif match == "text/csv":
                 extension = "csv"
-                filename = "%s-export-%s-%s.%s" % (SHORT_NAME,
-                                                   type(args[0]).__name__,
-                                                   datetime.now().strftime("%Y%m%dT%H%M%S"),
-                                                   extension)
+                filename = "%s-export-%s-%s.%s" % (
+                    SHORT_NAME,
+                    type(args[0]).__name__,
+                    datetime.now().strftime("%Y%m%dT%H%M%S"),
+                    extension,
+                )
 
                 f = Flattener().flatten_to_csv(result["data"])
 
-                r = make_response(send_file(
-                    f,
-                    as_attachment=True,
-                    mimetype=match,
-                    attachment_filename=filename))
+                r = make_response(
+                    send_file(
+                        f,
+                        as_attachment=True,
+                        mimetype=match,
+                        attachment_filename=filename,
+                    )
+                )
                 r.headers["Access-Control-Expose-Headers"] = "content-disposition"
                 return r
             else:

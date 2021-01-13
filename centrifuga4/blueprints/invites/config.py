@@ -8,7 +8,7 @@ from .resources.new_user import NewUserCollectionRes
 
 from .resources.user_invite import UserInviteCollectionRes
 
-invites_blueprint = Blueprint('invites', __name__)
+invites_blueprint = Blueprint("invites", __name__)
 
 
 @invites_blueprint.errorhandler(NoAuthorizationError)
@@ -23,6 +23,5 @@ def handle(e):
 
 api = Api(invites_blueprint)
 
-api.add_resource(UserInviteCollectionRes, '/userInvite')
-api.add_resource(NewUserCollectionRes, '/newUser')
-
+api.add_resource(UserInviteCollectionRes, "/userInvite")
+api.add_resource(NewUserCollectionRes, "/newUser")

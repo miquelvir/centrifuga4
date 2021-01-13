@@ -8,17 +8,20 @@ from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
 def safe_delete(function):
     """ a safe delete is one with permissions to delete """
+
     @EasyRequires(DeletePermission)
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
+
     return decorator
 
 
 class ImplementsDeleteOne:
-    """ when used on an EasyResource, it implements the delete endpoint
+    """when used on an EasyResource, it implements the delete endpoint
 
     given an id, it deletes that entry
     """
+
     model: MyBase
     schema: MySQLAlchemyAutoSchema
 
@@ -38,4 +41,3 @@ class ImplementsDeleteOne:
 
         db.session.delete(result)
         db.session.commit()
-

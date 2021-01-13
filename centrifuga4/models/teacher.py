@@ -8,18 +8,14 @@ from centrifuga4.models.raw_person import RawPerson
 
 class Teacher(RawPerson):
     __tablename__ = "teacher"
-    __mapper_args__ = {
-        'polymorphic_identity': "teacher"
-    }
+    __mapper_args__ = {"polymorphic_identity": "teacher"}
     permissions = {TeachersPermission}
 
-    id = db.Column(db.Text,
-                   db.ForeignKey('raw_person.id'),
-                   primary_key=True)
+    id = db.Column(db.Text, db.ForeignKey("raw_person.id"), primary_key=True)
 
-    courses = db.relationship("Course",
-                              secondary="teacher_course",
-                              back_populates="teachers")
+    courses = db.relationship(
+        "Course", secondary="teacher_course", back_populates="teachers"
+    )
 
     @hybrid_property
     def schedules(self):
