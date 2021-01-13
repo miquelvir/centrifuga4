@@ -24,5 +24,5 @@ class EasyRequires(Requires):
             resource,
             *args,
             **kwargs,
-            _additional_permisions=resource.permissions
+            _additional_permisions=resource.permissions,
         )
