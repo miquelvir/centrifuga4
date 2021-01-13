@@ -57,6 +57,8 @@ class DevelopmentBuiltConfig(DevelopmentConfig):
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Strict"
+    CSRF_DISABLE = False
+    LOGIN_DISABLED = False
 
     FRONTEND_SERVER_URL = "https://127.0.0.1:4999"
 

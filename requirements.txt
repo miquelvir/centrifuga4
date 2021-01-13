@@ -62,4 +62,3 @@ typing-extensions==3.7.4.3
 WeasyPrint==52.2
 webencodings==0.5.1
 Werkzeug==1.0.1
-wkhtmltopdf-pack==0.12.3.0
