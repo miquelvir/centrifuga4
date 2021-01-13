@@ -1,7 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="deploy to production - Heroku" type="CompoundRunConfigurationType">
     <toRun name="buildHeroku" type="js.build_tools.npm" />
-    <toRun name="login to heroku" type="ShConfigurationType" />
     <toRun name="push to heroku" type="ShConfigurationType" />
     <method v="2" />
   </configuration>
