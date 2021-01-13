@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="start" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/centrifuga4-frontend/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="start" />
+    </scripts>
+    <node-interpreter value="project" />
+    <envs>
+      <env name="REACT_APP_API_VERSION" value="v1" />
+      <env name=" REACT_APP_BACKEND_URL" value="https://127.0.0.1:4999" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>
