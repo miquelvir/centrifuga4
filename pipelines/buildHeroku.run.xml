@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="buildHeroku" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/centrifuga4-frontend/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="build" />
+    </scripts>
+    <node-interpreter value="project" />
+    <envs>
+      <env name="REACT_APP_BACKEND_URL" value="https://centrifuga4.herokuapp.com" />
+      <env name="INLINE_RUNTIME_CHUNK" value="false" />
+      <env name="REACT_APP_API_VERSION" value="v1" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>
