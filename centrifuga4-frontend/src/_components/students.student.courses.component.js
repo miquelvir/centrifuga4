@@ -25,6 +25,7 @@ import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchBar from "./searchbar.component";
 import Pagination from "@material-ui/lab/Pagination";
+import {IconButtonSkeleton} from "../_skeletons/iconButton";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,9 +33,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-
-  },list: {
+  list: {
         overflow: "auto",
         display: "flex",
         flexDirection: "column",
@@ -53,24 +52,12 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
     flexDirection: "column"
   },
-  fullWidth: {
-    width: "100%"
-  },
-  sizeSmall: {
-    width: "25ch"
-  },
-  line: {
-    width: "100%",
-    marginTop: theme.spacing(1)
-  },
-  composite: {display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
-    gap: theme.spacing(1), width: "100%"}, appBar: {
-    position: 'relative',
-  },
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
-  },
+  }, actionIcon: {
+      float: 'right'
+    }
 }));
 
 class CloseIcon extends React.Component {
@@ -151,7 +138,6 @@ const onChangeSearchTerm = (e) => {
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
-      className={classes.root}
       {...other}
     >
       {value === index && (
@@ -182,7 +168,7 @@ const onChangeSearchTerm = (e) => {
 
                 <Box my={2}>
                     <Pagination
-                        className="pagination"
+                        className={classes.pagination}
                         count={count}
                         page={page}
                         size="small"
@@ -222,9 +208,9 @@ const onChangeSearchTerm = (e) => {
       </Dialog>
 
               {loading?
-                  <Skeleton style={{float: 'right'}}><AddCircleIcon/></Skeleton>
+                  <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              <Tooltip style={{float: 'right'}} title={t("new_payment")} aria-label={t("new_payment")}>
+              <Tooltip className={classes.actionIcon} title={t("new_payment")} aria-label={t("new_payment")}>
                 <IconButton onClick={(e) => {
                     if (allCourses === null) {
                         search();

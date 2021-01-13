@@ -12,6 +12,7 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import {IconButtonSkeleton} from "../_skeletons/iconButton";
 
 const getDefaultValues = () => {
     const date = new Date();
@@ -21,27 +22,16 @@ const getDefaultValues = () => {
     return {'id': null, 'date': `${yyyy}-${mm<=9 ? '0' + mm : mm}-${dd <= 9 ? '0' + dd : dd}`, 'quantity': null, 'concept': null, 'method': null}
 }
 const useStyles = makeStyles((theme) => ({
-  root: {
 
+  actionIcon: {
+    float: 'right'
   },
   newLine: {
     width: '100%',
        marginTop: theme.spacing(1),
         display: "flex",
     flexDirection: "column"
-  },
-  fullWidth: {
-    width: "100%"
-  },
-  sizeSmall: {
-    width: "25ch"
-  },
-  line: {
-    width: "100%",
-    marginTop: theme.spacing(1)
-  },
-  composite: {display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
-    gap: theme.spacing(1), width: "100%"}
+  }
 }));
 
 function Payments({ children, value, index, title, paymentIds, deletePaymentFromStudent, addPaymentId, student_id, ...other }) {
@@ -93,7 +83,6 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
-      className={classes.root}
       {...other}
     >
       {value === index && (
@@ -101,9 +90,9 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
         } <Box px={2}>
 
               {loading?
-                  <Skeleton style={{float: 'right'}}><AddCircleIcon/></Skeleton>
+                  <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              <Tooltip style={{float: 'right'}} title={t("new_payment")} aria-label={t("new_payment")}>
+              <Tooltip className={classes.actionIcon} title={t("new_payment")} aria-label={t("new_payment")}>
                 <IconButton onClick={(e) => { setNewPaymentCard(true); }}>
                   <AddCircleIcon />
                 </IconButton>

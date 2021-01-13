@@ -10,28 +10,10 @@ import styled from "@emotion/styled";
 import { useTheme } from '@material-ui/core/styles';
 import interactionPlugin from '@fullcalendar/interaction';
 import {useSnackbar} from "notistack";
+import Skeleton from "@material-ui/lab/Skeleton";
 const useStyles = makeStyles((theme) => ({
-  fullWidth: {
-    width: "100%"
-  },
   button: {
     margin: theme.spacing(1),
-  },
-  sizeSmall: {
-    width: "25ch"
-  },
-    line: {
-        width: "100%",
-        marginTop: theme.spacing(1)
-    },
-    composite: {
-        display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
-        gap: theme.spacing(1), width: "100%"
-    },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
   },
     calendar: {
       margin: theme.spacing(2)
@@ -149,64 +131,70 @@ function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
     >{// todo fix height
            }
            <Box p={2} style={{height: "100%"}}>
-                <StyleWrapper  style={{height: "100%"}}>
-                      <FullCalendar
-                        plugins={[ timeGridPlugin, interactionPlugin ]}
-                        initialView="timeGridWeek"
-                        height="100%"
-                        firstDay={1}
-                        editable={true}
-                          selectable={true}
-                          selectMirror={true}
-                          dayMaxEvents={true}
-                          weekends={true}
+               {loading? <Skeleton variant="rect" width="100%" height="100%"/>
+                   :
+                   <StyleWrapper style={{height: "100%"}}>
+                   <FullCalendar
+                       plugins={[timeGridPlugin, interactionPlugin]}
+                       initialView="timeGridWeek"
+                       height="100%"
+                       firstDay={1}
+                       editable={true}
+                       selectable={true}
+                       selectMirror={true}
+                       dayMaxEvents={true}
+                       weekends={true}
 
-                            snapDuration={'00:15'}
-                        events={schedules}
-                        eventAdd={function(){}}
-                        eventChange={function(clickInfo){
-                            // const schedule = clickInfo.event.extendedProps["schedule"];
-                            // if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
-                        }}
-                        eventRemove={function(){}}
-                        select={function(selectInfo){
-                            let title = prompt('Please enter a new title for your event')
-                            let calendarApi = selectInfo.view.calendar
+                       snapDuration={'00:15'}
+                       events={schedules}
+                       eventAdd={function () {
+                       }}
+                       eventChange={function (clickInfo) {
+                           // const schedule = clickInfo.event.extendedProps["schedule"];
+                           // if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
+                       }}
+                       eventRemove={function () {
+                       }}
+                       select={function (selectInfo) {
+                           let title = prompt('Please enter a new title for your event')
+                           let calendarApi = selectInfo.view.calendar
 
-                            calendarApi.unselect() // clear date selection
+                           calendarApi.unselect() // clear date selection
 
-                            if (title) {
-                              calendarApi.addEvent({
-                                id: 24,
-                                title,
-                                start: selectInfo.startStr,
-                                end: selectInfo.endStr,
-                                allDay: selectInfo.allDay
-                              })
-                            }
-                        }}
-                        eventContent={function(){}} // custom render function
-                        eventClick={function(clickInfo){
-                            const schedule = clickInfo.event.extendedProps["schedule"];
-                            if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
+                           if (title) {
+                               calendarApi.addEvent({
+                                   id: 24,
+                                   title,
+                                   start: selectInfo.startStr,
+                                   end: selectInfo.endStr,
+                                   allDay: selectInfo.allDay
+                               })
+                           }
+                       }}
+                       eventContent={function () {
+                       }} // custom render function
+                       eventClick={function (clickInfo) {
+                           const schedule = clickInfo.event.extendedProps["schedule"];
+                           if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
                            if (window.confirm(t("sure_delete_event"))) {
                                SchedulesDataService
-                                    .delete(schedule['id'])
-                                    .then(...errorHandler({snackbarSuccess: true}))
-                                    .then(function (res) {
-                                        clickInfo.event.remove();
-                                    });
+                                   .delete(schedule['id'])
+                                   .then(...errorHandler({snackbarSuccess: true}))
+                                   .then(function (res) {
+                                       clickInfo.event.remove();
+                                   });
 
-                        }}}
-                        eventTimeFormat={{
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false
-                        }}
-                        eventResize={eventChanged}
-                        eventDrop={eventChanged}
-                      />
-                </StyleWrapper>
+                           }
+                       }}
+                       eventTimeFormat={{
+                           hour: '2-digit',
+                           minute: '2-digit',
+                           hour12: false
+                       }}
+                       eventResize={eventChanged}
+                       eventDrop={eventChanged}
+                   />
+               </StyleWrapper>}
                </Box>
     </div>
   );

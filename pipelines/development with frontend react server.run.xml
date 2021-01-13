@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="development with frontend react server" type="CompoundRunConfigurationType">
-    <toRun name="build" type="js.build_tools.npm" />
+    <toRun name="start" type="js.build_tools.npm" />
+    <toRun name="wsgi_development" type="PythonConfigurationType" />
     <toRun name="worker" type="PythonConfigurationType" />
-    <toRun name="wsgi_development (built files)" type="PythonConfigurationType" />
     <method v="2" />
   </configuration>
 </component>

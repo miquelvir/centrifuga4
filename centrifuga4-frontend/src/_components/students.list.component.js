@@ -15,7 +15,6 @@ import {Accordion, AccordionDetails, AccordionSummary, Chip, ListItemSecondaryAc
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
-import LoadingBackdrop from "./loadingBackdrop.component";
 import {useErrorHandler} from "../_helpers/handle-response";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -29,18 +28,17 @@ const useStyles = makeStyles((theme) => ({
     },
     list: {
         overflow: "auto",
-        // maxHeight: "60vh",
         display: "flex",
         flexDirection: "column",
         flex: 1,
         minHeight: '150px'
     },
-    box: {
+    searchAndFilters: {
         display: "flex",
         flexDirection: "column",
     },
     pagination: {
-        margin: '30px'
+        margin: theme.spacing(3)
     },
     chip: {
         margin: theme.spacing(2)
@@ -51,13 +49,13 @@ const useStyles = makeStyles((theme) => ({
     },
     chips: {
         flexWrap: 'wrap',
-    '& > *': {
-      margin: theme.spacing(0.5),
-    },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
+        '& > *': {
+            margin: theme.spacing(0.5),
+        },
+        heading: {
+            fontSize: theme.typography.pxToRem(15),
+            fontWeight: theme.typography.fontWeightRegular,
+        },
     }
 }));
 
@@ -85,13 +83,11 @@ const StudentsList = (props) => {
 
     const classes = useStyles();
 
-    const [loading, setLoading] = useState(false);  // todo
-
     const onChangeSearchTerm = (e) => {
         setSearchTerm(e.target.value);
     };
 
-    function getFilters(fs){
+    function getFilters(fs) {
         let myFilters = {};
 
         if (fs.onlyEnrolled) {
@@ -119,29 +115,28 @@ const StudentsList = (props) => {
             .getAll({name: 'full_name', value: searchTerm}, page, ['id', 'full_name'], getFilters(filters))
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
-                    setStudents(res["data"]);
-                    setCount(res["_pagination"]["totalPages"]);
-                });
+                setStudents(res["data"]);
+                setCount(res["_pagination"]["totalPages"]);
+            });
     }
 
-    useEffect(search, [page, setStudents, filters]);
+    // we don't want the search to trigger for each searchTerm change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(search, [page, setStudents, filters, errorHandler]);
 
     const handlePageChange = (event, value) => {
         setPage(value);
     };
 
     function exportCsv() {
-        setLoading(true);  // todo clean this and the loading background
         StudentsDataService
             .downloadAllCsv(searchTerm, page, getFilters(filters))
-            .finally(()=>{
-                setLoading(false);
-            });
+            .then(...errorHandler({}))
     }
 
     return (
         <Box className={classes.root}>
-            <Box className={classes.box}>
+            <Box className={classes.searchAndFilters}>
                 <SearchBar
                     label={t("students")}
                     value={searchTerm}
@@ -149,62 +144,66 @@ const StudentsList = (props) => {
                     onSearch={search}
                 />
 
-                    <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-        >
-          <Typography className={classes.heading}>{t("filters_actions")}</Typography>
-        </AccordionSummary>
-        <AccordionDetails><Box className={classes.chips}>
-          <Tooltip title={t("export_results_csv")} aria-label={t("export_results_csv")}>
-                        <Chip variant="outlined"
-                              color="primary"
-                              size="small"
-                              avatar={<Avatar>csv</Avatar>}
-                              label={t("export")}
-                              onClick={exportCsv}/>
-                        </Tooltip>
-
-                    { [{label: "enrolled", tooltip: "only_enrolled", value: 'onlyEnrolled'},
-                        {label: "pre-enrolled", tooltip: "only_preenrolled", value: 'onlyPreEnrolled'},
-                        {label: "early-unenrolled", tooltip: "only_earlyunenrolled", value: 'onlyEarlyUnenrolled'},
-                    {label: "cash", tooltip: "only_cash", value: 'onlyCash'},
-                    {label: "bank-transfer", tooltip: "only_banktransfer", value: 'onlyBankTransfer'},
-                    {label: "bank-direct-debit", tooltip: "only_bankdirectdebit", value: 'onlyDirectDebit'}].map(x => (
-                            <Tooltip key={x.label} title={t(x.tooltip)} aria-label={t(x.tooltip)}>
-                                <Chip size="small"
-                                      color={filters[x.value]? "primary": "normal"}
-                                      label={t(x.label)}
-                                      onClick={(e) => {
-                                          let newFilters = {...filters};
-                                          if (x.value === 'onlyEnrolled' ||
-                                              x.value === 'onlyPreEnrolled' ||
-                                              x.value === 'onlyEarlyUnenrolled'
-                                          ) {
-                                              newFilters['onlyEnrolled'] = false;
-                                              newFilters['onlyPreEnrolled'] = false;
-                                              newFilters['onlyEarlyUnenrolled'] = false;
-                                          }
-
-                                          if (x.value === 'onlyBankTransfer' ||
-                                              x.value === 'onlyCash' ||
-                                              x.value === 'onlyDirectDebit'
-                                          ) {
-                                              newFilters['onlyBankTransfer'] = false;
-                                              newFilters['onlyCash'] = false;
-                                              newFilters['onlyDirectDebit'] = false;
-                                          }
-
-                                          newFilters[x.value] = !filters[x.value];
-                                          setFilters(newFilters);
-                                      }}/>
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon/>}
+                    >
+                        <Typography className={classes.heading}>{t("filters_actions")}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box className={classes.chips}>
+                            <Tooltip title={t("export_results_csv")} aria-label={t("export_results_csv")}>
+                                <Chip variant="outlined"
+                                      color="primary"
+                                      size="small"
+                                      avatar={<Avatar>csv</Avatar>}
+                                      label={t("export")}
+                                      onClick={exportCsv}/>
                             </Tooltip>
-                    ))}
 
-</Box>
-        </AccordionDetails>
-      </Accordion>
+                            {[{label: "enrolled", tooltip: "only_enrolled", value: 'onlyEnrolled'},
+                                {label: "pre-enrolled", tooltip: "only_preenrolled", value: 'onlyPreEnrolled'},
+                                {label: "early-unenrolled", tooltip: "only_earlyunenrolled", value: 'onlyEarlyUnenrolled'},
+                                {label: "cash", tooltip: "only_cash", value: 'onlyCash'},
+                                {label: "bank-transfer", tooltip: "only_banktransfer", value: 'onlyBankTransfer'},
+                                {
+                                    label: "bank-direct-debit",
+                                    tooltip: "only_bankdirectdebit",
+                                    value: 'onlyDirectDebit'
+                                }].map(x => (
+                                <Tooltip key={x.label} title={t(x.tooltip)} aria-label={t(x.tooltip)}>
+                                    <Chip size="small"
+                                          color={filters[x.value] ? "primary" : "default"}
+                                          label={t(x.label)}
+                                          onClick={(e) => {
+                                              let newFilters = {...filters};
+                                              if (x.value === 'onlyEnrolled' ||
+                                                  x.value === 'onlyPreEnrolled' ||
+                                                  x.value === 'onlyEarlyUnenrolled'
+                                              ) {
+                                                  newFilters['onlyEnrolled'] = false;
+                                                  newFilters['onlyPreEnrolled'] = false;
+                                                  newFilters['onlyEarlyUnenrolled'] = false;
+                                              }
 
+                                              if (x.value === 'onlyBankTransfer' ||
+                                                  x.value === 'onlyCash' ||
+                                                  x.value === 'onlyDirectDebit'
+                                              ) {
+                                                  newFilters['onlyBankTransfer'] = false;
+                                                  newFilters['onlyCash'] = false;
+                                                  newFilters['onlyDirectDebit'] = false;
+                                              }
+
+                                              newFilters[x.value] = !filters[x.value];
+                                              setFilters(newFilters);
+                                          }}/>
+                                </Tooltip>
+                            ))}
+
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
 
 
                 <Box my={2}>
@@ -230,12 +229,13 @@ const StudentsList = (props) => {
                                       setCurrentStudentId(student['id']);
                                   }}>
                             <ListItemAvatar>
-                                <Avatar className={student["id"] === currentStudentId? classes.selectedAvatar: classes.avatar}>{student['full_name'].charAt(0).toUpperCase()}</Avatar>
+                                <Avatar
+                                    className={student["id"] === currentStudentId ? classes.selectedAvatar : classes.avatar}>{student['full_name'].charAt(0).toUpperCase()}</Avatar>
                             </ListItemAvatar>
                             <ListItemText id="name" primary={student.full_name}/>
 
-                                <ListItemSecondaryAction>
-                                    <Tooltip title={t("export") + " .csv"}>
+                            <ListItemSecondaryAction>
+                                <Tooltip title={t("export") + " .csv"}>
                                     <IconButton edge="end" aria-label={t("export")} onClick={(e) => {
                                         StudentsDataService
                                             .downloadOneCsv(student['id'])
@@ -243,8 +243,8 @@ const StudentsList = (props) => {
                                     }}>
                                         <GetAppIcon/>
                                     </IconButton>
-                                        </Tooltip>
-                                </ListItemSecondaryAction>
+                                </Tooltip>
+                            </ListItemSecondaryAction>
 
                         </ListItem>
                         <Divider/>

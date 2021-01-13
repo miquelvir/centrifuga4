@@ -35,10 +35,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     backgroundColor: theme.palette.type === 'dark'? '#575757': null
   },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
-  },
   expand: {
     transform: 'rotate(0deg)',
     marginLeft: 'auto',
@@ -51,12 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     backgroundColor: theme.palette.secondary.main,
-  },fullWidth: {
-        width: "100%"
-    },
-    sizeSmall: {
-        width: "25ch"
-    },
+  },
     line: {
         width: "100%",
         marginTop: theme.spacing(1)

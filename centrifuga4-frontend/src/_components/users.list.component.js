@@ -11,14 +11,11 @@ import Divider from "@material-ui/core/Divider";
 import SearchBar from './searchbar.component'
 import Box from "@material-ui/core/Box";
 import {useTranslation} from "react-i18next";
-import {Accordion, AccordionDetails, AccordionSummary, Chip, ListItemSecondaryAction} from "@material-ui/core";
+import {ListItemSecondaryAction} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
-import LoadingBackdrop from "./loadingBackdrop.component";
 import {useErrorHandler} from "../_helpers/handle-response";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -102,7 +99,7 @@ const UsersList = (props) => {
         <Box className={classes.root}>
             <Box className={classes.box}>
                 <SearchBar
-                    label={t("students")}
+                    label={t("users")}
                     value={searchTerm}
                     onChange={onChangeSearchTerm}
                     onSearch={search}

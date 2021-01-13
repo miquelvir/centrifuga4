@@ -10,57 +10,21 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import Attendee from "./students.student.attendee.component";
 import Guardian from "./students.student.guardian.component";
 import StudentsDataService from "../_services/students.service";
-import GuardiansDataService from "../_services/guardians.service";
 import Payments from "./students.student.payments.component";
 import Courses from "./students.student.courses.component";
 import {useErrorHandler} from "../_helpers/handle-response";
-import AddIcon from "@material-ui/icons/Add";
-import Fab from "@material-ui/core/Fab";
-import Zoom from "@material-ui/core/Zoom";
-import Tooltip from "@material-ui/core/Tooltip";
-import Skeleton from "@material-ui/lab/Skeleton";
 import Schedule from "./students.student.schedule.component";
-import * as PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexGrow: 1,
-
-  },
-    fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-    backgroundColor: theme.palette.primary.main
-  }, fab_placeholder: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2)
-  },
   contentPanel: {
     //flex: 1,
-      position: 'relative', // todo proper scrollbar AND fab
+      position: 'relative', // todo proper scrollbar
     overflow: "auto",
     boxSizing: "border-box",
       height: '100%', // todo proper,
     minHeight: 200,
-
-  },
-  fullWidth: {
-    width: "100%"
-  },
-  sizeSmall: {
-    margin: theme.spacing(1),
-    width: "25ch"
-  },
-  sizeLong: {
-    margin: theme.spacing(1),
-    width: "100%"
   }
 }));
-
-
 
 
 function a11yProps(index) {

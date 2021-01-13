@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => (createStyles({
 
 export default function DirtyCountrySelect({formik, name, label, ...textFieldProps}) {
   const getInitialOption = (code) => {
-      if (code === undefined) return '';
+      if (code === undefined) return countries.find(x=>x.code==='');
       return countries.find(x=>x.code===code);
   }
 
@@ -43,12 +43,12 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
 
   React.useEffect(() => {
     _setOption(getInitialOption(formik.values[name]));
-  }, [formik.values[name]]);
+  }, [formik.values, name]);
 
   const setOption = (option) => {
       const newOption = (option !== null)? option.code: '';
       formik.setFieldValue(name, newOption);
-      _setOption(newOption);
+      _setOption(option);
   }
 
   const dirty = formik.values[name] !== formik.initialValues[name];
@@ -59,7 +59,7 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
   const { t } = useTranslation();
 
   return (
-    <Autocomplete  // o¡todo use
+    <Autocomplete
       style={{ width: 300 }}
       options={countries}
       classes={{
@@ -67,6 +67,7 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
       }}
       autoHighlight
       getOptionLabel={(option) => option.label }
+      getOptionSelected={(o) => o.code === option.code}
       value={option}
         onChange={(event, newValue) => {
           setOption(newValue);
@@ -78,7 +79,7 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
         name={name}
       onBlur={formik.handleBlur}
       renderOption={(option) => (
-        <React.Fragment>
+        <React.Fragment key={option.code}>
           <span>{countryToFlag(option.code)}</span>
           {option.label} ({option.code}) +{option.phone}
         </React.Fragment>

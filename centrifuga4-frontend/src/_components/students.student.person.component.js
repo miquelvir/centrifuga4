@@ -15,16 +15,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import RestoreIcon from '@material-ui/icons/Restore';
 import {education_years} from "../_data/education";
 import Divider from "@material-ui/core/Divider";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import {IconButtonSkeleton} from "../_skeletons/iconButton";
 
 const useStyles = makeStyles((theme) => ({
-
-    fullWidth: {
-        width: "100%"
-    },
-    sizeSmall: {
-        width: "25ch"
-    },
     line: {
         width: "100%",
         marginTop: theme.spacing(1)
@@ -32,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     composite: {
         display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
         gap: theme.spacing(1), width: "100%"
+    },
+    actionIcon: {
+        float: 'right'
     }
 }));
 
@@ -44,11 +40,12 @@ function Person(props) {
     const additionalValidation = props.additionalValidation === undefined? {}: props.additionalValidation;
     const studentId = props.studentId;
     const onUpdate = props.onUpdate;
+    const loading = currentPerson === null;
 
     const {t} = useTranslation();
     const classes = useStyles();
     const errorHandler = useErrorHandler();
-    let initialValues = currentPerson === null ? {} : currentPerson;
+    let initialValues = loading ? {} : currentPerson;
 
 
     const formik = useNormik(!newPerson, {
@@ -120,11 +117,11 @@ function Person(props) {
             <Divider />
             </Box>
             {
-            elements.map(res => (
-                <Box className={[classes.line, classes.composite]}>
+            elements.map((res, idx) => (
+                <Box key={idx} className={`${classes.line} ${classes.composite}`}>
                     {res instanceof Array ?
-                        res.map((r) => (
-                            React.cloneElement(r, {formik: formik})
+                        res.map((r, idx2) => (
+                            React.cloneElement(r, {formik: formik, key: idx+"-"+idx2})
                         ))
                         : React.cloneElement(res, {formik: formik})}
                 </Box>))
@@ -135,23 +132,22 @@ function Person(props) {
 
     return (
         <Box>
-            {currentPerson === null
-                ?
+            {loading?
                 (
 
                     <Box>
-                        <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
-                        <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
+                         <IconButtonSkeleton className={classes.actionIcon}/>
+                       <IconButtonSkeleton className={classes.actionIcon}/>
 
-                        {
 
-                            ["100%", "100%", "100%", "100%", "100%", "100%"].map((value, idx) => {
+                            <div style={{clear: 'both'}}>
+                               {   ["100%", "100%", "100%", "100%", "100%", "100%"].map((value, idx) => {
                                 return (
-                                    <Box key={idx} py={0}>
+                                    <Box key={idx} py={0} >
                                         <Skeleton variant="text" width={value} height="60px"/>
                                     </Box>);
-                            })
-                        }
+                            })}
+                            </div>
                     </Box>
                 )
                 :
@@ -159,16 +155,16 @@ function Person(props) {
                     <form onSubmit={formik.handleSubmit}>
 
 
-                        <IconButton style={{float: 'right'}}
-                                    onClick={formik.handleReset}
-                                    disabled={!formik.dirty || formik.isSubmitting}>
+                        <IconButton className={classes.actionIcon}
+                                     onClick={formik.handleReset}
+                                     disabled={!formik.dirty || formik.isSubmitting}>
                             <Tooltip title={t("reset")} aria-label={t("reset")}>
                                 <RestoreIcon/>
                             </Tooltip>
                         </IconButton>
 
 
-                        <IconButton style={{float: 'right'}} type="submit"
+                        <IconButton className={classes.actionIcon} type="submit"
                                     disabled={!newPerson && (!formik.dirty || formik.isSubmitting)}>
                             <Tooltip title={t("save")} aria-label={t("save")}>
                                 <SaveIcon/>

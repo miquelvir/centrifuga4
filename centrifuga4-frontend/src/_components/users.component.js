@@ -2,28 +2,23 @@ import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
-import StudentsList from "./students.list.component";
 import Student from "./students.student.component";
 import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
 import {
     Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl, FormControlLabel, FormGroup, FormHelperText,
-    FormLabel,
+    FormControlLabel,
     TextField,
     Tooltip
 } from "@material-ui/core";
 import UsersList from "./users.list.component";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import {allNeeds} from "../_data/needs";
-import {useNormik} from "../_helpers/normik";
 import * as yup from "yup";
 import {useFormik} from "formik";
 import Typography from "@material-ui/core/Typography";

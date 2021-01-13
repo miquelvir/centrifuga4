@@ -7,9 +7,7 @@
     </scripts>
     <node-interpreter value="project" />
     <envs>
-      <env name="REACT_APP_BACKEND_URL" value="https://127.0.0.1:4999" />
       <env name="INLINE_RUNTIME_CHUNK" value="false" />
-      <env name="REACT_APP_API_VERSION" value="v1" />
     </envs>
     <method v="2" />
   </configuration>

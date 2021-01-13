@@ -1,12 +1,9 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import {MenuItem, TextField} from "@material-ui/core";
+import {MenuItem} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Skeleton} from "@material-ui/lab";
-import Divider from "@material-ui/core/Divider";
 import StudentGuardianDataService from "../_services/student_guardians.service"
 import {student_guardian_relations} from "../_data/relations"
 import Person from "./students.student.person.component";
@@ -23,41 +20,15 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import * as yup from "yup";
 import DirtyTextField from "./dirtytextfield.component";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import {education_years} from "../_data/education";
 import {emptyGuardian} from "../_data/empty_objects";
-
-// here
-const useStyles = makeStyles((theme) => ({
-
-  fullWidth: {
-    width: "100%"
-  },
-  sizeSmall: {
-    width: "25ch"
-  },
-  line: {
-    width: "100%",
-    marginTop: theme.spacing(1)
-  },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },
-  composite: {display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
-    gap: theme.spacing(1), width: "100%"}
-}));
 
 function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
   const { t } = useTranslation();
-  const classes = useStyles();
   const errorHandler = useErrorHandler();
 
   const [guardian, setGuardian] = useState(null);
 
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
-  console.log(guardianId, guardian);
 
   useEffect(() => {
     if (newGuardian) return;

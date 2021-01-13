@@ -6,10 +6,7 @@
       <script value="start" />
     </scripts>
     <node-interpreter value="project" />
-    <envs>
-      <env name="REACT_APP_API_VERSION" value="v1" />
-      <env name=" REACT_APP_BACKEND_URL" value="https://127.0.0.1:4999" />
-    </envs>
+    <envs />
     <method v="2" />
   </configuration>
 </component>

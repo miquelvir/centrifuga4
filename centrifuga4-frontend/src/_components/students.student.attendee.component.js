@@ -9,6 +9,7 @@ import StudentsDataService from "../_services/students.service";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import * as yup from 'yup';
+import {IconButtonSkeleton} from "../_skeletons/iconButton"
 import Person from "./students.student.person.component";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -35,15 +36,11 @@ import {emptyAttendee, emptyGuardian} from "../_data/empty_objects";
 
 
 const useStyles = makeStyles((theme) => ({
-
-  fullWidth: {
-    width: "100%"
+  actionIcon: {
+    float: 'right'
   },
   button: {
     margin: theme.spacing(1),
-  },
-  sizeSmall: {
-    width: "25ch"
   },
     line: {
         width: "100%",
@@ -52,12 +49,7 @@ const useStyles = makeStyles((theme) => ({
     composite: {
         display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
         gap: theme.spacing(1), width: "100%"
-    },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },
+    }
 }));
 
 function Attendee({ children, addStudentId, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
@@ -137,7 +129,7 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
         <Box p={3}>
             <Box px={2}>
               {loading?
-                  !newStudent && <Skeleton style={{float: 'right'}}><PersonAddIcon/></Skeleton>
+                  !newStudent && <IconButtonSkeleton className={classes.actionIcon}/>
               :
               !newStudent && <Tooltip style={{float: 'right'}} title={t("new_guardian")} aria-label={t("new_guardian")}>
                 <IconButton onClick={(e) => {
@@ -150,7 +142,7 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
 
 
               {loading ?
-                  !newStudent && <Skeleton style={{float: 'right'}}><IconButton/></Skeleton>
+                  !newStudent && <IconButtonSkeleton className={classes.actionIcon}/>
               :
                !newStudent && <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
@@ -247,86 +239,78 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
 
               </Person>
 
-              {!newStudent && <Box my={3}>
+              {!loading && !newStudent && <Box my={3}>
             <Divider />
             </Box>}
 
               <Box className={[classes.line, classes.composite]}>
-                {loading ?
-                      !newStudent && <Skeleton style={{flex: 1}}><Button/></Skeleton>
-                      :
-                        !newStudent &&   <Tooltip style={{flex: 1}} title={t("send_grant_letter")} aria-label={t("send_grant_letter")}>
-                           <Button
-                          variant="contained"
-                          color="default"
-                          className={classes.button}
-                          startIcon={<SendIcon />}
-                          onClick={(e) => {
-                               sendGrantLetter();
-                            }}
-                        >
-                          {t("grant_letter")}
-                        </Button>
-                </Tooltip>
-                      }
+                {!loading && !newStudent &&
+                <Tooltip style={{flex: 1}} title={t("send_grant_letter")} aria-label={t("send_grant_letter")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<SendIcon/>}
+                      onClick={(e) => {
+                        sendGrantLetter();
+                      }}
+                  >
+                    {t("grant_letter")}
+                  </Button>
+                </Tooltip>}
 
-                {loading? !newStudent && <Skeleton style={{float: 'right'}}><Button/></Skeleton>
-                :
-               !newStudent &&  <Tooltip style={{flex: 1}} title={t("export_grant_letter")} aria-label={t("export_grant_letter")}>
-            <Button
-                          variant="contained"
-                          color="default"
-                          className={classes.button}
-                          startIcon={<GetAppIcon />}
-                          onClick={(e) => {
-                               StudentsDataService
-                    .downloadSubresource(currentStudent["id"], 'grantLetter')
-                    .then(...errorHandler({snackbarSuccess:true}))
-                    .then(()=>null)
-                            }}
-                        >
-                          {t("grant_letter")}
-                        </Button>
-          </Tooltip>}
+                {!loading && !newStudent &&
+                <Tooltip style={{flex: 1}} title={t("export_grant_letter")} aria-label={t("export_grant_letter")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<GetAppIcon/>}
+                      onClick={(e) => {
+                        StudentsDataService
+                            .downloadSubresource(currentStudent["id"], 'grantLetter')
+                            .then(...errorHandler({snackbarSuccess: true}))
+                            .then(() => null)
+                      }}
+                  >
+                    {t("grant_letter")}
+                  </Button>
+                </Tooltip>}
               </Box>
 
               <Box className={[classes.line, classes.composite]}>
-                {loading?
-                     !newStudent &&  <Skeleton style={{flex: 1}}><Button/></Skeleton>
-                      :
-                        !newStudent &&   <Tooltip style={{flex: 1}} title={t("send_enrollment_agreement")} aria-label={t("enrollment_agreement")}>
-                           <Button
-                          variant="contained"
-                          color="default"
-                          className={classes.button}
-                          startIcon={<SendIcon />}
-                          onClick={(e) => {
-                               sendEnrollmentAgreement();
-                            }}
-                        >
-                          {t("enrollment_agreement")}
-                        </Button>
-                </Tooltip>
-                      }
+                {!loading && !newStudent && <Tooltip style={{flex: 1}} title={t("send_enrollment_agreement")}
+                                                     aria-label={t("enrollment_agreement")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<SendIcon/>}
+                      onClick={(e) => {
+                        sendEnrollmentAgreement();
+                      }}
+                  >
+                    {t("enrollment_agreement")}
+                  </Button>
+                </Tooltip>}
 
-                {loading? !newStudent && <Skeleton style={{float: 'right'}}><Button/></Skeleton>
-                :
-              !newStudent &&   <Tooltip style={{flex: 1}} title={t("export_enrollment_agreement")} aria-label={t("export_enrollment_agreement")}>
-            <Button
-                          variant="contained"
-                          color="default"
-                          className={classes.button}
-                          startIcon={<GetAppIcon />}
-                          onClick={(e) => {
-                               StudentsDataService
-                    .downloadSubresource(currentStudent["id"], 'enrollmentAgreement')
-                    .then(...errorHandler({snackbarSuccess:true}))
-                    .then(()=>null)
-                            }}
-                        >
-                          {t("enrollment_agreement")}
-                        </Button>
-          </Tooltip>}
+                {!loading && !newStudent && <Tooltip style={{flex: 1}} title={t("export_enrollment_agreement")}
+                                                     aria-label={t("export_enrollment_agreement")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<GetAppIcon/>}
+                      onClick={(e) => {
+                        StudentsDataService
+                            .downloadSubresource(currentStudent["id"], 'enrollmentAgreement')
+                            .then(...errorHandler({snackbarSuccess: true}))
+                            .then(() => null)
+                      }}
+                  >
+                    {t("enrollment_agreement")}
+                  </Button>
+                </Tooltip>}
               </Box>
             </Box>
         </Box>
