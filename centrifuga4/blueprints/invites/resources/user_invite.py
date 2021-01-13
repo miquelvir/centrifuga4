@@ -1,3 +1,5 @@
+from threading import Thread
+
 import jwt
 from flask import request, current_app
 from flask_restful import Resource, abort
@@ -7,19 +9,29 @@ from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.auth_auth.resource_need import UsersPermission
 from centrifuga4.models import User
 from email_queue.emails.invite_email import my_job
-from centrifuga4 import q
 from email_queue.url_utils import merge_url_query_params
 
 
 def generate_signup_link(_token, _email, frontend_url=None):
-    return merge_url_query_params(
-        "%s/signup"
-        % (frontend_url if frontend_url else current_app.config["FRONTEND_SERVER_URL"]),
-        {"token": _token, "email": _email, "lan": "cat"},
-    ), merge_url_query_params(
-        "%s/signup"
-        % (frontend_url if frontend_url else current_app.config["FRONTEND_SERVER_URL"]),
-        {"token": _token, "email": _email, "lan": "eng"},
+    return (
+        merge_url_query_params(
+            "%s/signup"
+            % (
+                frontend_url
+                if frontend_url
+                else current_app.config["FRONTEND_SERVER_URL"]
+            ),
+            {"token": _token, "email": _email, "lan": "cat"},
+        ),
+        merge_url_query_params(
+            "%s/signup"
+            % (
+                frontend_url
+                if frontend_url
+                else current_app.config["FRONTEND_SERVER_URL"]
+            ),
+            {"token": _token, "email": _email, "lan": "eng"},
+        ),
     )
 
 
@@ -49,16 +61,12 @@ class UserInviteCollectionRes(Resource):
             algorithm="HS256",
         )
 
-        job = q.enqueue_call(
-            func=my_job,
-            args=(
-                *generate_signup_link(token, user_email),
-                user_email,
-            ),
-            result_ttl=5000,
+        thread = Thread(
+            target=my_job, args=(*generate_signup_link(token, user_email), user_email)
         )
+        thread.start()
 
-        return job.get_id()
+        return ""
 
 
 if __name__ == "__main__":
@@ -74,15 +82,13 @@ if __name__ == "__main__":
         algorithm="HS256",
     )
 
-    job = q.enqueue_call(
-        func=my_job,
+    thread = Thread(
+        target=my_job,
         args=(
             *generate_signup_link(
                 token, user_email, frontend_url="https://127.0.0.1:4999"
             ),
             user_email,
         ),
-        result_ttl=5000,
     )
-
-    print(job.get_id())
+    thread.start()

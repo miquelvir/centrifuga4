@@ -89,7 +89,7 @@ const UsersList = (props) => {
                 });
     }
 
-    useEffect(search, [page, setUsers]);
+    useEffect(search, [page]);
 
     const handlePageChange = (event, value) => {
         setPage(value);

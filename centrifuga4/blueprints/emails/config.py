@@ -6,7 +6,6 @@ from centrifuga4.blueprints.api.errors import Unauthorized, Forbidden
 from centrifuga4.errors.authorization import Forbidden as RawForbidden
 from .resources.enrollment_email import EnrollmentEmailCollectionRes
 from .resources.grant_email import GrantEmailCollectionRes
-from .resources.job_queue import JobQueueRes
 from .resources.payment_receipt_email import PaymentReceiptEmailCollectionRes
 
 emails_blueprint = Blueprint("emails", __name__)
@@ -24,7 +23,6 @@ def handle(e):
 
 api = Api(emails_blueprint)
 
-api.add_resource(JobQueueRes, "/queue/<job_id>")
 api.add_resource(EnrollmentEmailCollectionRes, "/enrollmentEmail/<student_id>")
 api.add_resource(GrantEmailCollectionRes, "/grantEmail/<student_id>")
 api.add_resource(PaymentReceiptEmailCollectionRes, "/paymentReceipt/<payment_id>")

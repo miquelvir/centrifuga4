@@ -1,3 +1,5 @@
+from threading import Thread
+
 from flask import current_app
 from flask_restful import Resource
 from centrifuga4.auth_auth.action_need import EmailPermission
@@ -6,7 +8,6 @@ from centrifuga4.auth_auth.resource_need import StudentsPermission
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models import Student
 from email_queue.emails.grant_letter_email import my_job
-from centrifuga4 import q
 
 
 class GrantEmailCollectionRes(Resource):
@@ -20,15 +21,15 @@ class GrantEmailCollectionRes(Resource):
                 "resource with the given id not found", requestedId=student_id
             )
 
-        job = q.enqueue_call(
-            func=my_job,
+        thread = Thread(
+            target=my_job,
             args=(
                 student,
                 [guardian.email for guardian in student.guardians if guardian.email]
                 + [student.email],
                 current_app.config["BACKEND_SERVER_URL"],
             ),
-            result_ttl=5000,
         )
+        thread.start()
 
-        return job.get_id()
+        return ""

@@ -122,7 +122,7 @@ const StudentsList = (props) => {
 
     // we don't want the search to trigger for each searchTerm change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(search, [page, setStudents, filters, errorHandler]);
+    useEffect(search, [page, filters]);
 
     const handlePageChange = (event, value) => {
         setPage(value);

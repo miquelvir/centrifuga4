@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="development with built files" type="CompoundRunConfigurationType">
-    <toRun name="build" type="js.build_tools.npm" />
-    <toRun name="worker" type="PythonConfigurationType" />
     <toRun name="wsgi_development (built files)" type="PythonConfigurationType" />
+    <toRun name="build" type="js.build_tools.npm" />
     <method v="2" />
   </configuration>
 </component>

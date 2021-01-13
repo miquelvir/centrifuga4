@@ -1,3 +1,5 @@
+from threading import Thread
+
 from flask import current_app
 from flask_restful import Resource
 
@@ -10,7 +12,6 @@ from centrifuga4.auth_auth.resource_need import (
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models import Payment
 from email_queue.emails.payment_receipt_email import my_job
-from centrifuga4 import q
 
 
 class PaymentReceiptEmailCollectionRes(Resource):  # todo check
@@ -24,8 +25,8 @@ class PaymentReceiptEmailCollectionRes(Resource):  # todo check
                 "resource with the given id not found", requestedId=payment_id
             )
 
-        job = q.enqueue_call(
-            func=my_job,
+        thread = Thread(
+            target=my_job,
             args=(
                 payment,
                 [
@@ -37,7 +38,7 @@ class PaymentReceiptEmailCollectionRes(Resource):  # todo check
                 current_app.config["PUBLIC_VALIDATION_SECRET"],
                 current_app.config["BACKEND_SERVER_URL"],
             ),
-            result_ttl=5000,
         )
+        thread.start()
 
-        return job.get_id()
+        return ""

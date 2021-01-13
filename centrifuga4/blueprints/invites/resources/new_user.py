@@ -2,7 +2,7 @@ import jwt
 from flask import request, current_app
 from flask_restful import Resource
 from centrifuga4.models import User, Need
-from centrifuga4 import q, db
+from centrifuga4 import db
 
 
 class NewUserCollectionRes(Resource):

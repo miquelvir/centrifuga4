@@ -12,15 +12,12 @@ from flask_talisman import Talisman
 from flask_login import LoginManager
 from config import DevelopmentBuiltConfig, ProductionConfig, DevelopmentConfig
 from rq import Queue
-from worker import conn
 
 db = SQLAlchemy()
 man = Talisman()
 login = LoginManager()
 principal = Principal()
 csrf = SeaSurf()
-
-q = Queue(connection=conn)  # todo here
 
 temp = {
     "swagger": "2.0",

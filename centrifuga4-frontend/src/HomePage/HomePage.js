@@ -16,7 +16,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Routes from "./routes";
-import {Route, Link, Router} from 'react-router-dom';
+import {BrowserRouter, Link, Route} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
 import {history} from "../_helpers/history";
@@ -142,7 +142,7 @@ const HomePage = (props) => {
                     open={open}
                 />
             </AppBar>
-            <Router history={history} basename={`${process.env.PUBLIC_URL}/`}>
+            <BrowserRouter history={history} basename={`${process.env.PUBLIC_URL}/`}>
                 <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
@@ -184,7 +184,7 @@ const HomePage = (props) => {
                         })}
                     </main>
                 </div>
-            </Router>
+            </BrowserRouter>
         </div>
     );
 }
