@@ -27,38 +27,39 @@ class Config(object):
     SSL_CERT = "cert.pem"
     SSL_KEY = "key.pem"
 
-    SECRET_KEY = os.getenv('SECRET')
+    SECRET_KEY = os.getenv("SECRET")
     INVITES_SECRET = SECRET_KEY
     PASSWORD_RESET_SECRET = SECRET_KEY
     PUBLIC_VALIDATION_SECRET = SECRET_KEY
 
 
 class DevelopmentBuiltConfig(Config):
-    CSRF_COOKIE_SAMESITE = 'Strict'
+    CSRF_COOKIE_SAMESITE = "Strict"
     SESSION_PROTECTION = "strong"
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Strict'
+    SESSION_COOKIE_SAMESITE = "Strict"
 
     FRONTEND_SERVER_URL = "https://127.0.0.1:4999"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), "",
-                                                            "people.db")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(
+        os.path.abspath(os.path.dirname(__file__)), "", "people.db"
+    )
 
 
 class ProductionConfig(Config):
-    CSRF_COOKIE_SAMESITE = 'Strict'
+    CSRF_COOKIE_SAMESITE = "Strict"
     SESSION_PROTECTION = "strong"
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Strict'
+    SESSION_COOKIE_SAMESITE = "Strict"
 
     BACKEND_SERVER_PORT = "443"
     BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
     BACKEND_SERVER_URL = "https://%s:%s" % (BACKEND_SERVER_HOST, BACKEND_SERVER_PORT)
     FRONTEND_SERVER_URL = BACKEND_SERVER_URL
 
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
 
 
 class DevelopmentConfig(Config):
@@ -71,11 +72,12 @@ class DevelopmentConfig(Config):
 
     LOGIN_DISABLED = True
 
-    CSRF_COOKIE_SAMESITE = 'Lax'  # allow development frontend server
+    CSRF_COOKIE_SAMESITE = "Lax"  # allow development frontend server
     FRONTEND_SERVER_URL = "https://127.0.0.1:3000"
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(os.path.abspath(os.path.dirname(__file__)), "", "people.db")
-
+    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(
+        os.path.abspath(os.path.dirname(__file__)), "", "people.db"
+    )
 
 
 class HerokuManualLiveConfig(ProductionConfig):
@@ -89,7 +91,7 @@ class HerokuManualLiveConfig(ProductionConfig):
     BACKEND_SERVER_PORT = "443"
     BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
 
-    SQLALCHEMY_DATABASE_URI = os.getenv('MANUAL_DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv("MANUAL_DATABASE_URL")
 
 
 class TestingConfig(DevelopmentConfig):
