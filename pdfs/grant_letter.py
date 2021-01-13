@@ -13,9 +13,6 @@ from pdfs.wkhtmltopdf import get_config
 
 
 def generate_grant_letter_pdf(student_id, backend_server_address, templates_folder=TEMPLATES_PATH):
-    config = get_config()
-
-
     templater = TemplateRenderer(templates_folder=templates_folder)
     student = Student.query.filter(Student.id == student_id).one_or_none()
     if not student:
@@ -35,6 +32,6 @@ def generate_grant_letter_pdf(student_id, backend_server_address, templates_fold
                                             datetime=datetime.date(datetime.now()))
     print("content", pdf_content)
     pdf = pdfkit.from_string(pdf_content, False,
-                             configuration=config)
+                             configuration=get_config())
 
     return pdf

@@ -1,13 +1,13 @@
 Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management platform.
 
-INSTALLING
+### INSTALLING
 1. Clone this repository
 2. Install [Python 3 and Pip](https://www.python.org/downloads/)
 3. Install Python requirements using `pip install -r requirements.txt`
 4. Install [npm](https://www.npmjs.com/get-npm)
 5. Run `npm install` inside centrifuga4-frontend to install the npm modules
 
-DEVELOPMENT
+### DEVELOPMENT
 1. Python backend
     1. Add all the required environment variables
     2. Use development/generate_sample_db.py to create a new database. It will contain a user 'admin@gmail.com' : 'admin'
@@ -16,18 +16,18 @@ DEVELOPMENT
     1. Run `npm start` inside centrifuga4-frontend to start the frontend development server
 3. Run Redis Server and email_queue/worker.py.
 
-DEVELOPMENT (USING THE BUILT REACT FILES)
+### DEVELOPMENT (USING THE BUILT REACT FILES)
 1. Run `npm build` inside centrifuga4-frontend to build the React files into static files
 2. Run wsgi_production.py to run the server
 3. Run Redis Server worker.py.
 
-AUTHORSHIP
+### AUTHORSHIP
 
 v0 by A. Rius
 
 v1-4 by @miquelvir
 
-ARCHITECTURE AND DESIGN
+### ARCHITECTURE AND DESIGN
 
 Due to budget constraints, reduced development and maintenance group, and for simplicity's sake, centrifuga4 is build
 following a monolithic approach. However, code decoupling and modularity are still important.
@@ -42,15 +42,30 @@ We are using 2 processes (dynos, in Heroku's slang), if we are not to count the 
    6. Document validation page (checks the content and validity of a JWT token signed by the server and displays it in a simple static page).
 2. Worker process: a Redis Queue worker for emails and long exports.
 
-DEPLOYMENT
+### DEPLOYMENT
 
 Due to the Redis Server, the deployment is limited to Linux servers. The one being used is Heroku; the Procfile 
-specifies how the workers are to be run.
+specifies how the workers are to be run (web uses wsgi.py, worker uses worker.py).
 
 For now, it is run on the free tier; if dyno hours were not enough, then it would be useful to increment to a Hobby plan
 (which would allow for a custom domain together with SSL). Similarly, if more than 500 students + 100 courses are needed,
 Heroku Postgres would probably need to be upgraded. An alternative is deploying a small server to Xamfrà.
 
-SECURITY COPIES
+### SECURITY COPIES
 
 One can manually export a PostgreSQL dump file from Heroku ([see instructions](https://devcenter.heroku.com/articles/heroku-postgres-import-export)).
+
+
+### REQUIRED ENVIRONMENT VARIABLES
+
+Create a .env on the root folder of the project with the following variables:
+1. SMTP_PASSWORD
+2. REDIS_URL
+3. MANUAL_DATABASE_URL
+4. DATABASE_URL
+5. SECRET, can be anything for development (e.g. 'super-secret')
+6. wkhtmltopdf, the path to wkhtmltopdf (e.g. '/usr/bin/wkhtmltopdf')
+7. ENVIRONMENT, one of the following: 
+   1. 'development' (using a separate React development server), 
+   2. 'production' (for the final Heroku deployment),
+   3. 'development-built' (development, but using the build version of the React frontend)

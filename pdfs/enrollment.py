@@ -13,8 +13,6 @@ from pdfs.wkhtmltopdf import get_config
 
 
 def generate_enrollment_agreement_pdf(student_id, backend_server_address, templates_folder=TEMPLATES_PATH):
-    config = get_config()
-
     student = Student.query.filter(Student.id == student_id).one_or_none()
     if not student:
         return
@@ -37,6 +35,6 @@ def generate_enrollment_agreement_pdf(student_id, backend_server_address, templa
                                             schedules=student.get_course_schedules())
 
     pdf = pdfkit.from_string(pdf_content, False,
-                             configuration=config)
+                             configuration=get_config())
 
     return pdf

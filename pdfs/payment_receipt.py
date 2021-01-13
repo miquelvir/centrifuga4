@@ -15,8 +15,6 @@ def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=T
         epoch = datetime.utcfromtimestamp(0)
         return int((datetime.now() - epoch).total_seconds() * 1000.0)
 
-    config = get_config()
-
     signing_at = unix_time_millis()
     try:
         student = payment.student
@@ -49,6 +47,6 @@ def generate_payment_recipe_pdf(secret, payment, backend_url, templates_folder=T
                                                 backend_url, token.decode('utf-8')))
 
     pdf = pdfkit.from_string(pdf_content, False,
-                             configuration=config)
+                             configuration=get_config())
 
     return pdf
