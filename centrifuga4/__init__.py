@@ -84,13 +84,13 @@ def init_app(config=None):
 
 
     with app.app_context():
-        from .blueprints import api, dashboard, auth_service, emails_service, invites_service, password_reset_service, validation_blueprint
+        from .blueprints import api, auth_service, emails_service, invites_service, password_reset_service, validation_blueprint
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
 
         from centrifuga4.auth_auth.login_user_loader import user_loader
 
-        # serve the frontend
+        # serve the react frontend
         @app.route('/')
         @app.route('/login')
         @app.route('/signup')
@@ -98,17 +98,11 @@ def init_app(config=None):
         def index():
             return render_template('index.html')  # todo sendstaticfile
 
-        # basic ping/pong
-        @app.route("/ping")
-        def hi():
-            return "pong"
-
         # add identity loader for Flask Principal
         identity_loaded.connect_via(app)(on_identity_loaded)
 
         # load blueprints for the different parts
         app.register_blueprint(api, url_prefix='/api/v1')
-        app.register_blueprint(dashboard, url_prefix='/dashboard/v1')
         app.register_blueprint(auth_service, url_prefix='/auth/v1')
         app.register_blueprint(emails_service, url_prefix='/emails/v1')
         app.register_blueprint(invites_service, url_prefix='/invites/v1')

@@ -1,5 +1,5 @@
 from centrifuga4 import db
-from centrifuga4.blueprints.api.easy_api.delete import safe_delete
+from centrifuga4.easy_api.delete import safe_delete
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema

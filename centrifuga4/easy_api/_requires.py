@@ -1,9 +1,7 @@
 from typing import Callable
 
-from flask_principal import Permission
-
 from centrifuga4.auth_auth.requires import Requires
-from centrifuga4.blueprints.api.easy_api import EasyResource
+from centrifuga4.easy_api import EasyResource
 
 
 class EasyRequires(Requires):

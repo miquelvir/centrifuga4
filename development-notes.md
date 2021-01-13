@@ -1,4 +1,4 @@
-"""https://github.com/realpython/flask-boilerplate
+https://github.com/realpython/flask-boilerplate
 
 https://flask.palletsprojects.com/en/1.1.x/patterns/fabric/
 
@@ -22,16 +22,12 @@ Flask-Babel
 
 
 https://flask-smorest.readthedocs.io/en/latest/openapi.html
-"""
 
 
-# todo, ui, before posting, checks if initial values are same
-
-# todo do tests
-
-# todo csrf token in post/patch/etc
-
-# todo maybe remove content negotiation as we know it and create proper csv resources
-
-# todo primary accent on student selected home page
-# todo unbuffered
+# todo
+ui, before posting, checks if initial values are same
+do tests
+csrf token in post/patch/etc
+maybe remove content negotiation as we know it and create proper csv resources
+primary accent on student selected home page
+unbuffered

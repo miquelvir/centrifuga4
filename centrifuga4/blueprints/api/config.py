@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
-from centrifuga4.blueprints.api.easy_api.resource_factory import get_resources
+from centrifuga4.easy_api.resource_factory import get_resources
 from centrifuga4.blueprints.api.errors import Unauthorized, Forbidden
 from centrifuga4.blueprints.api.resources.payment_receipts import PaymentsReceiptsRes
 from centrifuga4.blueprints.api.resources.student_enrollment_agreement import StudentsEnrollmentAgreementRes

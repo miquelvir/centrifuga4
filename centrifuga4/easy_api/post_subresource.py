@@ -2,7 +2,7 @@ from flask import abort
 
 from centrifuga4 import db
 
-from centrifuga4.blueprints.api.easy_api.post import safe_post
+from centrifuga4.easy_api.post import safe_post
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 

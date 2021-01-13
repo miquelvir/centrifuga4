@@ -1,6 +1,6 @@
 from flask import request
 
-import centrifuga4.blueprints.api.easy_api as easy
+from centrifuga4 import easy_api as easy
 from centrifuga4.auth_auth.resource_need import UsersPermission
 from centrifuga4.models import User
 from centrifuga4.schemas.schemas import UserSchema

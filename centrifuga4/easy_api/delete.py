@@ -1,6 +1,6 @@
 from centrifuga4 import db
 from centrifuga4.auth_auth.action_need import DeletePermission
-from centrifuga4.blueprints.api.easy_api._requires import EasyRequires
+from centrifuga4.easy_api._requires import EasyRequires
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema

@@ -4,7 +4,7 @@ from flask_restful import Resource
 from sqlalchemy import inspect
 from sqlalchemy.orm import Mapper, RelationshipProperty
 
-from centrifuga4.blueprints.api import easy_api as easy
+from centrifuga4 import easy_api as easy
 from centrifuga4.models import Student, Guardian, Course, Payment, User, Room, Schedule, Teacher, Need, Label
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import StudentSchema, GuardianSchema, CourseSchema, PaymentSchema, UserSchema, \
