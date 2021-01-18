@@ -5,6 +5,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {countries} from "../_data/countries";
 import TextField from "@material-ui/core/TextField";
 import createStyles from "@material-ui/styles/createStyles";
+import DirtyTextField from "./dirtytextfield.component";
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => (createStyles({
     },
   },})));
 
-export default function DirtyCountrySelect({formik, name, label, ...textFieldProps}) {
+export default function DirtyCountrySelect({formik, noDirty, name, label, ...textFieldProps}) {
   const getInitialOption = (code) => {
       if (code === undefined) return countries.find(x=>x.code==='');
       return countries.find(x=>x.code===code);
@@ -51,7 +52,7 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
       _setOption(option);
   }
 
-  const dirty = formik.values[name] !== formik.initialValues[name];
+  const dirty = noDirty === true? false: formik.values[name] !== formik.initialValues[name];
   const classes = useStyles(dirty);
 
   const [inputValue, setInputValue] = React.useState('');
@@ -84,15 +85,19 @@ export default function DirtyCountrySelect({formik, name, label, ...textFieldPro
           {option.label} ({option.code}) +{option.phone}
         </React.Fragment>
       )}
+
       renderInput={(params) => (
         <TextField
           {...params}
           label={label}
+          noDirty={noDirty}
           className={classes.textField}
           inputProps={{
             ...params.inputProps,
             autoComplete: 'new-password', // disable autocomplete and autofill
           }}
+          error={formik.status  || formik.errors[name] !== undefined}
+        helperText={formik.touched[name] && formik.errors[name]}
         />
       )}
     />

@@ -5,3 +5,4 @@ from .emails import emails_blueprint as emails_service
 from .invites import invites_blueprint as invites_service
 from .password_reset import password_reset_blueprint as password_reset_service
 from .validation import validation_blueprint
+from .pre_enrollment import pre_enrollment_blueprint

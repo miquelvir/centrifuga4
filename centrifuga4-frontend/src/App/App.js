@@ -14,6 +14,7 @@ import {userContext} from '../_context/user-context';
 import {themeContext} from '../_context/theme-context';
 import SignupPage from "../SignupPage/SignupPage";
 import ResetPage from "../ResetPage/ResetPage";
+import PreEnrollmentPage from "../PreEnrollmentPage/PreEnrollmentPage";
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
@@ -37,6 +38,7 @@ function App() {
                         <Route path={'/login'} component={LoginPage}/>
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
+                        <Route path={'/prematricula'} component={PreEnrollmentPage}/>
                     </Router>
                 </themeContext.Provider>
             </userContext.Provider>

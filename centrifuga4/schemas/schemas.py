@@ -41,9 +41,20 @@ class MySQLAlchemyAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
         return self.Meta.model(**data)  # init
 
 
+class BaseScheduleSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
+        model = models.Schedule
+
+
 class CourseSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Course
+
+    base_schedules = fields.Nested(BaseScheduleSchema, many=True)
+
+
+class PublicCourseSchema(CourseSchema):
+    schedules = fields.Nested(BaseScheduleSchema, many=True)
 
 
 class NeedSchema(MySQLAlchemyAutoSchema):
@@ -56,7 +67,7 @@ class LabelSchema(MySQLAlchemyAutoSchema):
         model = models.Label
 
 
-class ScheduleSchema(MySQLAlchemyAutoSchema):
+class ScheduleSchema(BaseScheduleSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Schedule
 

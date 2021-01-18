@@ -169,12 +169,13 @@ def add_courses(
             id=course_id,
             name="course %s" % idx,
             description=choice(("course description %s" % idx, None)),
+            is_published=choice((True, True, True, True, False)),
         )
 
         for student in sample(students, randint(0, 50)):
             c.students.append(student)
             if choice((True, False, False)):
-                s = generate_schedule(course_id, is_base=False)
+                s = generate_schedule(course_id, False)
                 s.student_id = student.id
                 centrifuga4.db.session.add(s)
 
@@ -188,7 +189,7 @@ def add_courses(
             c.rooms.append(choice(rooms))
 
         for idx2 in range(randint(0, 3)):
-            c.schedules.append(generate_schedule(course_id, is_base=True))
+            c.schedules.append(generate_schedule(course_id, True))
 
         centrifuga4.db.session.add(c)
 

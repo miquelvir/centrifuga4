@@ -26,7 +26,7 @@
   "dni": "dni",
   "gender": "gènere",
   "birth date": "data de naixement",
-  "country_of_origin": "estat d'origen",
+  "country_of_origin": "estat d'origen de la família",
   "been_invited": "t'han convidat a unir-te a la centrífuga4 \uD83D\uDCEF",
   "confirm_password": "confirma la contrasenya",
   "password": "contrasenya",
@@ -205,5 +205,15 @@
   "can-operate-with-schedules": "pot operar amb horaris",
   "can-operate-with-teachers": "pot operar amb professors",
   "can-operate-with-users": "pot operar amb usuaris",
-  "can-operate-with-payment-receipts": "pot operar amb rebuts de pagament"
+  "school_university": "escola o universitat",
+  "next": "següent",
+  "back": "anterior",
+  "skip": "ometre",
+  "finish": "enviar",
+  "can-operate-with-payment-receipts": "pot operar amb rebuts de pagament",
+  "data_protection": "protecció de dades",
+  "student_info": "informació de l'estudiant",
+  "contact_person_1": "persona de contacte (1)",
+  "contact_person_2": "persona de contacte (2)",
+  "confirmation": "confirmació"
 }

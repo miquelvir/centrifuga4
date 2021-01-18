@@ -10,18 +10,12 @@ ReactDOM.render(
   <React.StrictMode>
       <Helmet>
           <title>centrífuga4</title>
-          <meta property="csp-nonce" content="{{ csp_nonce() }}"/>
-          <style
-                  id="jss-server-side"
-                  nonce="{{ csp_nonce() }}"
-                />
                 <base href={`${process.env.PUBLIC_URL}/`}/>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <link nonce="{{csp_nonce()}}" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+          <link nonce="{{csp_nonce()}}" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
           <meta
               name="viewport"
               content="minimum-scale=1, initial-scale=1, width=device-width"/>
-          <meta property="csp-nonce" content="{{ csp_nonce() }}"/>
       </Helmet>
       <App/>
   </React.StrictMode>,

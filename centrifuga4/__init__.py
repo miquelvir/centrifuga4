@@ -7,7 +7,7 @@ from flask_cors import CORS
 from flask_principal import Principal, identity_loaded
 from flask_seasurf import SeaSurf
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template
+from flask import Flask, render_template, render_template_string
 from flask_talisman import Talisman
 from flask_login import LoginManager
 from config import DevelopmentBuiltConfig, ProductionConfig, DevelopmentConfig
@@ -64,7 +64,7 @@ def init_app(config=None):
     db.init_app(app)
     login.init_app(app)
 
-    if app.config["DEVELOPMENT"]:
+    if app.config["DEVELOPMENT"]:  # todo change
         # allow cors only during development (due to the front end development server)
         cors = CORS()
         cors.init_app(app)
@@ -72,15 +72,13 @@ def init_app(config=None):
         man.init_app(
             app,
             content_security_policy={
-                "style-src": [
-                    "'self'",
-                    "'unsafe-inline'",
-                    "https://fonts.googleapis.com",
-                ],  # todo production
+                "style-src": ["'self'", "https://fonts.googleapis.com"],
                 "font-src": ["'self'", "'unsafe-inline'", "https://fonts.gstatic.com"],
-                "default-src": ["'self'", "'unsafe-inline'"],
+                "script-src": ["'self'"],
+                "default-src": ["'self'"],
             },
-        )  # todo #  content_security_policy_nonce_in=['script-src', 'style-src']
+            content_security_policy_nonce_in=["script-src", "style-src"],
+        )
     swagger.init_app(app)
     principal.init_app(app)
     csrf.init_app(app)
@@ -93,6 +91,7 @@ def init_app(config=None):
             invites_service,
             password_reset_service,
             validation_blueprint,
+            pre_enrollment_blueprint,
         )
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
@@ -104,8 +103,9 @@ def init_app(config=None):
         @app.route("/login")
         @app.route("/signup")
         @app.route("/password-reset")
+        @app.route("/prematriula")
         def index():
-            return render_template("index.html")  # todo sendstaticfile
+            return render_template("index.html")
 
         # add identity loader for Flask Principal
         identity_loaded.connect_via(app)(on_identity_loaded)
@@ -117,6 +117,9 @@ def init_app(config=None):
         app.register_blueprint(invites_service, url_prefix="/invites/v1")
         app.register_blueprint(password_reset_service, url_prefix="/password-reset/v1")
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
+        app.register_blueprint(
+            pre_enrollment_blueprint, url_prefix="/pre-enrollment/v1"
+        )
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app

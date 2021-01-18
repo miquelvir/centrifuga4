@@ -1,3 +1,5 @@
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from centrifuga4 import db
 from centrifuga4.auth_auth.resource_need import CoursesPermission
 from centrifuga4.models._base import MyBase
@@ -36,6 +38,7 @@ class Course(MyBase):
     name = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=True)
     price_term = db.Column(db.Integer, nullable=False, default=60)
+    is_published = db.Column(db.Boolean, nullable=False, default=False)
 
     rooms = db.relationship("Room", secondary="room_course", back_populates="courses")
     teachers = db.relationship(
@@ -48,6 +51,10 @@ class Course(MyBase):
     labels = db.relationship(
         "Label", secondary="label_course", back_populates="courses"
     )
+
+    @hybrid_property
+    def base_schedules(self):
+        return [schedule for schedule in self.schedules if schedule.is_base]
 
     def __repr__(self):
         return "<Course | %s - %s>" % (self.id, self.name)

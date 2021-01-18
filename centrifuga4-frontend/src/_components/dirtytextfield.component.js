@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => (createStyles({
 const DirtyTextField = (props) => {
     const name = props.name;
     const formik = props.formik;
-    const dirty = formik.values[name] !== formik.initialValues[name];
+    const dirty = props.noDirty === true? false: formik.values[name] !== formik.initialValues[name];
     const classes = useStyles(dirty);
     const formikProps = {
         value: formik.values[name] === undefined? '': formik.values[name],  // todo why is this being called with undefined tho

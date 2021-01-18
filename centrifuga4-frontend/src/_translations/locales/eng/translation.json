@@ -25,7 +25,7 @@
   "dni": "dni",
   "gender": "gender",
   "birth date": "birth date",
-  "country_of_origin": "country of origin",
+  "country_of_origin": "country of origin of the family",
   "been_invited": "you have been invited to join centrífuga4 📯",
   "confirm_password": "confirm password",
   "password": "password",
@@ -204,5 +204,16 @@
   "can-operate-with-schedules": "can operate with schedules",
   "can-operate-with-teachers": "can operate with teachers",
   "can-operate-with-users": "can operate with users",
-  "can-operate-with-payment-receipts": "can operate with payment receipts"
+  "school_university": "school or university",
+  "next": "next",
+  "back": "back",
+  "skip": "skip",
+  "finish": "send",
+  "here": "here",
+  "can-operate-with-payment-receipts": "can operate with payment receipts",
+  "data_protection": "data protection",
+  "student_info": "student information",
+  "contact_person_1": "contact person (1)",
+  "contact_person_2": "contact person (2)",
+  "confirmation": "confirmation"
 }
