@@ -168,22 +168,15 @@ const PreEnrollmentPage = (props) => {
       };
 
       useOnMount(() => {
-         preEnrollmentService.getCourses().then(...errorHandler({}))
+         preEnrollmentService.getCourses()
+             .then(...errorHandler({}))
              .then(courses => {
+                 console.log("courses...", courses);
                  setAvailableCourses(courses);
+                 setFilteredCourses(courses);
              })
       });
 
-      useEffect(() => {
-          if (isUnderage(formik.values['birth_date']) && formik.values['is_studying']){
-              console.log("underage", formik.values['education_year']);
-              setFilteredCourses(availableCourses.filter(x => x['labels'].includes(formik.values['education_year'])));
-          } else {
-              console.log("overage");
-              setFilteredCourses(availableCourses.filter(x => x['labels'].includes('adults')));
-          }
-
-      }, [availableCourses]);
 
       const [searchTerm, setSearchTerm] = useState('');
 
@@ -405,6 +398,7 @@ __person1__surname1: '',
             body['courses'] = chosenCourses.map(x => x.id);
 
             console.log(body);
+            setSubmitting(false);
 
 
 
@@ -430,6 +424,20 @@ __person1__surname1: '',
         }
     });
 
+    console.log("fis", formik.isSubmitting);
+
+ useEffect(() => {
+          let labels = [];
+          if (!isUnderage(formik.values['birth_date']) ){
+              labels.push("adult");
+          }
+          if (formik.values['is_studying']){
+              labels.push(formik.values['education_year']);
+          }
+
+          setFilteredCourses(availableCourses.filter(x => labels.some(l => x['labels'].includes(l))));
+
+      }, [availableCourses, formik.values['education_year'], formik.values['birth_date']]);
 
 
     const isStepOptional = (step) => {
@@ -457,12 +465,12 @@ const handleNext = () => {
 
 
       };
-    console.log(formik.errors, formik.status, formik.isValid);
     return (
         <Box p={5} style={{width: '100%'}}>
             <Box m={2} style={{textAlign: "center"}}>
         <img src={"logo_xamfra_baseline.png"} alt="Logo Xamfrà"
              style={{height: "85px"}}/>
+
               <Tooltip title={t("change_language")} style={{float: 'right'}}>
                         <IconButton
                             color="inherit"
@@ -471,6 +479,7 @@ const handleNext = () => {
                             aria-haspopup="true">
                             <TranslateIcon/>
                         </IconButton>
+
                     </Tooltip>
              </Box>
 
@@ -898,7 +907,9 @@ La nostra política protecció de dades es basa en que:
                     onSearch={() => {}}
                 />
             <List className={classes.list}>
-                {filteredCourses && filteredCourses.filter(x => !chosenCourses.includes(x) && (x.name.includes(searchTerm)  || (x.description !== null && x.description.includes(searchTerm)) )).map((course) => (
+                {filteredCourses && filteredCourses.filter(x =>
+                    !chosenCourses.includes(x) &&
+                    (x.name.includes(searchTerm) || (x.description !== null && x.description.includes(searchTerm)))).map((course) => (
                     <div key={course["id"]}>
                         <ListItem key={course["id"]} button
                                   onClick={() => {
@@ -973,6 +984,7 @@ La nostra política protecció de dades es basa en que:
                                 multiline
                                 formik={formik}
                                 rowsMax={8}
+                                noDirty={true}
                                 name="other_comments"
                             />
                         </Box>
@@ -996,7 +1008,7 @@ La nostra política protecció de dades es basa en que:
                         key={'image_agreement'}
                         label={isUnderage(formik.values['birth_date'])?
                         "En cas de matricular-lo, autoritzo l’ús de la imatge de l’estudiant, menor d'edat, per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà."
-                        : "En cas de matricular-me, autoritzo l’ús de la meva imatge per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà."}
+                        : "En cas de matricular-me, autoritzo l’ús de la meva imatge per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà." }
                       />
       </div>
                }
@@ -1022,22 +1034,27 @@ La nostra política protecció de dades es basa en que:
               )}
 
 
- {activeStep === steps.length - 1 ? <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  disabled={formik.isSubmitting || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}>
-                { t("finish")}
-              </Button> :
+
+
+
  <Button
                   variant="contained"
                   color="primary"
-                  disabled={!fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}
+                  disabled={(activeStep === steps.length - 1) || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}
                   onClick={handleNext}>
                 { t("next")}
               </Button>
 
- }
+                {activeStep === steps.length - 1 && <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  onClickCapture={() => {console.log("clicked finish")}}
+                  disabled={formik.isSubmitting || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}>
+                { t("finish")}
+              </Button> }
+
+
 
             </Box>
               </Box>
