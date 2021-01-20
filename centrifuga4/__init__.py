@@ -103,7 +103,7 @@ def init_app(config=None):
         @app.route("/login")
         @app.route("/signup")
         @app.route("/password-reset")
-        @app.route("/prematriula")
+        @app.route("/prematriula")  # liat
         def index():
             return render_template("index.html")
 
