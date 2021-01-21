@@ -453,7 +453,7 @@ const handleNext = () => {
     return (
         <Box p={5} style={{width: '100%'}}>
             <Box m={2} style={{textAlign: "center"}}>
-        <img src={"logo_xamfra_baseline.png"} alt="Logo Xamfrà"
+        <img src={"logo_xamfra.png"} alt="Logo Xamfrà"
              style={{height: "85px"}}/>
 
               <Tooltip title={t("change_language")} style={{float: 'right'}}>
