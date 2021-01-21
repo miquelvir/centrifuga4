@@ -216,5 +216,8 @@
   "contact_person_1": "contact person (1)",
   "contact_person_2": "contact person (2)",
   "confirmation": "confirmation",
-  "ss_agent": "social service worker"
+  "ss_agent": "social service worker",
+  "no_courses_found_add_edu": "we can't find any courses for you; go back and add your education level! If you already did that, contact us (xamfra.net/contacte)!",
+  "student": "student"
+
 }

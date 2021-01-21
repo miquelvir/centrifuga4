@@ -216,5 +216,7 @@
   "contact_person_1": "persona de contacte (1)",
   "contact_person_2": "persona de contacte (2)",
   "confirmation": "confirmació",
-  "ss_agent": "referent (serveis socials)"
+  "ss_agent": "referent (serveis socials)",
+  "no_courses_found_add_edu": "no podem trobar-te cap curs; torna enrere i afegeix el teu nivell d'educació! Si ja ho has fet, contacta'ns (xamfra.net/contacte)!",
+  "student": "estudiant"
 }

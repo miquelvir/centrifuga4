@@ -530,6 +530,8 @@ La nostra política protecció de dades es basa en que:
 
                   {activeStep === 1 &&
                   <div>
+                      <Typography variant="h2">{t("student")}</Typography>
+
 <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("name")}
@@ -721,6 +723,7 @@ La nostra política protecció de dades es basa en que:
 
                   {(activeStep === 2 || activeStep === 3) &&
                   <div>
+                      <Typography variant="h2">{t("contact") + " " + (activeStep - 1)}</Typography>
                         <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("name")}
@@ -919,6 +922,9 @@ La nostra política protecció de dades es basa en que:
                     </div>
                 ))}
             </List>
+             {filteredCourses.length === 0 &&
+                <Typography>{t("no_courses_found_add_edu")}</Typography>
+             }
             </Box>
     </div>}
 

@@ -73,11 +73,14 @@ def init_app(config=None):
         content_security_policy={
             "style-src": ["'self'", "https://fonts.googleapis.com"],
             "font-src": ["'self'", "'unsafe-inline'", "https://fonts.gstatic.com"],
-            "script-src": ["'self'"],
+            "script-src": ["'self'", "www.google.com"],  # allow google for recaptcha
             "default-src": ["'self'"],
+            "img-src": ["'self'", "www.gstatic.com"],  # allow google for recaptcha
+            "frame-src": ["www.google.com"],  # allow google for recaptcha
         },
         content_security_policy_nonce_in=["script-src", "style-src"],
     )
+
     swagger.init_app(app)
     principal.init_app(app)
     csrf.init_app(app)
