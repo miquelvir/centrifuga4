@@ -32,6 +32,14 @@ class Person(RawPerson):
         time_difference = datetime.date.today() - self.birth_date
         return int(time_difference.days / 365.25)
 
+    @hybrid_property
+    def is_underage(self):
+        return self.age < 18
+
+    @hybrid_property
+    def is_overage(self):
+        return not self.is_underage
+
     @validates("education_entity", "career")
     def cleaner1(self, key, value):
         return value.lower().strip() if value else value

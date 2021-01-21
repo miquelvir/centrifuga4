@@ -8,7 +8,7 @@ export const sendEnrollmentEmail = (id) => {  // todo abstract
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'post',
-                    url: `${BACKEND_URL}/emails/v1/enrollmentEmail/${id}`,
+                    url: `${BACKEND_URL}/emails/v1/enrolmentEmail/${id}`,
                     headers: {
                         ...{
                             'Content-Type': 'application/json',

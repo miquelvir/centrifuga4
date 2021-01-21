@@ -168,6 +168,7 @@ const PreEnrollmentPage = (props) => {
       };
 
       useOnMount(() => {
+          i18next.changeLanguage('cat').then();
          preEnrollmentService.getCourses()
              .then(...errorHandler({}))
              .then(courses => {
@@ -380,6 +381,7 @@ __person1__surname1: '',
                     guardian['education_entity'] = values[prefix+"education_entity"];
                     guardian['education_year'] = values[prefix+"education_year"];
                     guardian['career'] = values[prefix+"career"];
+                    guardian['relation'] = values[prefix+"relation"];
 
                     body['guardians'].push(guardian);
                 }
@@ -397,30 +399,13 @@ __person1__surname1: '',
             body['other_comments'] = values['other_comments'];
             body['courses'] = chosenCourses.map(x => x.id);
 
-            console.log(body);
             setSubmitting(false);
 
-
-
-            /**signupService.signup(username, password, email, name, surname1, surname2, token)
-                .then(...errorHandler({handle401: false, handle400: false}))
-                .then(
-                    function (result) {
-                        enqueueSnackbar(t("sign_up_success"), {variant: "success"});
-                        setSubmitting(false);
-                        props.history.push("/login");
-                    },
-                    function (error) {
-                        console.log(">>><<<", error.response, error.request);
-                        setSubmitting(false);
-                        setStatus(error);
-
-                        if (error.response.status === 401){
-                            enqueueSnackbar(t("invalid_expired_invite"), { variant: "warning"});
-                        } else if (error.response.status === 400) {
-                            enqueueSnackbar(t("used_invite"), { variant: "warning"});
-                        }
-                    });*/
+            preEnrollmentService.postPreEnrollment(body)
+                .then(...errorHandler({snackbarSuccess: true}))
+                .then(() => {
+                    setActiveStep(steps.length);
+                })
         }
     });
 
@@ -504,7 +489,7 @@ const handleNext = () => {
                     <div>
         {activeStep === steps.length ? (
           <div style={{textAlign:"center"}}>
-            <Typography>Prematrícula completada amb èxit! | ¡Prematrícula completada con éxito! | Pre-enrollment successful!</Typography>
+            <Typography>Prematrícula completada amb èxit! | ¡Prematrícula completada con éxito! | Pre-enrolment successful!</Typography>
           </div>
         ) : (
              <form onSubmit={formik.handleSubmit}>

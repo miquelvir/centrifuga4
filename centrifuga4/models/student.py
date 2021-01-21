@@ -1,3 +1,5 @@
+from typing import List, Set
+
 from sqlalchemy import cast, String, case, func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import column_property, validates
@@ -34,6 +36,19 @@ class Student(Person):
     guardians = db.relationship(
         "Guardian", secondary="student_guardian", back_populates="students"
     )
+
+    @hybrid_property
+    def official_notification_emails(self) -> Set[str]:
+        emails = set()
+        for guardian in self.guardians:
+            if guardian.email:
+                emails.add(guardian.email)
+
+        if self.is_overage or len(emails) == 0:
+            if self.email:
+                emails.add(self.email)
+
+        return emails
 
     @hybrid_property
     def schedules(self):

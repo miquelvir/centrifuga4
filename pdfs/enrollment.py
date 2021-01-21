@@ -23,7 +23,7 @@ def generate_enrollment_agreement_pdf(
     gs = GuardianSchema()
     cs = CourseSchema()
     pdf_content = templater.render_template(
-        "enrollment.html",
+        "enrolment.html",
         server_address=backend_server_address,
         student_name=student.full_name.title(),
         courses=[cs.dump(c) for c in student.courses],

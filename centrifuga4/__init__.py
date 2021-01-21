@@ -116,9 +116,7 @@ def init_app(config=None):
         app.register_blueprint(invites_service, url_prefix="/invites/v1")
         app.register_blueprint(password_reset_service, url_prefix="/password-reset/v1")
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
-        app.register_blueprint(
-            pre_enrollment_blueprint, url_prefix="/pre-enrollment/v1"
-        )
+        app.register_blueprint(pre_enrollment_blueprint, url_prefix="/pre-enrolment/v1")
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app

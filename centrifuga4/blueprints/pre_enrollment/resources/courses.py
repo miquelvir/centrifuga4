@@ -15,8 +15,6 @@ from email_queue.url_utils import merge_url_query_params
 class Courses(Resource):
     def get(self):
         courses = Course.query.filter(Course.is_published == True).all()
-        for course in courses:
-            print(list(course.base_schedules))
         return jsonify(
             PublicCourseSchema(
                 exclude=(

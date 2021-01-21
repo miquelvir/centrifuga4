@@ -24,24 +24,9 @@ class RawPerson(MyBase):
     gender = db.Column(db.Text, nullable=True)
 
     full_name = column_property(
-        case(
-            [
-                (name != None, name + " "),
-            ],
-            else_="",
-        )
-        + case(
-            [
-                (surname1 != None, surname1 + " "),
-            ],
-            else_="",
-        )
-        + case(
-            [
-                (surname2 != None, surname2),
-            ],
-            else_="",
-        )
+        case([(name != None, name + " ")], else_="")
+        + case([(surname1 != None, surname1 + " ")], else_="")
+        + case([(surname2 != None, surname2)], else_="")
     )
 
     # todo full_name no accents with collate https://docs.sqlalchemy.org/en/13/core/sqlelement.html#sqlalchemy.sql.expression.collate
@@ -57,7 +42,7 @@ class RawPerson(MyBase):
         "name", "surname1", "surname2", "email", "address", "zip", "gender", "city"
     )
     def cleaner1(self, key, value):
-        return value.lower().strip() if value else value
+        return str(value).lower().strip() if value else value
 
     @validates("dni")
     def cleaner2(self, key, value):
@@ -65,7 +50,7 @@ class RawPerson(MyBase):
 
     @validates("phone")
     def cleaner3(self, key, value):
-        return value.lower().replace(" ", "") if value else value
+        return str(value).lower().replace(" ", "") if value else value
 
     def __repr__(self):
         return "<Raw person - %s | %s>" % (type(self).__name__, self.id)

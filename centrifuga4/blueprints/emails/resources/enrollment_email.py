@@ -25,8 +25,7 @@ class EnrollmentEmailCollectionRes(Resource):
             target=my_job,
             args=(
                 student,
-                [guardian.email for guardian in student.guardians if guardian.email]
-                + [student.email],
+                student.official_notification_emails,
                 current_app.config["BACKEND_SERVER_URL"],
             ),
         )

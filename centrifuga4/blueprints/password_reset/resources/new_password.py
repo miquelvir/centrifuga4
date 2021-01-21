@@ -1,8 +1,11 @@
+from threading import Thread
+
 import jwt
 from flask import request, current_app
 from flask_restful import Resource
 from centrifuga4.models import User
 from centrifuga4 import db
+from email_queue.emails.password_change_email import my_job
 
 
 class NewPasswordCollectionRes(Resource):
@@ -40,6 +43,9 @@ class NewPasswordCollectionRes(Resource):
 
             user.password_hash = User.hash_password(password)
             db.session.commit()
+
+            thread = Thread(target=my_job, args=(user.email,))
+            thread.start()
 
             return "password change successful", 200
 

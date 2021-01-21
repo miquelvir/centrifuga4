@@ -10,7 +10,7 @@ from centrifuga4.auth_auth.resource_need import (
     PaymentsPermission,
 )
 from centrifuga4.blueprints.api.errors import NotFound
-from centrifuga4.models import Payment
+from centrifuga4.models import Payment, Student
 from email_queue.emails.payment_receipt_email import my_job
 
 
@@ -29,12 +29,7 @@ class PaymentReceiptEmailCollectionRes(Resource):  # todo check
             target=my_job,
             args=(
                 payment,
-                [
-                    guardian.email
-                    for guardian in payment.student[0].guardians
-                    if guardian.email
-                ]
-                + [payment.student[0].email],
+                payment.student[0].official_notification_emails,
                 current_app.config["PUBLIC_VALIDATION_SECRET"],
                 current_app.config["BACKEND_SERVER_URL"],
             ),

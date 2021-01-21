@@ -17,9 +17,9 @@ def my_job(student, to, backend_server_address):
 
     emailer.send(
         Email(
-            "Xamfrà - matrícula | enrollment",
+            "Xamfrà - matrícula | enrolment",
             to=to,
-            plain_body="Document de matrícula adjunt\nDocumento de matrícula adjunto\nEnrollment agreement attached",
-            files=[(io.BytesIO(pdf), "enrollment-%s.pdf" % student.id)],
+            plain_body="Document de matrícula adjunt\nDocumento de matrícula adjunto\nEnrolment agreement attached",
+            files=[(io.BytesIO(pdf), "enrolment-%s.pdf" % student.id)],
         )
     )
