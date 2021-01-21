@@ -27,8 +27,7 @@ import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
 import { useFormikContext } from 'formik';
-
-// Then inside the component body
+import ReCAPTCHA from "react-google-recaptcha"
 
 import {safe_password_repetition, safe_email, safe_password, safe_username} from "../_yup/validators";
 import DirtyTextField from "../_components/dirtytextfield.component";
@@ -52,6 +51,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import CoursesDataService from "../_services/courses.service";
 import CardContent from "@material-ui/core/CardContent";
 import DeleteIcon from "@material-ui/icons/Delete";
+import {RECAPTCHA} from "../config";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -80,6 +80,9 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 500,
         display: 'inline-block'
   },
+    recaptcha: {
+        margin: theme.spacing(4)
+    },
   bullet: {
     display: 'inline-block',
     margin: '0 2px',
@@ -129,6 +132,10 @@ const PreEnrollmentPage = (props) => {
     const selectedLan = localStorage.getItem("i18nextLng") || "cat";
     const switchLanguage = () => {
         i18next.changeLanguage(selectedLan === "eng"? "cat": "eng").then();
+    }
+    const [recaptcha, setRecaptcha] = React.useState(null);
+    function onChange(value) {
+      setRecaptcha(value);
     }
 
     const themeCtx = React.useContext(themeContext);
@@ -196,7 +203,7 @@ __person1__surname1: '',
             __person2__email: '', __person2__phone: '', __person2__relation: '',
             __person2__is_studying: '', __person2__is_working: '', __person2__career: '',
             __person2__education_entity: '', __person2__education_year: '',
-
+            image_agreement: false
 
 
         },
@@ -401,7 +408,7 @@ __person1__surname1: '',
 
             setSubmitting(false);
 
-            preEnrollmentService.postPreEnrollment(body)
+            preEnrollmentService.postPreEnrollment(body, recaptcha)
                 .then(...errorHandler({snackbarSuccess: true}))
                 .then(() => {
                     setActiveStep(steps.length);
@@ -995,6 +1002,12 @@ La nostra política protecció de dades es basa en que:
                         "En cas de matricular-lo, autoritzo l’ús de la imatge de l’estudiant, menor d'edat, per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà."
                         : "En cas de matricular-me, autoritzo l’ús de la meva imatge per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà." }
                       />
+
+                      <ReCAPTCHA sitekey={RECAPTCHA}
+                                 onChange={onChange}
+                                 theme={themeCtx.theme? "dark": "light"}
+                                 className={classes.recaptcha}
+                      />
       </div>
                }
 
@@ -1035,7 +1048,7 @@ La nostra política protecció de dades es basa en que:
                   color="primary"
                   type="submit"
                   onClickCapture={() => {console.log("clicked finish")}}
-                  disabled={formik.isSubmitting || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}>
+                  disabled={formik.isSubmitting || recaptcha===null || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}>
                 { t("finish")}
               </Button> }
 

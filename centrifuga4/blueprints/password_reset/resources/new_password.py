@@ -3,6 +3,8 @@ from threading import Thread
 import jwt
 from flask import request, current_app
 from flask_restful import Resource
+
+from centrifuga4.auth_auth.recaptcha import validate_recaptcha
 from centrifuga4.models import User
 from centrifuga4 import db
 from email_queue.emails.password_change_email import my_job
@@ -10,6 +12,9 @@ from email_queue.emails.password_change_email import my_job
 
 class NewPasswordCollectionRes(Resource):
     def post(self):
+        recaptcha = request.json["recaptcha"]
+        validate_recaptcha(recaptcha)
+
         try:
             password = request.json["password"]
         except KeyError:

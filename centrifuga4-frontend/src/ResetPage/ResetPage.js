@@ -16,6 +16,8 @@ import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
 import {safe_password, safe_password_repetition, safe_username} from "../_yup/validators";
+import {RECAPTCHA} from "../config";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     field: {
         width: "100%",
         margin: "5px"
+    },
+    recaptcha: {
+        margin: theme.spacing(3)
     },
     paper: {
         width: "50%",
@@ -40,6 +45,11 @@ const useStyles = makeStyles((theme) => ({
 const ResetPage = (props) => {
     const classes = useStyles();
     const themeCtx = React.useContext(themeContext);
+
+    const [recaptcha, setRecaptcha] = React.useState(null);
+    function onChange(value) {
+      setRecaptcha(value);
+    }
 
     const {enqueueSnackbar} = useSnackbar();
 
@@ -68,7 +78,7 @@ const ResetPage = (props) => {
             setStatus();
 
             passwordResetService
-                .reset(username, password, token)
+                .reset(username, password, token, recaptcha)
                 .then(...errorHandler({handle401: false}))
                 .then(
                     function (result) {
@@ -146,12 +156,17 @@ const ResetPage = (props) => {
                                             onBlur={formik.handleBlur}
                                             error={formik.status}
                                         />
+                                        <ReCAPTCHA sitekey={RECAPTCHA}
+                                                 onChange={onChange}
+                                                 theme={themeCtx.theme? "dark": "light"}
+                                                 className={classes.recaptcha}
+                                      />
                                         <Box my={3}>
                                             <Button
                                                 variant="contained"
                                                 color="primary"
                                                 type="submit"
-                                                disabled={formik.isSubmitting}
+                                                disabled={formik.isSubmitting || recaptcha==null}
                                                 className={classes.field}>
                                                 {t("change_password")}
                                             </Button>

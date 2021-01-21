@@ -28,13 +28,16 @@ function getCourses() {
     }
 
 
-    function postPreEnrollment(data) {
+    function postPreEnrollment(data, recaptcha) {
         return new Promise(function (resolve, reject) {
 
             axios({
                 method: 'post',
                 url: `${BACKEND_URL}/pre-enrolment/v1/pre-enrolment`,
-                data: data,
+                data: {
+                    body: data,
+                    recaptcha: recaptcha
+                },
                 headers: {
                     ...{
                         'Content-Type': 'application/json',

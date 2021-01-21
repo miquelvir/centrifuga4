@@ -2,10 +2,13 @@ import datetime
 from threading import Thread
 
 import jwt
+import marshmallow
+import requests as requests
 from flask import request, current_app, jsonify
 from flask_restful import Resource, abort
 
 from centrifuga4 import db
+from centrifuga4.auth_auth.recaptcha import validate_recaptcha
 from centrifuga4.models import User, Course, Student, Guardian
 from centrifuga4.schemas.schemas import (
     PublicCourseSchema,
@@ -14,12 +17,14 @@ from centrifuga4.schemas.schemas import (
 )
 from email_queue.emails.pre_enrollment_email import my_job
 
-from email_queue.url_utils import merge_url_query_params
-
 
 class PreEnrollment(Resource):
     def post(self):
-        body = request.json
+        recaptcha = request.json["recaptcha"]
+
+        validate_recaptcha(recaptcha)
+
+        body = request.json["body"]
 
         guardians = body["guardians"]
         courses = body["courses"]
@@ -27,18 +32,21 @@ class PreEnrollment(Resource):
         del body["courses"]
         body["id"] = Student.generate_new_id()
         body["enrollment_status"] = "pre-enrolled"
-        s: Student = StudentSchema().load(body)
-        for course_id in courses:
-            c = Course.query.filter_by(id=course_id).one_or_none()
-            if not c:
-                return 400, "no course found with id %s" % course_id
-            s.courses.append(c)
 
-        for guardian in guardians:
-            guardian["id"] = Guardian.generate_new_id()
-            g: Guardian = GuardianSchema().load(guardian)
-            s.guardians.append(g)
+        try:
+            s: Student = StudentSchema().load(body)
+            for course_id in courses:
+                c = Course.query.filter_by(id=course_id).one_or_none()
+                if not c:
+                    return 400, "no course found with id %s" % course_id
+                s.courses.append(c)
 
+            for guardian in guardians:
+                guardian["id"] = Guardian.generate_new_id()
+                g: Guardian = GuardianSchema().load(guardian)
+                s.guardians.append(g)
+        except marshmallow.exceptions.ValidationError as e:
+            return 400, "invalid request: " + str(e)
         db.session.add(s)
         db.session.commit()
 

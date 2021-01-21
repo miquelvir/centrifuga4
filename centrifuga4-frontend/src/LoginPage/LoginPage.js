@@ -18,6 +18,8 @@ import {useSnackbar} from "notistack";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
 import {safe_username} from "../_yup/validators";
+import ReCAPTCHA from "react-google-recaptcha";
+import {RECAPTCHA} from "../config";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -48,6 +50,12 @@ const LoginPage = (props) => {
     const classes = useStyles();
     const userCtx = React.useContext(userContext);
     const themeCtx = React.useContext(themeContext);
+
+    const [recaptcha, setRecaptcha] = React.useState(null);
+    const [showRecaptcha, setShowRecaptcha] = React.useState(false);
+    function onChange(value) {
+      setRecaptcha(value);
+    }
 
     const errorHandler = useErrorHandler();
 
@@ -105,16 +113,21 @@ const LoginPage = (props) => {
     });
 
     const resetPassword = () => {
+        setShowRecaptcha(true);
+    }
+
+    const resetPassword2 = () => {
         const username = formik.values["username"];
         if (username === null || username === '' || username === undefined) {
             enqueueSnackbar(t("username_required_password_reset"), { variant: "warning"});
         } else {
             passwordResetService
-                .startReset(username)
-                .then(...errorHandler({errorOut: false}))
+                .startReset(username, recaptcha)
+                .then(...errorHandler({}))
                 .then(r => {
-                enqueueSnackbar(t("started_password_reset"), { variant: "success"});
-            })
+                    setShowRecaptcha(false);
+                    enqueueSnackbar(t("started_password_reset"), { variant: "success"});
+                })
         }
     }
 
@@ -173,6 +186,25 @@ const LoginPage = (props) => {
                                             </Button>
                                         </Box>
                                     </form>
+
+                                     {showRecaptcha &&
+                                     <div><ReCAPTCHA sitekey={RECAPTCHA}
+                                                 onChange={onChange}
+                                                 theme={themeCtx.theme? "dark": "light"}
+
+                                                 className={classes.recaptcha}
+                                      />
+                                     <Box my={3}>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={resetPassword2}
+                                                disabled={recaptcha === null}
+                                                className={classes.field}>
+                                                {t("reset_password")}
+                                            </Button>
+                                        </Box>
+                                     </div>}
 
                                     <Box className={classes.reset}>
                                         <Typography variant="caption">

@@ -5,6 +5,7 @@ import jwt
 from flask import request, current_app
 from flask_restful import Resource, abort
 
+from centrifuga4.auth_auth.recaptcha import validate_recaptcha
 from centrifuga4.models import User
 from email_queue.emails.password_reset_email import my_job
 
@@ -13,22 +14,25 @@ from email_queue.url_utils import merge_url_query_params
 
 class PasswordResetCollectionRes(Resource):
     def post(self):
+        recaptcha = request.json["recaptcha"]
+
+        validate_recaptcha(recaptcha)
+
         try:
             username = request.json["username"]
         except KeyError:
-            abort(400, "no username found in body")
+            return "no username found in body", 400
 
         user = User.query.filter_by(username=username).one_or_none()
         if user is None:
-            return 200
+            return "", 200
 
         token = jwt.encode(
             {
                 "username": user.username,
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
             },
-            current_app.config["PASSWORD_RESET_SECRET"],
-            +user.password_hash,
+            current_app.config["PASSWORD_RESET_SECRET"] + user.password_hash,
             algorithm="HS256",
         )
 

@@ -8,5 +8,7 @@ export const student_guardian_relations = [
     'uncle',
     'aunt',
     'cousin',
-    'legal_guardian'
+    'legal_guardian',
+    'ss_agent',
+    'other'
 ]
