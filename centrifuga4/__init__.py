@@ -11,7 +11,6 @@ from flask import Flask, render_template, render_template_string
 from flask_talisman import Talisman
 from flask_login import LoginManager
 from config import DevelopmentBuiltConfig, ProductionConfig, DevelopmentConfig
-from rq import Queue
 
 db = SQLAlchemy()
 man = Talisman()
@@ -68,17 +67,17 @@ def init_app(config=None):
         # allow cors only during development (due to the front end development server)
         cors = CORS()
         cors.init_app(app)
-    else:
-        man.init_app(
-            app,
-            content_security_policy={
-                "style-src": ["'self'", "https://fonts.googleapis.com"],
-                "font-src": ["'self'", "'unsafe-inline'", "https://fonts.gstatic.com"],
-                "script-src": ["'self'"],
-                "default-src": ["'self'"],
-            },
-            content_security_policy_nonce_in=["script-src", "style-src"],
-        )
+
+    man.init_app(
+        app,
+        content_security_policy={
+            "style-src": ["'self'", "https://fonts.googleapis.com"],
+            "font-src": ["'self'", "'unsafe-inline'", "https://fonts.gstatic.com"],
+            "script-src": ["'self'"],
+            "default-src": ["'self'"],
+        },
+        content_security_policy_nonce_in=["script-src", "style-src"],
+    )
     swagger.init_app(app)
     principal.init_app(app)
     csrf.init_app(app)
@@ -103,7 +102,7 @@ def init_app(config=None):
         @app.route("/login")
         @app.route("/signup")
         @app.route("/password-reset")
-        @app.route("/prematriula")  # liat
+        @app.route("/prematricula")
         def index():
             return render_template("index.html")
 
