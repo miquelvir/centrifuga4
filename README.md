@@ -42,9 +42,11 @@ We are using 2 processes (dynos, in Heroku's slang), if we are not to count the 
    6. Document validation page (checks the content and validity of a JWT token signed by the server and displays it in a simple static page).
 2. Worker process: a Redis Queue worker for emails and long exports.
 
+The worker process has been replaced with a threaded approach, so that the free dynos last for the whole month.
+
 ### DEPLOYMENT
 
-Due to the Redis Server, the deployment is limited to Linux servers. The one being used is Heroku; the Procfile 
+Due to the Redis Server, the deployment is limited to Linux servers. The one being used is Heroku; the Procfile
 specifies how the workers are to be run (web uses wsgi.py, worker uses worker.py).
 
 For now, it is run on the free tier; if dyno hours were not enough, then it would be useful to increment to a Hobby plan
@@ -65,7 +67,15 @@ Create a .env on the root folder of the project with the following variables:
 4. DATABASE_URL
 5. SECRET, can be anything for development (e.g. 'super-secret')
 6. wkhtmltopdf, the path to wkhtmltopdf (e.g. '/usr/bin/wkhtmltopdf')
-7. ENVIRONMENT, one of the following: 
-   1. 'development' (using a separate React development server), 
+7. ENVIRONMENT, one of the following:
+   1. 'development' (using a separate React development server),
    2. 'production' (for the final Heroku deployment),
    3. 'development-built' (development, but using the build version of the React frontend)
+
+
+### FRONTEND
+
+FE is built on React with Material UI. Fullcalendar is used for displaying schedules/calendars.
+
+Frontend uses Google reCAPTCHA service for bot detection in all API calls which do not require authentication. E.g:
+password recovery, pre-enrolment, etc.
