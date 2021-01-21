@@ -141,7 +141,9 @@ const StudentsList = (props) => {
                     label={t("students")}
                     value={searchTerm}
                     onChange={onChangeSearchTerm}
-                    onSearch={search}
+                    onSearch={() => {
+                        setPage(1);  // search will be triggered
+                    }}
                 />
 
                 <Accordion>
