@@ -466,7 +466,7 @@ const handleNext = () => {
                 <ThemeButton style={{float: 'right'}}/>
 
             <Box m={2} style={{textAlign: "center"}}>
-        <img src={ `${PUBLIC_URL}/logo_xamfra_${themeCtx.label}.svg`} alt="Logo Xamfrà"
+        <img src={ `${PUBLIC_URL}/logo_xamfra_${themeCtx.label}.png`} alt="Logo Xamfrà"
              style={{height: "85px"}}/>
             </Box>
                 <Paper className={`${classes.paper} ${classes.root}`}>
