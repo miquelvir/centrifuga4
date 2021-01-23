@@ -21,8 +21,7 @@ class User(MyBase, UserMixin):
     name = db.Column(db.Text, nullable=False)
     surname1 = db.Column(db.Text, nullable=True)
     surname2 = db.Column(db.Text, nullable=True)
-    email = db.Column(db.Text, nullable=True)
-    username = db.Column(db.Text, unique=True, nullable=False)
+    email = db.Column(db.Text, nullable=False, unique=True)
     password_hash = db.Column(db.Text, nullable=False)
     needs = db.relationship("Need", secondary="user_need")
 

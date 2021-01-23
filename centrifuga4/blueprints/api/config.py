@@ -46,9 +46,8 @@ api.add_resource(
 )
 api.add_resource(PaymentsReceiptsRes, "/payments/<string:id_>/receipt")
 
-for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room):
+for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User):
     for res in get_resources(model):
-        api.add_resource(*res)
-
-for res in get_resources(User, individual=False):
-    api.add_resource(*res)
+        api.add_resource(
+            *res
+        )  # todo users in schema password is load only, hash cant be loaded nor dumped

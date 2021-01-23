@@ -7,6 +7,7 @@ import Student from "./students.student.component";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import {Tooltip} from "@material-ui/core";
+import RoomsList from "./rooms.list.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,39 +27,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Students({history, ...other}) {
+export default function Rooms({history, ...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
 
-  const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState(false);
-  const [currentStudentId, setCurrentStudentId] = useState(null);
+  const [rooms, setRooms] = useState([]);
+  const [newRoom, setNewRoom] = useState(false);
+  const [currentRoomId, setCurrentRoomId] = useState(null);
 
   const query = new URLSearchParams(window.location.search);
   const id = query.get('id');
   useEffect(() => {
-      if (id !== null && id !== undefined) setCurrentStudentId(id);
+      if (id !== null && id !== undefined) setCurrentRoomId(id);
   }, [id])
 
   useEffect(() => {
-      if (currentStudentId !== null) setNewStudent(false);
-  }, [currentStudentId])
+      if (currentRoomId !== null) setNewRoom(false);
+  }, [currentRoomId])
 
   return (
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={4} className={classes.left}>
-          <h1>{t("students")}</h1>
-          <StudentsList
-            setCurrentStudentId={setCurrentStudentId}
-            currentStudentId={currentStudentId}
-            students={students}
-            setStudents={setStudents}
+          <h1>{t("rooms")}</h1>
+          <RoomsList
+            setCurrentItemId={setCurrentRoomId}
+            currentItemId={currentRoomId}
+            items={rooms}
+            setItems={setRooms}
 
           />
           <Tooltip title={t("new_student")}>
               <Fab className={classes.fab} color="primary" onClick={(e) => {
-                  setCurrentStudentId(null);
-                 setNewStudent(true);
+                  setCurrentRoomId(null);
+                 setNewRoom(true);
               }}>
                 <AddIcon />
               </Fab>
@@ -67,16 +68,16 @@ export default function Students({history, ...other}) {
 
         <Grid item xs={8} className={classes.left}>
           <Student
-            currentStudentId={currentStudentId}
-            newStudent={newStudent}
+            currentStudentId={currentRoomId}
+            newStudent={newRoom}
             history={history}
             addStudentId={(id) =>{
-                setCurrentStudentId(id);
+                setCurrentRoomId(id);
             }}
             deleteStudent={(studentId) => {
-                if (studentId === currentStudentId) setCurrentStudentId(null);
+                if (studentId === currentRoomId) setCurrentRoomId(null);
 
-                setStudents(students.filter((s) => s['id'] !== studentId));
+                setRooms(rooms.filter((s) => s['id'] !== studentId));
             }}
           />
         </Grid>

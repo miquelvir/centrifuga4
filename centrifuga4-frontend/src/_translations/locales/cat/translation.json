@@ -38,7 +38,7 @@
   "username_required_password_reset": "Omple el camp del correu per restaurar la contrasenya!",
   "started_password_reset": "El procés ha començat. Si l'usuari és correcte, rebràs un correu per acabar el canvi de contrasenya!",
   "export": "exportar",
-  "export_results_csv": "exportar resultats de la cerca com a .csv",
+  "export_results_csv": "exportar aquesta pàgina com a .csv",
   "email_required": "cal un correu",
   "invalid_email": "introduïu un correu vàlid",
   "password_required": "cal una contrasenya",
@@ -99,6 +99,8 @@
   "delete_guardian": "eliminar el contacte",
   "delete_student": "eliminar l'estudiant",
   "delete_student_question": "vols eliminar aquest estudiant?",
+  "delete_user": "eliminar l'usuari",
+  "delete_user_question": "vols eliminar aquest usuari?",
   "student_also_deletes": "aquesta acció no es pot desfer; també s'eliminaran els contactes associats, pagaments i horaris",
   "default_payment_method": "mètode de pagament",
   "payment_comments": "comentaris (pagament)",
@@ -209,6 +211,7 @@
   "next": "següent",
   "back": "anterior",
   "skip": "ometre",
+  "schedules": "horaris",
   "finish": "enviar",
   "can-operate-with-payment-receipts": "pot operar amb rebuts de pagament",
   "data_protection": "protecció de dades",
@@ -218,5 +221,9 @@
   "confirmation": "confirmació",
   "ss_agent": "referent (serveis socials)",
   "no_courses_found_add_edu": "no podem trobar-te cap curs; torna enrere i afegeix el teu nivell d'educació! Si ja ho has fet, contacta'ns (xamfra.net/contacte)!",
-  "student": "estudiant"
+  "student": "estudiant",
+  "search_by_id": "cercar amb id",
+  "search_by": "cercar per",
+  "export_all": "exportar tots",
+  "export_all_csv": "exportar totes les pàgines com a .csv"
 }

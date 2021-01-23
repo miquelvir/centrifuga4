@@ -11,11 +11,15 @@ import Divider from "@material-ui/core/Divider";
 import SearchBar from './searchbar.component'
 import Box from "@material-ui/core/Box";
 import {useTranslation} from "react-i18next";
-import {ListItemSecondaryAction} from "@material-ui/core";
+import {Accordion, AccordionDetails, AccordionSummary, Chip, ListItemSecondaryAction} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Tooltip from "@material-ui/core/Tooltip";
 import {useErrorHandler} from "../_helpers/handle-response";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Typography from "@material-ui/core/Typography";
+import StudentsDataService from "../_services/students.service";
+import ExportSearchChip from "./ExportSearchChip.component";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -104,6 +108,29 @@ const UsersList = (props) => {
                     onChange={onChangeSearchTerm}
                     onSearch={search}
                 />
+
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon/>}
+                    >
+                        <Typography className={classes.heading}>{t("filters_actions")}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box className={classes.chips}>
+                            <ExportSearchChip
+                                searchTerm={searchTerm}
+                                page={page}
+                                dataService={UsersDataService}
+                            />
+                            <ExportSearchChip
+                                searchTerm={searchTerm}
+                                page={page}
+                                dataService={UsersDataService}
+                                exportAll={true}
+                            />
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
 
                 <Box my={2}>
                     <Pagination

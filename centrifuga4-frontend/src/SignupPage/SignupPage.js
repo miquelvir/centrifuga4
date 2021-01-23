@@ -120,18 +120,6 @@ const SignupPage = (props) => {
 
                                     <form onSubmit={formik.handleSubmit}>
                                         <TextField
-                                            label={t("username")}
-                                            helperText={formik.touched["username"] && formik.errors["username"]}
-                                            type="email"
-                                            name="username"
-                                            className={classes.field}
-                                            value={formik.values["username"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.status}
-                                            disabled
-                                        />
-                                        <TextField
                                             label={t("email")}
                                             helperText={formik.touched["email"] && formik.errors["email"]}
                                             type="email"

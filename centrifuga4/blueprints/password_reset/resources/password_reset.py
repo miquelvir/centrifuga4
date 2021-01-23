@@ -19,38 +19,38 @@ class PasswordResetCollectionRes(Resource):
         validate_recaptcha(recaptcha)
 
         try:
-            username = request.json["username"]
+            email = request.json["email"]
         except KeyError:
             return "no username found in body", 400
 
-        user = User.query.filter_by(username=username).one_or_none()
+        user = User.query.filter(User.email == email).one_or_none()
         if user is None:
             return "", 200
 
         token = jwt.encode(
             {
-                "username": user.username,
+                "email": user.email,
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
             },
             current_app.config["PASSWORD_RESET_SECRET"] + user.password_hash,
             algorithm="HS256",
         )
 
-        def generate_password_reset_link(_token, _username):
+        def generate_password_reset_link(_token, _email):
             return (
                 merge_url_query_params(
                     "%s/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
-                    {"token": _token, "username": _username, "lan": "cat"},
+                    {"token": _token, "email": _email, "lan": "cat"},
                 ),
                 merge_url_query_params(
                     "%s/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
-                    {"token": _token, "username": _username, "lan": "eng"},
+                    {"token": _token, "email": _email, "lan": "eng"},
                 ),
             )
 
         thread = Thread(
             target=my_job,
-            args=(*generate_password_reset_link(token, username), user.email),
+            args=(*generate_password_reset_link(token, email), user.email),
         )
         thread.start()
 

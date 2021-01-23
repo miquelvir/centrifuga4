@@ -164,7 +164,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return Promise.all(ids.map(id => (this.delete(id))));
         }
 
-        downloadAllCsv(likeSearchText=null, page = 1, filters=null) {
+        downloadCsv(likeSearchText=null, page = 1, filters=null) {
             return new Promise(function (resolve, reject) {
                 let myFilters = {
                        "filter.full_name.like": likeSearchText === null? null: `%${likeSearchText}%`,

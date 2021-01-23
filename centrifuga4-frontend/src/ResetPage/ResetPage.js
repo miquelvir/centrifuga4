@@ -61,24 +61,24 @@ const ResetPage = (props) => {
     const query = new URLSearchParams(window.location.search);
     const errorHandler = useErrorHandler();
     const token = query.get('token')
-    const username = query.get('username')
+    const email = query.get('email')
     const formik = useFormik({
         initialValues: {
-            username: username,
+            email: email,
             password: '',
             password2: ''
         },
         validationSchema: yup.object({
-            username: safe_username(t),
+            email: safe_username(t),
             password: safe_password(t),
             password2: safe_password_repetition(t)
         }),
         enableReinitialize: true,
-        onSubmit: ({username, password, password2}, {setStatus, setSubmitting}) => {
+        onSubmit: ({email, password, password2}, {setStatus, setSubmitting}) => {
             setStatus();
 
             passwordResetService
-                .reset(username, password, token, recaptcha)
+                .reset(email, password, token, recaptcha)
                 .then(...errorHandler({handle401: false}))
                 .then(
                     function (result) {
@@ -121,12 +121,12 @@ const ResetPage = (props) => {
 
                                     <form onSubmit={formik.handleSubmit}>
                                         <TextField
-                                            label={t("username")}
-                                            helperText={formik.touched["username"] && formik.errors["username"]}
+                                            label={t("email")}
+                                            helperText={formik.touched["email"] && formik.errors["email"]}
                                             type="email"
-                                            name="username"
+                                            name="email"
                                             className={classes.field}
-                                            value={formik.values["username"]}
+                                            value={formik.values["email"]}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={formik.status}

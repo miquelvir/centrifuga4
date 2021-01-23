@@ -9,6 +9,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import Students from "../_components/students.component";
 import Users from "../_components/users.component";
 import {useTranslation} from "react-i18next";
+import Payments from "../_components/payments.component";
+import Rooms from "../_components/rooms.component";
 
 
 const Courses = () => {
@@ -32,21 +34,6 @@ const Teachers = () => {
   );
 };
 
-const Payments = () => {
-  const { t } = useTranslation();
-
-  return (
-    <h1>{t("payments")}</h1>
-  );
-};
-
-const Rooms = () => {
-  const { t } = useTranslation();
-
-  return (
-    <h1>{t("rooms")}</h1>
-  );
-};
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -90,12 +77,7 @@ const Routes = [
     component: Users,
     title: 'users',
     icon: ContactMailIcon
-  },{
-    path: '/settings',
-    component: Settings,
-    title: 'settings',
-    icon: SettingsIcon
-  },
+  }
 ];
 
 

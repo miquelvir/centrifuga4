@@ -90,7 +90,6 @@ def add_users():
             surname1="marques%s" % idx,
             surname2="brownlee%s" % idx,
             email="jmb%s@gmail.com" % idx,
-            username="jmb%s@gmail.com" % idx,
             password_hash=User.hash_password("john%s" % idx),
         )
         centrifuga4.db.session.add(u)
@@ -101,7 +100,6 @@ def add_users():
         surname1="admin",
         surname2="admin",
         email="admin@gmail.com",
-        username="admin@gmail.com",
         password_hash=User.hash_password("admin"),
     )
 

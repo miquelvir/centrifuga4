@@ -21,7 +21,7 @@ class NewPasswordCollectionRes(Resource):
             return "no password found in body", 400
 
         try:
-            username = request.json["username"]
+            email = request.json["email"]
         except KeyError:
             return "no username found in body", 400
 
@@ -37,13 +37,13 @@ class NewPasswordCollectionRes(Resource):
             )
 
         try:
-            user = User.query.filter_by(username=username).one()
+            user = User.query.filter(User.email == email).one()
 
             data = jwt.decode(
                 token, current_app.secret_key + user.password_hash, algorithms=["HS256"]
             )
 
-            if data["username"] != user.username:
+            if data["email"] != user.email:
                 return "invalid token for current username", 401
 
             user.password_hash = User.hash_password(password)

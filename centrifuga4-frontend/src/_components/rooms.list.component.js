@@ -61,22 +61,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const StudentsList = (props) => {
-    const setCurrentStudentId = props.setCurrentStudentId;
-    const currentStudentId = props.currentStudentId;
-    const students = props.students;
-    const setStudents = props.setStudents;
-
+const ItemsList = ({setCurrentItemId, currentItemId, items, setItems,
+                       usableFilters=[], defaultSearchBy="full_name", searchByOptions=["full_name"],
+                        dataService, searchBarLabel, exportPage=true, exportItem=true, exportAllPages=true}) => {
     const [searchTerm, setSearchTerm] = useState("");
-    const [filters, setFilters] = useState({
-        onlyEnrolled: false,
-        onlyEarlyUnenrolled: false,
-        onlyPreEnrolled: false,
-        onlyCash: false,
-        onlyBankTransfer: false,
-        onlyDirectDebit: false
-    });
-    const [searchBy, setSearchBy] = useState('full_name');
+    const [filters, setFilters] = useState(usableFilters.reduce((map, f) => {
+        map[obj.name] = f.initialValue;
+        return map;
+        }, {})
+    );
+    const [searchBy, setSearchBy] = useState(defaultSearchBy);
 
     const {t} = useTranslation();
 
@@ -90,39 +84,17 @@ const StudentsList = (props) => {
         setSearchTerm(e.target.value);
     };
 
-    function getFilters(fs) {
-        let myFilters = {};
-
-        if (fs.onlyEnrolled) {
-            myFilters['enrollment_status'] = 'enrolled';
-        } else if (fs.onlyEarlyUnenrolled) {
-            myFilters['enrollment_status'] = 'early-unenrolled';
-        } else if (fs.onlyPreEnrolled) {
-            myFilters['enrollment_status'] = 'pre-enrolled'
-        }
-
-        if (fs.onlyCash) {
-            myFilters['default_payment_method'] = 'cash';
-        } else if (fs.onlyBankTransfer) {
-            myFilters['default_payment_method'] = 'bank-transfer';
-        } else if (fs.onlyDirectDebit) {
-            myFilters['default_payment_method'] = 'bank-direct-debit';
-        }
-
-        return myFilters;
-    }
-
     const resetSearchBy = () => {
-        setSearchBy("full_name");
+        setSearchBy(defaultSearchBy);
     }
 
     function search() {
-
-        StudentsDataService
-            .getAll({name: searchBy, value: searchTerm}, page, ['id', 'full_name'], getFilters(filters))
+        dataService
+            .getAll({name: searchBy, value: searchTerm}, page,
+               [...new Set(['id', 'full_name'])], filters)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
-                setStudents(res["data"]);
+                setItems(res["data"]);
                 setCount(res["_pagination"]["totalPages"]);
             });
     }
@@ -139,7 +111,7 @@ const StudentsList = (props) => {
         <Box className={classes.root}>
             <Box className={classes.searchAndFilters}>
                 <SearchBar
-                    label={t("students")}
+                    label={t(searchBarLabel)}
                     value={searchTerm}
                     onChange={onChangeSearchTerm}
                     onSearch={() => {
@@ -153,81 +125,59 @@ const StudentsList = (props) => {
                 />
 
                 <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon/>}
-                    >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography className={classes.heading}>{t("filters_actions")}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Box className={classes.chips}>
 
-                            <ExportSearchChip
+                            {exportPage && <ExportSearchChip
                                 searchTerm={searchTerm}
                                 page={page}
                                 dataService={StudentsDataService}
-                                getFilters={() => getFilters(filters)}
-                            />
-                            <ExportSearchChip
+                                getFilters={() => (filters)}
+                            />}
+                            {exportAllPages && <ExportSearchChip
                                 searchTerm={searchTerm}
                                 page={page}
                                 dataService={StudentsDataService}
                                 exportAll={true}
-                                getFilters={() => getFilters(filters)}
-                            />
+                                getFilters={() => (filters)}
+                            />}
 
-                            <Tooltip title={t("search_by_id")}>
+                            {searchByOptions.map(option => (
+                                <Tooltip key={option} title={`${t("search_by")} ${t(option)}`}>
                                     <Chip size="small"
-                                          color={searchBy === 'id' ? "primary" : "default"}
-                                          label={t("search_by_id")}
+                                          color={searchBy === option ? "primary" : "default"}
+                                          label={`${t("search_by")} ${t(option)}`}
                                           onClick={(e) => {
-                                              if (searchBy === 'id') {
+                                              if (searchBy === option) {
                                                   resetSearchBy();
                                               } else {
-                                                  setSearchBy('id');
+                                                  setSearchBy(option);
                                               }
-                                          }}/>
-                                </Tooltip>
-
-                            {[{label: "enrolled", tooltip: "only_enrolled", value: 'onlyEnrolled'},
-                                {label: "pre-enrolled", tooltip: "only_preenrolled", value: 'onlyPreEnrolled'},
-                                {label: "early-unenrolled", tooltip: "only_earlyunenrolled", value: 'onlyEarlyUnenrolled'},
-                                {label: "cash", tooltip: "only_cash", value: 'onlyCash'},
-                                {label: "bank-transfer", tooltip: "only_banktransfer", value: 'onlyBankTransfer'},
-                                {
-                                    label: "bank-direct-debit",
-                                    tooltip: "only_bankdirectdebit",
-                                    value: 'onlyDirectDebit'
-                                }].map(x => (
-                                <Tooltip key={x.label} title={t(x.tooltip)} aria-label={t(x.tooltip)}>
-                                    <Chip size="small"
-                                          color={filters[x.value] ? "primary" : "default"}
-                                          label={t(x.label)}
-                                          onClick={(e) => {
-                                              let newFilters = {...filters};
-                                              if (x.value === 'onlyEnrolled' ||
-                                                  x.value === 'onlyPreEnrolled' ||
-                                                  x.value === 'onlyEarlyUnenrolled'
-                                              ) {
-                                                  newFilters['onlyEnrolled'] = false;
-                                                  newFilters['onlyPreEnrolled'] = false;
-                                                  newFilters['onlyEarlyUnenrolled'] = false;
-                                              }
-
-                                              if (x.value === 'onlyBankTransfer' ||
-                                                  x.value === 'onlyCash' ||
-                                                  x.value === 'onlyDirectDebit'
-                                              ) {
-                                                  newFilters['onlyBankTransfer'] = false;
-                                                  newFilters['onlyCash'] = false;
-                                                  newFilters['onlyDirectDebit'] = false;
-                                              }
-
-                                              newFilters[x.value] = !filters[x.value];
-                                              setFilters(newFilters);
                                           }}/>
                                 </Tooltip>
                             ))}
 
+
+
+                            {usableFilters.map(f => (
+                                f['options'].map(option => (
+                                    <Tooltip key={f.name+option.name}
+                                        title={t(option.tooltip)}
+                                        aria-label={t(option.tooltip)}>
+                                    <Chip size="small"
+                                          color={filters[f.name] === option.name ? "primary" : "default"}
+                                          label={t(option.label)}
+                                          onClick={(e) => {
+                                              setFilters({...filters, [f.name]: option.name})
+                                          }}/>
+                                </Tooltip>
+                                    )
+                                )
+                                ))
+                            }
                         </Box>
                     </AccordionDetails>
                 </Accordion>
@@ -249,29 +199,30 @@ const StudentsList = (props) => {
                 </Box>
             </Box>
             <List className={classes.list}>
-                {students && students.map((student, index) => (
-                    <div key={student["id"]}>
-                        <ListItem key={student["id"]} button
+                {items && items.map((item) => (
+                    <div key={item["id"]}>
+                        <ListItem key={item["id"]} button
                                   onClick={() => {
-                                      setCurrentStudentId(student['id']);
+                                      setCurrentItemId(item['id']);
                                   }}>
                             <ListItemAvatar>
                                 <Avatar
-                                    className={student["id"] === currentStudentId ? classes.selectedAvatar : classes.avatar}>{student['full_name'].charAt(0).toUpperCase()}</Avatar>
+                                    className={item["id"] === currentItemId ? classes.selectedAvatar : classes.avatar}>{item['full_name'].charAt(0).toUpperCase()}</Avatar>
                             </ListItemAvatar>
-                            <ListItemText id="name" primary={student.full_name}/>
+                            <ListItemText id="name" primary={item['full_name']}/>
 
+                            {exportItem &&
                             <ListItemSecondaryAction>
                                 <Tooltip title={t("export") + " .csv"}>
                                     <IconButton edge="end" aria-label={t("export")} onClick={(e) => {
-                                        StudentsDataService
-                                            .downloadOneCsv(student['id'])
+                                        dataService
+                                            .downloadOneCsv(item['id'])
                                             .then(...errorHandler({}));
                                     }}>
                                         <GetAppIcon/>
                                     </IconButton>
                                 </Tooltip>
-                            </ListItemSecondaryAction>
+                            </ListItemSecondaryAction>}
 
                         </ListItem>
                         <Divider/>
@@ -282,4 +233,4 @@ const StudentsList = (props) => {
     );
 };
 
-export default StudentsList;
+export default ItemsList;

@@ -138,15 +138,6 @@ export default function HomeToolbar(props){
                     </Typography>
                     <div className={classes.grow}/>
 
-                    <Tooltip title={t("download_backup")}>
-                        <IconButton
-                            color="inherit"
-                            aria-label={t("download_backup")}
-                            onClick={() => changeTheme()}>
-                            <CloudDownloadIcon/>
-                        </IconButton>
-                    </Tooltip>
-
                     <Tooltip title={t("change_language")}>
                         <IconButton
                             color="inherit"

@@ -52,7 +52,7 @@ class UserInviteCollectionRes(Resource):
         for need in needs:
             clean_needs.append(need)  # todo check is a valid legitimate need
 
-        if User.query.filter_by(username=user_email).count() > 0:
+        if User.query.filter(User.email == user_email).count() > 0:
             abort(400)
 
         token = jwt.encode(

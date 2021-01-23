@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
-import Student from "./students.student.component";
 import Fab from "@material-ui/core/Fab";
 import {
     Checkbox,
@@ -24,6 +23,7 @@ import {useFormik} from "formik";
 import Typography from "@material-ui/core/Typography";
 import {invitationsService} from "../_services/userInvites.service";
 import {useErrorHandler} from "../_helpers/handle-response";
+import User from "./students.user.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(2),
   }
 }));
-
 
 export default function Users({history, ...other}) {
   const classes = useStyles();
@@ -165,8 +164,8 @@ export default function Users({history, ...other}) {
           </Tooltip>
         </Grid>
 
-        <Grid item xs={8} className={classes.right}>
-          <Student
+        <Grid item xs={8} className={classes.left}>
+          <User
             currentStudentId={currentUserId}
             history={history}
             deleteUser={(userId) => {

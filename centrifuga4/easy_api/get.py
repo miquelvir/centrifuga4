@@ -65,7 +65,10 @@ class _ImplementsGet:
                 try:
                     page = int(v)
                 except ValueError:
-                    raise BaseBadRequest("Page is not a valid integer")
+                    if v == "*":
+                        page = None
+                    else:
+                        raise BaseBadRequest("Page is not a valid integer")
             elif k[0] == "include":
                 if include is None:
                     include = [
@@ -87,7 +90,7 @@ class _ImplementsGet:
     )  # content negotiation (and automatic creation of raw csv from json)
     def get(self, *args, id_=None, many=False, **kwargs):
         filters, sort, page, include = self._parse_args(request.args)
-        do_pagination = True
+        do_pagination = page is not None
 
         if many:
             try:
@@ -110,7 +113,7 @@ class _ImplementsGet:
                     )
                     result = pagination.items
                 else:
-                    query.all()
+                    result = query.all()
 
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)

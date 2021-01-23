@@ -86,6 +86,7 @@ const useStyles = makeStyles(theme => (createStyles({
         flexFlow: 'column',
         height: "100%",
         width: "100%",
+        overflow: 'auto'
     },
     main: {
         flex: 1,

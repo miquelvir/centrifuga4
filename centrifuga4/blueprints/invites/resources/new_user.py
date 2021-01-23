@@ -43,7 +43,7 @@ class NewUserCollectionRes(Resource):
             data = jwt.decode(token, current_app.secret_key, algorithms=["HS256"])
 
             if (
-                User.query.filter_by(username=user_email).count() > 0
+                User.query.filter_by(User.email == user_email).count() > 0
             ):  # todo maybe wait or integrity error and then return?
                 return "user already exists", 400
 
@@ -57,7 +57,6 @@ class NewUserCollectionRes(Resource):
                 surname1=user_surname1,
                 surname2=user_surname2,
                 email=user_email,
-                username=user_email,
                 password_hash=User.hash_password(user_password),
             )
 

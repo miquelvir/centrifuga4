@@ -22,8 +22,20 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     boxSizing: "border-box",
       height: '100%', // todo proper,
-    minHeight: 200,
-  }
+    display: 'flex',
+      flexDirection: 'column'
+  },
+    content: {
+      overflowX: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        overflowY: 'auto',
+        flex: 1,
+        height: '100%'
+    },
+    tab: {
+      height: '100%'
+    }
 }));
 
 
@@ -88,13 +100,12 @@ export default function Student(props) {
                   indicatorColor="primary"
                   textColor="primary"
                   variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="full width tabs example"
+                  scrollButtons="on"
                 >
                   <Tab label={t("attendee")} {...a11yProps(0)} />
 
                     { !newStudent &&
-                  <Tab label={t("schedule")} {...a11yProps(1)} />}
+                  <Tab label={t("schedules")} {...a11yProps(1)} />}
                  { !newStudent && <Tab label={t("payments")} {...a11yProps(2)} />}
                  { !newStudent && <Tab label={t("courses")} {...a11yProps(3)} />}
 
@@ -115,6 +126,8 @@ export default function Student(props) {
           <SwipeableViews
             axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
             index={value}
+            containerStyle={{height: '100%'}}
+            className={classes.content}
             onChangeIndex={handleChangeIndex}
           >
             <Attendee value={value}
@@ -135,6 +148,7 @@ export default function Student(props) {
 
             <Schedule value={value}
                       index={1}
+                      className={classes.tab}
                       dir={theme.direction}
                       title={t("attendee")}
                       scheduleIds={student === null? null: student['schedules']}

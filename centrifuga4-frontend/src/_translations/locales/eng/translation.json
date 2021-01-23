@@ -37,7 +37,7 @@
   "username_required_password_reset": "Fill in the email field to ask for a password reset!",
   "started_password_reset": "Process started. If the username is correct, you will receive an email to finish the password change!",
   "export": "export",
-  "export_results_csv": "export search results as .csv",
+  "export_results_csv": "export this page as .csv",
   "email_required": "email is required",
   "invalid_email": "enter a valid email",
   "password_required": "password is required",
@@ -208,6 +208,7 @@
   "next": "next",
   "back": "back",
   "skip": "skip",
+  "schedules": "schedules",
   "finish": "send",
   "here": "here",
   "can-operate-with-payment-receipts": "can operate with payment receipts",
@@ -218,6 +219,10 @@
   "confirmation": "confirmation",
   "ss_agent": "social service worker",
   "no_courses_found_add_edu": "we can't find any courses for you; go back and add your education level! If you already did that, contact us (xamfra.net/contacte)!",
-  "student": "student"
+  "student": "student",
+  "search_by_id": "search by id",
+  "search_by": "search by",
+  "export_all": "export all",
+  "export_all_csv": "export all pages as .csv"
 
 }
