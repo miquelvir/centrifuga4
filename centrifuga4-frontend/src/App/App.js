@@ -17,6 +17,7 @@ import ResetPage from "../ResetPage/ResetPage";
 import PreEnrollmentPage from "../PreEnrollmentPage/PreEnrollmentPage";
 import {createBrowserHistory} from "history";
 import NotFound from "../_components/not_found";
+import {Switch} from "@material-ui/core";
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
@@ -36,12 +37,14 @@ function App() {
                     setTheme(!theme);
                 }, label: theme? "dark": "light"}}>
                     <BrowserRouter basename="/app">
+                        <Switch>
                         <PrivateRoute path={'/home'}  component={HomePage}/>
                         <Route path={'/login'} component={LoginPage}/>
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
                         <Route path={'/prematricula'} component={PreEnrollmentPage}/>
-                        <Route path='*' exact={true} component={NotFound}/>
+                        <Route component={NotFound}/>
+                        </Switch>
                     </BrowserRouter>
                 </themeContext.Provider>
             </userContext.Provider>
