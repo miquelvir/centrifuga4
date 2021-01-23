@@ -16,6 +16,7 @@ import SignupPage from "../SignupPage/SignupPage";
 import ResetPage from "../ResetPage/ResetPage";
 import PreEnrollmentPage from "../PreEnrollmentPage/PreEnrollmentPage";
 import {createBrowserHistory} from "history";
+import NotFound from "../_components/not_found";
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
@@ -40,6 +41,7 @@ function App() {
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
                         <Route path={'/prematricula'} component={PreEnrollmentPage}/>
+                        <Route component={NotFound}/>
                     </BrowserRouter>
                 </themeContext.Provider>
             </userContext.Provider>

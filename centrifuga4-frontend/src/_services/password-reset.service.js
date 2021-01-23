@@ -12,7 +12,7 @@ function reset(username, password, token, recaptcha) {
         axios({url: 'https://127.0.0.1:4999/password-reset/v1/newPassword',
             method: 'POST',
             data: {
-                username: username,
+                email: username,
                 password: password,
                 token: token,
                 recaptcha: recaptcha
@@ -32,7 +32,7 @@ function startReset(username, recaptcha) {
         axios({url: 'https://127.0.0.1:4999/password-reset/v1/passwordReset',
             method: 'POST',
             data: {
-                username: username,
+                email: username,
                 recaptcha: recaptcha
             },
             headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()}

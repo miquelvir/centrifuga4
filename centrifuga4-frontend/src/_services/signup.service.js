@@ -12,7 +12,6 @@ function signup(username, password, email, name, surname1, surname2, token) {
         axios({url: `${BACKEND_URL}/invites/v1/newUser`,
             method: 'POST',
             data: {
-                username: username,
                 password: password,
                 email: email,
                 name: name,

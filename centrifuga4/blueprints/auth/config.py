@@ -51,7 +51,7 @@ def get_auth_token():
     remember = request.args.get("remember")
     remember = remember == "1" if remember else False
 
-    login_user(user, remember=False)
+    login_user(user, remember=False)  # todo
     identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
 
     return "", 200
