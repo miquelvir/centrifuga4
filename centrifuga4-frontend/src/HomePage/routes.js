@@ -35,17 +35,9 @@ const Teachers = () => {
 };
 
 
-const Settings = () => {
-  const { t } = useTranslation();
-
-  return (
-    <h1>{t("settings")}</h1>
-  );
-};
-
 const Routes = [
   {
-    path: '/',
+    path: '/students',
     component: Students,
     title: 'students',
     icon: PersonIcon

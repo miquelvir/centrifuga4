@@ -14,6 +14,7 @@
   "users": "usuaris",
   "settings": "configuració",
   "locations": "ubicacions",
+  "room": "espai",
   "search": "cercar",
   "name": "nom",
   "surname1": "primer cognom",
@@ -225,5 +226,6 @@
   "search_by_id": "cercar amb id",
   "search_by": "cercar per",
   "export_all": "exportar tots",
-  "export_all_csv": "exportar totes les pàgines com a .csv"
+  "export_all_csv": "exportar totes les pàgines com a .csv",
+  "full_name": "nom complet"
 }

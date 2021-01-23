@@ -1,16 +1,10 @@
 import {useTranslation} from "react-i18next";
-import Box from "@material-ui/core/Box";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import SchedulesDataService from "../_services/schedules.service";
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles, useTheme} from "@material-ui/core/styles";
 import {useErrorHandler} from "../_helpers/handle-response";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from '@fullcalendar/timegrid';
-import styled from "@emotion/styled";
-import { useTheme } from '@material-ui/core/styles';
-import interactionPlugin from '@fullcalendar/interaction';
 import {useSnackbar} from "notistack";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Scheduler, {eventFromSchedule} from "./scheduler.component";
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
@@ -27,67 +21,16 @@ function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
   const classes = useStyles();
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const errorHandler = useErrorHandler();
-    const theme = useTheme();
-   const StyleWrapper = styled.div`
-      .fc-button, .fc-button.fc-button-primary {
-        background: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.contrastText};
-        border-color: ${theme.palette.primary.main};
-        background-image: none;
-    }
-    .fc-button:enabled:hover {
-        background: ${theme.palette.primary.dark};
-        color: ${theme.palette.primary.contrastText};
-        border-color: ${theme.palette.primary.dark};
-        background-image: none;
-    }
-    `
-
-    const [schedules, setSchedules] = useState(null);
-   const loading = scheduleIds === null;
-
-   const eventFromSchedule = (schedule) => {
-       return {
-            daysOfWeek: [schedule['day_week']],
-            title: schedule['course']['name'],
-            groupId: [schedule['id']],
-            startTime: schedule['start_time'],
-            endTime: schedule['end_time'],
-            color: schedule["is_base"]? theme.palette.secondary.main: theme.palette.secondary.light,
-            textColor: schedule["is_base"]? theme.palette.secondary.contrastText: theme.palette.secondary.contrastText,
-            extendedProps: {
-                schedule: schedule
-            },
-        }
-   }
-
-   useEffect(() => {
-    if (scheduleIds === null) return;
-
-    if (scheduleIds.length === 0){
-      setSchedules([]);
-    } else {
-      SchedulesDataService
-            .getMany(scheduleIds)
-            .then(...errorHandler({}))
-            .then(function (res) {
-                    setSchedules(res.map(res => res["data"]).map(schedule => {
-                        return eventFromSchedule(schedule);
-                    }));
-                });
-    }
-  }, [scheduleIds, theme]);
-
-   const eventChanged = (info) => {
-       const schedule = info.event.extendedProps["schedule"];
+const theme = useTheme();
+   const eventChanged = (info, day_week, start_time, end_time, schedule) => {
        const newEvent = info.event;
        let body = {};
-        body['day_week'] = newEvent['start'].getDay();
-        body['start_time'] = newEvent['start'].toLocaleTimeString('en-US', { hour12: false });
-        body['end_time'] = newEvent['end'].toLocaleTimeString('en-US', { hour12: false });
+        body['day_week'] = day_week;
+        body['start_time'] = start_time;
+        body['end_time'] = end_time;
 
-        if (schedule["is_base"] === true) {
-            body['course_id'] = schedule['course_id'];
+        if (schedule["is_base"]) {
+            body['course_id'] = schedule["course_id"];
             body['student_id'] = student_id;
             body['is_base'] = false;
             SchedulesDataService
@@ -95,8 +38,8 @@ function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
                     .then(...errorHandler({errorOut: true, snackbarSuccess: true}))
                     .then(function (res) {
                         let calendarApi = info.view.calendar;
-                        newEvent['is_base'] = true;
-                        calendarApi.addEvent(eventFromSchedule(res));
+                        newEvent['is_base'] = true;  // todo why needed
+                        calendarApi.addEvent(eventFromSchedule(theme, res));
                         info.revert();
                     }).catch(function(err){
                         info.revert();
@@ -128,52 +71,9 @@ function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
       {...other}
         style={{height: '100%', flex: 1, minHeight: "70vh" }}
 
-    >{// todo fix height
-           }
-           <Box p={2} style={{height: "100%"}}>
-               {loading? <Skeleton variant="rect" width="100%" height="100%"/>
-                   :
-                   <StyleWrapper style={{height: "100%"}}>
-                   <FullCalendar
-                       plugins={[timeGridPlugin, interactionPlugin]}
-                       initialView="timeGridWeek"
-                       height="100%"
-                       firstDay={1}
-                       editable={true}
-                       selectable={true}
-                       selectMirror={true}
-                       dayMaxEvents={true}
-                       weekends={true}
-
-                       snapDuration={'00:15'}
-                       events={schedules}
-                       eventAdd={function () {
-                       }}
-                       eventChange={function (clickInfo) {
-                           // const schedule = clickInfo.event.extendedProps["schedule"];
-                           // if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
-                       }}
-                       eventRemove={function () {
-                       }}
-                       select={function (selectInfo) {
-                           let title = prompt('Please enter a new title for your event')
-                           let calendarApi = selectInfo.view.calendar
-
-                           calendarApi.unselect() // clear date selection
-
-                           if (title) {
-                               calendarApi.addEvent({
-                                   id: 24,
-                                   title,
-                                   start: selectInfo.startStr,
-                                   end: selectInfo.endStr,
-                                   allDay: selectInfo.allDay
-                               })
-                           }
-                       }}
-                       eventContent={function () {
-                       }} // custom render function
-                       eventClick={function (clickInfo) {
+    >
+        <Scheduler
+            onEventClick={function (clickInfo) {
                            const schedule = clickInfo.event.extendedProps["schedule"];
                            if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
                            if (window.confirm(t("sure_delete_event"))) {
@@ -186,16 +86,11 @@ function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
 
                            }
                        }}
-                       eventTimeFormat={{
-                           hour: '2-digit',
-                           minute: '2-digit',
-                           hour12: false
-                       }}
-                       eventResize={eventChanged}
-                       eventDrop={eventChanged}
-                   />
-               </StyleWrapper>}
-               </Box>
+            onEventDrop={eventChanged}
+            onEventResize={eventChanged}
+            scheduleIds={scheduleIds}
+            editable={true}
+        />
     </div>
   );
 }

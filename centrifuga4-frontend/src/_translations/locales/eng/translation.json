@@ -223,6 +223,8 @@
   "search_by_id": "search by id",
   "search_by": "search by",
   "export_all": "export all",
-  "export_all_csv": "export all pages as .csv"
+  "export_all_csv": "export all pages as .csv",
+  "full_name": "full name",
+  "room": "room"
 
 }

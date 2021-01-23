@@ -162,7 +162,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
 
 
                             <div style={{clear: 'both'}}>
-                               {   ["100%", "100%", "100%", "100%", "100%", "100%"].map((value, idx) => {
+                               {   ["100%", "100%", "100%"].map((value, idx) => {
                                 return (
                                     <Box key={idx} py={0} >
                                         <Skeleton variant="text" width={value} height="60px"/>

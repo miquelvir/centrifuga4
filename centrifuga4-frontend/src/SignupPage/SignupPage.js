@@ -16,6 +16,9 @@ import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
 import {safe_password_repetition, safe_email, safe_password, safe_username} from "../_yup/validators";
+import TranslateButton from "../_components/translate_button.component";
+import ThemeButton from "../_components/theme_button.component";
+import {PUBLIC_URL} from "../config";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -112,7 +115,7 @@ const SignupPage = (props) => {
                         <Grid item>
                             <Box m={2}>
                                 <Paper className={classes.paper}>
-                                    <img src={themeCtx.theme? "logo_centrifuga4_dark.svg": "logo_centrifuga4_light.svg"} alt="Logo Centrífuga" style={{height: "85px"}}/>
+                                    <img src={`${PUBLIC_URL}/logo_centrifuga4_${themeCtx.label}.svg`} alt="Logo Centrífuga" style={{height: "85px"}}/>
 
                                      <Box m={2}>
                                          <Typography>{t("been_invited")}</Typography>
@@ -206,7 +209,10 @@ const SignupPage = (props) => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid xs={2} item/>
+                <Grid xs={2} item>
+                    <TranslateButton style={{float: 'right'}}/>
+                    <ThemeButton style={{float: 'right'}}/>
+                </Grid>
             </Grid></div>);
 
 }

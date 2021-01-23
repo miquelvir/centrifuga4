@@ -19,7 +19,9 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
 import {safe_username} from "../_yup/validators";
 import ReCAPTCHA from "react-google-recaptcha";
-import {RECAPTCHA} from "../config";
+import {PUBLIC_URL, RECAPTCHA} from "../config";
+import TranslateButton from "../_components/translate_button.component";
+import ThemeButton from "../_components/theme_button.component";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,7 +66,7 @@ const LoginPage = (props) => {
     const logged = () => {
         const setLogged = userCtx["setUser"];
         setLogged({logged: true, ping: true});
-        const {from} = props.location.state || {from: {pathname: "/"}};
+        const {from} = props.location.state || {from: {pathname: "/home/students"}};
         props.history.push(from);
     }
 
@@ -99,7 +101,7 @@ const LoginPage = (props) => {
 
     useOnMount(() => {
         if (userCtx["user"]["logged"]) {
-            props.history.push('/');
+            props.history.push('/home/students');
             return null;
         }
 
@@ -133,6 +135,7 @@ const LoginPage = (props) => {
 
     return (
         <div className={classes.root}>
+
             <Grid container>
                 <Grid xs={2} item/>
 
@@ -148,7 +151,7 @@ const LoginPage = (props) => {
                         <Grid item>
                             <Box m={2}>
                                 <Paper className={classes.paper}>
-                                    <img src={themeCtx.theme? "logo_centrifuga4_dark.svg": "logo_centrifuga4_light.svg"} alt="Logo Centrífuga" style={{height: "85px"}}/>
+                                    <img src={`${PUBLIC_URL}/logo_centrifuga4_${themeCtx.label}.svg`} alt="Logo Centrífuga" style={{height: "85px"}}/>
 
                                     <form onSubmit={formik.handleSubmit}>
                                         <TextField
@@ -221,7 +224,10 @@ const LoginPage = (props) => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid xs={2} item/>
+                <Grid xs={2} item>
+                    <TranslateButton style={{float: 'right'}}/>
+            <ThemeButton style={{float: 'right'}}/>
+                </Grid>
             </Grid></div>);
 
 }

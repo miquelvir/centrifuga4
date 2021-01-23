@@ -13,7 +13,6 @@ import {
     TextField,
     Tooltip
 } from "@material-ui/core";
-import UsersList from "./users.list.component";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -24,6 +23,8 @@ import Typography from "@material-ui/core/Typography";
 import {invitationsService} from "../_services/userInvites.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import User from "./students.user.component";
+import ItemsList from "./items_list.component";
+import UsersDataService from "../_services/users.service";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -150,13 +151,16 @@ export default function Users({history, ...other}) {
       </Dialog>
         <Grid item xs={4} className={classes.left}>
           <h1>{t("users")}</h1>
-          <UsersList
-            setCurrentUserId={setCurrentUserId}
-            currentUserId={currentUserId}
-            users={users}
-            setUsers={setUsers}
-
-          />
+          <ItemsList
+                setCurrentItemId={setCurrentUserId}
+                currentItemId={currentUserId}
+                items={users}
+                setItems={setUsers}
+                defaultSearchBy="full_name"
+                searchByOptions={["full_name", "id"]}
+                dataService={UsersDataService}
+                searchBarLabel="users"
+            />
           <Tooltip title={t("new_user")}>
               <Fab className={classes.fab} color="primary" onClick={handleClickOpen}>
                 <PersonAddIcon />

@@ -16,10 +16,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Routes from "./routes";
-import {BrowserRouter, Link, Route} from "react-router-dom";
+import {BrowserRouter, Link, Redirect, Route, Router} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
-import {history} from "../_helpers/history";
+import {createBrowserHistory} from "history";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
@@ -115,7 +115,7 @@ const HomePage = (props) => {
     const { t } = useTranslation();
 
     const [open, setOpen] = React.useState(false);
-    const [currentRoute, setCurrentRoute] = React.useState('/');
+    const [currentRoute, setCurrentRoute] = React.useState('/students');
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -127,6 +127,8 @@ const HomePage = (props) => {
     const onItemClick = p => {
         setCurrentRoute(p.path);
     };
+
+    const history = createBrowserHistory();
 
     return (
         <div className={classes.root}>
@@ -143,7 +145,7 @@ const HomePage = (props) => {
                     open={open}
                 />
             </AppBar>
-            <BrowserRouter history={history} basename={`${process.env.PUBLIC_URL}/`}>
+            <BrowserRouter history={history} basename="/app/home">
                 <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
@@ -165,7 +167,7 @@ const HomePage = (props) => {
                     <Divider/>
                     <List>
                         {Routes.map((prop) =>(
-                                  <ListItem  key={prop.title} button to={prop.path} component={Link} onClick={() => onItemClick(prop)}>
+                                  <ListItem key={prop.title} to={prop.path } button component={Link} onClick={() => onItemClick(prop)}>
                                     <ListItemIcon className={prop.path === currentRoute? classes.selectedIcon: classes.icon}>
                                         <Tooltip title={t(prop.title)} aria-label={t(prop.title)}>
                                             {<prop.icon/>}
@@ -181,7 +183,7 @@ const HomePage = (props) => {
                     <main className={classes.main}>
                         {Routes.map((prop) => {
                             return (
-                                <Route key={prop.title} exact path={prop.path} component={prop.component}/>)
+                                <Route key={prop.title} path={prop.path} component={prop.component}/>)
                         })}
                     </main>
                 </div>

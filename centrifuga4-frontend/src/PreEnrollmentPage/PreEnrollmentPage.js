@@ -51,7 +51,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import CoursesDataService from "../_services/courses.service";
 import CardContent from "@material-ui/core/CardContent";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {RECAPTCHA} from "../config";
+import {PUBLIC_URL, RECAPTCHA} from "../config";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
+import ThemeButton from "../_components/theme_button.component";
+import Link from "@material-ui/core/Link";
+import TranslateButton from "../_components/translate_button.component";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -129,16 +133,15 @@ const PreEnrollmentPage = (props) => {
      const can_pay_40 =  "Puc pagar una quota trimestral de 40€/estudiant";
 
     const classes = useStyles();
-    const selectedLan = localStorage.getItem("i18nextLng") || "cat";
-    const switchLanguage = () => {
-        i18next.changeLanguage(selectedLan === "eng"? "cat": "eng").then();
-    }
+
+
     const [recaptcha, setRecaptcha] = React.useState(null);
     function onChange(value) {
       setRecaptcha(value);
     }
 
-    const themeCtx = React.useContext(themeContext);
+
+
     const {enqueueSnackbar} = useSnackbar();
     const [skipped, setSkipped] = React.useState(new Set());
     const [availableCourses, setAvailableCourses] = React.useState([]);
@@ -243,7 +246,6 @@ __person1__surname1: '',
                                   'requiredIfNotSkipped',
                                   required,
                                   v => {
-                                      console.log("*****************************", v);
                                       return v !== undefined && v !== "" || isStepSkipped(2)
                                   }
                                 ),
@@ -457,24 +459,16 @@ const handleNext = () => {
 
 
       };
+    const themeCtx = React.useContext(themeContext);
     return (
         <Box p={5} style={{width: '100%'}}>
+             <TranslateButton style={{float: 'right'}}/>
+                <ThemeButton style={{float: 'right'}}/>
+
             <Box m={2} style={{textAlign: "center"}}>
-        <img src={"logo_xamfra.png"} alt="Logo Xamfrà"
+        <img src={ `${PUBLIC_URL}/logo_xamfra_${themeCtx.label}.svg`} alt="Logo Xamfrà"
              style={{height: "85px"}}/>
-
-              <Tooltip title={t("change_language")} style={{float: 'right'}}>
-                        <IconButton
-                            color="inherit"
-                            onClick={switchLanguage}
-                            aria-label={t("change_language")}
-                            aria-haspopup="true">
-                            <TranslateIcon/>
-                        </IconButton>
-
-                    </Tooltip>
-             </Box>
-
+            </Box>
                 <Paper className={`${classes.paper} ${classes.root}`}>
                    <Box p={2}> <Stepper activeStep={activeStep}>
                     {steps.map((label, index) => {
@@ -505,7 +499,7 @@ const handleNext = () => {
                   {activeStep === 0 &&
                   <div>
                       <Typography>
-                          Podeu consultar el quadre horari del curs 20-21 <a target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</a>.
+                          Podeu consultar el quadre horari del curs 20-21 <Link target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</Link>.
                       </Typography>
                       <br/>
                       <Typography variant={"caption"}>

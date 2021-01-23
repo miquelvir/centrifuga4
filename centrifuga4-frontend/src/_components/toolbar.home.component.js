@@ -18,6 +18,8 @@ import createStyles from "@material-ui/styles/createStyles";
 import {userContext} from "../_context/user-context";
 import {authenticationService} from "../_services/auth.service";
 import {useErrorHandler} from "../_helpers/handle-response";
+import TranslateButton from "./translate_button.component";
+import ThemeButton from "./theme_button.component";
 
 const languageMap = {
     eng: { label: "english", dir: "ltr", active: true },
@@ -138,25 +140,8 @@ export default function HomeToolbar(props){
                     </Typography>
                     <div className={classes.grow}/>
 
-                    <Tooltip title={t("change_language")}>
-                        <IconButton
-                            color="inherit"
-                            onClick={handleLanguageMenuOpen}
-                            aria-label={t("change_language")}
-                            aria-controls={languageMenuId}
-                            aria-haspopup="true">
-                            <TranslateIcon/>
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={t("dark_light_theme")}>
-                        <IconButton
-                            color="inherit"
-                            aria-label={t("dark_light_theme")}
-                            onClick={changeTheme}>
-                            <Brightness4Icon/>
-                        </IconButton>
-                    </Tooltip>
+                    <TranslateButton/>
+            <ThemeButton />
 
 
                         <Tooltip title={t("my_account")}>

@@ -2,11 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
-import StudentsList from "./students.list.component";
 import Student from "./students.student.component";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import {Tooltip} from "@material-ui/core";
+import StudentsDataService from "../_services/students.service";
+import ItemsList from "./items_list.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,13 +49,49 @@ export default function Students({history, ...other}) {
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={4} className={classes.left}>
           <h1>{t("students")}</h1>
-          <StudentsList
-            setCurrentStudentId={setCurrentStudentId}
-            currentStudentId={currentStudentId}
-            students={students}
-            setStudents={setStudents}
+            <ItemsList
+                setCurrentItemId={setCurrentStudentId}
+                currentItemId={currentStudentId}
+                items={students}
+                setItems={setStudents}
+                usableFilters={[{
+                    name: 'enrollment_status',
+                    defaultValue: null,
+                    options: [
+                        {
+                            label: "enrolled",
+                            tooltip: "only_enrolled",
+                            name: 'enrolled'
+                        }, {
+                            label: "pre-enrolled",
+                            tooltip: "only_preenrolled",
+                            name: 'pre-enrolled'
+                        }, {
+                            label: "early-unenrolled",
+                            tooltip: "only_earlyunenrolled",
+                            name: 'early-unenrolled'
+                        }
+                    ]
+                },
+                    {
+                      name: 'default_payment_method',
+                        defaultValue: null,
+                        options: [
+                           {label: "cash", tooltip: "only_cash", name: 'cash'},
+                                {label: "bank-transfer", tooltip: "only_banktransfer", name: 'bank-transfer'},
+                                {
+                                    label: "bank-direct-debit",
+                                    tooltip: "only_bankdirectdebit",
+                                    name: 'bank-direct-debit'
+                                }
+                        ]
+                    }]}
+                defaultSearchBy="full_name"
+                searchByOptions={["full_name", "id"]}
+                dataService={StudentsDataService}
+                searchBarLabel="students"
+            />
 
-          />
           <Tooltip title={t("new_student")}>
               <Fab className={classes.fab} color="primary" onClick={(e) => {
                   setCurrentStudentId(null);

@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
-import StudentsList from "./students.list.component";
 import Student from "./students.student.component";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import {Tooltip} from "@material-ui/core";
-import RoomsList from "./rooms.list.component";
+import ItemsList from "./items_list.component";
+import RoomsDataService from "../_services/rooms.service";
+import Room from "./rooms.room.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,12 +50,16 @@ export default function Rooms({history, ...other}) {
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={4} className={classes.left}>
           <h1>{t("rooms")}</h1>
-          <RoomsList
+          <ItemsList
             setCurrentItemId={setCurrentRoomId}
             currentItemId={currentRoomId}
             items={rooms}
             setItems={setRooms}
-
+            defaultSearchBy="name"
+            displayNameField="name"
+            searchByOptions={["name", "id"]}
+            dataService={RoomsDataService}
+            searchBarLabel="rooms"
           />
           <Tooltip title={t("new_student")}>
               <Fab className={classes.fab} color="primary" onClick={(e) => {
@@ -67,14 +72,14 @@ export default function Rooms({history, ...other}) {
         </Grid>
 
         <Grid item xs={8} className={classes.left}>
-          <Student
-            currentStudentId={currentRoomId}
-            newStudent={newRoom}
+          <Room
+            currentRoomId={currentRoomId}
+            newRoom={newRoom}
             history={history}
-            addStudentId={(id) =>{
+            addRoomId={(id) =>{
                 setCurrentRoomId(id);
             }}
-            deleteStudent={(studentId) => {
+            deleteRoom={(studentId) => {
                 if (studentId === currentRoomId) setCurrentRoomId(null);
 
                 setRooms(rooms.filter((s) => s['id'] !== studentId));

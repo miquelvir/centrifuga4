@@ -68,6 +68,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
         getMany(ids) {
             return Promise.all(ids.map(id => (this.getOne(id))));
         }
+
         patch({id, body, initial_values = null}) {
             if (initial_values !== null) {
                 for (const [key, value] of Object.entries(body)) {

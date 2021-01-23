@@ -7,7 +7,7 @@ from flask_cors import CORS
 from flask_principal import Principal, identity_loaded
 from flask_seasurf import SeaSurf
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, render_template_string
+from flask import Flask, render_template, render_template_string, redirect
 from flask_talisman import Talisman
 from flask_login import LoginManager
 from config import DevelopmentBuiltConfig, ProductionConfig, DevelopmentConfig
@@ -102,11 +102,12 @@ def init_app(config=None):
 
         # serve the react frontend
         @app.route("/")
-        @app.route("/login")
-        @app.route("/signup")
-        @app.route("/password-reset")
-        @app.route("/prematricula")
         def index():
+            return redirect("/app/login")
+
+        @app.route("/app", defaults={"path": None})
+        @app.route("/app/<path:path>")
+        def index2(path):
             return render_template("index.html")
 
         # add identity loader for Flask Principal

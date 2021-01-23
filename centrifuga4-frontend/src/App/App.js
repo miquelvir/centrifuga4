@@ -9,20 +9,18 @@ import {history} from '../_helpers/history';
 import PrivateRoute from '../_components/PrivateRoute';
 import HomePage from '../HomePage/HomePage';
 import LoginPage from '../LoginPage/LoginPage';
-import {Route, Router} from 'react-router-dom';
+import {BrowserRouter, Route, Router} from 'react-router-dom';
 import {userContext} from '../_context/user-context';
 import {themeContext} from '../_context/theme-context';
 import SignupPage from "../SignupPage/SignupPage";
 import ResetPage from "../ResetPage/ResetPage";
 import PreEnrollmentPage from "../PreEnrollmentPage/PreEnrollmentPage";
+import {createBrowserHistory} from "history";
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
     const appliedTheme = createMuiTheme(theme ? darkTheme : lightTheme);
-    const changeTheme = () => {
-        localStorage.setItem("darkTheme", (!theme).toString());
-        setTheme(!theme);
-    }
+
 
     const [user, setUser] = useState({logged: false, ping: true});
 
@@ -32,14 +30,17 @@ function App() {
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
             <userContext.Provider value={{user: user, setUser: setUser}}>
-                <themeContext.Provider value={{theme: theme}}>
-                    <Router history={history} basename={`${process.env.PUBLIC_URL}`}>
-                        <PrivateRoute exact path={'/'}  component={HomePage} changeTheme={changeTheme}/>
+                <themeContext.Provider value={{theme: theme, switchTheme: () => {
+                    localStorage.setItem("darkTheme", (!theme).toString());
+                    setTheme(!theme);
+                }, label: theme? "dark": "light"}}>
+                    <BrowserRouter basename="/app">
+                        <PrivateRoute path={'/home'}  component={HomePage}/>
                         <Route path={'/login'} component={LoginPage}/>
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
                         <Route path={'/prematricula'} component={PreEnrollmentPage}/>
-                    </Router>
+                    </BrowserRouter>
                 </themeContext.Provider>
             </userContext.Provider>
         </SnackbarProvider>
