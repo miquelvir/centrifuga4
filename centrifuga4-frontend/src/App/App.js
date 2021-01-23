@@ -9,7 +9,7 @@ import {history} from '../_helpers/history';
 import PrivateRoute from '../_components/PrivateRoute';
 import HomePage from '../HomePage/HomePage';
 import LoginPage from '../LoginPage/LoginPage';
-import {BrowserRouter, Route, Router} from 'react-router-dom';
+import {BrowserRouter, Route, Router, Switch} from 'react-router-dom';
 import {userContext} from '../_context/user-context';
 import {themeContext} from '../_context/theme-context';
 import SignupPage from "../SignupPage/SignupPage";
@@ -17,7 +17,6 @@ import ResetPage from "../ResetPage/ResetPage";
 import PreEnrollmentPage from "../PreEnrollmentPage/PreEnrollmentPage";
 import {createBrowserHistory} from "history";
 import NotFound from "../_components/not_found";
-import {Switch} from "@material-ui/core";
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
