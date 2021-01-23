@@ -41,7 +41,7 @@ function App() {
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
                         <Route path={'/prematricula'} component={PreEnrollmentPage}/>
-                        <Route component={NotFound}/>
+                        <Route path='*' exact={true} component={NotFound}/>
                     </BrowserRouter>
                 </themeContext.Provider>
             </userContext.Provider>
