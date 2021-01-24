@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "https://centrifuga4.herokuapp.com/static/css/main.68b8b5e7.chunk.css",
-    "main.js": "https://centrifuga4.herokuapp.com/static/js/main.0bad5ccf.chunk.js",
-    "main.js.map": "https://centrifuga4.herokuapp.com/static/js/main.0bad5ccf.chunk.js.map",
+    "main.js": "https://centrifuga4.herokuapp.com/static/js/main.65dcc5fe.chunk.js",
+    "main.js.map": "https://centrifuga4.herokuapp.com/static/js/main.65dcc5fe.chunk.js.map",
     "runtime-main.js": "https://centrifuga4.herokuapp.com/static/js/runtime-main.18397294.js",
     "runtime-main.js.map": "https://centrifuga4.herokuapp.com/static/js/runtime-main.18397294.js.map",
-    "static/css/2.d33eb334.chunk.css": "https://centrifuga4.herokuapp.com/static/css/2.d33eb334.chunk.css",
-    "static/js/2.923777ad.chunk.js": "https://centrifuga4.herokuapp.com/static/js/2.923777ad.chunk.js",
-    "static/js/2.923777ad.chunk.js.map": "https://centrifuga4.herokuapp.com/static/js/2.923777ad.chunk.js.map",
+    "static/css/2.10dd623b.chunk.css": "https://centrifuga4.herokuapp.com/static/css/2.10dd623b.chunk.css",
+    "static/js/2.f61eddc3.chunk.js": "https://centrifuga4.herokuapp.com/static/js/2.f61eddc3.chunk.js",
+    "static/js/2.f61eddc3.chunk.js.map": "https://centrifuga4.herokuapp.com/static/js/2.f61eddc3.chunk.js.map",
     "static/js/3.311d7858.chunk.js": "https://centrifuga4.herokuapp.com/static/js/3.311d7858.chunk.js",
     "static/js/3.311d7858.chunk.js.map": "https://centrifuga4.herokuapp.com/static/js/3.311d7858.chunk.js.map",
     "index.html": "https://centrifuga4.herokuapp.com/index.html",
-    "static/css/2.d33eb334.chunk.css.map": "https://centrifuga4.herokuapp.com/static/css/2.d33eb334.chunk.css.map",
+    "static/css/2.10dd623b.chunk.css.map": "https://centrifuga4.herokuapp.com/static/css/2.10dd623b.chunk.css.map",
     "static/css/main.68b8b5e7.chunk.css.map": "https://centrifuga4.herokuapp.com/static/css/main.68b8b5e7.chunk.css.map",
-    "static/js/2.923777ad.chunk.js.LICENSE.txt": "https://centrifuga4.herokuapp.com/static/js/2.923777ad.chunk.js.LICENSE.txt"
+    "static/js/2.f61eddc3.chunk.js.LICENSE.txt": "https://centrifuga4.herokuapp.com/static/js/2.f61eddc3.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.18397294.js",
-    "static/css/2.d33eb334.chunk.css",
-    "static/js/2.923777ad.chunk.js",
+    "static/css/2.10dd623b.chunk.css",
+    "static/js/2.f61eddc3.chunk.js",
     "static/css/main.68b8b5e7.chunk.css",
-    "static/js/main.0bad5ccf.chunk.js"
+    "static/js/main.65dcc5fe.chunk.js"
   ]
 }
