@@ -1,20 +1,12 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import {MenuItem, TextField} from "@material-ui/core";
-import PropTypes from "prop-types";
 import React from "react";
-import StudentsDataService from "../_services/students.service";
+import RoomsDataService from "../_services/rooms.service";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import * as yup from 'yup';
-import {IconButtonSkeleton} from "../_skeletons/iconButton"
-import Person from "./students.student.person.component";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import UsersDataService from "../_services/users.service";
@@ -24,11 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Tooltip from "@material-ui/core/Tooltip";
 import DirtyTextField from "./dirtytextfield.component";
-import Divider from "@material-ui/core/Divider";
 import {useNormik} from "../_helpers/normik";
-import RestoreIcon from "@material-ui/icons/Restore";
-import SaveIcon from "@material-ui/icons/Save";
-import NeedsSelection from "./needs_selection.component";
 import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 
@@ -50,14 +38,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function UserPerson({ children, addStudentId, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
+function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
   const deleteFullStudent = () => {
-    UsersDataService
+    RoomsDataService
               .delete(currentStudent['id'])
               .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
               .then(function (res) {
@@ -69,7 +57,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
   let initialValues = loading ? {} : currentStudent;
 
 
-    const formik = useNormik(true, {
+    const formik = useNormik(!newRoom, {
         initialValues: initialValues,
         validationSchema: yup.object({
             email: yup.string().email(t("invalid_email")),  // todo
@@ -77,11 +65,23 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
         }),
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
-            console.log(changedValues);
-                if (Object.keys(changedValues).length > 0) {
+            if (Object.keys(changedValues).length > 0) {
                 setStatus();
 
-                UsersDataService.patch({
+                if (newRoom) {
+                    RoomsDataService.post(changedValues)
+                         .then(...errorHandler({snackbarSuccess: true}))
+                    .then(function (new_id) {
+                        console.log("....................", new_id);
+                        updateCurrentStudent(new_id);
+                        setNewRoom(false);
+                    }).catch(function (err) {
+                    setStatus(true);
+                    }).finally(() => {
+                    setSubmitting(false);
+                });
+                } else {
+                   RoomsDataService.patch({
                     id: initialValues["id"],
                     body: changedValues,
                     initial_values: initialValues
@@ -94,6 +94,9 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
                     }).finally(() => {
                         setSubmitting(false);
                     });
+                }
+
+
 
 
             } else {
@@ -116,7 +119,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{t("delete_user_question")}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{t("delete_room_question")}</DialogTitle>
         <DialogActions>
           <Button onClick={(e) => {
             setOpenConfirmDeleteDialog(false);
@@ -124,10 +127,11 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
             {t("cancel")}
           </Button>
           <Button onClick={(e) => {
-            deleteFullStudent(currentStudent['id']);
+              deleteFullStudent(currentStudent['id']);
+
             setOpenConfirmDeleteDialog(false);
           }} color="primary" autoFocus>
-            {t("delete_user")}
+            {t("delete_room")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -136,19 +140,24 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
         <Box p={3}>
             <Box px={2}>
 
-              {loading ?
+              {!newRoom && loading ?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
                <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
-                  setOpenConfirmDeleteDialog(true);
+                    if (newRoom) {
+                        setNewRoom(false);
+                    } else{
+                        setOpenConfirmDeleteDialog(true);
+                    }
+
                 }}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
               }
 
-              {loading?
+              {!newRoom && loading?
                 (
 
                     <Box>
@@ -190,32 +199,16 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
                         <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("name")}
-                                style={{flex: 1}}
+                                style={{flex: 4}}
                                 name="name"
                                 formik={formik}
                             />
                             <DirtyTextField
-                                label={t("surname1")}
+                                label={t("capacity")}
                                 style={{flex: 1}}
-                                name="surname1"
+                                name="capacity"
                                 formik={formik}
-                            />
-                            <DirtyTextField
-                                label={t("surname2")}
-                                style={{flex: 1}}
-                                formik={formik}
-                                name="surname2"
-                            />
-                        </Box>
-
-                        <Box className={[classes.line, classes.composite]}>
-                            <DirtyTextField
-                                label={t("email")}
-                                type="email"
-                                style={{flex: 1}}
-                                formik={formik}
-                                name="email"
-                                helperText={formik.touched["email"] && formik.errors["email"]}
+                                type="number"
                             />
                         </Box>
 
@@ -231,4 +224,4 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
   );
 }
 
-export default UserPerson;
+export default RoomDetails;

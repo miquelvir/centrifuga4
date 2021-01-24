@@ -122,6 +122,8 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             });
         }
 
+        // todo arent post and postwith id nearly same? merge
+
         postWithId(id, subresourceid=null) {
             return new Promise(function (resolve, reject) {
                 axios({
@@ -255,11 +257,12 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
         }
 
 
-        downloadSubresource(id, subresource) {
+        downloadSubresource(id, subresource, params) {
             return new Promise(function (resolve, reject) {
                 axios({
                     url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}/${subresource}`,
                     method: 'POST',
+                    params: params,
                     responseType: 'blob', // important
                     headers: {
                         ...{

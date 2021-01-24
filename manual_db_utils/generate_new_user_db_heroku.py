@@ -19,7 +19,6 @@ if __name__ == "__main__":
             surname1="admin",
             surname2="admin",
             email="admin4@gmail.com",
-            username="admin4@gmail.com",
             password_hash=User.hash_password("admin4"),
         )
 

@@ -47,6 +47,12 @@ class _ImplementsGet:
                     )
 
                 try:
+                    if v == "true":  # todo proper
+                        v = True
+                    elif v == "false":
+                        v = False
+                    elif v == "null":
+                        v = None
                     if operator == "eq":
                         filters.append(self.model.get_field(field) == v)
                     elif operator == "like":
@@ -71,9 +77,12 @@ class _ImplementsGet:
                         raise BaseBadRequest("Page is not a valid integer")
             elif k[0] == "include":
                 if include is None:
-                    include = [
-                        self.model.get_field(f) for f in json.loads(v)
-                    ]  # todo to json?
+                    try:
+                        include = [
+                            self.model.get_field(f) for f in json.loads(v)
+                        ]  # todo to json?
+                    except KeyError:
+                        raise BaseBadRequest("specified fields not found")
                 else:
                     raise BaseBadRequest(
                         "include can only appear once, an does not take a dot parameter"

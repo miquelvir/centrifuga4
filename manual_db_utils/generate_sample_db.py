@@ -24,38 +24,30 @@ from centrifuga4.models import (
 from random import randint, choice, sample
 
 
-need_get = Need(name="get", description="can perform get operations", type="action")
-need_patch = Need(
-    name="patch", description="can perform patch operations", type="action"
-)
+need_get = Need(id="get", description="can perform get operations", type="action")
+need_patch = Need(id="patch", description="can perform patch operations", type="action")
 need_delete = Need(
-    name="delete", description="can perform delete operations", type="action"
+    id="delete", description="can perform delete operations", type="action"
 )
-need_post = Need(name="post", description="can perform post operations", type="action")
-need_send_email = Need(name="send_email", description="can send emails", type="action")
+need_post = Need(id="post", description="can perform post operations", type="action")
+need_send_email = Need(id="send_email", description="can send emails", type="action")
 need_invite_users = Need(
-    name="invite_users", description="can invite users", type="action"
+    id="invite_users", description="can invite users", type="action"
 )
-need_students = Need(
-    name="students", description="can use students resource", type="res"
-)
-need_courses = Need(name="courses", description="can use courses resource", type="res")
+need_students = Need(id="students", description="can use students resource", type="res")
+need_courses = Need(id="courses", description="can use courses resource", type="res")
 need_guardians = Need(
-    name="guardians", description="can use guardians resource", type="res"
+    id="guardians", description="can use guardians resource", type="res"
 )
-need_payments = Need(
-    name="payments", description="can use payments resource", type="res"
-)
-need_rooms = Need(name="rooms", description="can use rooms resource", type="res")
+need_payments = Need(id="payments", description="can use payments resource", type="res")
+need_rooms = Need(id="rooms", description="can use rooms resource", type="res")
 need_schedules = Need(
-    name="schedules", description="can use schedules resource", type="res"
+    id="schedules", description="can use schedules resource", type="res"
 )
-need_teachers = Need(
-    name="teachers", description="can use teachers resource", type="res"
-)
-need_users = Need(name="users", description="can use users resource", type="res")
+need_teachers = Need(id="teachers", description="can use teachers resource", type="res")
+need_users = Need(id="users", description="can use users resource", type="res")
 need_recipes = Need(
-    name="payments-receipts", description="can use the recipes of payments", type="res"
+    id="payments-receipts", description="can use the recipes of payments", type="res"
 )
 all_needs = (
     need_get,
@@ -272,8 +264,9 @@ def add_labels():
         "master",
         "phd",
         "other",
+        "adult",
     ):
-        l = Label(name=label_name)
+        l = Label(id=label_name)
         centrifuga4.db.session.add(l)
         labels.append(l)
     return labels

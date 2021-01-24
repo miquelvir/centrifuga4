@@ -14,6 +14,7 @@ import Payments from "./students.student.payments.component";
 import Courses from "./students.student.courses.component";
 import {useErrorHandler} from "../_helpers/handle-response";
 import Schedule from "./students.student.schedule.component";
+import StudentsCourseDataService from "../_services/student_courses.service";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -169,6 +170,7 @@ export default function Student(props) {
 
             <Courses value={value}
                       index={3}
+                     dataService={StudentsCourseDataService}
                      history={props.history}
                       courseIds={student === null? null: student['courses']}
                       addCourseId={(course_id) => {

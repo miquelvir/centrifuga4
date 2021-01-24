@@ -61,8 +61,8 @@ class NewUserCollectionRes(Resource):
             )
 
             for n in data["needs"]:
-                need = Need.query.filter_by(
-                    name=n
+                need = Need.query.filter(
+                    Need.id == n
                 ).one_or_none()  # todo why query always is brought up by linter
                 if need:
                     u.needs.append(need)

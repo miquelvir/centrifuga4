@@ -1,0 +1,185 @@
+import React, {useEffect, useState} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import {useTranslation} from "react-i18next";
+import SwipeableViews from 'react-swipeable-views';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import useTheme from "@material-ui/core/styles/useTheme";
+import CoursesDataService from "../_services/courses.service";
+import {useErrorHandler} from "../_helpers/handle-response";
+import CourseStudentsDataService from "../_services/course_students.service";
+import CourseTeachersDataService from "../_services/course_teachers.service";
+import CourseDetails from "./courses.course.details.component";
+import CourseLabels from "./courses.course.labels.component";
+import CourseSchedule from "./courses.course.schedule.component";
+import CourseStudents from "./courses.course.students.component";
+import CourseTeachers from "./courses.course.teachers.component";
+import {useSnackbar} from "notistack";
+
+const useStyles = makeStyles((theme) => ({
+  contentPanel: {
+    //flex: 1,
+      position: 'relative', // todo proper scrollbar
+    overflow: "auto",
+    boxSizing: "border-box",
+      height: '100%', // todo proper,
+    display: 'flex',
+      flexDirection: 'column'
+  },
+    content: {
+      overflowX: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        overflowY: 'auto',
+        flex: 1,
+        height: '100%'
+    },
+    tab: {
+      height: '100%'
+    }
+}));
+
+
+function a11yProps(index) {
+  return {
+    id: `full-width-tab-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
+  };
+}
+
+
+export default function Course({currentCourseId, history, setNewCourse, addCourseId, newCourse, deleteCourse}) {
+  const loading = currentCourseId === null;
+
+  const errorHandler = useErrorHandler();
+
+  const [course, setCourse] = useState(null);  // todo rename to student
+
+  useEffect(() => {
+    if (loading) return setCourse(null);
+    CoursesDataService
+            .getOne(currentCourseId)
+            .then(...errorHandler({}))  // todo everywhere
+            .then(function (res) {
+                    setCourse(res["data"]);
+                });
+  }, [currentCourseId])
+
+  const classes = useStyles();
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+   useEffect(()=>{
+    setValue(0);
+  }, [currentCourseId])
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+
+  return (
+    <Paper elevation={3} square className={classes.contentPanel}>
+            <AppBar position="static" color="default">
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="scrollable"
+                  scrollButtons="on"
+                >
+                  <Tab label={t("course")} {...a11yProps(0)} />
+                   { !newCourse &&
+                  <Tab label={t("labels")} {...a11yProps(1)} />}
+
+                    { !newCourse &&
+                  <Tab label={t("schedules")} {...a11yProps(2)} />}
+
+                   { !newCourse &&
+                  <Tab label={t("students")} {...a11yProps(3)} />}
+
+                   { !newCourse &&
+                  <Tab label={t("teachers")} {...a11yProps(4)} />}
+
+                </Tabs>
+              </AppBar>
+          <SwipeableViews
+            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+            index={value}
+            containerStyle={{height: '100%'}}
+            className={classes.content}
+            onChangeIndex={handleChangeIndex}
+          >
+
+              <CourseDetails
+                    value={value}
+                    index={0}
+                    newCourse={newCourse}
+                    setNewCourse={setNewCourse}
+                    dir={theme.direction}
+                    currentCourse={course}
+                    updateCurrentCourse={setCourse}
+                    deleteCourse={deleteCourse}
+            />
+
+              <CourseLabels value={value}
+                      index={1}
+                      dir={theme.direction}
+                      currentCourse={course}
+                      updateCurrentCourse={setCourse}
+                      deleteCourse={deleteCourse}
+            />
+
+            <CourseSchedule value={value}
+                      index={2}
+                          history={history}
+                      className={classes.tab}
+                      dir={theme.direction}
+                      scheduleIds={course === null? null: course['schedules']}
+                      student_id={currentCourseId}
+            />
+
+            <CourseStudents value={value}
+                      index={3}
+                     dataService={CourseStudentsDataService}
+                     history={history}
+                      courseIds={course === null? null: course['students']}
+                      addCourseId={(student_id) => {
+                        setCourse({...course,
+                            students: [...course['students'], student_id]})
+                      }}
+                      student_id={currentCourseId}
+                      deleteCourseFromStudent={(student_id) => {
+                        setCourse({...course,
+                            students: course['students'].filter((s) => s !== student_id)});
+                      }}
+            />
+
+            <CourseTeachers value={value}
+                      index={4}
+                     dataService={CourseTeachersDataService}
+                     history={history}
+                      courseIds={course === null? null: course['teachers']}
+                      addCourseId={(course_id) => {
+                        setCourse({...course,
+                            teachers: [...course['teachers'], course_id]})
+                      }}
+                      student_id={currentCourseId}
+                      deleteCourseFromStudent={(course_id) => {
+                        setCourse({...course,
+                            teachers: course['teachers'].filter((c) => c !== course_id)});
+                      }}
+            />
+
+
+          </SwipeableViews>
+
+    </Paper>
+  );
+}

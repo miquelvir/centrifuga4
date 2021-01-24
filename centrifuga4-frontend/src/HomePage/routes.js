@@ -5,34 +5,12 @@ import RoomIcon from "@material-ui/icons/Room";
 import SchoolIcon from "@material-ui/icons/School";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
-import SettingsIcon from "@material-ui/icons/Settings";
 import Students from "../_components/students.component";
 import Users from "../_components/users.component";
-import {useTranslation} from "react-i18next";
 import Payments from "../_components/payments.component";
 import Rooms from "../_components/rooms.component";
-
-
-const Courses = () => {
-  const { t } = useTranslation();
-  const query = new URLSearchParams(window.location.search);
-  const id = query.get('id')
-  return (
-      <div>
-        <h1>{t("courses")}</h1>
-      <h2>{id}</h2>
-      </div>
-
-  );
-};
-
-const Teachers = () => {
-  const { t } = useTranslation();
-
-  return (
-    <h1>{t("teachers")}</h1>
-  );
-};
+import Teachers from "../_components/teachers.component";
+import Courses from "../_components/courses.component";
 
 
 const Routes = [

@@ -18,13 +18,14 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import {allNeeds} from "../_data/needs";
 import * as yup from "yup";
-import {useFormik} from "formik";
+import {FieldArray, useFormik} from "formik";
 import Typography from "@material-ui/core/Typography";
 import {invitationsService} from "../_services/userInvites.service";
 import {useErrorHandler} from "../_helpers/handle-response";
-import User from "./students.user.component";
+import User from "./users.user.component";
 import ItemsList from "./items_list.component";
 import UsersDataService from "../_services/users.service";
+import NeedsSelection from "./needs_selection.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,15 +80,14 @@ export default function Users({history, ...other}) {
   const errorHandler = useErrorHandler();
 
   const formik = useFormik({
-        initialValues: {...Object.assign({}, ...allNeeds.map((x) => ({[x.name]: true}))),
-                        email: ''},
+        initialValues: {email: '', needs: []},
         validationSchema: yup.object({
             email: yup.string().required(t("email_required")).email(t("invalid_email"))}),
         enableReinitialize: true,
         onSubmit: (values, {setStatus, setSubmitting}) => {
             setSubmitting(true);
             invitationsService
-                .inviteUser(values['email'], allNeeds.map(n => (n.name)).filter(name => values[name]))
+                .inviteUser(values['email'], values['needs'])
                 .then(...errorHandler({snackbarSuccess: true}))
                 .then(res => {
                     handleClose();
@@ -98,6 +98,8 @@ export default function Users({history, ...other}) {
             })
         }
     });
+
+  console.log(formik.values);
 
   return (
       <Grid container spacing={3} className={classes.root}>
@@ -122,21 +124,10 @@ export default function Users({history, ...other}) {
           />
           <Box my={2} className={classes.dialog}>
 
-                  <Typography>{t("permissions")}</Typography>
-                  {allNeeds.map(need => (
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                            checked={formik.values[need.name]}
-                            name={need.name}
-                            value={formik.values[need.name]}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            />
-                        }
-                        key={need.name}
-                        label={t(need.description)}
-                      />))}
+                  <NeedsSelection
+                      noDirty={true}
+                    formik={formik}
+                  />
 
           </Box>
         </DialogContent>

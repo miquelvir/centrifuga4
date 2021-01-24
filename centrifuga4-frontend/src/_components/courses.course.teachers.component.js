@@ -3,8 +3,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import StudentsCourseDataService from "../_services/student_courses.service";
-import CoursesDataService from "../_services/courses.service"
+import TeachersDataService from "../_services/teachers.service"
 import {useErrorHandler} from "../_helpers/handle-response";
 import {Skeleton} from "@material-ui/lab";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -69,7 +68,7 @@ class CloseIcon extends React.Component {
     }
 }
 
-function Courses({ children, history, value, dataService, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
+function CourseTeachers({ children, history, value, dataService, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
@@ -94,7 +93,7 @@ function Courses({ children, history, value, dataService, index, title, courseId
    function search() {
        if (loading || !newCourse) return;
 
-        CoursesDataService
+        TeachersDataService
             .getAll({name: 'name', value: searchTerm}, page, ['name', 'description', 'id'])
             .then(...errorHandler({}))
             .then(res => {
@@ -124,7 +123,7 @@ function Courses({ children, history, value, dataService, index, title, courseId
     if (courseIds.length === 0){
       setCourses([]);
     } else {
-      CoursesDataService
+      TeachersDataService
             .getMany(courseIds)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
@@ -213,7 +212,7 @@ const onChangeSearchTerm = (e) => {
               {loading?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              <Tooltip className={classes.actionIcon} title={t("enroll_to_course")} aria-label={t("new_payment")}>
+              <Tooltip className={classes.actionIcon} title={t("add_teacher")} aria-label={t("new_payment")}>
                 <IconButton onClick={(e) => {
                     if (allCourses === null) {
                         search();
@@ -254,7 +253,7 @@ const onChangeSearchTerm = (e) => {
               }
 
               {!loading && courses.length === 0 && !newCourse &&
-                <Typography>{t("no_courses")}</Typography>
+                <Typography>{t("no_teachers")}</Typography>
               }
               </div>
             </Box>
@@ -264,4 +263,4 @@ const onChangeSearchTerm = (e) => {
   );
 }
 
-export default Courses;
+export default CourseTeachers;

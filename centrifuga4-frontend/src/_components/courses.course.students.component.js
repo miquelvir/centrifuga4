@@ -3,8 +3,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import StudentsCourseDataService from "../_services/student_courses.service";
-import CoursesDataService from "../_services/courses.service"
+import StudentsDataService from "../_services/students.service"
 import {useErrorHandler} from "../_helpers/handle-response";
 import {Skeleton} from "@material-ui/lab";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -69,11 +68,13 @@ class CloseIcon extends React.Component {
     }
 }
 
-function Courses({ children, history, value, dataService, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
+function CourseStudents({ history, value, dataService, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
   const loading = courseIds === null;
+
+  // todo add teachers/students menus and generalise
 
   const [courses, setCourses] = useState([]);
   const [allCourses, setAllCourses] = useState(null);
@@ -94,7 +95,7 @@ function Courses({ children, history, value, dataService, index, title, courseId
    function search() {
        if (loading || !newCourse) return;
 
-        CoursesDataService
+        StudentsDataService
             .getAll({name: 'name', value: searchTerm}, page, ['name', 'description', 'id'])
             .then(...errorHandler({}))
             .then(res => {
@@ -124,7 +125,7 @@ function Courses({ children, history, value, dataService, index, title, courseId
     if (courseIds.length === 0){
       setCourses([]);
     } else {
-      CoursesDataService
+      StudentsDataService
             .getMany(courseIds)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
@@ -132,7 +133,7 @@ function Courses({ children, history, value, dataService, index, title, courseId
                 });
     }
   }, [courseIds])
-const onChangeSearchTerm = (e) => {
+    const onChangeSearchTerm = (e) => {
         setSearchTerm(e.target.value);
     };
   return (
@@ -213,7 +214,7 @@ const onChangeSearchTerm = (e) => {
               {loading?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              <Tooltip className={classes.actionIcon} title={t("enroll_to_course")} aria-label={t("new_payment")}>
+              <Tooltip className={classes.actionIcon} title={t("add_student")} aria-label={t("new_payment")}>
                 <IconButton onClick={(e) => {
                     if (allCourses === null) {
                         search();
@@ -254,7 +255,7 @@ const onChangeSearchTerm = (e) => {
               }
 
               {!loading && courses.length === 0 && !newCourse &&
-                <Typography>{t("no_courses")}</Typography>
+                <Typography>{t("no_students")}</Typography>
               }
               </div>
             </Box>
@@ -264,4 +265,4 @@ const onChangeSearchTerm = (e) => {
   );
 }
 
-export default Courses;
+export default CourseStudents;

@@ -1,7 +1,7 @@
 import {useFormik} from "formik";
 
 
-export function useNormik(onlyChangedValuesOnSubmit, props) {
+export function useNormik(onlyChangedValuesOnSubmit, props, allowArrays=false) {
     let originalInitialValues = {};
     if ("initialValues" in props) {
         let nullSafeInitialValues = {};
@@ -19,12 +19,12 @@ export function useNormik(onlyChangedValuesOnSubmit, props) {
     if ("onSubmit" in props){
         const oldOnSubmit = props.onSubmit;
         const nullSafeOnSubmit = (values, actions) => {
-            console.log("and the values are", values);
             let normalizedValues = {};
             for (const [key, value] of Object.entries(values)) {  // todo how to make clean
                 const normalizedValue = value === ''? null : value;
                 if (!onlyChangedValuesOnSubmit ||
-                    (onlyChangedValuesOnSubmit && normalizedValue !== originalInitialValues[key] && !Array.isArray(originalInitialValues[key]))){
+                    (onlyChangedValuesOnSubmit && normalizedValue !== originalInitialValues[key] &&
+                        (allowArrays || !Array.isArray(originalInitialValues[key])) )){
                   normalizedValues[key] = normalizedValue;
                 }
 

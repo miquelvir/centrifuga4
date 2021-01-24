@@ -24,7 +24,7 @@ db.Table(
 
 db.Table(
     "label_course",
-    db.Column("label_name", db.Text, db.ForeignKey("label.name")),
+    db.Column("label_id", db.Text, db.ForeignKey("label.id")),
     db.Column("course_id", db.Text, db.ForeignKey("course.id")),
 )
 

@@ -13,11 +13,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function RoomSchedule({ value, history, index, scheduleIds, ...other }) {
+function TeacherSchedule({ value, history, index, scheduleIds, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  // todo no minHeight ? and also tabpanel component
   return (
     <div
       role="tabpanel"
@@ -45,4 +44,4 @@ function RoomSchedule({ value, history, index, scheduleIds, ...other }) {
   );
 }
 
-export default RoomSchedule;
+export default TeacherSchedule;

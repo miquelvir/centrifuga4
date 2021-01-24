@@ -2,6 +2,12 @@ from flask import Blueprint
 from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
+from centrifuga4.blueprints.api.resources.course_attendance_list import (
+    CoursesAttendanceListRes,
+)
+from centrifuga4.blueprints.api.resources.course_students_contact_sheet import (
+    CourseContactSheet,
+)
 from centrifuga4.easy_api.resource_factory import get_resources
 from centrifuga4.blueprints.api.errors import Unauthorized, Forbidden
 from centrifuga4.blueprints.api.resources.payment_receipts import PaymentsReceiptsRes
@@ -34,7 +40,6 @@ def handle(e):
 
 @api_blueprint.errorhandler(RawForbidden)
 def handle(e):
-    print(e)
     raise Forbidden(e.message, **e.kwargs)
 
 
@@ -45,6 +50,9 @@ api.add_resource(
     StudentsEnrollmentAgreementRes, "/students/<string:id_>/enrollmentAgreement"
 )
 api.add_resource(PaymentsReceiptsRes, "/payments/<string:id_>/receipt")
+api.add_resource(CoursesAttendanceListRes, "/courses/<string:id_>/attendanceList")
+api.add_resource(CourseContactSheet, "/courses/<string:id_>/contactsSheet")
+
 
 for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User):
     for res in get_resources(model):

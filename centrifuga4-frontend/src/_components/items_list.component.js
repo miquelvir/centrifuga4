@@ -105,6 +105,9 @@ const ItemsList = ({setCurrentItemId, currentItemId, items, setItems, displayNam
 
     // we don't want the search to trigger for each searchTerm change
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        setPage(1);
+    }, [filters]);  // todo
     useEffect(search, [page, filters, searchBy]);
 
     const handlePageChange = (event, value) => {

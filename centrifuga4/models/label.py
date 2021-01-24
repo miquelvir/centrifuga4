@@ -6,10 +6,10 @@ class Label(MyBase):
     __tablename__ = "label"
     permissions = {}
 
-    name = db.Column(db.Text, primary_key=True)
+    id = db.Column(db.Text, primary_key=True)
     courses = db.relationship(
         "Course", secondary="label_course", back_populates="labels"
     )
 
     def __repr__(self):
-        return "<Label | %s - %s>" % (self.id, self.name)
+        return "<Label | %s>" % self.id

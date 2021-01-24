@@ -51,6 +51,10 @@ class Student(Person):
         return emails
 
     @hybrid_property
+    def is_enrolled(self) -> bool:
+        return self.enrollment_status == "enrolled"
+
+    @hybrid_property
     def schedules(self):
         if self.courses:
             for course in self.courses:

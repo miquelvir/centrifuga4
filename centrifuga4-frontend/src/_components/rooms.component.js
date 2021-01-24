@@ -61,7 +61,7 @@ export default function Rooms({history, ...other}) {
             dataService={RoomsDataService}
             searchBarLabel="rooms"
           />
-          <Tooltip title={t("new_student")}>
+          <Tooltip title={t("new_room")}>
               <Fab className={classes.fab} color="primary" onClick={(e) => {
                   setCurrentRoomId(null);
                  setNewRoom(true);
@@ -75,6 +75,7 @@ export default function Rooms({history, ...other}) {
           <Room
             currentRoomId={currentRoomId}
             newRoom={newRoom}
+            setNewRoom={setNewRoom}
             history={history}
             addRoomId={(id) =>{
                 setCurrentRoomId(id);

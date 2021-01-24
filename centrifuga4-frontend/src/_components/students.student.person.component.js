@@ -16,6 +16,8 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import {education_years} from "../_data/education";
 import Divider from "@material-ui/core/Divider";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
+import DiscardButton from "./formik_discard_button";
+import SaveButton from "./formik_save_button";
 
 const useStyles = makeStyles((theme) => ({
     line: {
@@ -154,22 +156,12 @@ function Person(props) {
                 (
                     <form onSubmit={formik.handleSubmit}>
 
-
-                        <IconButton className={classes.actionIcon}
-                                     onClick={formik.handleReset}
-                                     disabled={!formik.dirty || formik.isSubmitting}>
-                            <Tooltip title={t("reset")} aria-label={t("reset")}>
-                                <RestoreIcon/>
-                            </Tooltip>
-                        </IconButton>
+                        <DiscardButton className={classes.actionIcon}
+                                        formik={formik}/>
 
 
-                        <IconButton className={classes.actionIcon} type="submit"
-                                    disabled={!newPerson && (!formik.dirty || formik.isSubmitting)}>
-                            <Tooltip title={t("save")} aria-label={t("save")}>
-                                <SaveIcon/>
-                            </Tooltip>
-                        </IconButton>
+                        <SaveButton className={classes.actionIcon}
+                                    formik={formik}/>
 
 
                         <DirtyTextField

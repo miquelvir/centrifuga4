@@ -7,14 +7,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import useTheme from "@material-ui/core/styles/useTheme";
-import Attendee from "./students.student.attendee.component";
-import Guardian from "./students.student.guardian.component";
 import UsersDataService from "../_services/users.service";
-import Payments from "./students.student.payments.component";
-import Courses from "./students.student.courses.component";
 import {useErrorHandler} from "../_helpers/handle-response";
-import Schedule from "./students.student.schedule.component";
 import UserPerson from "./users.user.userperson.component";
+import UserPermissions from "./users.user.permissions.component";
+import * as PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -48,6 +45,16 @@ function a11yProps(index) {
 }
 
 
+
+UserPermissions.propTypes = {
+  updateCurrentStudent: PropTypes.func,
+  index: PropTypes.number,
+  value: PropTypes.number,
+  deleteStudent: PropTypes.any,
+  title: PropTypes.any,
+  currentStudent: PropTypes.any,
+  dir: PropTypes.any
+};
 export default function User(props) {
   const currentUserId = props.currentStudentId;
   const deleteUser = props.deleteStudent;
@@ -96,6 +103,7 @@ export default function User(props) {
                   scrollButtons="on"
                 >
                   <Tab label={t("user")} {...a11yProps(0)} />
+                  <Tab label={t("permissions")} {...a11yProps(1)} />
                 </Tabs>
               </AppBar>
           <SwipeableViews
@@ -108,7 +116,14 @@ export default function User(props) {
             <UserPerson value={value}
                       index={0}
                       dir={theme.direction}
-                      title={t("attendee")}
+                      currentStudent={user}
+                      updateCurrentStudent={setUser}
+                      deleteStudent={deleteUser}
+            />
+
+            <UserPermissions value={value}
+                      index={1}
+                      dir={theme.direction}
                       currentStudent={user}
                       updateCurrentStudent={setUser}
                       deleteStudent={deleteUser}

@@ -7,11 +7,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import useTheme from "@material-ui/core/styles/useTheme";
-import RoomsDataService from "../_services/rooms.service";
+import Attendee from "./students.student.attendee.component";
+import TeachersDataService from "../_services/teachers.service";
 import {useErrorHandler} from "../_helpers/handle-response";
-import RoomSchedule from "./rooms.room.schedule.component";
-import UserPerson from "./users.user.userperson.component";
-import RoomDetails from "./rooms.room.details.component";
+import TeachersCoursesDataService from "../_services/teachers_courses.service";
+import TeacherDetails from "./teachers.teacher.details.component";
+import TeacherSchedule from "./teachers.teacher.schedule.component";
+import Courses from "./students.student.courses.component";
+import StudentsCourseDataService from "../_services/student_courses.service";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -45,22 +48,22 @@ function a11yProps(index) {
 }
 
 
-export default function Room({history, setNewRoom, currentRoomId, deleteRoom, newRoom, addRoomId}) {
-  const loading = currentRoomId === null;
+export default function Teacher({currentTeacherId, history, setNewTeacher, addTeacherId, newTeacher, deleteTeacher}) {
+  const loading = currentTeacherId === null;
 
   const errorHandler = useErrorHandler();
 
-  const [room, setRoom] = useState(null);
+  const [teacher, setTeacher] = useState(null);  // todo rename to student
 
   useEffect(() => {
-    if (loading) return setRoom(null);
-    RoomsDataService
-            .getOne(currentRoomId)
+    if (loading) return setTeacher(null);
+    TeachersDataService
+            .getOne(currentTeacherId)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
-                    setRoom(res["data"]);
+                    setTeacher(res["data"]);
                 });
-  }, [currentRoomId])
+  }, [currentTeacherId])
 
   const classes = useStyles();
   const theme = useTheme();
@@ -72,7 +75,7 @@ export default function Room({history, setNewRoom, currentRoomId, deleteRoom, ne
 
    useEffect(()=>{
     setValue(0);
-  }, [currentRoomId])
+  }, [currentTeacherId])
 
   const handleChangeIndex = (index) => {
     setValue(index);
@@ -89,10 +92,13 @@ export default function Room({history, setNewRoom, currentRoomId, deleteRoom, ne
                   variant="scrollable"
                   scrollButtons="on"
                 >
-                  <Tab label={t("room")} {...a11yProps(0)} />
+                  <Tab label={t("teacher")} {...a11yProps(0)} />
 
-                    { !newRoom &&
+                    { !newTeacher &&
                   <Tab label={t("schedules")} {...a11yProps(1)} />}
+
+                   { !newTeacher &&
+                  <Tab label={t("courses")} {...a11yProps(2)} />}
 
                 </Tabs>
               </AppBar>
@@ -103,25 +109,44 @@ export default function Room({history, setNewRoom, currentRoomId, deleteRoom, ne
             className={classes.content}
             onChangeIndex={handleChangeIndex}
           >
-                   <RoomDetails value={value}
-                      index={0}
-                                newRoom={newRoom}
-                                setNewRoom={setNewRoom}
-                      dir={theme.direction}
-                      currentStudent={room}
-                      updateCurrentStudent={setRoom}
-                      deleteStudent={deleteRoom}
+
+              <TeacherDetails
+                    value={value}
+                    index={0}
+                    newRoom={newTeacher}
+                    setNewRoom={setNewTeacher}
+                    dir={theme.direction}
+                    currentStudent={teacher}
+                    updateCurrentStudent={setTeacher}
+                    deleteStudent={deleteTeacher}
             />
 
 
-            <RoomSchedule value={value}
+            <TeacherSchedule value={value}
                       index={1}
                           history={history}
                       className={classes.tab}
                       dir={theme.direction}
-                      scheduleIds={room === null? null: room['schedules']}
-                      student_id={currentRoomId}
+                      scheduleIds={teacher === null? null: teacher['schedules']}
+                      student_id={currentTeacherId}
             />
+
+            <Courses value={value}
+                      index={2}
+                     dataService={TeachersCoursesDataService}
+                     history={history}
+                      courseIds={teacher === null? null: teacher['courses']}
+                      addCourseId={(course_id) => {
+                        setTeacher({...teacher,
+                            courses: [...teacher['courses'], course_id]})
+                      }}
+                      student_id={currentTeacherId}
+                      deleteCourseFromStudent={(course_id) => {
+                        setTeacher({...teacher,
+                            courses: teacher['courses'].filter((c) => c !== course_id)});
+                      }}
+            />
+
 
           </SwipeableViews>
 

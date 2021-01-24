@@ -25,14 +25,11 @@ const DirtyTextField = (props) => {
         error: formik.status  || formik.errors[name] !== undefined,
         helperText: formik.touched[name] && formik.errors[name]
     }
-    return ('InputLabelProps' in props )?
-                    <TextField className={classes.root}
-                                          {...props}
-                                          {...formikProps}/>:
-        <TextField className={classes.root}
-                          InputLabelProps={{shrink: formik.values[name] !== ''}}
-                          {...props}
-                          {...formikProps}/>;
+    return <TextField className={classes.root}
+       InputLabelProps={{shrink: formik.values[name] !== ''}}
+      {...formikProps}
+       {...props}
+                  />
 }
 
 export default DirtyTextField;
