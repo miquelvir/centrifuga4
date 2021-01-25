@@ -12,7 +12,7 @@ from centrifuga4.auth_auth.resource_need import StudentsPermission, CoursesPermi
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.constants import SHORT_NAME
 from centrifuga4.models import Student, Course
-from pdfs.enrollment import generate_enrollment_agreement_pdf
+from pdfs.enrolment import generate_enrolment_agreement_pdf
 
 
 def write_students(students, spamwriter):
@@ -63,18 +63,18 @@ def write_students(students, spamwriter):
         ]
     )
     for student in students:
-        if student.enrollment_status not in emails:
-            emails[student.enrollment_status] = {
+        if student.enrolment_status not in emails:
+            emails[student.enrolment_status] = {
                 "official_contact_emails": set(),
                 "guardian_emails": set(),
                 "student_emails": set(),
             }
 
         if student.email:
-            emails[student.enrollment_status]["student_emails"].add(student.email)
+            emails[student.enrolment_status]["student_emails"].add(student.email)
 
         for email in student.official_notification_emails:
-            emails[student.enrollment_status]["official_contact_emails"].add(email)
+            emails[student.enrolment_status]["official_contact_emails"].add(email)
 
         spamwriter.writerow(
             [
@@ -86,7 +86,7 @@ def write_students(students, spamwriter):
                 student.surname1,
                 student.surname2,
                 student.full_name,
-                student.enrollment_status,
+                student.enrolment_status,
                 student.email,
                 student.phone,
                 student.address,
@@ -123,7 +123,7 @@ def write_students(students, spamwriter):
 
         for guardian in student.guardians:
             if guardian.email:
-                emails[student.enrollment_status]["guardian_emails"].add(guardian.email)
+                emails[student.enrolment_status]["guardian_emails"].add(guardian.email)
 
             spamwriter.writerow(
                 [

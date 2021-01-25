@@ -18,7 +18,7 @@ from pdfs.payment_receipt import generate_payment_recipe_pdf
 class PaymentsReceiptsRes(Resource, SwaggerView):  # todo documented class higher up
     @Requires(PostPermission, PaymentsPermission, PaymentsRecipesPermission)
     def post(self, id_):
-        query = Payment.query.filter_by(id=id_)
+        query = Payment.query.filter(Payment.id == id_)
         payment: Payment = query.first()
 
         if not payment:

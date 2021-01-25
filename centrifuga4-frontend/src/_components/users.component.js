@@ -4,28 +4,25 @@ import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
 import Fab from "@material-ui/core/Fab";
 import {
-    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControlLabel,
     TextField,
     Tooltip
 } from "@material-ui/core";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
-import {allNeeds} from "../_data/needs";
 import * as yup from "yup";
-import {FieldArray, useFormik} from "formik";
-import Typography from "@material-ui/core/Typography";
+import {useFormik} from "formik";
 import {invitationsService} from "../_services/userInvites.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import User from "./users.user.component";
 import ItemsList from "./items_list.component";
 import UsersDataService from "../_services/users.service";
 import NeedsSelection from "./needs_selection.component";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +60,7 @@ export default function Users({history, ...other}) {
   const [users, setUsers] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [open, setOpen] = React.useState(false);
+    const [hasNeeds, NEEDS] = useNeeds();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -99,7 +97,6 @@ export default function Users({history, ...other}) {
         }
     });
 
-  console.log(formik.values);
 
   return (
       <Grid container spacing={3} className={classes.root}>
@@ -152,11 +149,11 @@ export default function Users({history, ...other}) {
                 dataService={UsersDataService}
                 searchBarLabel="users"
             />
-          <Tooltip title={t("new_user")}>
-              <Fab className={classes.fab} color="primary" onClick={handleClickOpen}>
-                <PersonAddIcon />
-              </Fab>
-          </Tooltip>
+            {hasNeeds([NEEDS.invite_users]) && <Tooltip title={t("new_user")}>
+                <Fab className={classes.fab} color="primary" onClick={handleClickOpen}>
+                    <PersonAddIcon/>
+                </Fab>
+            </Tooltip>}
         </Grid>
 
         <Grid item xs={8} className={classes.left}>

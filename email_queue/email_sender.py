@@ -103,10 +103,7 @@ class EmailSender:
         encoders.encode_base64(part)
 
         # Add header as key/value pair to attachment part
-        part.add_header(
-            "Content-Disposition",
-            f"attachment; filename={filename}",
-        )
+        part.add_header("Content-Disposition", f"attachment; filename={filename}")
 
         return part
 
@@ -120,8 +117,6 @@ class EmailSender:
         encoders.encode_base64(part)"""
 
         part = MIMEApplication(attachment.read(), "pdf")
-        print("att", attachment)
-        print("att_read", attachment.read())
 
         # Add header as key/value pair to attachment part
         part.add_header("Content-Disposition", "attachment", filename=filename)
@@ -164,8 +159,6 @@ class EmailSender:
         elif config.BCC_ADMIN:
             message[_BCC] = config.DEBUGGING_EMAIL
 
-        print(message[_TO])
-
         # add plain text to the body if given
         if email.plain_body:
             message.attach(text.MIMEText(email.plain_body, _PLAIN))
@@ -184,9 +177,7 @@ class EmailSender:
 
         # send message using server
         if not config.DEBUGGING_MODE or config.DEBUGGING_SEND_EMAILS:
-            print("sending")
             result = self._server.send_message(message)
-            print(result)
         else:
             result = {}
             log.debug(

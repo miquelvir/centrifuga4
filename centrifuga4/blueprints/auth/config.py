@@ -1,9 +1,9 @@
 from functools import wraps
 
-from flask import Blueprint, g, request, current_app, session, abort
+from flask import Blueprint, g, request, current_app, session, abort, jsonify
 
 # initialise the blueprint
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from flask_principal import identity_changed, Identity, AnonymousIdentity
 
 from centrifuga4.models import User
@@ -51,10 +51,10 @@ def get_auth_token():
     remember = request.args.get("remember")
     remember = remember == "1" if remember else False
 
-    login_user(user, remember=False)  # todo
+    login_user(user, remember=False)  # todo remember
     identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
 
-    return "", 200
+    return jsonify({"needs": [n.id for n in user.needs]})
 
 
 @auth_service.route("/logout", methods=["GET"])
@@ -93,6 +93,7 @@ def logout():
 
 
 @auth_service.route("/ping", methods=["GET"])
-@login_required
+@login_required  #  todo everything should have this or requires
 def ping():
-    return "pong"
+    # will break if login is disabled, as in wsgi_development config
+    return jsonify({"needs": [n.id for n in current_user.needs]})

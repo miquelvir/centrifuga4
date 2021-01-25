@@ -22,10 +22,6 @@ const DirtyCheckbox = ({name, value, formik, noDirty=false, ...props}) => {
     const dirty = noDirty === true? false: formik.values[name] !== undefined && formik.initialValues[name] !== undefined && formik.values[name].includes(value) !== formik.initialValues[name].includes(value);
 
     const classes = useStyles(dirty);
-     if (value === "users"){
-        console.log("dirty", dirty, classes.root);
-        console.log(props.checked);
-    }
 
 
     return  <Checkbox

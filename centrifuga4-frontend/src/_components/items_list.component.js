@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import StudentsDataService from "../_services/students.service";
 import Pagination from '@material-ui/lab/Pagination';
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
@@ -91,7 +90,7 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
         return Object.fromEntries(Object.entries(filters).filter(([k,v]) => (v !== null)))
     }
 
-    function search() {
+    function search(page) {
         dataService
             .getAll({name: searchBy, value: searchTerm}, page,
                [...new Set(['id', displayNameField])], getFilters())
@@ -105,9 +104,14 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
     // we don't want the search to trigger for each searchTerm change
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        setPage(1);
+        if (page === 1) {
+            search(); // no need to change page, since we are at page 1
+        } else {
+            setPage(1);  // will trigger search due tot the effect below
+        }
     }, [filters]);  // todo
-    useEffect(search, [page, filters, searchBy]);
+
+    useEffect(search, [page, searchBy]);
 
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -137,14 +141,14 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
                     <AccordionDetails>
                         <Box className={classes.chips}>
 
-                            {exportPage && <ExportSearchChip
+                            {exportPage && Array.isArray(items) && items.length > 0 && <ExportSearchChip
                                 searchTerm={searchTerm}
                                 page={page}
                                 searchTermField={searchBy}
                                 dataService={dataService}
                                 getFilters={getFilters}
                             />}
-                            {exportAllPages && <ExportSearchChip
+                            {exportAllPages && Array.isArray(items) && items.length > 0 &&  <ExportSearchChip
                                 searchTerm={searchTerm}
                                 page={page}
                                 dataService={dataService}
@@ -156,6 +160,8 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
                             {chips.map((chip) => (
                                 chip
                             ))}
+
+                            ·
 
                             {searchByOptions.map(option => (
                                 <Tooltip key={option} title={`${t("search_by")} ${t(option)}`}>
@@ -175,20 +181,25 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
 
 
                             {usableFilters.map(f => (
-                                f['options'].map(option => (
-                                    <Tooltip key={f.name+option.name}
-                                        title={t(option.tooltip)}
-                                        aria-label={t(option.tooltip)}>
-                                    <Chip size="small"
-                                          color={filters[f.name] === option.name ? "primary" : "default"}
-                                          label={t(option.label)}
-                                          onClick={(e) => {
-                                              setFilters({...filters, [f.name]: (filters[f.name] === option.name)? null: option.name})
-                                          }}/>
-                                </Tooltip>
-                                    )
-                                )
-                                ))
+                                <React.Fragment>
+                                   · {f['options'].map(option => (
+                                            <Tooltip key={f.name + option.name}
+                                                     title={t(option.tooltip)}
+                                                     aria-label={t(option.tooltip)}>
+                                                <Chip size="small"
+                                                      color={filters[f.name] === option.name ? "primary" : "default"}
+                                                      label={t(option.label)}
+                                                      onClick={(e) => {
+                                                          setFilters({
+                                                              ...filters,
+                                                              [f.name]: (filters[f.name] === option.name) ? null : option.name
+                                                          })
+                                                      }}/>
+                                            </Tooltip>
+                                        )
+                                    )}
+
+                                    </React.Fragment>))
                             }
                         </Box>
                     </AccordionDetails>

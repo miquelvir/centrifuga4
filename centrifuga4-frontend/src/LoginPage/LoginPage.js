@@ -63,9 +63,11 @@ const LoginPage = (props) => {
 
     const {enqueueSnackbar} = useSnackbar();
 
-    const logged = () => {
+    const logged = (needs) => {
         const setLogged = userCtx["setUser"];
+        const setNeeds = userCtx["setNeeds"];
         setLogged({logged: true, ping: true});
+        setNeeds(needs);
         const {from} = props.location.state || {from: {pathname: "/home/students"}};
         props.history.push(from);
     }
@@ -86,13 +88,12 @@ const LoginPage = (props) => {
             authenticationService
                 .login(username, password)
                 .then(...errorHandler({}))
-                .then(function (success) {
-                        if (success) {
-                            logged();
-                        } else {
-                            setStatus(true);
-                        }
+                .then(function (needs) {
+                        logged(needs);
                     })
+                .catch(() => {
+                    setStatus(true);
+                })
                 .finally(() => {
                         setSubmitting(false);
                 });
@@ -109,7 +110,7 @@ const LoginPage = (props) => {
              authenticationService
             .ping()
             .then(...errorHandler({errorOut: false}))
-            .then((success) => { if (success) logged(); });  // ignore failed ping (it is just not logged in)
+            .then((needs) => { logged(needs); });  // ignore failed ping (it is just not logged in)
         }
 
     });

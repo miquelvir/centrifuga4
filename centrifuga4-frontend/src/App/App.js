@@ -5,7 +5,6 @@ import {ThemeProvider} from '@material-ui/styles';
 import {darkTheme, lightTheme} from '../theme';
 import {SnackbarProvider} from 'notistack';
 
-import {history} from '../_helpers/history';
 import PrivateRoute from '../_components/PrivateRoute';
 import HomePage from '../HomePage/HomePage';
 import LoginPage from '../LoginPage/LoginPage';
@@ -14,8 +13,7 @@ import {userContext} from '../_context/user-context';
 import {themeContext} from '../_context/theme-context';
 import SignupPage from "../SignupPage/SignupPage";
 import ResetPage from "../ResetPage/ResetPage";
-import PreEnrollmentPage from "../PreEnrollmentPage/PreEnrollmentPage";
-import {createBrowserHistory} from "history";
+import PreEnrolmentPage from "../PreEnrolmentPage/PreEnrolmentPage";
 import NotFound from "../_components/not_found";
 
 function App() {
@@ -24,13 +22,17 @@ function App() {
 
 
     const [user, setUser] = useState({logged: false, ping: true});
-
+    const [needs, _setNeeds] = useState([]);
+    const setNeeds = (needs) => {
+        if (!Array.isArray(needs)) return _setNeeds([]);
+        return _setNeeds(needs);
+    }
 
     return (
       <ThemeProvider theme={appliedTheme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
-            <userContext.Provider value={{user: user, setUser: setUser}}>
+            <userContext.Provider value={{user: user, setUser: setUser, needs: needs, setNeeds: setNeeds}}>
                 <themeContext.Provider value={{theme: theme, switchTheme: () => {
                     localStorage.setItem("darkTheme", (!theme).toString());
                     setTheme(!theme);
@@ -41,7 +43,7 @@ function App() {
                         <Route path={'/login'} component={LoginPage}/>
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
-                        <Route path={'/prematricula'} component={PreEnrollmentPage}/>
+                        <Route path={'/prematricula'} component={PreEnrolmentPage}/>
                         <Route component={NotFound}/>
                         </Switch>
                     </BrowserRouter>

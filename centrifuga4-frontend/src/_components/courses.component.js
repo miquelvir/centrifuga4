@@ -9,6 +9,7 @@ import {Tooltip} from "@material-ui/core";
 import CoursesDataService from "../_services/courses.service";
 import ItemsList from "./items_list.component";
 import Course from "./courses.course.component";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +46,7 @@ export default function Courses({history, ...other}) {
   useEffect(() => {
       if (currentCourseId !== null) setNewCourse(false);
   }, [currentCourseId])
-
+const [hasNeeds, NEEDS] = useNeeds();
   return (
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={4} className={classes.left}>
@@ -78,20 +79,21 @@ export default function Courses({history, ...other}) {
             />
 
 
-          <Tooltip title={t("new_student")}>
-              <Fab className={classes.fab} color="primary" onClick={(e) => {
-                  setCurrentCourseId(null);
-                 setNewCourse(true);
-              }}>
-                <AddIcon />
-              </Fab>
-          </Tooltip>
+            {hasNeeds([NEEDS.post]) && <Tooltip title={t("new_student")}>
+                <Fab className={classes.fab} color="primary" onClick={(e) => {
+                    setCurrentCourseId(null);
+                    setNewCourse(true);
+                }}>
+                    <AddIcon/>
+                </Fab>
+            </Tooltip>}
         </Grid>
 
         <Grid item xs={8} className={classes.left}>
           <Course
             currentCourseId={currentCourseId}
             newCourse={newCourse}
+            setNewCourse={setNewCourse}
             history={history}
             addCourseId={(id) =>{
                 setCurrentCourseId(id);

@@ -21,6 +21,7 @@ import Dialog from "@material-ui/core/Dialog";
 import * as yup from "yup";
 import DirtyTextField from "./dirtytextfield.component";
 import {emptyGuardian} from "../_data/empty_objects";
+import {useNeeds} from "../_helpers/needs";
 
 function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
   const [guardian, setGuardian] = useState(null);
 
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
-
+  const [hasNeeds, NEEDS] = useNeeds();
   useEffect(() => {
     if (newGuardian) return;
 
@@ -68,11 +69,11 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
           </Button>
           <Button onClick={(e) => {
             GuardiansDataService
-              .delete(guardianId)
-              .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
-              .then(function (res) {
-                      deleteGuardianId(guardianId);
-                  });
+                .delete(guardianId)
+                .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
+                .then(function (res) {
+                  deleteGuardianId(guardianId);
+                });
             setOpenConfirmDeleteDialog(false);
           }} color="primary" autoFocus>
             {t("delete_guardian")}
@@ -85,14 +86,14 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
             <Box px={2}>
 
 
-          <IconButton style={{float: 'right'}}  onClick={(e) => {
-            if (!newGuardian) return setOpenConfirmDeleteDialog(true);
-            deleteNewGuardian();
-          }}>
-            <Tooltip title={t("delete")} aria-label={t("delete")}>
-            <DeleteIcon />
-             </Tooltip>
-          </IconButton>
+              {hasNeeds([NEEDS.delete]) && <IconButton style={{float: 'right'}} onClick={(e) => {
+                if (!newGuardian) return setOpenConfirmDeleteDialog(true);
+                deleteNewGuardian();
+              }}>
+                <Tooltip title={t("delete")} aria-label={t("delete")}>
+                  <DeleteIcon/>
+                </Tooltip>
+              </IconButton>}
 
 
               <Person currentPerson={newGuardian? emptyGuardian: guardian}

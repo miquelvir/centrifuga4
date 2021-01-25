@@ -15,6 +15,7 @@ import Courses from "./students.student.courses.component";
 import {useErrorHandler} from "../_helpers/handle-response";
 import Schedule from "./students.student.schedule.component";
 import StudentsCourseDataService from "../_services/student_courses.service";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -48,18 +49,15 @@ function a11yProps(index) {
 }
 
 
-export default function Student(props) {
-  const currentStudentId = props.currentStudentId;
-  const deleteStudent = props.deleteStudent;
-  const newStudent = props.newStudent;
-  const addStudentId = props.addStudentId;
+export default function Student({setNewStudent,newStudent,addStudentId, currentStudentId, deleteStudent, ...props}) {
+
   const loading = currentStudentId === null;
 
   const errorHandler = useErrorHandler();
 
   const [student, setStudent] = useState(null);  // todo rename to student
   const [newGuardian, setNewGuardian] = useState(false);
-
+    const [hasNeeds, NEEDS] = useNeeds();
 
 
   useEffect(() => {
@@ -105,13 +103,13 @@ export default function Student(props) {
                 >
                   <Tab label={t("attendee")} {...a11yProps(0)} />
 
-                    { !newStudent &&
+                    { !newStudent && hasNeeds([NEEDS.schedules]) &&
                   <Tab label={t("schedules")} {...a11yProps(1)} />}
-                 { !newStudent && <Tab label={t("payments")} {...a11yProps(2)} />}
-                 { !newStudent && <Tab label={t("courses")} {...a11yProps(3)} />}
+                 { !newStudent  && hasNeeds([NEEDS.payments]) &&  <Tab label={t("payments")} {...a11yProps(2)} />}
+                 { !newStudent  && hasNeeds([NEEDS.courses]) &&  <Tab label={t("courses")} {...a11yProps(3)} />}
 
                   {
-                  (!newStudent && guardians) && guardians.map((contact, index) => (
+                  (!newStudent && guardians  && hasNeeds([NEEDS.guardians]) ) && guardians.map((contact, index) => (
                   <Tab key={t("contact") + " " + (index+1)} label={t("contact") + " " + (index+1)} {...a11yProps(index+4)} />
                       ))}
 
@@ -133,6 +131,7 @@ export default function Student(props) {
           >
             <Attendee value={value}
                       index={0}
+                      setNewStudent={setNewStudent}
                       dir={theme.direction}
                       newStudent={newStudent}
                       title={t("attendee")}
@@ -147,46 +146,52 @@ export default function Student(props) {
                       }}
             />
 
-            <Schedule value={value}
-                      index={1}
-                      className={classes.tab}
-                      dir={theme.direction}
-                      title={t("attendee")}
-                      scheduleIds={student === null? null: student['schedules']}
-                      student_id={currentStudentId}
-            />
-            <Payments value={value}
-                      index={2}
-                      paymentIds={student === null? null: student.payments}
-                      addPaymentId={(payment_id) => {
-                        setStudent({...student, payments: [...student.payments, payment_id]})
-                      }}
-                      student_id={currentStudentId}
-                      deletePaymentFromStudent={(payment_id) => {
-                        setStudent({...student,
-                            payments: student.payments.filter((p) => p !== payment_id)});
-                      }}
-            />
+              {hasNeeds([NEEDS.schedules]) && <Schedule value={value}
+                         index={1}
+                         className={classes.tab}
+                         dir={theme.direction}
+                         title={t("attendee")}
+                         scheduleIds={student === null ? null : student['schedules']}
+                         student_id={currentStudentId}
+              />}
+              {hasNeeds([NEEDS.payments]) && <Payments value={value}
+                         index={2}
+                         paymentIds={student === null ? null : student.payments}
+                         addPaymentId={(payment_id) => {
+                             setStudent({...student, payments: [...student.payments, payment_id]})
+                         }}
+                         student_id={currentStudentId}
+                         deletePaymentFromStudent={(payment_id) => {
+                             setStudent({
+                                 ...student,
+                                 payments: student.payments.filter((p) => p !== payment_id)
+                             });
+                         }}
+              />}
 
-            <Courses value={value}
-                      index={3}
-                     dataService={StudentsCourseDataService}
-                     history={props.history}
-                      courseIds={student === null? null: student['courses']}
-                      addCourseId={(course_id) => {
-                        setStudent({...student,
-                            courses: [...student['courses'], course_id]})
-                      }}
-                      student_id={currentStudentId}
-                      deleteCourseFromStudent={(course_id) => {
-                        setStudent({...student,
-                            courses: student['courses'].filter((c) => c !== course_id)});
-                      }}
-            />
-
+              {hasNeeds([NEEDS.courses]) && <Courses value={value}
+                        index={3}
+                        dataService={StudentsCourseDataService}
+                        history={props.history}
+                        courseIds={student === null ? null : student['courses']}
+                        addCourseId={(course_id) => {
+                            setStudent({
+                                ...student,
+                                courses: [...student['courses'], course_id]
+                            })
+                        }}
+                        student_id={currentStudentId}
+                        deleteCourseFromStudent={(course_id) => {
+                            setStudent({
+                                ...student,
+                                courses: student['courses'].filter((c) => c !== course_id)
+                            });
+                        }}
+              />
+              }
 
             {
-              guardians && guardians.map((guardian, index) => (
+              guardians && hasNeeds([NEEDS.guardians]) && guardians.map((guardian, index) => (
                   <Guardian value={value}
                             index={index+4}
                             key={guardian}

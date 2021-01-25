@@ -17,7 +17,7 @@ from email_queue.emails.payment_receipt_email import my_job
 class PaymentReceiptEmailCollectionRes(Resource):  # todo check
     @Requires(EmailPermission, PaymentsRecipesPermission, PaymentsPermission)
     def post(self, payment_id):
-        query = Payment.query.filter_by(id=payment_id)
+        query = Payment.query.filter(Payment.id == payment_id)
         payment: Payment = query.first()
 
         if not payment:
@@ -29,7 +29,7 @@ class PaymentReceiptEmailCollectionRes(Resource):  # todo check
             target=my_job,
             args=(
                 payment,
-                payment.student[0].official_notification_emails,
+                payment.student.official_notification_emails,
                 current_app.config["PUBLIC_VALIDATION_SECRET"],
                 current_app.config["BACKEND_SERVER_URL"],
             ),

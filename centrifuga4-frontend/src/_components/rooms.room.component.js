@@ -10,8 +10,8 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import RoomsDataService from "../_services/rooms.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import RoomSchedule from "./rooms.room.schedule.component";
-import UserPerson from "./users.user.userperson.component";
 import RoomDetails from "./rooms.room.details.component";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -76,7 +76,7 @@ export default function Room({history, setNewRoom, currentRoomId, deleteRoom, ne
 
   const handleChangeIndex = (index) => {
     setValue(index);
-  };
+  };const [hasNeeds, NEEDS] = useNeeds();
 
   return (
     <Paper elevation={3} square className={classes.contentPanel}>
@@ -91,7 +91,7 @@ export default function Room({history, setNewRoom, currentRoomId, deleteRoom, ne
                 >
                   <Tab label={t("room")} {...a11yProps(0)} />
 
-                    { !newRoom &&
+                    { !newRoom && hasNeeds([NEEDS.schedules]) &&
                   <Tab label={t("schedules")} {...a11yProps(1)} />}
 
                 </Tabs>
@@ -114,14 +114,14 @@ export default function Room({history, setNewRoom, currentRoomId, deleteRoom, ne
             />
 
 
-            <RoomSchedule value={value}
-                      index={1}
-                          history={history}
-                      className={classes.tab}
-                      dir={theme.direction}
-                      scheduleIds={room === null? null: room['schedules']}
-                      student_id={currentRoomId}
-            />
+              {hasNeeds([NEEDS.schedules]) && <RoomSchedule value={value}
+                             index={1}
+                             history={history}
+                             className={classes.tab}
+                             dir={theme.direction}
+                             scheduleIds={room === null ? null : room['schedules']}
+                             student_id={currentRoomId}
+              />}
 
           </SwipeableViews>
 

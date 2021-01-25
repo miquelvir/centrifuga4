@@ -13,7 +13,7 @@ from email_queue.emails.grant_letter_email import my_job
 class GrantEmailCollectionRes(Resource):
     @Requires(EmailPermission, StudentsPermission)
     def post(self, student_id):
-        query = Student.query.filter_by(id=student_id)
+        query = Student.query.filter(Student.id == student_id)
         student: Student = query.first()
 
         if not student:

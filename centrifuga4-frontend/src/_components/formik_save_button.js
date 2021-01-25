@@ -10,11 +10,13 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import SaveIcon from "@material-ui/icons/Save";
+import {useNeeds} from "../_helpers/needs";
 
 
 const SaveButton = ({formik, ...props}) => {
     const {t} = useTranslation();
-    return   <IconButton  type="submit"
+    const [hasNeeds, NEEDS] = useNeeds();
+    return   hasNeeds([NEEDS.patch]) && <IconButton  type="submit"
                                     disabled={!formik.dirty || formik.isSubmitting}
                           {...props}>
                             <Tooltip title={t("save")} aria-label={t("save")}>

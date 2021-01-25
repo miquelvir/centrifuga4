@@ -9,6 +9,7 @@ import {Tooltip} from "@material-ui/core";
 import ItemsList from "./items_list.component";
 import RoomsDataService from "../_services/rooms.service";
 import Room from "./rooms.room.component";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +46,7 @@ export default function Rooms({history, ...other}) {
   useEffect(() => {
       if (currentRoomId !== null) setNewRoom(false);
   }, [currentRoomId])
-
+const [hasNeeds, NEEDS] = useNeeds();
   return (
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={4} className={classes.left}>
@@ -61,14 +62,14 @@ export default function Rooms({history, ...other}) {
             dataService={RoomsDataService}
             searchBarLabel="rooms"
           />
-          <Tooltip title={t("new_room")}>
-              <Fab className={classes.fab} color="primary" onClick={(e) => {
-                  setCurrentRoomId(null);
-                 setNewRoom(true);
-              }}>
-                <AddIcon />
-              </Fab>
-          </Tooltip>
+            {hasNeeds([NEEDS.post]) && <Tooltip title={t("new_room")}>
+                <Fab className={classes.fab} color="primary" onClick={(e) => {
+                    setCurrentRoomId(null);
+                    setNewRoom(true);
+                }}>
+                    <AddIcon/>
+                </Fab>
+            </Tooltip>}
         </Grid>
 
         <Grid item xs={8} className={classes.left}>

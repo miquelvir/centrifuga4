@@ -20,6 +20,9 @@ import {BrowserRouter, Link, Redirect, Route, Router} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
 import {createBrowserHistory} from "history";
+import {useNeeds} from "../_helpers/needs";
+import {Backdrop, CircularProgress} from "@material-ui/core";
+import {loadingContext} from '../_context/loading-context';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
@@ -72,7 +75,10 @@ const useStyles = makeStyles(theme => (createStyles({
         [theme.breakpoints.up('sm')]: {
             width: theme.spacing(9) + 1,
         },
-    },
+    },backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
     toolbar: {
         display: 'flex',
         alignItems: 'center',
@@ -116,6 +122,7 @@ const HomePage = (props) => {
 
     const [open, setOpen] = React.useState(false);
     const [currentRoute, setCurrentRoute] = React.useState('/students');
+    const [hasNeeds, NEEDS] = useNeeds();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -130,9 +137,15 @@ const HomePage = (props) => {
 
     const history = createBrowserHistory();
 
+    const [loading, setLoading] = React.useState(false);
+      const handleClose = () => {
+        setLoading(false);
+      };
+
     return (
         <div className={classes.root}>
             <CssBaseline/>
+<loadingContext.Provider value={{loading: loading, startLoading: () => {setLoading(true)}, stopLoading: () =>{setLoading(false)}}}>
             <AppBar
                 position="fixed"
                 className={clsx(classes.appBar, {
@@ -166,7 +179,9 @@ const HomePage = (props) => {
                     </div>
                     <Divider/>
                     <List>
-                        {Routes.map((prop) =>(
+                        {Routes
+                            .filter(route => hasNeeds(route.needs))
+                            .map((prop) =>(
                                   <ListItem key={prop.title} to={prop.path } button component={Link} onClick={() => onItemClick(prop)}>
                                     <ListItemIcon className={prop.path === currentRoute? classes.selectedIcon: classes.icon}>
                                         <Tooltip title={t(prop.title)} aria-label={t(prop.title)}>
@@ -178,16 +193,25 @@ const HomePage = (props) => {
                                 ))}
                     </List>
                 </Drawer>
+
+
                 <div className={classes.content}>
                     <div className={classes.toolbar}/>
                     <main className={classes.main}>
-                        {Routes.map((prop) => {
+                        {Routes
+                            .filter(route => hasNeeds(route.needs))
+                            .map((prop) => {
                             return (
                                 <Route key={prop.title} path={prop.path} component={prop.component}/>)
                         })}
                     </main>
                 </div>
             </BrowserRouter>
+
+            <Backdrop className={classes.backdrop} open={loading} onClick={handleClose}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+</loadingContext.Provider>
         </div>
     );
 }

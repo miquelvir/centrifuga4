@@ -12,7 +12,7 @@ from centrifuga4.blueprints.api.resources.god_file import GodFile
 from centrifuga4.easy_api.resource_factory import get_resources
 from centrifuga4.blueprints.api.errors import Unauthorized, Forbidden
 from centrifuga4.blueprints.api.resources.payment_receipts import PaymentsReceiptsRes
-from centrifuga4.blueprints.api.resources.student_enrollment_agreement import (
+from centrifuga4.blueprints.api.resources.student_enrolment_agreement import (
     StudentsEnrollmentAgreementRes,
 )
 from centrifuga4.blueprints.api.resources.student_grant_letter import (
@@ -48,7 +48,7 @@ api = Api(api_blueprint)
 
 api.add_resource(StudentsGrantLettersRes, "/students/<string:id_>/grantLetter")
 api.add_resource(
-    StudentsEnrollmentAgreementRes, "/students/<string:id_>/enrollmentAgreement"
+    StudentsEnrollmentAgreementRes, "/students/<string:id_>/enrolmentAgreement"
 )
 api.add_resource(PaymentsReceiptsRes, "/payments/<string:id_>/receipt")
 api.add_resource(CoursesAttendanceListRes, "/courses/<string:id_>/attendanceList")

@@ -16,7 +16,7 @@ import CourseLabels from "./courses.course.labels.component";
 import CourseSchedule from "./courses.course.schedule.component";
 import CourseStudents from "./courses.course.students.component";
 import CourseTeachers from "./courses.course.teachers.component";
-import {useSnackbar} from "notistack";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -56,7 +56,7 @@ export default function Course({currentCourseId, history, setNewCourse, addCours
   const errorHandler = useErrorHandler();
 
   const [course, setCourse] = useState(null);  // todo rename to student
-
+const [hasNeeds, NEEDS] = useNeeds();
   useEffect(() => {
     if (loading) return setCourse(null);
     CoursesDataService
@@ -98,13 +98,13 @@ export default function Course({currentCourseId, history, setNewCourse, addCours
                    { !newCourse &&
                   <Tab label={t("labels")} {...a11yProps(1)} />}
 
-                    { !newCourse &&
+                    { !newCourse && hasNeeds([NEEDS.schedules]) &&
                   <Tab label={t("schedules")} {...a11yProps(2)} />}
 
-                   { !newCourse &&
+                   { !newCourse && hasNeeds([NEEDS.students]) &&
                   <Tab label={t("students")} {...a11yProps(3)} />}
 
-                   { !newCourse &&
+                   { !newCourse && hasNeeds([NEEDS.teachers]) &&
                   <Tab label={t("teachers")} {...a11yProps(4)} />}
 
                 </Tabs>
@@ -136,46 +136,54 @@ export default function Course({currentCourseId, history, setNewCourse, addCours
                       deleteCourse={deleteCourse}
             />
 
-            <CourseSchedule value={value}
-                      index={2}
-                          history={history}
-                      className={classes.tab}
-                      dir={theme.direction}
-                      scheduleIds={course === null? null: course['schedules']}
-                      student_id={currentCourseId}
-            />
+              {hasNeeds([NEEDS.schedules]) && <CourseSchedule value={value}
+                               index={2}
+                               history={history}
+                               className={classes.tab}
+                               dir={theme.direction}
+                               scheduleIds={course === null ? null : course['schedules']}
+                               student_id={currentCourseId}
+              />}
 
-            <CourseStudents value={value}
-                      index={3}
-                     dataService={CourseStudentsDataService}
-                     history={history}
-                      courseIds={course === null? null: course['students']}
-                      addCourseId={(student_id) => {
-                        setCourse({...course,
-                            students: [...course['students'], student_id]})
-                      }}
-                      student_id={currentCourseId}
-                      deleteCourseFromStudent={(student_id) => {
-                        setCourse({...course,
-                            students: course['students'].filter((s) => s !== student_id)});
-                      }}
-            />
+              {hasNeeds([NEEDS.students]) && <CourseStudents value={value}
+                               index={3}
+                               dataService={CourseStudentsDataService}
+                               history={history}
+                               courseIds={course === null ? null : course['students']}
+                               addCourseId={(student_id) => {
+                                   setCourse({
+                                       ...course,
+                                       students: [...course['students'], student_id]
+                                   })
+                               }}
+                               student_id={currentCourseId}
+                               deleteCourseFromStudent={(student_id) => {
+                                   setCourse({
+                                       ...course,
+                                       students: course['students'].filter((s) => s !== student_id)
+                                   });
+                               }}
+              />}
 
-            <CourseTeachers value={value}
-                      index={4}
-                     dataService={CourseTeachersDataService}
-                     history={history}
-                      courseIds={course === null? null: course['teachers']}
-                      addCourseId={(course_id) => {
-                        setCourse({...course,
-                            teachers: [...course['teachers'], course_id]})
-                      }}
-                      student_id={currentCourseId}
-                      deleteCourseFromStudent={(course_id) => {
-                        setCourse({...course,
-                            teachers: course['teachers'].filter((c) => c !== course_id)});
-                      }}
-            />
+              {hasNeeds([NEEDS.teachers]) && <CourseTeachers value={value}
+                               index={4}
+                               dataService={CourseTeachersDataService}
+                               history={history}
+                               courseIds={course === null ? null : course['teachers']}
+                               addCourseId={(course_id) => {
+                                   setCourse({
+                                       ...course,
+                                       teachers: [...course['teachers'], course_id]
+                                   })
+                               }}
+                               student_id={currentCourseId}
+                               deleteCourseFromStudent={(course_id) => {
+                                   setCourse({
+                                       ...course,
+                                       teachers: course['teachers'].filter((c) => c !== course_id)
+                                   });
+                               }}
+              />}
 
 
           </SwipeableViews>

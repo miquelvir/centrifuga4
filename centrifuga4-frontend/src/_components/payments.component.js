@@ -10,6 +10,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import {useErrorHandler} from "../_helpers/handle-response";
+import {loadingContext} from "../_context/loading-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +46,7 @@ export default function Payments({history, ...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
   const errorHandler = useErrorHandler();
-
+ const loadingCtx = React.useContext(loadingContext);
   return (
       <div>
           <h1>{t("payments")}</h1>
@@ -53,9 +54,14 @@ export default function Payments({history, ...other}) {
       <List className={classes.list}>
         <ListItem button
                   onClick={() => {
+                      if (loadingCtx.loading) return;
+                      loadingCtx.startLoading();
                       PaymentsDataService
                           .downloadCsv(null, null,'*', null)
                           .then(...errorHandler({}))
+                          .finally(() => {
+                              loadingCtx.stopLoading();
+                          })
 
                   }}>
         <ListItemAvatar>

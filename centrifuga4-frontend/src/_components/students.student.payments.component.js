@@ -13,6 +13,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
+import {useNeeds} from "../_helpers/needs";
 
 const getDefaultValues = () => {
     const date = new Date();
@@ -53,6 +54,7 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
       return body;
     }))
   }
+  const [hasNeeds, NEEDS] = useNeeds();
 
   const deletePayment = (id) => {
     PaymentsDataService.delete(id)
@@ -92,7 +94,7 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
               {loading?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              <Tooltip className={classes.actionIcon} title={t("new_payment")} aria-label={t("new_payment")}>
+              hasNeeds([NEEDS.post]) && <Tooltip className={classes.actionIcon} title={t("new_payment")} aria-label={t("new_payment")}>
                 <IconButton onClick={(e) => { setNewPaymentCard(true); }}>
                   <AddCircleIcon />
                 </IconButton>

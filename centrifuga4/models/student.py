@@ -24,7 +24,7 @@ class Student(Person):
     image_agreement = db.Column(db.Boolean, nullable=False, default=False)
     birth_date = db.Column(db.Date, nullable=False)
 
-    enrollment_status = db.Column(db.Text, nullable=False)
+    enrolment_status = db.Column(db.Text, nullable=False)
 
     courses = db.relationship(
         "Course", secondary="student_course", back_populates="students"
@@ -52,7 +52,7 @@ class Student(Person):
 
     @hybrid_property
     def is_enrolled(self) -> bool:
-        return self.enrollment_status == "enrolled"
+        return self.enrolment_status == "enrolled"
 
     @hybrid_property
     def schedules(self):

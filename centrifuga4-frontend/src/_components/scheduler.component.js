@@ -1,4 +1,3 @@
-import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import React, {useEffect, useState} from "react";
 import SchedulesDataService from "../_services/schedules.service";
@@ -9,7 +8,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import styled from "@emotion/styled";
 import {useTheme} from '@material-ui/core/styles';
 import interactionPlugin from '@fullcalendar/interaction';
-import {useSnackbar} from "notistack";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
@@ -96,6 +94,16 @@ function Scheduler({snapDuration = '00:15', scheduleIds, onEventClick, onEventRe
                         height="100%"
                         firstDay={1}
                         editable={editable}
+                        buttonText={{
+                            prev:     '<', // <
+                              next:     '>', // >
+                              prevYear: '<<',  // <<
+                              nextYear: '>>',  // >>
+                              today:    'today',
+                              month:    'month',
+                              week:     'week',
+                              day:      'day'
+                        }}
                         selectable={true}
                         selectMirror={true}
                         dayMaxEvents={true}

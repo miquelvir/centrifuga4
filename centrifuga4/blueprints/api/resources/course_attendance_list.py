@@ -13,7 +13,7 @@ from centrifuga4.auth_auth.resource_need import StudentsPermission, CoursesPermi
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.constants import SHORT_NAME
 from centrifuga4.models import Student, Course, Schedule
-from pdfs.enrollment import generate_enrollment_agreement_pdf
+from pdfs.enrolment import generate_enrolment_agreement_pdf
 
 
 class CoursesAttendanceListRes(Resource, SwaggerView):

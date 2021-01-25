@@ -33,6 +33,8 @@ import {sendGrantEmail} from "../_services/emailsGrants.service";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import {payment_methods} from "../_data/payment_methods";
 import {emptyAttendee, emptyGuardian} from "../_data/empty_objects";
+import {useNeeds} from "../_helpers/needs";
+import {loadingContext} from "../_context/loading-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,11 +54,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Attendee({ children, addStudentId, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
+function Attendee({ children, setNewStudent, addStudentId, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
+  const [hasNeeds, NEEDS] = useNeeds();
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
   const deleteFullStudent = () => {
     StudentsDataService
@@ -84,14 +87,24 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
                 deleteStudent(currentStudent['id']);
               });
   }
+  const loadingCtx = React.useContext(loadingContext);
   const sendGrantLetter = () => {
+      loadingCtx.startLoading();
       sendGrantEmail(currentStudent['id'])
-          .then(...errorHandler({snackbarSuccess: true}));
+          .then(...errorHandler({snackbarSuccess: true}))
+          .finally(() => {
+              loadingCtx.stopLoading();
+          });
   }
   const sendEnrollmentAgreement = () => {
+      loadingCtx.startLoading();
       sendEnrollmentEmail(currentStudent['id'])
-          .then(...errorHandler({snackbarSuccess: true}));
+          .then(...errorHandler({snackbarSuccess: true}))
+          .finally(() => {
+              loadingCtx.stopLoading();
+          });
   }
+
   return (
     <div
       role="tabpanel"
@@ -131,7 +144,7 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
               {loading?
                   !newStudent && <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              !newStudent && <Tooltip style={{float: 'right'}} title={t("new_guardian")} aria-label={t("new_guardian")}>
+              !newStudent && hasNeeds([NEEDS.guardians, NEEDS.post]) && <Tooltip style={{float: 'right'}} title={t("new_guardian")} aria-label={t("new_guardian")}>
                 <IconButton onClick={(e) => {
                   addNewGuardian();
                 }}>
@@ -141,12 +154,17 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
               }
 
 
-              {loading ?
-                  !newStudent && <IconButtonSkeleton className={classes.actionIcon}/>
+              {loading && !newStudent ?
+                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-               !newStudent && <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
+                hasNeeds([NEEDS.delete]) && <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
-                  setOpenConfirmDeleteDialog(true);
+                    if (newStudent) {
+                        setNewStudent(false);
+                    } else {
+                        setOpenConfirmDeleteDialog(true);
+                    }
+
                 }}>
                   <DeleteIcon />
                 </IconButton>
@@ -167,7 +185,7 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
                         }
                       }}
                       additionalValidation={{
-                        enrollment_status: yup.string().required(t("status_required")),
+                        enrolment_status: yup.string().required(t("status_required")),
                         image_agreement: yup.boolean().required(t("image_required")),
                         birth_date: yup.date().required(t("birthdate_required"))
                       }}
@@ -213,7 +231,7 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
                               <DirtyTextField
                                 label={t("status")}
                                 style={{flex: 1}}
-                                name="enrollment_status"
+                                name="enrolment_status"
                                 select>
                                 {['enrolled', 'early-unenrolled', 'pre-enrolled'].map((s) => (
                                     <MenuItem key={s} value={s}>{t(s)}</MenuItem>
@@ -244,12 +262,13 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
             </Box>}
 
               <Box className={[classes.line, classes.composite]}>
-                {!loading && !newStudent &&
+                {!loading && !newStudent && hasNeeds([NEEDS.send_email]) &&
                 <Tooltip style={{flex: 1}} title={t("send_grant_letter")} aria-label={t("send_grant_letter")}>
                   <Button
                       variant="contained"
                       color="default"
                       className={classes.button}
+                      disabled={loadingCtx.loading}
                       startIcon={<SendIcon/>}
                       onClick={(e) => {
                         sendGrantLetter();
@@ -265,12 +284,17 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
                       variant="contained"
                       color="default"
                       className={classes.button}
+                      disabled={loadingCtx.loading}
                       startIcon={<GetAppIcon/>}
                       onClick={(e) => {
+                          if (loadingCtx.loading) return;
+                          loadingCtx.startLoading();
                         StudentsDataService
                             .downloadSubresource(currentStudent["id"], 'grantLetter')
                             .then(...errorHandler({snackbarSuccess: true}))
-                            .then(() => null)
+                            .finally(() => {
+                                loadingCtx.stopLoading();
+                            })
                       }}
                   >
                     {t("grant_letter")}
@@ -279,36 +303,43 @@ function Attendee({ children, addStudentId, value, index, newStudent, title, cur
               </Box>
 
               <Box className={[classes.line, classes.composite]}>
-                {!loading && !newStudent && <Tooltip style={{flex: 1}} title={t("send_enrollment_agreement")}
-                                                     aria-label={t("enrollment_agreement")}>
+                {!loading && !newStudent && hasNeeds([NEEDS.send_email]) &&
+                <Tooltip style={{flex: 1}} title={t("send_enrolment_agreement")}
+                                                     aria-label={t("enrolment_agreement")}>
                   <Button
                       variant="contained"
                       color="default"
                       className={classes.button}
                       startIcon={<SendIcon/>}
+                      disabled={loadingCtx.loading}
                       onClick={(e) => {
                         sendEnrollmentAgreement();
                       }}
                   >
-                    {t("enrollment_agreement")}
+                    {t("enrolment_agreement")}
                   </Button>
                 </Tooltip>}
 
-                {!loading && !newStudent && <Tooltip style={{flex: 1}} title={t("export_enrollment_agreement")}
-                                                     aria-label={t("export_enrollment_agreement")}>
+                {!loading && !newStudent && <Tooltip style={{flex: 1}} title={t("export_enrolment_agreement")}
+                                                     aria-label={t("export_enrolment_agreement")}>
                   <Button
                       variant="contained"
                       color="default"
                       className={classes.button}
                       startIcon={<GetAppIcon/>}
+                      disabled={loadingCtx.loading}
                       onClick={(e) => {
+                          if (loadingCtx.loading) return;
+                          loadingCtx.startLoading();
                         StudentsDataService
-                            .downloadSubresource(currentStudent["id"], 'enrollmentAgreement')
+                            .downloadSubresource(currentStudent["id"], 'enrolmentAgreement')
                             .then(...errorHandler({snackbarSuccess: true}))
-                            .then(() => null)
+                            .finally(() => {
+                                loadingCtx.stopLoading();
+                            })
                       }}
                   >
-                    {t("enrollment_agreement")}
+                    {t("enrolment_agreement")}
                   </Button>
                 </Tooltip>}
               </Box>

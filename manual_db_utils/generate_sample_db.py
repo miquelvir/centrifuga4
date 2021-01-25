@@ -200,7 +200,7 @@ def add_students():
             ),
             is_studying=choice((True, True, True, False)),
             is_working=choice((True, False, False, False)),
-            enrollment_status=choice(("enrolled", "early-unenrolled", "pre-enrolled")),
+            enrolment_status=choice(("enrolled", "early-unenrolled", "pre-enrolled")),
             years_in_xamfra=randint(0, 15),
             image_agreement=choice((True, False)),
         )

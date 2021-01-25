@@ -93,12 +93,21 @@ def init_app(config=None):
             invites_service,
             password_reset_service,
             validation_blueprint,
-            pre_enrollment_blueprint,
+            pre_enrolment_blueprint,
         )
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
 
-        from centrifuga4.auth_auth.login_user_loader import user_loader
+        @login.user_loader
+        def user_loader(id_):
+            """
+            loads a user given its id for Flask-Login
+
+            :param id_: the user id
+            :return: the User with that id
+            """
+            print("loading")
+            return User.query.get(id_)
 
         # serve the react frontend
         @app.route("/")
@@ -124,7 +133,7 @@ def init_app(config=None):
         app.register_blueprint(invites_service, url_prefix="/invites/v1")
         app.register_blueprint(password_reset_service, url_prefix="/password-reset/v1")
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
-        app.register_blueprint(pre_enrollment_blueprint, url_prefix="/pre-enrolment/v1")
+        app.register_blueprint(pre_enrolment_blueprint, url_prefix="/pre-enrolment/v1")
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app

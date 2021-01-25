@@ -15,7 +15,7 @@ from email_queue.url_utils import merge_url_query_params
 def generate_signup_link(_token, _email, frontend_url=None):
     return (
         merge_url_query_params(
-            "%s/signup"
+            "%s/app/signup"
             % (
                 frontend_url
                 if frontend_url
@@ -24,7 +24,7 @@ def generate_signup_link(_token, _email, frontend_url=None):
             {"token": _token, "email": _email, "lan": "cat"},
         ),
         merge_url_query_params(
-            "%s/signup"
+            "%s/app/signup"
             % (
                 frontend_url
                 if frontend_url

@@ -19,6 +19,7 @@ import {useNormik} from "../_helpers/normik";
 import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import Divider from "@material-ui/core/Divider";
+import {useNeeds} from "../_helpers/needs";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +104,7 @@ function TeacherDetails({ children, addStudentId, setNewRoom, newRoom, value, in
             }
         }
     });
-
+const [hasNeeds, NEEDS] = useNeeds();
   return (
     <div
       role="tabpanel"
@@ -142,7 +143,7 @@ function TeacherDetails({ children, addStudentId, setNewRoom, newRoom, value, in
               {!newRoom && loading ?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-               <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
+              hasNeeds([NEEDS.delete]) &&  <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
                     if (newRoom) {
                         setNewRoom(false);

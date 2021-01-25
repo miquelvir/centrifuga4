@@ -25,6 +25,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SearchBar from "./searchbar.component";
 import Pagination from "@material-ui/lab/Pagination";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
+import {useNeeds} from "../_helpers/needs";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -73,7 +74,7 @@ function CourseTeachers({ children, history, value, dataService, index, title, c
   const classes = useStyles();
   const errorHandler = useErrorHandler();
   const loading = courseIds === null;
-
+const [hasNeeds, NEEDS] = useNeeds();
   const [courses, setCourses] = useState([]);
   const [allCourses, setAllCourses] = useState(null);
   const [newCourse, setNewCourse] = useState(false);
@@ -212,7 +213,7 @@ const onChangeSearchTerm = (e) => {
               {loading?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              <Tooltip className={classes.actionIcon} title={t("add_teacher")} aria-label={t("new_payment")}>
+             hasNeeds([NEEDS.post]) && <Tooltip className={classes.actionIcon} title={t("add_teacher")} aria-label={t("new_payment")}>
                 <IconButton onClick={(e) => {
                     if (allCourses === null) {
                         search();
@@ -233,13 +234,13 @@ const onChangeSearchTerm = (e) => {
                             history.push('/courses?id='+course['id']);
                         }}>
                             <ListItemText id="name" primary={course.name} secondary={course.description}/>
-                            <ListItemSecondaryAction>
+                            {hasNeeds([NEEDS.delete]) && <ListItemSecondaryAction>
                                 <IconButton onClick={(e) => {
                                     if (window.confirm(t("confirm_unenroll_to_course"))) deleteStudentCourse(course['id'])
                                 }}>
-                                  <DeleteIcon />
+                                    <DeleteIcon/>
                                 </IconButton>
-                            </ListItemSecondaryAction>
+                            </ListItemSecondaryAction>}
                         </ListItem>
                         <Divider/>
                     </div>

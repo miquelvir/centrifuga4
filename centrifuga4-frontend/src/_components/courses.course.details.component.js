@@ -26,6 +26,9 @@ import StudentsDataService from "../_services/students.service";
 import Typography from "@material-ui/core/Typography";
 import {useSnackbar} from "notistack";
 import {useFormik} from "formik";
+import {DEFAULT_COURSE_PRICE_TERM} from "../_data/price_term";
+import {useNeeds} from "../_helpers/needs";
+import {loadingContext} from "../_context/loading-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     float: 'right'
   },
     textField: {
-    marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 200,
   },
@@ -47,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     composite: {
         display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
         gap: theme.spacing(1), width: "100%"
+    },
+    choose: {
+      marginBottom: theme.spacing(3)
     }
 }));
 
@@ -70,6 +75,12 @@ function CourseDetails({ children, addCourseId, setNewCourse, newCourse, value, 
 const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
   let initialValues = loading ? {} : currentCourse;
+  if (newCourse) {
+      initialValues = {
+          price_term: DEFAULT_COURSE_PRICE_TERM,
+          is_published: false
+      }
+  }
 
     const formik2 = useFormik({
         initialValues: {},
@@ -88,7 +99,7 @@ const {enqueueSnackbar, closeSnackbar} = useSnackbar();
                     .downloadSubresource(currentCourse["id"], 'attendanceList', values)
                     .then(...errorHandler({snackbarSuccess: true}))
                     .then(() => {
-                        setOpenConfirmDeleteDialog(false);
+                        setOpenDownloadAttendanceList(false);
                     })
                  .catch(() => {
                      setStatus(true);
@@ -146,7 +157,8 @@ const {enqueueSnackbar, closeSnackbar} = useSnackbar();
             }
         }
     });
-
+     const loadingCtx = React.useContext(loadingContext);
+const [hasNeeds, NEEDS] = useNeeds();
   return (
     <div
       role="tabpanel"
@@ -187,7 +199,7 @@ const {enqueueSnackbar, closeSnackbar} = useSnackbar();
       ><form onSubmit={formik2.handleSubmit}>
         <DialogTitle id="alert-dialog-title">{t("download")}</DialogTitle>
             <DialogContent>
-                <Typography>{t("chose_list_dates")}</Typography>
+                <Typography className={classes.choose}>{t("chose_list_dates")}</Typography>
 
                 <TextField
                     id="date"
@@ -239,7 +251,7 @@ const {enqueueSnackbar, closeSnackbar} = useSnackbar();
               {!newCourse && loading ?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-               <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
+               hasNeeds([NEEDS.delete]) && <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
                     if (newCourse) {
                         setNewCourse(false);
@@ -346,7 +358,7 @@ const {enqueueSnackbar, closeSnackbar} = useSnackbar();
             </Box>}
 
             <Box className={[classes.line, classes.composite]}>
-                {!loading && !newCourse &&
+                {!loading && hasNeeds([NEEDS.students]) &&  !newCourse &&
                 <Tooltip style={{flex: 1}} title={t("export_attendance_list")} aria-label={t("send_grant_letter")}>
                   <Button
                       variant="contained"
@@ -361,18 +373,22 @@ const {enqueueSnackbar, closeSnackbar} = useSnackbar();
                   </Button>
                 </Tooltip>}
 
-                {!loading && !newCourse &&
+                {!loading && hasNeeds([NEEDS.students, NEEDS.guardians]) && !newCourse &&
                 <Tooltip style={{flex: 1}} title={t("export_students_contact_sheet")} aria-label={t("export_grant_letter")}>
                   <Button
                       variant="contained"
                       color="default"
                       className={classes.button}
+                      disabled={loadingCtx.loading}
                       startIcon={<GetAppIcon/>}
                       onClick={(e) => {
+                          loadingCtx.startLoading();
                         CoursesDataService
                             .downloadSubresource(currentCourse["id"], 'contactsSheet')
                             .then(...errorHandler({snackbarSuccess: true}))
-                            .then(() => null)
+                            .finally(() => {
+                                loadingCtx.stopLoading();
+                            })
                       }}
                   >
                     {t("students_contact_sheet")}

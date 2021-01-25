@@ -30,6 +30,7 @@ import {one_of} from "../_yup/validators";
 import {useErrorHandler} from "../_helpers/handle-response";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {payment_methods} from "../_data/payment_methods"
+import {useNeeds} from "../_helpers/needs";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '100%',
@@ -63,7 +64,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(newPayment);
   const errorHandler = useErrorHandler();
-
+  const [hasNeeds, NEEDS] = useNeeds();
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -75,7 +76,6 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
                                         date: yup.date().required(t("date_required"))}),  // todo
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
-            console.log("submitting", changedValues);
             if (Object.keys(changedValues).length > 0){
                 setStatus();
 
@@ -138,7 +138,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
 
         }
         action={
-          <Tooltip title={t("delete")} aria-label={t("delete")}>
+         hasNeeds([NEEDS.delete]) && <Tooltip title={t("delete")} aria-label={t("delete")}>
           <IconButton onClick={(e) => {deletePayment(payment['id'])}}>
             <DeleteIcon />
           </IconButton>
@@ -149,7 +149,8 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
       />
 
         {!newPayment && <CardActions disableSpacing>
-        <Tooltip title={t("export_receipt")} aria-label={t("export_receipt")}>
+            {hasNeeds([NEEDS.paymentReceipts]) &&
+            <Tooltip title={t("export_receipt")} aria-label={t("export_receipt")}>
           <IconButton aria-label={t("export_receipt")} onClick={(e) => {
               PaymentsDataService
                   .downloadSubresource(payment["id"], 'receipt')
@@ -158,7 +159,8 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
           }}>
             <ReceiptIcon />
           </IconButton>
-        </Tooltip>
+        </Tooltip>}
+            {hasNeeds([NEEDS.paymentReceipts, NEEDS.send_email]) &&
         <Tooltip title={t("send_receipt")} aria-label={t("send_receipt")}>
           <IconButton aria-label={t("send_receipt")} onClick={(e) => {
               sendReceiptEmail(payment["id"])
@@ -167,7 +169,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
           }}>
             <SendIcon />
           </IconButton>
-        </Tooltip>
+        </Tooltip>}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -262,9 +264,9 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
                                             >
                                                 {t("reset")}
                                             </Button>
-                                            <Button type="submit" disabled={!formik.dirty || formik.isSubmitting}>
-                                                {newPayment? t("create"): t("save")}
-                                            </Button>
+                                            {hasNeeds([NEEDS.patch]) && <Button type="submit" disabled={!formik.dirty || formik.isSubmitting}>
+                                                {newPayment ? t("create") : t("save")}
+                                            </Button>}
                                         </DialogActions>
                                     </form>
                 )

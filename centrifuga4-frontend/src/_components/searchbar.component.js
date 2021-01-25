@@ -35,9 +35,12 @@ export default function SearchBar({label, searchTitle, onChange, onSearch}) {
         inputProps={{ 'aria-label': 'search ' + label}}
         value={searchTitle}
         onChange={onChange}
-        onKeyDown={(e) => {
-          if(e.code === 'Enter') onSearch();
-        }}
+        onKeyPress={(e) =>
+        { if(e.key === 'Enter'){
+            onSearch();
+            e.preventDefault();
+        } }}
+
       />
       <IconButton
           type="submit"

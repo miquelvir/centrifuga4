@@ -85,7 +85,6 @@ const SignupPage = (props) => {
                         props.history.push("/login");
                     },
                     function (error) {
-                        console.log(">>><<<", error.response, error.request);
                         setSubmitting(false);
                         setStatus(error);
 

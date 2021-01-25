@@ -17,7 +17,7 @@ from centrifuga4.blueprints.api.resources.course_students_contact_sheet import (
 )
 from centrifuga4.constants import SHORT_NAME
 from centrifuga4.models import Student, Course, Schedule
-from pdfs.enrollment import generate_enrollment_agreement_pdf
+from pdfs.enrolment import generate_enrolment_agreement_pdf
 
 
 def students_file():

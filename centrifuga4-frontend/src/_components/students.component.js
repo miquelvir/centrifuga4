@@ -12,6 +12,8 @@ import ExportSearchChip from "./ExportSearchChip.component";
 import Avatar from "@material-ui/core/Avatar";
 import {downloadGodFile} from "../_services/god.service";
 import {useErrorHandler} from "../_helpers/handle-response";
+import {useNeeds} from "../_helpers/needs";
+import {loadingContext} from "../_context/loading-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,9 +43,12 @@ export default function Students({history, ...other}) {
     const handleError = useErrorHandler();
   const query = new URLSearchParams(window.location.search);
   const id = query.get('id');
+  const [hasNeeds, NEEDS] = useNeeds();
   useEffect(() => {
       if (id !== null && id !== undefined) setCurrentStudentId(id);
-  }, [id])
+  }, [id]);
+  const loadingCtx = React.useContext(loadingContext);
+
 
   useEffect(() => {
       if (currentStudentId !== null) setNewStudent(false);
@@ -63,16 +68,23 @@ export default function Students({history, ...other}) {
                            aria-label={t("export_contact_sheets")}>
                     <Chip variant="outlined"
                           color="primary"
+                          disabled={loadingCtx.loading}
                           size="small"
                           avatar={<Avatar>csv</Avatar>}
                           label={t("export_all_plus")}
                           onClick={() => {
-                            downloadGodFile().then(...handleError({}))
+                              if (loadingCtx.loading) return;
+                              loadingCtx.startLoading();
+                            downloadGodFile()
+                                .then(...handleError({}))
+                                .finally(() => {
+                                    loadingCtx.stopLoading();
+                                })
                           }}/>
                   </Tooltip>
                 ]}
                 usableFilters={[{
-                    name: 'enrollment_status',
+                    name: 'enrolment_status',
                     defaultValue: null,
                     options: [
                         {
@@ -109,14 +121,14 @@ export default function Students({history, ...other}) {
                 searchBarLabel="students"
             />
 
-          <Tooltip title={t("new_student")}>
-              <Fab className={classes.fab} color="primary" onClick={(e) => {
-                  setCurrentStudentId(null);
-                 setNewStudent(true);
-              }}>
-                <AddIcon />
-              </Fab>
-          </Tooltip>
+            {hasNeeds([NEEDS.post]) && <Tooltip title={t("new_student")}>
+                <Fab className={classes.fab} color="primary" onClick={(e) => {
+                    setCurrentStudentId(null);
+                    setNewStudent(true);
+                }}>
+                    <AddIcon/>
+                </Fab>
+            </Tooltip>}
         </Grid>
 
         <Grid item xs={8} className={classes.left}>
@@ -124,6 +136,7 @@ export default function Students({history, ...other}) {
             currentStudentId={currentStudentId}
             newStudent={newStudent}
             history={history}
+            setNewStudent={setNewStudent}
             addStudentId={(id) =>{
                 setCurrentStudentId(id);
             }}

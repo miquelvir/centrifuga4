@@ -3,6 +3,7 @@ from flask import request, current_app
 from flask_restful import Resource
 from centrifuga4.models import User, Need
 from centrifuga4 import db
+import logging as log
 
 
 class NewUserCollectionRes(Resource):
@@ -43,7 +44,7 @@ class NewUserCollectionRes(Resource):
             data = jwt.decode(token, current_app.secret_key, algorithms=["HS256"])
 
             if (
-                User.query.filter_by(User.email == user_email).count() > 0
+                User.query.filter(User.email == user_email).count() > 0
             ):  # todo maybe wait or integrity error and then return?
                 return "user already exists", 400
 
@@ -76,5 +77,5 @@ class NewUserCollectionRes(Resource):
         except jwt.exceptions.ExpiredSignatureError:
             return "token expired", 401
         except Exception as e:
-            print(e)
+            log.exception(e)
             return "invalid token", 401  # todo or bound this except clause

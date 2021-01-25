@@ -1,20 +1,11 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import {MenuItem, TextField} from "@material-ui/core";
-import PropTypes from "prop-types";
 import React from "react";
-import StudentsDataService from "../_services/students.service";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import * as yup from 'yup';
-import {IconButtonSkeleton} from "../_skeletons/iconButton"
-import Person from "./students.student.person.component";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import UsersDataService from "../_services/users.service";
@@ -24,13 +15,10 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Tooltip from "@material-ui/core/Tooltip";
 import DirtyTextField from "./dirtytextfield.component";
-import Divider from "@material-ui/core/Divider";
 import {useNormik} from "../_helpers/normik";
-import RestoreIcon from "@material-ui/icons/Restore";
-import SaveIcon from "@material-ui/icons/Save";
-import NeedsSelection from "./needs_selection.component";
 import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
+import {useNeeds} from "../_helpers/needs";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -77,7 +65,6 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
         }),
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
-            console.log(changedValues);
                 if (Object.keys(changedValues).length > 0) {
                 setStatus();
 
@@ -101,7 +88,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
             }
         }
     });
-
+const [hasNeeds, NEEDS] = useNeeds();
   return (
     <div
       role="tabpanel"
@@ -139,7 +126,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
               {loading ?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-               <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
+               hasNeeds([NEEDS.delete]) && <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
                   setOpenConfirmDeleteDialog(true);
                 }}>

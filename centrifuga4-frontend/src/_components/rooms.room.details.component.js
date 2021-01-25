@@ -9,7 +9,6 @@ import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import UsersDataService from "../_services/users.service";
 import Dialog from "@material-ui/core/Dialog";
 import {useErrorHandler} from "../_helpers/handle-response";
 import IconButton from "@material-ui/core/IconButton";
@@ -19,6 +18,7 @@ import DirtyTextField from "./dirtytextfield.component";
 import {useNormik} from "../_helpers/normik";
 import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
+import {useNeeds} from "../_helpers/needs";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -72,7 +72,6 @@ function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index
                     RoomsDataService.post(changedValues)
                          .then(...errorHandler({snackbarSuccess: true}))
                     .then(function (new_id) {
-                        console.log("....................", new_id);
                         updateCurrentStudent(new_id);
                         setNewRoom(false);
                     }).catch(function (err) {
@@ -103,7 +102,7 @@ function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index
                 setSubmitting(false);
             }
         }
-    });
+    });const [hasNeeds, NEEDS] = useNeeds();
 
   return (
     <div
@@ -142,7 +141,7 @@ function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index
 
               {!newRoom && loading ?
                   <IconButtonSkeleton className={classes.actionIcon}/>
-              :
+              : hasNeeds([NEEDS.delete]) &&
                <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
                     if (newRoom) {

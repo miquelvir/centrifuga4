@@ -35,14 +35,14 @@ class MyBase(db.Model):
         the probability of a uuid4 collision is of 1/E30 (extremely low)
         we check multiple times just in case, so that the program is fail proof
         since the code is readable and easy
-        
+
         we could consider not checking if it supposed a noticeable overhead
         """
         attempts = 0
         while True:
             id_ = str(uuid.uuid4())
             exists = (
-                db.session.query(cls.id).filter_by(id=id_).scalar() is not None
+                db.session.query(cls.id).filter(cls.id == id_).scalar() is not None
             )  # todo check
             if not exists and id_ not in avoid:
                 return id_

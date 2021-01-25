@@ -1,5 +1,6 @@
 import axios from "axios";
 import {authHeader} from "../_helpers/auth-header";
+import {BACKEND_URL} from "../config";
 
 export const passwordResetService = {
     reset,
@@ -9,7 +10,7 @@ export const passwordResetService = {
 function reset(username, password, token, recaptcha) {
 
     return new Promise(function(resolve, reject) {
-        axios({url: 'https://127.0.0.1:4999/password-reset/v1/newPassword',
+        axios({url: `${BACKEND_URL}/password-reset/v1/newPassword`,
             method: 'POST',
             data: {
                 email: username,
@@ -29,7 +30,7 @@ function reset(username, password, token, recaptcha) {
 function startReset(username, recaptcha) {
 
     return new Promise(function(resolve, reject) {
-        axios({url: 'https://127.0.0.1:4999/password-reset/v1/passwordReset',
+        axios({url: `${BACKEND_URL}/password-reset/v1/passwordReset`,
             method: 'POST',
             data: {
                 email: username,

@@ -7,14 +7,13 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import useTheme from "@material-ui/core/styles/useTheme";
-import Attendee from "./students.student.attendee.component";
 import TeachersDataService from "../_services/teachers.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import TeachersCoursesDataService from "../_services/teachers_courses.service";
 import TeacherDetails from "./teachers.teacher.details.component";
 import TeacherSchedule from "./teachers.teacher.schedule.component";
 import Courses from "./students.student.courses.component";
-import StudentsCourseDataService from "../_services/student_courses.service";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -79,7 +78,7 @@ export default function Teacher({currentTeacherId, history, setNewTeacher, addTe
 
   const handleChangeIndex = (index) => {
     setValue(index);
-  };
+  };const [hasNeeds, NEEDS] = useNeeds();
 
   return (
     <Paper elevation={3} square className={classes.contentPanel}>
@@ -94,10 +93,10 @@ export default function Teacher({currentTeacherId, history, setNewTeacher, addTe
                 >
                   <Tab label={t("teacher")} {...a11yProps(0)} />
 
-                    { !newTeacher &&
+                    { !newTeacher && hasNeeds([NEEDS.schedules]) &&
                   <Tab label={t("schedules")} {...a11yProps(1)} />}
 
-                   { !newTeacher &&
+                   { !newTeacher && hasNeeds([NEEDS.courses]) &&
                   <Tab label={t("courses")} {...a11yProps(2)} />}
 
                 </Tabs>
@@ -122,30 +121,34 @@ export default function Teacher({currentTeacherId, history, setNewTeacher, addTe
             />
 
 
-            <TeacherSchedule value={value}
-                      index={1}
-                          history={history}
-                      className={classes.tab}
-                      dir={theme.direction}
-                      scheduleIds={teacher === null? null: teacher['schedules']}
-                      student_id={currentTeacherId}
-            />
+              {hasNeeds([NEEDS.schedules]) && <TeacherSchedule value={value}
+                                index={1}
+                                history={history}
+                                className={classes.tab}
+                                dir={theme.direction}
+                                scheduleIds={teacher === null ? null : teacher['schedules']}
+                                student_id={currentTeacherId}
+              />}
 
-            <Courses value={value}
-                      index={2}
-                     dataService={TeachersCoursesDataService}
-                     history={history}
-                      courseIds={teacher === null? null: teacher['courses']}
-                      addCourseId={(course_id) => {
-                        setTeacher({...teacher,
-                            courses: [...teacher['courses'], course_id]})
-                      }}
-                      student_id={currentTeacherId}
-                      deleteCourseFromStudent={(course_id) => {
-                        setTeacher({...teacher,
-                            courses: teacher['courses'].filter((c) => c !== course_id)});
-                      }}
-            />
+              {hasNeeds([NEEDS.courses]) && <Courses value={value}
+                        index={2}
+                        dataService={TeachersCoursesDataService}
+                        history={history}
+                        courseIds={teacher === null ? null : teacher['courses']}
+                        addCourseId={(course_id) => {
+                            setTeacher({
+                                ...teacher,
+                                courses: [...teacher['courses'], course_id]
+                            })
+                        }}
+                        student_id={currentTeacherId}
+                        deleteCourseFromStudent={(course_id) => {
+                            setTeacher({
+                                ...teacher,
+                                courses: teacher['courses'].filter((c) => c !== course_id)
+                            });
+                        }}
+              />}
 
 
           </SwipeableViews>

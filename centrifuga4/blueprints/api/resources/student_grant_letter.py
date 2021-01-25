@@ -46,7 +46,7 @@ class StudentsRes(easy.EasyResource,
                       $ref: '#/definitions/StudentSchema'
                     examples:
                       rgb: ['red', 'green', 'blue']
-                
+
         return super().get(*args, **kwargs)
 
 """
@@ -55,7 +55,7 @@ class StudentsRes(easy.EasyResource,
 class StudentsGrantLettersRes(Resource, SwaggerView):  # todo documented class higher up
     @Requires(PostPermission, StudentsPermission)
     def post(self, id_):
-        query = Student.query.filter_by(id=id_)
+        query = Student.query.filter(Student.id == id_)
         student: Student = query.first()
 
         if not student:

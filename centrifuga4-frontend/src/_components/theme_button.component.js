@@ -10,10 +10,11 @@ export default function ThemeButton({...props}){
     const themeCtx = React.useContext(themeContext);
     const {t} = useTranslation();
 
-    return  <Tooltip title={t("dark_light_theme")}  style={{float: 'right'}} {...props}>
+    return  <Tooltip title={themeCtx.theme? t("use_light"): t("use_dark")}
+                     style={{float: 'right'}} {...props}>
                 <IconButton
                     color="inherit"
-                    aria-label={t("dark_light_theme")}
+                    aria-label={themeCtx.theme? t("use_light"): t("use_dark")}
                     onClick={themeCtx.switchTheme}>
                     <Brightness4Icon/>
                 </IconButton>

@@ -11,6 +11,7 @@ import Payments from "../_components/payments.component";
 import Rooms from "../_components/rooms.component";
 import Teachers from "../_components/teachers.component";
 import Courses from "../_components/courses.component";
+import {NEEDS} from "../_helpers/needs";
 
 
 const Routes = [
@@ -18,35 +19,41 @@ const Routes = [
     path: '/students',
     component: Students,
     title: 'students',
-    icon: PersonIcon
+    icon: PersonIcon,
+    needs: [NEEDS.students, NEEDS.get]
   },
   {
     path: '/courses',
     component: Courses,
     title: 'courses',
-    icon: ClassIcon
+    icon: ClassIcon,
+    needs: [NEEDS.courses, NEEDS.get]
   },
   {
     path: '/teachers',
     component: Teachers,
     title: 'teachers',
-    icon: SchoolIcon
+    icon: SchoolIcon,
+    needs: [NEEDS.teachers, NEEDS.get]
   },
   {
-    path: '/locations',
+    path: '/rooms',
     component: Rooms,
-    title: 'locations',
-    icon:  RoomIcon
+    title: 'rooms',
+    icon:  RoomIcon,
+    needs: [NEEDS.rooms, NEEDS.get]
   },{
     path: '/payments',
     component: Payments,
     title: 'payments',
-    icon: AccountBalanceIcon
+    icon: AccountBalanceIcon,
+    needs: [NEEDS.payments, NEEDS.get]
   },{
     path: '/users',
     component: Users,
     title: 'users',
-    icon: ContactMailIcon
+    icon: ContactMailIcon,
+    needs: [NEEDS.users, NEEDS.get]
   }
 ];
 

@@ -27,10 +27,10 @@ class ImplementsDeleteOne:
 
     @safe_delete
     def delete(self, id_):
-        result = db.session.query(self.model).filter_by(id=id_).one_or_none()
+        result = db.session.query(self.model).filter(self.model.id == id_).one_or_none()
 
         # todo subresources decide
-        """delete_guardians = request.args.get('deleteGuardians')  
+        """delete_guardians = request.args.get('deleteGuardians')
         if delete_guardians:
             delete_guardians = bool(int(delete_guardians))
             if delete_guardians:

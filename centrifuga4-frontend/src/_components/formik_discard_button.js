@@ -15,6 +15,7 @@ import RestoreIcon from "@material-ui/icons/Restore";
 
 const DiscardButton = ({formik, ...props}) => {
     const {t} = useTranslation();
+
     return   <IconButton
                                      onClick={formik.handleReset}
                                      disabled={!formik.dirty || formik.isSubmitting}
