@@ -11,7 +11,7 @@ class ImplementsDeleteOneSubresource:
     given an id, it deletes that entry
     """
 
-    model: MyBase
+    model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
     parent_model: type(MyBase)
     parent_field: str
@@ -25,7 +25,7 @@ class ImplementsDeleteOneSubresource:
         if not parent:
             raise NotFound("resource with the given id not found", requestedId=id_)
 
-        field = getattr(parent, self.parent_field)  # todo secure as get field
+        field = getattr(parent, self.parent_field)
 
         index = next(i for i, v in enumerate(field) if v.id == nested_id)
         if index is None:

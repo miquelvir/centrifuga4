@@ -19,6 +19,7 @@ import {useNormik} from "../_helpers/normik";
 import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import {useNeeds} from "../_helpers/needs";
+import {safe_email} from "../_yup/validators";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +61,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
     const formik = useNormik(true, {
         initialValues: initialValues,
         validationSchema: yup.object({
-            email: yup.string().email(t("invalid_email")),  // todo
+            email: safe_email,
             name: yup.string().required(t("name_required")),
         }),
         enableReinitialize: true,

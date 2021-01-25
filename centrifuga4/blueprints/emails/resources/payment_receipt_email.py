@@ -14,7 +14,7 @@ from centrifuga4.models import Payment, Student
 from email_queue.emails.payment_receipt_email import my_job
 
 
-class PaymentReceiptEmailCollectionRes(Resource):  # todo check
+class PaymentReceiptEmailCollectionRes(Resource):
     @Requires(EmailPermission, PaymentsReceiptsPermission, PaymentsPermission)
     def post(self, payment_id):
         query = Payment.query.filter(Payment.id == payment_id)

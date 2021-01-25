@@ -1,7 +1,7 @@
 import io
 
 from flasgger import SwaggerView
-from flask import make_response, send_file, current_app
+from flask import current_app
 from flask_restful import Resource
 
 from centrifuga4.auth_auth.action_need import PostPermission
@@ -11,6 +11,7 @@ from centrifuga4.auth_auth.resource_need import (
     PaymentsReceiptsPermission,
 )
 from centrifuga4.blueprints.api.errors import NotFound
+from centrifuga4.file_utils.string_bytes_io import make_response_with_file
 from centrifuga4.models import Payment
 from pdfs.payment_receipt import generate_payment_recipe_pdf
 
@@ -30,14 +31,6 @@ class PaymentsReceiptsRes(Resource, SwaggerView):  # todo documented class highe
             current_app.config["BACKEND_SERVER_URL"],
         )
 
-        r = make_response(
-            send_file(
-                io.BytesIO(pdf),
-                as_attachment=True,
-                mimetype="application/pdf",
-                attachment_filename="receipt-%s.pdf" % id_,
-            )
+        return make_response_with_file(
+            io.BytesIO(pdf), "receipt-%s.pdf" % id_, "application/pdf"
         )
-        r.headers["Access-Control-Expose-Headers"] = "content-disposition"
-
-        return r

@@ -63,7 +63,7 @@ def init_app(config=None):
     db.init_app(app)
     login.init_app(app)
 
-    if app.config["DEVELOPMENT"]:  # todo change
+    if app.config["DEVELOPMENT"]:
         # allow cors only during development (due to the front end development server)
         cors = CORS()
         cors.init_app(app)

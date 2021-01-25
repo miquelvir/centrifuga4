@@ -26,4 +26,4 @@ class Courses(Resource):
                     "schedules",
                 )
             ).dump(courses, many=True)
-        )  # todo pagination
+        )

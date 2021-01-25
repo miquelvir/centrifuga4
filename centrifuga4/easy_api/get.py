@@ -24,6 +24,20 @@ def safe_get(function):
     return decorator
 
 
+def _get_page_url(original_url, page, _page):
+    url_params = request.url[len(request.base_url) :]
+    if len(url_params) <= 1:
+        return "%s?page=%s" % (original_url, _page)
+    else:
+        if "?page=%s" % page in url_params:
+            url_params = url_params.replace("?page=%s" % page, "?page=%s" % _page)
+        elif "&page=%s" % page in url_params:
+            url_params = url_params.replace("&page=%s" % page, "&page=%s" % _page)
+        else:
+            url_params += "&page=%s" % _page
+        return request.base_url + url_params
+
+
 class _ImplementsGet:
     """ abstract class both for the Collection and the One get resources """
 
@@ -46,27 +60,34 @@ class _ImplementsGet:
                         "Filter must have operator 'eq' or 'like'. Syntax: filter.[param-name].[operator]"
                     )
 
-                try:
-                    if v == "true":  # todo proper
-                        v = True
-                    elif v == "false":
-                        v = False
-                    elif v == "null":
-                        v = None
-                    if operator == "eq":
+                if (
+                    v == "true"
+                ):  # todo proper; it is json loadable, but are other values
+                    v = True
+                elif v == "false":
+                    v = False
+                elif v == "null":
+                    v = None
+                if operator == "eq":
+                    try:
                         filters.append(self.model.get_field(field) == v)
-                    elif operator == "like":
+                    except AttributeError as e:
+                        raise BaseBadRequest("can't access field '%s'" % v)
+                elif operator == "like":
+                    try:
                         filters.append(self.model.get_field(field).like(v))
-                    else:
-                        raise BaseBadRequest(
-                            "Filter must have operator 'eq' or 'like'. Found: '%s'"
-                            % k[2]
-                        )
-                except KeyError:
-                    raise BaseBadRequest("Uknown field '%s'" % field)
+                    except AttributeError as e:
+                        raise BaseBadRequest("can't access field '%s'" % v)
+                else:
+                    raise BaseBadRequest(
+                        "Filter must have operator 'eq' or 'like'. Found: '%s'" % k[2]
+                    )
 
             elif k[0] == "sort":
-                sort = self.model.get_field(v)  # todo
+                try:
+                    sort = self.model.get_field(v)
+                except AttributeError:
+                    raise BaseBadRequest("Uknown field '%s'" % v)
             elif k[0] == "page":
                 try:
                     page = int(v)
@@ -78,10 +99,8 @@ class _ImplementsGet:
             elif k[0] == "include":
                 if include is None:
                     try:
-                        include = [
-                            self.model.get_field(f) for f in json.loads(v)
-                        ]  # todo to json?
-                    except KeyError:
+                        include = [self.model.get_field(f) for f in json.loads(v)]
+                    except AttributeError:
                         raise BaseBadRequest("specified fields not found")
                 else:
                     raise BaseBadRequest(
@@ -101,16 +120,16 @@ class _ImplementsGet:
         filters, sort, page, include = self._parse_args(request.args)
         do_pagination = page is not None
 
+        query = self.model.query
+
+        if include:
+            query = query.with_entities(*include)
+
+        if filters:
+            query = query.filter(*filters)
+
         if many:
             try:
-                query = self.model.query
-
-                if include:
-                    query = query.with_entities(*include)
-
-                if filters:
-                    query = query.filter(*filters)
-
                 if sort:
                     query = query.order_by(sort)
 
@@ -131,15 +150,8 @@ class _ImplementsGet:
             if not id_:
                 raise BaseBadRequest("id_ must be given")
 
-            try:  # todo are filters actually needed?
-                query = self.model.query.filter(
-                    self.model.id == id_, *(filters if filters else [])
-                )
-
-                if include:
-                    query = query.with_entities(*include)
-
-                result = query.first()
+            try:
+                result = query.one_or_none()
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
@@ -153,54 +165,42 @@ class _ImplementsGet:
         _result = result
         result = self.schema.dump(result, many=many)
 
-        if many and do_pagination:
-
-            def get_page_url(original_url, _page):
-                url_params = request.url[len(request.base_url) :]
-                if len(url_params) <= 1:
-                    return "%s?page=%s" % (original_url, _page)
-                else:
-                    if "?page=%s" % page in url_params:
-                        url_params = url_params.replace(
-                            "?page=%s" % page, "?page=%s" % _page
-                        )
-                    elif "&page=%s" % page in url_params:
-                        url_params = url_params.replace(
-                            "&page=%s" % page, "&page=%s" % _page
-                        )
-                    else:
-                        url_params += "&page=%s" % _page
-                    return request.base_url + url_params
-
-            return (
-                _result,
-                {
-                    "data": result,
-                    "_pagination": {
-                        "currentPage": pagination.page,
-                        "totalItems": pagination.total,
-                        "perPage": pagination.per_page,
-                        "nextPage": pagination.next_num,
-                        "prevPage": pagination.prev_num,
-                        "hasNext": pagination.has_next,
-                        "hasPrev": pagination.has_prev,
-                        "totalPages": pagination.pages,
-                    },
-                    "_links": {
-                        "self": {"href": get_page_url(request.base_url, page)},
-                        "first": {"href": get_page_url(request.base_url, 1)},
-                        "last": {"href": get_page_url(request.url, pagination.pages)},
-                        "prev": {"href": get_page_url(request.url, pagination.prev_num)}
-                        if page > 1
-                        else None,
-                        "next": {"href": get_page_url(request.url, pagination.next_num)}
-                        if page < pagination.pages
-                        else None,
-                    },
-                },
-            )
-        else:
+        if not (many and do_pagination):
             return _result, {"data": result}
+
+        return (
+            _result,
+            {
+                "data": result,
+                "_pagination": {
+                    "currentPage": pagination.page,
+                    "totalItems": pagination.total,
+                    "perPage": pagination.per_page,
+                    "nextPage": pagination.next_num,
+                    "prevPage": pagination.prev_num,
+                    "hasNext": pagination.has_next,
+                    "hasPrev": pagination.has_prev,
+                    "totalPages": pagination.pages,
+                },
+                "_links": {
+                    "self": {"href": _get_page_url(request.base_url, page, page)},
+                    "first": {"href": _get_page_url(request.base_url, page, 1)},
+                    "last": {
+                        "href": _get_page_url(request.url, page, pagination.pages)
+                    },
+                    "prev": {
+                        "href": _get_page_url(request.url, page, pagination.prev_num)
+                    }
+                    if page > 1
+                    else None,
+                    "next": {
+                        "href": _get_page_url(request.url, page, pagination.next_num)
+                    }
+                    if page < pagination.pages
+                    else None,
+                },
+            },
+        )
 
 
 class ImplementsGetOne(_ImplementsGet):

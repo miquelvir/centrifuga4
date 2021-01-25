@@ -1,6 +1,5 @@
 from os.path import join, dirname
 from dotenv import load_dotenv
-from flask import render_template_string
 
 load_dotenv(join(dirname(__file__), "../.env"))
 

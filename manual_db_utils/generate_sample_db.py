@@ -106,7 +106,7 @@ def add_teachers():
     for idx in range(20):
         print("    teacher %s" % idx)
         t = Teacher(
-            id=RawPerson.generate_new_id(),  # todo id collision check
+            id=RawPerson.generate_new_id(),
             name="ester%s" % idx,
             surname1="bonal%s" % idx,
             surname2="vivé%s" % idx,
@@ -122,22 +122,19 @@ def add_rooms():
     for idx in range(20):
         print("    room %s" % idx)
         r = Room(
-            id=Room.generate_new_id(),  # todo id collision check
-            name="monpou %s" % idx,
-            capacity=randint(1, 50),
+            id=Room.generate_new_id(), name="monpou %s" % idx, capacity=randint(1, 50)
         )
         centrifuga4.db.session.add(r)
         rooms.append(r)
     return rooms
 
 
-def generate_schedule(course_id, is_base):
+def generate_schedule(course_id):
     start_h = randint(0, 22)
     start_m = choice((0, 15, 30, 45))
     return Schedule(
         id=Schedule.generate_new_id(),
         day_week=randint(0, 6),
-        is_base=is_base,
         start_time=datetime.time(start_h, start_m),
         end_time=datetime.time(
             randint(start_h, start_h + 23 if start_h + 23 < 23 else 23), start_m
@@ -165,7 +162,7 @@ def add_courses(
         for student in sample(students, randint(0, 50)):
             c.students.append(student)
             if choice((True, False, False)):
-                s = generate_schedule(course_id, False)
+                s = generate_schedule(course_id)
                 s.student_id = student.id
                 centrifuga4.db.session.add(s)
 
@@ -179,7 +176,7 @@ def add_courses(
             c.rooms.append(choice(rooms))
 
         for idx2 in range(randint(0, 3)):
-            c.schedules.append(generate_schedule(course_id, True))
+            c.schedules.append(generate_schedule(course_id))
 
         centrifuga4.db.session.add(c)
 

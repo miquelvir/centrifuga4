@@ -3,7 +3,6 @@ import io
 from datetime import datetime
 
 from flasgger import SwaggerView
-from flask import make_response, send_file, current_app
 from flask_restful import Resource
 
 from centrifuga4.auth_auth.action_need import PostPermission
@@ -11,8 +10,8 @@ from centrifuga4.auth_auth.requires import Requires
 from centrifuga4.auth_auth.resource_need import StudentsPermission, CoursesPermission
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.constants import SHORT_NAME
-from centrifuga4.models import Student, Course
-from pdfs.enrolment import generate_enrolment_agreement_pdf
+from centrifuga4.file_utils.string_bytes_io import make_response_with_file
+from centrifuga4.models import Course
 
 
 def write_students(students, spamwriter):
@@ -226,11 +225,9 @@ class CourseContactSheet(Resource, SwaggerView):
             datetime.now().strftime("%Y%m%dT%H%M%S"),
         )
 
-        proxy = io.StringIO()
+        with io.StringIO() as proxy:
 
-        with proxy as fr:
-
-            spamwriter = csv.writer(fr)
+            spamwriter = csv.writer(proxy)
             spamwriter.writerow(["id >", course.id])
             spamwriter.writerow(["nom / nombre / name >", course.name])
             spamwriter.writerow(
@@ -241,18 +238,4 @@ class CourseContactSheet(Resource, SwaggerView):
             spamwriter.writerow(["students"])
             write_students(course.students, spamwriter)
 
-            f = io.BytesIO()  # todo function
-            f.write(proxy.getvalue().encode("utf-8"))
-            f.seek(0)
-            proxy.close()
-
-            r = make_response(
-                send_file(
-                    f,
-                    as_attachment=True,
-                    mimetype="text/csv",
-                    attachment_filename=filename,
-                )
-            )
-            r.headers["Access-Control-Expose-Headers"] = "content-disposition"
-            return r
+            return make_response_with_file(proxy, filename, "text/csv")

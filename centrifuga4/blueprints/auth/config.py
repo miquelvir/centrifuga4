@@ -1,5 +1,3 @@
-from functools import wraps
-
 from flask import Blueprint, g, request, current_app, session, abort, jsonify
 
 # initialise the blueprint
@@ -34,6 +32,11 @@ def basic_http_auth_required(f):
     return wrapper
 
 
+def get_current_needs():
+    """ returns a json object with the needs of the current user """
+    return jsonify({"needs": [n.id for n in current_user.needs]})
+
+
 @auth_service.route("/login", methods=["POST"])
 @basic_http_auth_required  # require user and password to be validated
 def get_auth_token():
@@ -48,13 +51,11 @@ def get_auth_token():
     """
 
     user = g.user
-    remember = request.args.get("remember")
-    remember = remember == "1" if remember else False
 
-    login_user(user, remember=False)  # todo remember
+    login_user(user, remember=False)
     identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
 
-    return jsonify({"needs": [n.id for n in user.needs]})
+    return get_current_needs()
 
 
 @auth_service.route("/logout", methods=["GET"])
@@ -69,17 +70,6 @@ def logout():
     """
     logout_user()
 
-    # Remove session keys set by Flask-Principal
-    for key in (
-        "identity.name",
-        "identity.auth_type",
-        "_user_id",
-        "_id",
-    ):  # todo refractor function
-        session.pop(key, None)
-
-    g.pop("user", None)
-
     current_app.login_manager._update_request_context_with_user()
 
     # Tell Flask-Principal the user is anonymous
@@ -93,7 +83,7 @@ def logout():
 
 
 @auth_service.route("/ping", methods=["GET"])
-@login_required  #  todo everything should have this or requires
+@login_required
 def ping():
     # will break if login is disabled, as in wsgi_development config
-    return jsonify({"needs": [n.id for n in current_user.needs]})
+    return get_current_needs()

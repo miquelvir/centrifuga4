@@ -10,7 +10,7 @@ export const authenticationService = {
 
 function login(username, password) {
     return new Promise(function(resolve, reject) {
-        axios({url: `${BACKEND_URL}/auth/v1/login`,  // todo server url
+        axios({url: `${BACKEND_URL}/auth/v1/login`,
             method: 'POST',
             auth: {
                 username: username,

@@ -14,6 +14,7 @@ import Divider from "@material-ui/core/Divider";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import DiscardButton from "./formik_discard_button";
 import SaveButton from "./formik_save_button";
+import {safe_email} from "../_yup/validators";
 
 const useStyles = makeStyles((theme) => ({
     line: {
@@ -49,7 +50,7 @@ function Person(props) {
     const formik = useNormik(!newPerson, {
         initialValues: initialValues,
         validationSchema: yup.object({...{
-            email: yup.string().email(t("invalid_email")),  // todo
+            email: safe_email(t),  // todo
             name: yup.string().required(t("name_required")),
             is_studying: yup.boolean().required(t("studying_required")),
             is_working: yup.boolean().required(t("working_required")),

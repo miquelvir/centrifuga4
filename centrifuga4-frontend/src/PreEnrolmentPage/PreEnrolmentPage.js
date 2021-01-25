@@ -40,6 +40,7 @@ import ThemeButton from "../_components/theme_button.component";
 import Link from "@material-ui/core/Link";
 import TranslateButton from "../_components/translate_button.component";
 import {preEnrolmentService} from "../_services/pre-enrolment.service";
+import {safe_email} from "../_yup/validators";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -197,7 +198,7 @@ __person1__surname1: '',
             name: yup.string(required).required(required),
             surname1: yup.string(required).required(required),
             surname2: yup.string(required).required(required),
-            email: yup.string(required).email(t("invalid_email")).when('birth_date', (other, schema) => ((other && !isUnderage(other))? schema.required(required): schema)),
+            email: safe_email(t).when('birth_date', (other, schema) => ((other && !isUnderage(other))? schema.required(required): schema)),
             phone: yup.string().when('birth_date', (other, schema) => ((other && !isUnderage(other))? schema.required(required): schema)),
             address: yup.string(required).required(required),
             city: yup.string(required).required(required),
@@ -242,7 +243,7 @@ __person1__surname1: '',
                                   required,
                                   v => v !== undefined && v !== "" || isStepSkipped(2)
                                 ),
-            __person1__email: yup.string(required).email(t("invalid_email")).test(  // one of the array
+            __person1__email: safe_email(t).test(  // one of the array
                                   'requiredIfNotSkipped',
                                   required,
                                   v =>v !== undefined && v !== ""||  isStepSkipped(2)
@@ -294,7 +295,7 @@ __person1__surname1: '',
                                   required,
                                   v =>  v !== undefined && v !== ""|| isStepSkipped(3)
                                 ),
-            __person2__email: yup.string(required).email(t("invalid_email")).test(  // one of the array
+            __person2__email: safe_email(t).test(  // one of the array
                                   'requiredIfNotSkipped',
                                   required,
                                   v => v !== undefined && v !== "" || isStepSkipped(3)

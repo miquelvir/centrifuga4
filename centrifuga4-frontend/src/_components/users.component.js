@@ -23,6 +23,7 @@ import ItemsList from "./items_list.component";
 import UsersDataService from "../_services/users.service";
 import NeedsSelection from "./needs_selection.component";
 import {useNeeds} from "../_helpers/needs";
+import {safe_email} from "../_yup/validators";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,7 +81,7 @@ export default function Users({history, ...other}) {
   const formik = useFormik({
         initialValues: {email: '', needs: []},
         validationSchema: yup.object({
-            email: yup.string().required(t("email_required")).email(t("invalid_email"))}),
+            email: safe_email(t)}),
         enableReinitialize: true,
         onSubmit: (values, {setStatus, setSubmitting}) => {
             setSubmitting(true);

@@ -11,7 +11,7 @@ from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 def safe_patch(function):
-    """ a safe patch is one with permission, and no nested patches """  # todo complete and check
+    """ a safe patch is one with permission, and no nested patches """
 
     @EasyRequires(PatchPermission)
     @safe_marshmallow
@@ -29,7 +29,7 @@ class ImplementsPatchOne:
     given an id, it patches it with the given body
     """
 
-    model: MyBase
+    model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
     privileges = List[str]
 

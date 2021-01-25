@@ -22,20 +22,13 @@ class ImplementsDeleteOne:
     given an id, it deletes that entry
     """
 
-    model: MyBase
+    model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
 
     @safe_delete
     def delete(self, id_):
         result = db.session.query(self.model).filter(self.model.id == id_).one_or_none()
 
-        # todo subresources decide
-        """delete_guardians = request.args.get('deleteGuardians')
-        if delete_guardians:
-            delete_guardians = bool(int(delete_guardians))
-            if delete_guardians:
-                for guardian in student.guardians:
-                    db.session.delete(guardian)"""
         if not result:
             raise NotFound("resource with the given id not found", requestedId=id_)
 

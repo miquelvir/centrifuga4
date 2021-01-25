@@ -9,20 +9,14 @@ import logging as log
 class MyBase(db.Model):
     __abstract__ = True
 
-    id: str
-    resource_name: str  # todo checks
-    """
-    def __init_subclass__(cls, **kwargs):
-        if not hasattr(cls, 'resource_name'):
-            cls.resource_name = cls.__name__.lower()+'s'  # todo warnings
-    """
+    id: str  # common interface, all of our models must have a field id
 
     @classmethod
     def get_field(cls, item):
         field = cls.__dict__[item]
 
         if not isinstance(field, (InstrumentedAttribute, hybrid_property)):
-            raise KeyError("protected field '%s' can't be accessed" % item)
+            raise AttributeError("protected field '%s' can't be accessed" % item)
 
         return field
 
@@ -39,11 +33,11 @@ class MyBase(db.Model):
         we could consider not checking if it supposed a noticeable overhead
         """
         attempts = 0
-        while True:
+        while attempts < 10:
             id_ = str(uuid.uuid4())
             exists = (
                 db.session.query(cls.id).filter(cls.id == id_).scalar() is not None
-            )  # todo check
+            )  # todo could actually collide with super
             if not exists and id_ not in avoid:
                 return id_
 
@@ -52,5 +46,4 @@ class MyBase(db.Model):
                 "generated a uuid4 identifier which collided with an existing id; retying now."
             )
 
-            if attempts > 10:
-                raise ValueError("multiple collisions in a row when creating uuids")
+        raise ValueError("multiple collisions in a row when creating uuids")

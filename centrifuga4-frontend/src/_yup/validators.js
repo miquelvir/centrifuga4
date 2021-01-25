@@ -11,7 +11,7 @@ import {
 
 export const safe_password = (t) => (
     yup.string()
-        .required(t("password_required"))  // todo translate
+        .required(t("password_required"))
         .matches(longer_8, t("longer_8"))
         .matches(shorter_64, t("shorter_64"))
         .matches(has_lowercase, t("has_lowercase"))

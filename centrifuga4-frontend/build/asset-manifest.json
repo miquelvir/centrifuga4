@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "https://centrifuga4.herokuapp.com/static/css/main.68b8b5e7.chunk.css",
-    "main.js": "https://centrifuga4.herokuapp.com/static/js/main.3a570587.chunk.js",
-    "main.js.map": "https://centrifuga4.herokuapp.com/static/js/main.3a570587.chunk.js.map",
+    "main.js": "https://centrifuga4.herokuapp.com/static/js/main.da73db16.chunk.js",
+    "main.js.map": "https://centrifuga4.herokuapp.com/static/js/main.da73db16.chunk.js.map",
     "runtime-main.js": "https://centrifuga4.herokuapp.com/static/js/runtime-main.fd1fd03b.js",
     "runtime-main.js.map": "https://centrifuga4.herokuapp.com/static/js/runtime-main.fd1fd03b.js.map",
     "static/css/2.6fdf7c43.chunk.css": "https://centrifuga4.herokuapp.com/static/css/2.6fdf7c43.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.6fdf7c43.chunk.css",
     "static/js/2.dacbc51d.chunk.js",
     "static/css/main.68b8b5e7.chunk.css",
-    "static/js/main.3a570587.chunk.js"
+    "static/js/main.da73db16.chunk.js"
   ]
 }

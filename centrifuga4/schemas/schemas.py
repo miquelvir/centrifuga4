@@ -3,7 +3,6 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, fields, auto_field
 from marshmallow import fields
 import centrifuga4.models as models
 from centrifuga4 import db
-from flasgger import Schema
 
 
 class MySQLAlchemyAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
@@ -72,6 +71,7 @@ class ScheduleSchema(BaseScheduleSchema):
         model = models.Schedule
 
     course = fields.Nested(CourseSchema(only=("id", "name")), many=False)
+    is_base = fields.Bool(dump_only=True)
 
 
 class RoomSchema(MySQLAlchemyAutoSchema):
@@ -124,7 +124,9 @@ class UserSchema(MySQLAlchemyAutoSchema):
         dump_only = (model.full_name.key,)
 
     full_name = fields.Str(dump_only=True)
-    password_hash = fields.Str(load_only=True)  # due to security
+    password_hash = fields.Str(
+        load_only=True, dump_only=True
+    )  # due to security: don't allow loading nor dumping
 
 
 class TeacherSchema(RawPersonSchema):

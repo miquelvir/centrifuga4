@@ -8,6 +8,7 @@ from centrifuga4.blueprints.api.errors import (
     no_nested,
     safe_marshmallow,
     ResourceBaseBadRequest,
+    integrity,
 )
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
@@ -17,8 +18,9 @@ def safe_post(function):
     """ a safe post is one with permissions and no nested objects """
 
     @EasyRequires(PostPermission)
-    @safe_marshmallow  # todo check
+    @safe_marshmallow
     @no_nested
+    @integrity
     def decorator(*args, **kwargs):
         return function(*args, **kwargs)
 
@@ -31,12 +33,13 @@ class ImplementsPostOne:
     given an id, it posts with the given body
     """
 
-    model: MyBase
+    model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
 
     @safe_post
-    def post(self):  # todo test completeness
+    def post(self):
         body = request.get_json()
+
         if "id" in body:
             raise ResourceBaseBadRequest(
                 "post does not admit id argument",
@@ -45,13 +48,6 @@ class ImplementsPostOne:
 
         new_id = self.model.generate_new_id()
         body["id"] = new_id
-
-        """if "guardians" in body:
-            used_uncommitted_ids = [new_id]
-            for guardian in body["guardians"]:
-                guardian_id = generate_new_person_id(db, avoid=used_uncommitted_ids)
-                guardian["id"] = guardian_id
-                used_uncommitted_ids.append(guardian_id)"""
 
         new = self.schema.load(body)
         db.session.add(new)

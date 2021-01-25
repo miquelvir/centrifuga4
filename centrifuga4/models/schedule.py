@@ -1,3 +1,4 @@
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 
 from centrifuga4 import db
@@ -14,7 +15,6 @@ class Schedule(MyBase):
     day_week = db.Column(db.Integer, nullable=False)
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
-    is_base = db.Column(db.Boolean, nullable=False, default=True)  # todo to hybrid
 
     course_id = db.Column(db.Text, db.ForeignKey("course.id"), nullable=False)
 
@@ -23,6 +23,10 @@ class Schedule(MyBase):
     course = db.relationship(
         "Course", foreign_keys=course_id, back_populates="schedules"
     )
+
+    @hybrid_property
+    def is_base(self) -> bool:
+        return self.student_id is None
 
     @validates("day_week")
     def validation(self, key, value):

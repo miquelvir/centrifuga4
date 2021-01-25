@@ -29,8 +29,6 @@ class RawPerson(MyBase):
         + case([(surname2 != None, surname2)], else_="")
     )
 
-    # todo full_name no accents with collate https://docs.sqlalchemy.org/en/13/core/sqlelement.html#sqlalchemy.sql.expression.collate
-
     @hybrid_property
     def age(self):
         if not self.birth_date:

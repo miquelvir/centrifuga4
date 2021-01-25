@@ -6,7 +6,7 @@ export function useNormik(onlyChangedValuesOnSubmit, props, allowArrays=false) {
     if ("initialValues" in props) {
         let nullSafeInitialValues = {};
         originalInitialValues = props.initialValues;
-        for (const [key, value] of Object.entries(originalInitialValues)) {  // todo how to make clean
+        for (const [key, value] of Object.entries(originalInitialValues)) {
           if (value === null) {
               nullSafeInitialValues[key] = '';
           } else {
@@ -20,7 +20,7 @@ export function useNormik(onlyChangedValuesOnSubmit, props, allowArrays=false) {
         const oldOnSubmit = props.onSubmit;
         const nullSafeOnSubmit = (values, actions) => {
             let normalizedValues = {};
-            for (const [key, value] of Object.entries(values)) {  // todo how to make clean
+            for (const [key, value] of Object.entries(values)) {
                 const normalizedValue = value === ''? null : value;
                 if (!onlyChangedValuesOnSubmit ||
                     (onlyChangedValuesOnSubmit && normalizedValue !== originalInitialValues[key] &&

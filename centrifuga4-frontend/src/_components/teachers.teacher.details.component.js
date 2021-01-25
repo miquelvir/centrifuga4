@@ -20,6 +20,7 @@ import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import Divider from "@material-ui/core/Divider";
 import {useNeeds} from "../_helpers/needs";
+import {safe_email} from "../_yup/validators";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +62,7 @@ function TeacherDetails({ children, addStudentId, setNewRoom, newRoom, value, in
     const formik = useNormik(!newRoom, {
         initialValues: initialValues,
         validationSchema: yup.object({
-            email: yup.string().email(t("invalid_email")),  // todo
+            email: safe_email(t),  // todo
             name: yup.string().required(t("name_required")),
         }),
         enableReinitialize: true,

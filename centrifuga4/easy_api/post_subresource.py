@@ -13,7 +13,7 @@ class ImplementsPostOneSubresource:
     given an id, it posts with the given body
     """
 
-    model: type(MyBase)  # todo add type everywhere
+    model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
     parent_model: type(MyBase)
     parent_field: str

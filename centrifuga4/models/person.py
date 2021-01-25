@@ -23,8 +23,6 @@ class Person(RawPerson):
     is_working = db.Column(db.Boolean, nullable=False)
     career = db.Column(db.Text, nullable=True)
 
-    # todo full_name no accents with collate https://docs.sqlalchemy.org/en/13/core/sqlelement.html#sqlalchemy.sql.expression.collate
-
     @hybrid_property
     def age(self):
         if not self.birth_date:

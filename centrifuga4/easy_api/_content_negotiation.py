@@ -4,10 +4,11 @@ from datetime import datetime
 
 from typing import Union, Tuple
 
-from flask import request, jsonify, send_file, make_response
+from flask import request, jsonify
 
 from centrifuga4.blueprints.api.errors import BaseBadRequest
 from centrifuga4.constants import SHORT_NAME
+from centrifuga4.file_utils.string_bytes_io import make_response_with_file
 from centrifuga4.models import Student
 
 
@@ -110,16 +111,7 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
 
                 f = Flattener().flatten_to_csv(_result, result["data"])
 
-                r = make_response(
-                    send_file(
-                        f,
-                        as_attachment=True,
-                        mimetype=match,
-                        attachment_filename=filename,
-                    )
-                )
-                r.headers["Access-Control-Expose-Headers"] = "content-disposition"
-                return r
+                return make_response_with_file(f, filename, match)
             else:
                 raise NotImplementedError("mimeType cast not implemented")
 
