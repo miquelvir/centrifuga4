@@ -19,7 +19,6 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import ExportSearchChip from "./ExportSearchChip.component";
-import UsersDataService from "../_services/users.service";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ItemsList = ({setCurrentItemId, currentItemId, items, setItems, displayNameField="full_name",
+const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, displayNameField="full_name",
                        usableFilters=[], defaultSearchBy="full_name", searchByOptions=["full_name"],
                         dataService, searchBarLabel, exportPage=true, exportItem=true, exportAllPages=true}) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -141,16 +140,22 @@ const ItemsList = ({setCurrentItemId, currentItemId, items, setItems, displayNam
                             {exportPage && <ExportSearchChip
                                 searchTerm={searchTerm}
                                 page={page}
-                                dataService={StudentsDataService}
+                                searchTermField={searchBy}
+                                dataService={dataService}
                                 getFilters={getFilters}
                             />}
                             {exportAllPages && <ExportSearchChip
                                 searchTerm={searchTerm}
                                 page={page}
-                                dataService={StudentsDataService}
+                                dataService={dataService}
+                                searchTermField={searchBy}
                                 exportAll={true}
                                 getFilters={getFilters}
                             />}
+
+                            {chips.map((chip) => (
+                                chip
+                            ))}
 
                             {searchByOptions.map(option => (
                                 <Tooltip key={option} title={`${t("search_by")} ${t(option)}`}>

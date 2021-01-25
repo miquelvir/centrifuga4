@@ -5,9 +5,13 @@ import {useTranslation} from "react-i18next";
 import Student from "./students.student.component";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import {Tooltip} from "@material-ui/core";
+import {Chip, Tooltip} from "@material-ui/core";
 import StudentsDataService from "../_services/students.service";
 import ItemsList from "./items_list.component";
+import ExportSearchChip from "./ExportSearchChip.component";
+import Avatar from "@material-ui/core/Avatar";
+import {downloadGodFile} from "../_services/god.service";
+import {useErrorHandler} from "../_helpers/handle-response";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +38,7 @@ export default function Students({history, ...other}) {
   const [students, setStudents] = useState([]);
   const [newStudent, setNewStudent] = useState(false);
   const [currentStudentId, setCurrentStudentId] = useState(null);
-
+    const handleError = useErrorHandler();
   const query = new URLSearchParams(window.location.search);
   const id = query.get('id');
   useEffect(() => {
@@ -54,6 +58,19 @@ export default function Students({history, ...other}) {
                 currentItemId={currentStudentId}
                 items={students}
                 setItems={setStudents}
+                chips={[
+                    <Tooltip title={t("export_contact_sheets")}
+                           aria-label={t("export_contact_sheets")}>
+                    <Chip variant="outlined"
+                          color="primary"
+                          size="small"
+                          avatar={<Avatar>csv</Avatar>}
+                          label={t("export_all_plus")}
+                          onClick={() => {
+                            downloadGodFile().then(...handleError({}))
+                          }}/>
+                  </Tooltip>
+                ]}
                 usableFilters={[{
                     name: 'enrollment_status',
                     defaultValue: null,

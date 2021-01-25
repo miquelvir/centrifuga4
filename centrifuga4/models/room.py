@@ -26,3 +26,6 @@ class Room(MyBase):
                     yield schedule
         else:
             return []
+
+    def user_representation(self):
+        return self.name

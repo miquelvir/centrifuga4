@@ -150,6 +150,7 @@ class _ImplementsGet:
                     filters=request.args,
                 )
 
+        _result = result
         result = self.schema.dump(result, many=many)
 
         if many and do_pagination:
@@ -171,32 +172,35 @@ class _ImplementsGet:
                         url_params += "&page=%s" % _page
                     return request.base_url + url_params
 
-            return {
-                "data": result,
-                "_pagination": {
-                    "currentPage": pagination.page,
-                    "totalItems": pagination.total,
-                    "perPage": pagination.per_page,
-                    "nextPage": pagination.next_num,
-                    "prevPage": pagination.prev_num,
-                    "hasNext": pagination.has_next,
-                    "hasPrev": pagination.has_prev,
-                    "totalPages": pagination.pages,
+            return (
+                _result,
+                {
+                    "data": result,
+                    "_pagination": {
+                        "currentPage": pagination.page,
+                        "totalItems": pagination.total,
+                        "perPage": pagination.per_page,
+                        "nextPage": pagination.next_num,
+                        "prevPage": pagination.prev_num,
+                        "hasNext": pagination.has_next,
+                        "hasPrev": pagination.has_prev,
+                        "totalPages": pagination.pages,
+                    },
+                    "_links": {
+                        "self": {"href": get_page_url(request.base_url, page)},
+                        "first": {"href": get_page_url(request.base_url, 1)},
+                        "last": {"href": get_page_url(request.url, pagination.pages)},
+                        "prev": {"href": get_page_url(request.url, pagination.prev_num)}
+                        if page > 1
+                        else None,
+                        "next": {"href": get_page_url(request.url, pagination.next_num)}
+                        if page < pagination.pages
+                        else None,
+                    },
                 },
-                "_links": {
-                    "self": {"href": get_page_url(request.base_url, page)},
-                    "first": {"href": get_page_url(request.base_url, 1)},
-                    "last": {"href": get_page_url(request.url, pagination.pages)},
-                    "prev": {"href": get_page_url(request.url, pagination.prev_num)}
-                    if page > 1
-                    else None,
-                    "next": {"href": get_page_url(request.url, pagination.next_num)}
-                    if page < pagination.pages
-                    else None,
-                },
-            }
+            )
         else:
-            return {"data": result}
+            return _result, {"data": result}
 
 
 class ImplementsGetOne(_ImplementsGet):

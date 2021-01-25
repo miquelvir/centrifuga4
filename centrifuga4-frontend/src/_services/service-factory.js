@@ -167,12 +167,16 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return Promise.all(ids.map(id => (this.delete(id))));
         }
 
-        downloadCsv(likeSearchText=null, page = 1, filters=null) {
+        downloadCsv(searchtermfield, searchterm, page = 1, filters=null) {
             return new Promise(function (resolve, reject) {
                 let myFilters = {
-                       "filter.full_name.like": likeSearchText === null? null: `%${likeSearchText}%`,
                         "page": page
                     };
+
+                if (searchtermfield !== null){
+                    myFilters[`filter.${searchtermfield}.like`]= `%${searchterm}%`;
+                }
+
                 if (filters !== null){
                     Object.keys(filters).forEach((key) => {
                     myFilters[`filter.${key}.eq`] = filters[key];

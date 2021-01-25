@@ -5,7 +5,6 @@ import {Autocomplete} from "@material-ui/lab";
 import {countries} from "../_data/countries";
 import TextField from "@material-ui/core/TextField";
 import createStyles from "@material-ui/styles/createStyles";
-import DirtyTextField from "./dirtytextfield.component";
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11

@@ -3,9 +3,6 @@ import clsx from "clsx";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import TranslateIcon from "@material-ui/icons/Translate";
-import Brightness4Icon from "@material-ui/icons/Brightness4";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Toolbar from "@material-ui/core/Toolbar";
 import React, {useContext} from "react";
@@ -141,7 +138,7 @@ export default function HomeToolbar(props){
                     <div className={classes.grow}/>
 
                     <TranslateButton/>
-            <ThemeButton />
+                <ThemeButton />
 
 
                         <Tooltip title={t("my_account")}>

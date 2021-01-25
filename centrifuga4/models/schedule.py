@@ -33,3 +33,12 @@ class Schedule(MyBase):
 
     def __repr__(self):
         return "<Schedule | %s - %s>" % (self.id, self.course_id)
+
+    def user_representation(self):
+        return "(%s, %s - %s, %s, %s)" % (
+            self.day_week,
+            self.start_time,
+            self.end_time,
+            self.course.name,
+            "common" if self.is_base else self.student_id,
+        )

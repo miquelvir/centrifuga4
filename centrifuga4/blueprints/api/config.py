@@ -8,6 +8,7 @@ from centrifuga4.blueprints.api.resources.course_attendance_list import (
 from centrifuga4.blueprints.api.resources.course_students_contact_sheet import (
     CourseContactSheet,
 )
+from centrifuga4.blueprints.api.resources.god_file import GodFile
 from centrifuga4.easy_api.resource_factory import get_resources
 from centrifuga4.blueprints.api.errors import Unauthorized, Forbidden
 from centrifuga4.blueprints.api.resources.payment_receipts import PaymentsReceiptsRes
@@ -52,6 +53,7 @@ api.add_resource(
 api.add_resource(PaymentsReceiptsRes, "/payments/<string:id_>/receipt")
 api.add_resource(CoursesAttendanceListRes, "/courses/<string:id_>/attendanceList")
 api.add_resource(CourseContactSheet, "/courses/<string:id_>/contactsSheet")
+api.add_resource(GodFile, "/files/god")
 
 
 for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User):

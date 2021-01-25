@@ -8,6 +8,7 @@ from flask import request, jsonify, send_file, make_response
 
 from centrifuga4.blueprints.api.errors import BaseBadRequest
 from centrifuga4.constants import SHORT_NAME
+from centrifuga4.models import Student
 
 
 def to_file(function):
@@ -28,45 +29,45 @@ class Flattener:
         pass
 
     @to_file
-    def flatten_to_csv(self, src, proxy=None):
+    def flatten_to_csv(self, _result: Student, src, proxy=None):
         if proxy is None:
             raise ValueError("proxy can't be none, value must be provided")
 
-        matrix, keys = self.flatten(src)
+        matrix, keys = self.flatten(src, _result)
         keys = list(keys)
         keys.sort()
         dict_writer = csv.DictWriter(proxy, keys)
         dict_writer.writeheader()
         dict_writer.writerows(matrix)
 
-    def flatten(self, src):
+    def flatten(self, src, _result):
         if type(src) is not list:
             src = [src]
+            _result = [_result]
 
         matrix = []
         keys = set()
-        for row in src:
-            flattened_row = self._flatten_row(row)
+        for row, _res in zip(src, _result):
+            flattened_row = self._flatten_row(row, _res)
             matrix.append(flattened_row)
             keys = keys | set(flattened_row.keys())
         return matrix, keys
 
-    def _flatten_row(self, src: Union[list, dict], upper_key: str = None, result=None):
-        result = result if result is not None else {}
-        if type(src) is list:
-            for idx, value in enumerate(src):
-                key = "%s_%s" % (upper_key, idx) if upper_key is not None else str(idx)
-                _ = self._flatten_row(value, key, result)
-        elif type(src) is dict:
-            for local_key, value in src.items():
-                key = (
-                    "%s_%s" % (upper_key, local_key)
-                    if upper_key is not None
-                    else local_key
-                )
-                _ = self._flatten_row(value, key, result)
-        else:
-            result[upper_key] = src
+    def _flatten_row(self, src: Union[list, dict], _result: Student):
+        result = {}
+        for key, value in src.items():
+            if type(value) is list:
+                result[key] = ", ".join([str(v) for v in value])
+                try:
+                    result[key + " [readable]"] = ", ".join(
+                        [v.user_representation() for v in _result.__dict__[key]]
+                    )
+                except AttributeError:
+                    pass
+                except KeyError:
+                    pass
+            else:
+                result[key] = str(value)
         return result
 
 
@@ -93,7 +94,7 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
                     )
 
             # call the actual endpoint
-            result = function(*args, **kwargs)
+            _result, result = function(*args, **kwargs)
 
             # return in matched type
             if match == "application/json":
@@ -107,7 +108,7 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
                     extension,
                 )
 
-                f = Flattener().flatten_to_csv(result["data"])
+                f = Flattener().flatten_to_csv(_result, result["data"])
 
                 r = make_response(
                     send_file(

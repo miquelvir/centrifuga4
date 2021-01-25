@@ -58,3 +58,6 @@ class Course(MyBase):
 
     def __repr__(self):
         return "<Course | %s - %s>" % (self.id, self.name)
+
+    def user_representation(self):
+        return self.name

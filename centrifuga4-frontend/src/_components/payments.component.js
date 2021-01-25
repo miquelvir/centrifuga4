@@ -54,7 +54,7 @@ export default function Payments({history, ...other}) {
         <ListItem button
                   onClick={() => {
                       PaymentsDataService
-                          .downloadCsv(null, '*', null)
+                          .downloadCsv(null, null,'*', null)
                           .then(...errorHandler({}))
 
                   }}>

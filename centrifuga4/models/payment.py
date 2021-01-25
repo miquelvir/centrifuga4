@@ -28,3 +28,11 @@ class Payment(MyBase):
 
     def __repr__(self):
         return "<Payment | %s - %s>" % (self.id, self.date)
+
+    def user_representation(self):
+        return "(%s€ via %s, %s, %s)" % (
+            self.quantity,
+            self.method,
+            self.date,
+            self.concept,
+        )

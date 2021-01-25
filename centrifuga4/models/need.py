@@ -25,3 +25,6 @@ class Need(db.Model):
         elif self.type == "action":
             return ActionNeed(self.id)
         raise NotImplementedError("type '%s' is not implemented" % self.type)
+
+    def user_representation(self):
+        return self.id

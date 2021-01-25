@@ -54,3 +54,6 @@ class RawPerson(MyBase):
 
     def __repr__(self):
         return "<Raw person - %s | %s>" % (type(self).__name__, self.id)
+
+    def user_representation(self):
+        return self.full_name

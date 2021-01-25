@@ -58,3 +58,6 @@ class User(MyBase, UserMixin):
                 re.compile("(?=.*[-/:-@[-`{-~]{1,})").match(password) is not None,
             )
         )
+
+    def user_representation(self):
+        return self.full_name

@@ -13,3 +13,6 @@ class Label(MyBase):
 
     def __repr__(self):
         return "<Label | %s>" % self.id
+
+    def user_representation(self):
+        return self.id
