@@ -151,7 +151,7 @@ class _ImplementsGet:
                 raise BaseBadRequest("id_ must be given")
 
             try:
-                result = query.one_or_none()
+                result = query.first()
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 

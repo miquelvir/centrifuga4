@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, render_template_string, redirect
 from flask_talisman import Talisman
 from flask_login import LoginManager
+
 from config import DevelopmentBuiltConfig, ProductionConfig, DevelopmentConfig
 
 db = SQLAlchemy()
@@ -98,16 +99,7 @@ def init_app(config=None):
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
 
-        @login.user_loader
-        def user_loader(id_):
-            """
-            loads a user given its id for Flask-Login
-
-            :param id_: the user id
-            :return: the User with that id
-            """
-            print("loading")
-            return User.query.get(id_)
+        from centrifuga4.auth_auth.login_user_loader import user_loader
 
         # serve the react frontend
         @app.route("/")
