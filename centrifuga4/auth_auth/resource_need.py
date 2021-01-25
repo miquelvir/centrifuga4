@@ -16,7 +16,7 @@ ResourceNeed = namedtuple("resource_need", ["resource"])
 CoursesNeed = partial(ResourceNeed, "courses")
 GuardiansNeed = partial(ResourceNeed, "guardians")
 PaymentsNeed = partial(ResourceNeed, "payments")
-PaymentsRecipesNeed = partial(ResourceNeed, "payments-recipes")
+PaymentsReceiptsNeed = partial(ResourceNeed, "payments-receipts")
 RoomsNeed = partial(ResourceNeed, "rooms")
 SchedulesNeed = partial(ResourceNeed, "schedules")
 StudentsNeed = partial(ResourceNeed, "students")
@@ -64,9 +64,9 @@ class PaymentsPermission(Permission):
         super().__init__(PaymentsNeed())
 
 
-class PaymentsRecipesPermission(Permission):
+class PaymentsReceiptsPermission(Permission):
     def __init__(self):
-        super().__init__(PaymentsRecipesPermission())
+        super().__init__(PaymentsReceiptsNeed())
 
 
 class RoomsPermission(Permission):

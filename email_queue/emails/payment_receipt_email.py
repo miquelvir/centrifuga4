@@ -17,8 +17,6 @@ def my_job(payment, to, secret, backend_url):
             plain_body="Rebut del pagament adjunt ({quantity}€)\nRecibo del pago adjunto ({quantity}€)\nPayment receipt attached ({quantity}€)".format(
                 quantity=payment.quantity
             ),
-            files=[
-                (io.BytesIO(pdf), "receipt-%s.pdf" % payment.id)
-            ],  # todo clean files typing
+            files=[(io.BytesIO(pdf), "receipt-%s.pdf" % payment.id)],
         )
     )

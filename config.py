@@ -64,6 +64,9 @@ class DevelopmentBuiltConfig(DevelopmentConfig):
     CSRF_DISABLE = False
     LOGIN_DISABLED = False
 
+    DEVELOPMENT = False
+    LOGIN_DISABLED = False
+
     FRONTEND_SERVER_URL = "https://127.0.0.1:4999"
 
     SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % os.path.join(

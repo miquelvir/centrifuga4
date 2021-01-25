@@ -90,7 +90,7 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
         return Object.fromEntries(Object.entries(filters).filter(([k,v]) => (v !== null)))
     }
 
-    function search(page) {
+    function search() {
         dataService
             .getAll({name: searchBy, value: searchTerm}, page,
                [...new Set(['id', displayNameField])], getFilters())

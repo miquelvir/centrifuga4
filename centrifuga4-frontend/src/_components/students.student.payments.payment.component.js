@@ -31,6 +31,7 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {payment_methods} from "../_data/payment_methods"
 import {useNeeds} from "../_helpers/needs";
+import {loadingContext} from "../_context/loading-context";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '100%',
@@ -68,7 +69,7 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
+const loadingCtx = React.useContext(loadingContext);
   const formik = useNormik(!newPayment, {
         initialValues: payment,
         validationSchema: yup.object({method: one_of(t, payment_methods),
@@ -151,21 +152,27 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
         {!newPayment && <CardActions disableSpacing>
             {hasNeeds([NEEDS.paymentReceipts]) &&
             <Tooltip title={t("export_receipt")} aria-label={t("export_receipt")}>
-          <IconButton aria-label={t("export_receipt")} onClick={(e) => {
+          <IconButton disabled={loadingCtx.loading} aria-label={t("export_receipt")} onClick={(e) => {
+              loadingCtx.startLoading();
               PaymentsDataService
                   .downloadSubresource(payment["id"], 'receipt')
                   .then(...errorHandler({snackbarSuccess:true}))
-                  .then(()=>null)
+                  .finally(() => {
+                      loadingCtx.stopLoading();
+                  })
           }}>
             <ReceiptIcon />
           </IconButton>
         </Tooltip>}
             {hasNeeds([NEEDS.paymentReceipts, NEEDS.send_email]) &&
         <Tooltip title={t("send_receipt")} aria-label={t("send_receipt")}>
-          <IconButton aria-label={t("send_receipt")} onClick={(e) => {
+          <IconButton  disabled={loadingCtx.loading} aria-label={t("send_receipt")} onClick={(e) => {
+              loadingCtx.startLoading();
               sendReceiptEmail(payment["id"])
                   .then(...errorHandler({snackbarSuccess:true}))
-                  .then(()=>null);
+                  .finally(() => {
+                      loadingCtx.stopLoading();
+                  });
           }}>
             <SendIcon />
           </IconButton>

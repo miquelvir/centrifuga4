@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from dataclasses import dataclass
 from typing import List, Tuple
 
@@ -20,6 +22,6 @@ class Email:
     to: List[str] = None
     cc: List[str] = None
     bcc: List[str] = None
-    files: List[Tuple[str, str]] = None
+    files: List[Tuple[BytesIO, str]] = None
     plain_body: str = None
     html_body: str = None
