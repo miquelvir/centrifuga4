@@ -147,8 +147,11 @@ class _ImplementsGet:
                 raise ResourceModelBadRequest(e)
 
         else:
+
             if not id_:
                 raise BaseBadRequest("id_ must be given")
+
+            query = query.filter_by(id=id_)
 
             try:
                 result = query.first()

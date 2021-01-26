@@ -226,6 +226,7 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
                     <div key={item["id"]}>
                         <ListItem key={item["id"]} button
                                   onClick={() => {
+                                      console.log(item['id']);
                                       setCurrentItemId(item['id']);
                                   }}>
                             <ListItemAvatar>
