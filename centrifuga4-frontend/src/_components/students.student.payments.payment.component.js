@@ -32,6 +32,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import {payment_methods} from "../_data/payment_methods"
 import {useNeeds} from "../_helpers/needs";
 import {loadingContext} from "../_context/loading-context";
+import {confirmContext} from "../_context/confirm-context";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '100%',
@@ -69,6 +70,8 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  const confirm = React.useContext(confirmContext);
 const loadingCtx = React.useContext(loadingContext);
   const formik = useNormik(!newPayment, {
         initialValues: payment,
@@ -140,7 +143,12 @@ const loadingCtx = React.useContext(loadingContext);
         }
         action={
          hasNeeds([NEEDS.delete]) && <Tooltip title={t("delete")} aria-label={t("delete")}>
-          <IconButton onClick={(e) => {deletePayment(payment['id'])}}>
+          <IconButton onClick={(e) => {
+              confirm.confirm("delete_payment", "not_undone", () => {
+                  deletePayment(payment['id'])
+              });
+
+          }}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>

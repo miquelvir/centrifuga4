@@ -27,6 +27,7 @@ import SearchBar from "./searchbar.component";
 import Pagination from "@material-ui/lab/Pagination";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import {useNeeds} from "../_helpers/needs";
+import {confirmContext} from "../_context/confirm-context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -82,7 +83,7 @@ function Courses({ children, history, value, dataService, index, title, courseId
   const handleClose = () => {
     setNewCourse(false);
   };
-
+const confirm = React.useContext(confirmContext);
   useEffect(()=>{
     setNewCourse(false);
   }, [courses])
@@ -239,7 +240,9 @@ const onChangeSearchTerm = (e) => {
                             <ListItemText id="name" primary={course.name} secondary={course.description}/>
                             { hasNeeds([NEEDS.delete]) && <ListItemSecondaryAction>
                                 <IconButton onClick={(e) => {
-                                    if (window.confirm(t("confirm_unenroll_to_course"))) deleteStudentCourse(course['id'])
+                                    confirm.confirm("confirm_unenroll_to_course", "not_undone", () => {
+                                        deleteStudentCourse(course['id']);
+                                    });
                                 }}>
                                     <DeleteIcon/>
                                 </IconButton>

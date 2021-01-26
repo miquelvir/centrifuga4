@@ -21,8 +21,19 @@ import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
 import {createBrowserHistory} from "history";
 import {useNeeds} from "../_helpers/needs";
-import {Backdrop, CircularProgress} from "@material-ui/core";
+import {
+    Backdrop,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    useMediaQuery
+} from "@material-ui/core";
 import {loadingContext} from '../_context/loading-context';
+import {confirmContext} from '../_context/confirm-context';
+import DialogContentText from "@material-ui/core/DialogContentText";
+import Button from "@material-ui/core/Button";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
@@ -142,76 +153,133 @@ const HomePage = (props) => {
         setLoading(false);
       };
 
+      const [confirmDialog, setConfirmDialog] = React.useState({
+          open: false,
+          title: null,
+          subtitle: null,
+          success: () => {},
+          cancel: () => {},
+          args: []
+      });
+      const confirm = (title, subtitle, successCallable, cancelCallable=null, args=[]) => {
+          setConfirmDialog(
+              {
+                open: true,
+                title: title,
+                subtitle: subtitle,
+                success: successCallable,
+                cancel: cancelCallable === null? () => {}: cancelCallable,
+                  args: args
+              }
+          );
+      }
+      const handleCloseConfirm = () => {
+          setConfirmDialog({...confirmDialog, open: false});
+      }
+
     return (
         <div className={classes.root}>
             <CssBaseline/>
-<loadingContext.Provider value={{loading: loading, startLoading: () => {setLoading(true)}, stopLoading: () =>{setLoading(false)}}}>
-            <AppBar
-                position="fixed"
-                className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
-                })}>
-                <HomeToolbar
-                    changeTheme={props.changeTheme}
-                    handleDrawerOpen={handleDrawerOpen}
-                    handleDrawerClose={handleDrawerClose}
-                    open={open}
-                />
-            </AppBar>
-            <BrowserRouter history={history} basename="/app/home">
-                <Drawer
-                    variant="permanent"
-                    className={clsx(classes.drawer, {
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
-                    })}
-                    classes={{
-                        paper: clsx({
-                            [classes.drawerOpen]: open,
-                            [classes.drawerClose]: !open,
-                        }),
-                    }}
-                >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
-                        </IconButton>
-                    </div>
-                    <Divider/>
-                    <List>
-                        {Routes
-                            .filter(route => hasNeeds(route.needs))
-                            .map((prop) =>(
-                                  <ListItem key={prop.title} to={prop.path } button component={Link} onClick={() => onItemClick(prop)}>
-                                    <ListItemIcon className={prop.path === currentRoute? classes.selectedIcon: classes.icon}>
-                                        <Tooltip title={t(prop.title)} aria-label={t(prop.title)}>
-                                            {<prop.icon/>}
-                                        </Tooltip>
-                                    </ListItemIcon>
-                                    <ListItemText primary={t(prop.title)}/>
-                                </ListItem>
-                                ))}
-                    </List>
-                </Drawer>
+                <loadingContext.Provider value={{loading: loading, startLoading: () => {setLoading(true)}, stopLoading: () =>{setLoading(false)}}}>
+                    <confirmContext.Provider value={{confirm: confirm}}>
+                            <AppBar
+                                position="fixed"
+                                className={clsx(classes.appBar, {
+                                    [classes.appBarShift]: open,
+                                })}>
+                                <HomeToolbar
+                                    changeTheme={props.changeTheme}
+                                    handleDrawerOpen={handleDrawerOpen}
+                                    handleDrawerClose={handleDrawerClose}
+                                    open={open}
+                                />
+                            </AppBar>
+                            <BrowserRouter history={history} basename="/app/home">
+                                <Drawer
+                                    variant="permanent"
+                                    className={clsx(classes.drawer, {
+                                        [classes.drawerOpen]: open,
+                                        [classes.drawerClose]: !open,
+                                    })}
+                                    classes={{
+                                        paper: clsx({
+                                            [classes.drawerOpen]: open,
+                                            [classes.drawerClose]: !open,
+                                        }),
+                                    }}
+                                >
+                                    <div className={classes.toolbar}>
+                                        <IconButton onClick={handleDrawerClose}>
+                                            {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
+                                        </IconButton>
+                                    </div>
+                                    <Divider/>
+                                    <List>
+                                        {Routes
+                                            .filter(route => hasNeeds(route.needs))
+                                            .map((prop) =>(
+                                                  <ListItem key={prop.title} to={prop.path } button component={Link} onClick={() => onItemClick(prop)}>
+                                                    <ListItemIcon className={prop.path === currentRoute? classes.selectedIcon: classes.icon}>
+                                                        <Tooltip title={t(prop.title)} aria-label={t(prop.title)}>
+                                                            {<prop.icon/>}
+                                                        </Tooltip>
+                                                    </ListItemIcon>
+                                                    <ListItemText primary={t(prop.title)}/>
+                                                </ListItem>
+                                                ))}
+                                    </List>
+                                </Drawer>
 
 
-                <div className={classes.content}>
-                    <div className={classes.toolbar}/>
-                    <main className={classes.main}>
-                        {Routes
-                            .filter(route => hasNeeds(route.needs))
-                            .map((prop) => {
-                            return (
-                                <Route key={prop.title} path={prop.path} component={prop.component}/>)
-                        })}
-                    </main>
-                </div>
-            </BrowserRouter>
+                                <div className={classes.content}>
+                                    <div className={classes.toolbar}/>
+                                    <main className={classes.main}>
+                                        {Routes
+                                            .filter(route => hasNeeds(route.needs))
+                                            .map((prop) => {
+                                            return (
+                                                <Route key={prop.title} path={prop.path} component={prop.component}/>)
+                                        })}
+                                    </main>
+                                </div>
+                            </BrowserRouter>
 
-            <Backdrop className={classes.backdrop} open={loading} onClick={handleClose}>
-            <CircularProgress color="inherit" />
-          </Backdrop>
-</loadingContext.Provider>
+                    <Backdrop className={classes.backdrop} open={loading} onClick={handleClose}>
+                    <CircularProgress color="inherit" />
+                  </Backdrop>
+
+                        <Dialog
+        open={confirmDialog.open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        {confirmDialog.title &&
+        <DialogTitle id="responsive-dialog-title">
+            {t(confirmDialog.title)}
+        </DialogTitle>
+        }
+        {confirmDialog.subtitle && <DialogContent>
+            <DialogContentText>
+                {t(confirmDialog.subtitle)}
+            </DialogContentText>
+        </DialogContent>}
+        <DialogActions>
+          <Button autoFocus onClick={() => {
+              confirmDialog.cancel(...confirmDialog.args);
+              handleCloseConfirm();
+          }} color="primary">
+              {t("cancel")}
+          </Button>
+          <Button onClick={() => {
+              confirmDialog.success(...confirmDialog.args);
+              handleCloseConfirm();
+          }} color="primary" autoFocus>
+              {t("continue")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+                </confirmContext.Provider>
+            </loadingContext.Provider>
         </div>
     );
 }

@@ -21,6 +21,7 @@ import DiscardButton from "./formik_discard_button";
 import Divider from "@material-ui/core/Divider";
 import {useNeeds} from "../_helpers/needs";
 import {safe_email} from "../_yup/validators";
+import {confirmContext} from "../_context/confirm-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -45,8 +46,7 @@ function TeacherDetails({ children, addStudentId, setNewRoom, newRoom, value, in
   const loading = currentStudent === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
-  const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
-  const deleteFullStudent = () => {
+   const deleteFullStudent = () => {
     TeachersDataService
               .delete(currentStudent['id'])
               .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
@@ -56,6 +56,7 @@ function TeacherDetails({ children, addStudentId, setNewRoom, newRoom, value, in
   }
 
 
+const confirm = React.useContext(confirmContext);
   let initialValues = loading ? {} : currentStudent;
 
 
@@ -114,28 +115,6 @@ const [hasNeeds, NEEDS] = useNeeds();
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      <Dialog
-        open={openConfirmDeleteDialog}
-        onClose={(e) => {setOpenConfirmDeleteDialog(false)}}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{t("delete_room_question")}</DialogTitle>
-        <DialogActions>
-          <Button onClick={(e) => {
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary">
-            {t("cancel")}
-          </Button>
-          <Button onClick={(e) => {
-              deleteFullStudent(currentStudent['id']);
-
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary" autoFocus>
-            {t("delete_room")}
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {value === index && (
         <Box p={3}>
@@ -149,7 +128,9 @@ const [hasNeeds, NEEDS] = useNeeds();
                     if (newRoom) {
                         setNewRoom(false);
                     } else{
-                        setOpenConfirmDeleteDialog(true);
+                        confirm.confirm("delete_teacher", "not_undone", () => {
+                            deleteFullStudent();
+                        })
                     }
 
                 }}>

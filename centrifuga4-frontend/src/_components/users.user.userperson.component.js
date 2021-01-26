@@ -20,6 +20,7 @@ import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import {useNeeds} from "../_helpers/needs";
 import {safe_email} from "../_yup/validators";
+import {confirmContext} from "../_context/confirm-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,8 +45,9 @@ function UserPerson({ children, addStudentId, value, index, newStudent, title, c
   const loading = currentStudent === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
-  const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
-  const deleteFullStudent = () => {
+
+const confirm = React.useContext(confirmContext);
+const deleteFullUser = () => {
     UsersDataService
               .delete(currentStudent['id'])
               .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
@@ -98,27 +100,6 @@ const [hasNeeds, NEEDS] = useNeeds();
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      <Dialog
-        open={openConfirmDeleteDialog}
-        onClose={(e) => {setOpenConfirmDeleteDialog(false)}}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{t("delete_user_question")}</DialogTitle>
-        <DialogActions>
-          <Button onClick={(e) => {
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary">
-            {t("cancel")}
-          </Button>
-          <Button onClick={(e) => {
-            deleteFullStudent(currentStudent['id']);
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary" autoFocus>
-            {t("delete_user")}
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {value === index && (
         <Box p={3}>
@@ -129,7 +110,9 @@ const [hasNeeds, NEEDS] = useNeeds();
               :
                hasNeeds([NEEDS.delete]) && <Tooltip style={{float: 'right'}} title={t("delete")} aria-label={t("delete")}>
                 <IconButton onClick={(e) => {
-                  setOpenConfirmDeleteDialog(true);
+                 confirm.confirm("delete_user_question", "not_undone", () => {
+                     deleteFullUser();
+                 })
                 }}>
                   <DeleteIcon />
                 </IconButton>

@@ -26,6 +26,7 @@ import SearchBar from "./searchbar.component";
 import Pagination from "@material-ui/lab/Pagination";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import {useNeeds} from "../_helpers/needs";
+import {confirmContext} from "../_context/confirm-context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -74,6 +75,8 @@ function CourseTeachers({ children, history, value, dataService, index, title, c
   const classes = useStyles();
   const errorHandler = useErrorHandler();
   const loading = courseIds === null;
+
+const confirm = React.useContext(confirmContext);
 const [hasNeeds, NEEDS] = useNeeds();
   const [courses, setCourses] = useState([]);
   const [allCourses, setAllCourses] = useState(null);
@@ -188,15 +191,15 @@ const onChangeSearchTerm = (e) => {
                     <div key={course["id"]}>
                         <ListItem key={course["id"]} button
                                   onClick={() => {
-                                      if (window.confirm(t("confirm_enroll_to_course"))){  // todo
-                                        dataService
+                                      confirm.confirm("confirm_add_to_course", null, () => {
+                                          dataService
                                             .postWithId(student_id, course['id'])
                                             .then(...errorHandler({snackbarSuccess: true}))
                                             .then((body) => {
                                                 addCourseId(course['id']);
                                                 handleClose();
                                             })
-                                      }
+                                      })
                                   }}>
 
                             <ListItemText id="name" primary={course['name']} secondary={course['description']}/>
@@ -236,7 +239,9 @@ const onChangeSearchTerm = (e) => {
                             <ListItemText id="name" primary={course.name} secondary={course.description}/>
                             {hasNeeds([NEEDS.delete]) && <ListItemSecondaryAction>
                                 <IconButton onClick={(e) => {
-                                    if (window.confirm(t("confirm_unenroll_to_course"))) deleteStudentCourse(course['id'])
+                                    confirm.confirm("confirm_remove_from_course", null, () => {
+                                        deleteStudentCourse(course['id'])
+                                    })
                                 }}>
                                     <DeleteIcon/>
                                 </IconButton>

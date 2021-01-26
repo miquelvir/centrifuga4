@@ -29,6 +29,7 @@ import {useFormik} from "formik";
 import {DEFAULT_COURSE_PRICE_TERM} from "../_data/price_term";
 import {useNeeds} from "../_helpers/needs";
 import {loadingContext} from "../_context/loading-context";
+import {confirmContext} from "../_context/confirm-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,19 +61,18 @@ function CourseDetails({ children, addCourseId, setNewCourse, newCourse, value, 
   const loading = currentCourse === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
-  const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
-  const deleteFullStudent = () => {
+  const deleteFullCourse = (id_) => {
     CoursesDataService
-              .delete(currentCourse['id'])
+              .delete(id_)
               .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
               .then(function (res) {
-                deleteCourse(currentCourse['id']);
+                deleteCourse(id_);
               });
   }
 
   const [openDownloadAttendanceList, setOpenDownloadAttendanceList] = React.useState(false);
 
-const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+const confirm = React.useContext(confirmContext);
 
   let initialValues = loading ? {} : currentCourse;
   if (newCourse) {
@@ -167,28 +167,6 @@ const [hasNeeds, NEEDS] = useNeeds();
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      <Dialog
-        open={openConfirmDeleteDialog}
-        onClose={(e) => {setOpenConfirmDeleteDialog(false)}}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{t("delete_room_question")}</DialogTitle>
-        <DialogActions>
-          <Button onClick={(e) => {
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary">
-            {t("cancel")}
-          </Button>
-          <Button onClick={(e) => {
-              deleteFullStudent(currentCourse['id']);
-
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary" autoFocus>
-            {t("delete_room")}
-          </Button>
-        </DialogActions>
-      </Dialog>
 
 
          <Dialog
@@ -256,7 +234,9 @@ const [hasNeeds, NEEDS] = useNeeds();
                     if (newCourse) {
                         setNewCourse(false);
                     } else{
-                        setOpenConfirmDeleteDialog(true);
+                        confirm.confirm("delete_course_question", "not_undone", () => {
+                            deleteFullCourse(currentCourse['id']);
+                        })
                     }
 
                 }}>

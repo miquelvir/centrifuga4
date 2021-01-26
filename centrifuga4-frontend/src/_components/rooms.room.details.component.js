@@ -20,6 +20,7 @@ import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import {useNeeds} from "../_helpers/needs";
 import {safe_email} from "../_yup/validators";
+import {confirmContext} from "../_context/confirm-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +45,8 @@ function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index
   const loading = currentStudent === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
-  const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
+
+const confirm = React.useContext(confirmContext);
   const deleteFullStudent = () => {
     RoomsDataService
               .delete(currentStudent['id'])
@@ -113,28 +115,6 @@ function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      <Dialog
-        open={openConfirmDeleteDialog}
-        onClose={(e) => {setOpenConfirmDeleteDialog(false)}}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{t("delete_room_question")}</DialogTitle>
-        <DialogActions>
-          <Button onClick={(e) => {
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary">
-            {t("cancel")}
-          </Button>
-          <Button onClick={(e) => {
-              deleteFullStudent(currentStudent['id']);
-
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary" autoFocus>
-            {t("delete_room")}
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {value === index && (
         <Box p={3}>
@@ -148,7 +128,9 @@ function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index
                     if (newRoom) {
                         setNewRoom(false);
                     } else{
-                        setOpenConfirmDeleteDialog(true);
+                        confirm.confirm("delete_room_question", "not_undone", () => {
+                            deleteFullStudent();
+                        })
                     }
 
                 }}>

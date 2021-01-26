@@ -35,6 +35,7 @@ import {payment_methods} from "../_data/payment_methods";
 import {emptyAttendee, emptyGuardian} from "../_data/empty_objects";
 import {useNeeds} from "../_helpers/needs";
 import {loadingContext} from "../_context/loading-context";
+import {confirmContext} from "../_context/confirm-context";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +61,8 @@ function Attendee({ children, setNewStudent, addStudentId, value, index, newStud
   const classes = useStyles();
   const errorHandler = useErrorHandler();
   const [hasNeeds, NEEDS] = useNeeds();
-  const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
+  const confirm = React.useContext(confirmContext);
+
   const deleteFullStudent = () => {
     StudentsDataService
               .delete(currentStudent['id'])
@@ -105,6 +107,8 @@ function Attendee({ children, setNewStudent, addStudentId, value, index, newStud
           });
   }
 
+
+
   return (
     <div
       role="tabpanel"
@@ -113,30 +117,7 @@ function Attendee({ children, setNewStudent, addStudentId, value, index, newStud
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      <Dialog
-        open={openConfirmDeleteDialog}
-        onClose={(e) => {setOpenConfirmDeleteDialog(false)}}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{t("delete_student_question")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">{t("student_also_deletes")}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={(e) => {
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary">
-            {t("cancel")}
-          </Button>
-          <Button onClick={(e) => {
-            deleteFullStudent(currentStudent['id']);
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary" autoFocus>
-            {t("delete_student")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+
 
       {value === index && (
         <Box p={3}>
@@ -162,7 +143,11 @@ function Attendee({ children, setNewStudent, addStudentId, value, index, newStud
                     if (newStudent) {
                         setNewStudent(false);
                     } else {
-                        setOpenConfirmDeleteDialog(true);
+                        confirm.confirm("delete_student_question",
+      "student_also_deletes",
+      () => {
+                            deleteFullStudent(currentStudent['id'])
+      });
                     }
 
                 }}>

@@ -5,6 +5,7 @@ import {makeStyles, useTheme} from "@material-ui/core/styles";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useSnackbar} from "notistack";
 import Scheduler, {eventFromSchedule} from "./scheduler.component";
+import {confirmContext} from "../_context/confirm-context";
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
@@ -21,6 +22,7 @@ function Schedule({ value, index, title, scheduleIds, student_id, ...other }) {
   const classes = useStyles();
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const errorHandler = useErrorHandler();
+  const confirm = React.useContext(confirmContext);
 const theme = useTheme();
    const eventChanged = (info, day_week, start_time, end_time, schedule) => {
        const newEvent = info.event;
@@ -76,15 +78,15 @@ const theme = useTheme();
             onEventClick={function (clickInfo) {
                            const schedule = clickInfo.event.extendedProps["schedule"];
                            if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
-                           if (window.confirm(t("sure_delete_event"))) {
+                           confirm.confirm("sure_delete_event", null,
+                               (clickInfo) => {
                                SchedulesDataService
                                    .delete(schedule['id'])
                                    .then(...errorHandler({snackbarSuccess: true}))
                                    .then(function (res) {
-                                       clickInfo.event.remove();
+                                       clickInfo.event.remove();  // todo no longer working
                                    });
-
-                           }
+                               }, null)
                        }}
             onEventDrop={eventChanged}
             onEventResize={eventChanged}

@@ -22,6 +22,7 @@ import * as yup from "yup";
 import DirtyTextField from "./dirtytextfield.component";
 import {emptyGuardian} from "../_data/empty_objects";
 import {useNeeds} from "../_helpers/needs";
+import {confirmContext} from "../_context/confirm-context";
 
 function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
   const { t } = useTranslation();
@@ -29,8 +30,7 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
 
   const [guardian, setGuardian] = useState(null);
 
-  const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = React.useState(false);
-  const [hasNeeds, NEEDS] = useNeeds();
+   const [hasNeeds, NEEDS] = useNeeds();
   useEffect(() => {
     if (newGuardian) return;
 
@@ -41,8 +41,8 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
                     setGuardian(res["data"]);
 
                 });
-  }, [guardianId])
-
+  }, [guardianId]);
+const confirm = React.useContext(confirmContext);
   return (
     <div
       role="tabpanel"
@@ -51,35 +51,6 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-        <Dialog
-        open={openConfirmDeleteDialog}
-        onClose={(e) => {setOpenConfirmDeleteDialog(false)}}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{t("delete_guardian_question")}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">{t("action_cant_undone")}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={(e) => {
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary">
-            {t("cancel")}
-          </Button>
-          <Button onClick={(e) => {
-            GuardiansDataService
-                .delete(guardianId)
-                .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
-                .then(function (res) {
-                  deleteGuardianId(guardianId);
-                });
-            setOpenConfirmDeleteDialog(false);
-          }} color="primary" autoFocus>
-            {t("delete_guardian")}
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {value === index && (
         <Box p={3}>
@@ -87,7 +58,17 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
 
 
               {hasNeeds([NEEDS.delete]) && <IconButton style={{float: 'right'}} onClick={(e) => {
-                if (!newGuardian) return setOpenConfirmDeleteDialog(true);
+                if (!newGuardian) {
+                  confirm.confirm("delete_guardian_question", "not_undone", () => {
+                    GuardiansDataService
+                      .delete(guardianId)
+                      .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
+                      .then(function (res) {
+                        deleteGuardianId(guardianId);
+                      });
+                  })
+                  return;
+                }
                 deleteNewGuardian();
               }}>
                 <Tooltip title={t("delete")} aria-label={t("delete")}>

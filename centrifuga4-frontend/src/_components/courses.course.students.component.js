@@ -26,6 +26,7 @@ import SearchBar from "./searchbar.component";
 import Pagination from "@material-ui/lab/Pagination";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import {useNeeds} from "../_helpers/needs";
+import {confirmContext} from "../_context/confirm-context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -120,6 +121,7 @@ const [hasNeeds, NEEDS] = useNeeds();
         });
   }
 
+const confirm = React.useContext(confirmContext);
   useEffect(() => {
     if (courseIds === null) return;
 
@@ -190,15 +192,15 @@ const [hasNeeds, NEEDS] = useNeeds();
                     <div key={course["id"]}>
                         <ListItem key={course["id"]} button
                                   onClick={() => {
-                                      if (window.confirm(t("confirm_enroll_to_course"))){  // todo
-                                        dataService
+                                      confirm.confirm("confirm_enroll_to_course", null, () => {
+                                          dataService
                                             .postWithId(student_id, course['id'])
                                             .then(...errorHandler({snackbarSuccess: true}))
                                             .then((body) => {
                                                 addCourseId(course['id']);
                                                 handleClose();
                                             })
-                                      }
+                                      })
                                   }}>
 
                             <ListItemText id="name" primary={course['name']} secondary={course['description']}/>
@@ -238,7 +240,9 @@ const [hasNeeds, NEEDS] = useNeeds();
                             <ListItemText id="name" primary={course.name} secondary={course.description}/>
                             {hasNeeds([NEEDS.delete]) && <ListItemSecondaryAction>
                                 <IconButton onClick={(e) => {
-                                    if (window.confirm(t("confirm_unenroll_to_course"))) deleteStudentCourse(course['id'])
+                                    confirm.confirm("confirm_unenroll_to_course", null, () => {
+                                        deleteStudentCourse(course['id'])
+                                    });
                                 }}>
                                     <DeleteIcon/>
                                 </IconButton>
