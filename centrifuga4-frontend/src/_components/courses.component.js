@@ -10,6 +10,7 @@ import CoursesDataService from "../_services/courses.service";
 import ItemsList from "./items_list.component";
 import Course from "./courses.course.component";
 import {useNeeds} from "../_helpers/needs";
+import ItemsListMain from "./items_list_main.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,7 @@ const [hasNeeds, NEEDS] = useNeeds();
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={4} className={classes.left}>
           <h1>{t("courses")}</h1>
-            <ItemsList
+            <ItemsListMain
                 setCurrentItemId={setCurrentCourseId}
                 currentItemId={currentCourseId}
                 items={courses}

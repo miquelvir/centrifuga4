@@ -8,7 +8,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
         resource = resource;
         subresource = subresource;
 
-        getAll(likeSearchText=null, page = 1, include=null, filters=null) {
+        getAll(likeSearchText=null, page = 1, include=null, filters=null, parent_id=null) {
             return new Promise(function (resolve, reject) {
 
                 let myFilters = {
@@ -27,7 +27,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
 
                 axios({
                     method: 'get',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}`,
+                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}${subresource===null? '': `/${parent_id}/${subresource}`}`,
                     params: myFilters,
                     headers: {
                         ...{

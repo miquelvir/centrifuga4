@@ -18,6 +18,8 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import ExportSearchChip from "./ExportSearchChip.component";
+import DeleteIcon from "@material-ui/icons/Delete";
+import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,9 +61,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, displayNameField="full_name",
+const ItemsList = ({setCurrentItemId=() => {}, onItemClick = () => {}, parent_id=null, secondaryDisplayNameField=null,
+                        secondaryAction=null, secondaryActionNeeds=[], secondaryActionTooltip=null, secondaryActionIcon=null, secondaryActionCallable=null,
+                       withAvatar=true, withFiltersBox = true,
+                       chips=[], currentItemId = null, items, setItems, displayNameField="full_name",
                        usableFilters=[], defaultSearchBy="full_name", searchByOptions=["full_name"],
-                        dataService, searchBarLabel, exportPage=true, exportItem=true, exportAllPages=true}) => {
+                        dataService, searchBarLabel, exportPage=true, exportAllPages=true}) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [filters, setFilters] = useState(usableFilters.reduce((map, f) => {
         map[f.name] = f.initialValue;
@@ -75,6 +80,7 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const errorHandler = useErrorHandler();
+     const [hasNeeds, NEEDS] = useNeeds();
 
     const classes = useStyles();
 
@@ -92,9 +98,8 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
 
     function search() {
         dataService
-            .getAll({name: searchBy, value: searchTerm}, page,
-               [...new Set(['id', displayNameField])], getFilters())
-            .then(...errorHandler({}))  // todo everywhere
+            .getAll({name: searchBy, value: searchTerm}, page, [...new Set(['id', displayNameField, secondaryDisplayNameField === null? 'id': secondaryDisplayNameField])], getFilters(), parent_id)
+            .then(...errorHandler({}))
             .then(function (res) {
                 setItems(res["data"]);
                 setCount(res["_pagination"]["totalPages"]);
@@ -134,7 +139,7 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
                     }}
                 />
 
-                <Accordion>
+                {withFiltersBox && <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                         <Typography className={classes.heading}>{t("filters_actions")}</Typography>
                     </AccordionSummary>
@@ -148,7 +153,7 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
                                 dataService={dataService}
                                 getFilters={getFilters}
                             />}
-                            {exportAllPages && Array.isArray(items) && items.length > 0 &&  <ExportSearchChip
+                            {exportAllPages && Array.isArray(items) && items.length > 0 && <ExportSearchChip
                                 searchTerm={searchTerm}
                                 page={page}
                                 dataService={dataService}
@@ -179,31 +184,30 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
                             ))}
 
 
-
                             {usableFilters.map(f => (
                                 <React.Fragment>
-                                   · {f['options'].map(option => (
-                                            <Tooltip key={f.name + option.name}
-                                                     title={t(option.tooltip)}
-                                                     aria-label={t(option.tooltip)}>
-                                                <Chip size="small"
-                                                      color={filters[f.name] === option.name ? "primary" : "default"}
-                                                      label={t(option.label)}
-                                                      onClick={(e) => {
-                                                          setFilters({
-                                                              ...filters,
-                                                              [f.name]: (filters[f.name] === option.name) ? null : option.name
-                                                          })
-                                                      }}/>
-                                            </Tooltip>
-                                        )
-                                    )}
+                                    · {f['options'].map(option => (
+                                        <Tooltip key={f.name + option.name}
+                                                 title={t(option.tooltip)}
+                                                 aria-label={t(option.tooltip)}>
+                                            <Chip size="small"
+                                                  color={filters[f.name] === option.name ? "primary" : "default"}
+                                                  label={t(option.label)}
+                                                  onClick={(e) => {
+                                                      setFilters({
+                                                          ...filters,
+                                                          [f.name]: (filters[f.name] === option.name) ? null : option.name
+                                                      })
+                                                  }}/>
+                                        </Tooltip>
+                                    )
+                                )}
 
-                                    </React.Fragment>))
+                                </React.Fragment>))
                             }
                         </Box>
                     </AccordionDetails>
-                </Accordion>
+                </Accordion>}
 
 
                 <Box my={2}>
@@ -226,28 +230,25 @@ const ItemsList = ({setCurrentItemId, chips=[], currentItemId, items, setItems, 
                     <div key={item["id"]}>
                         <ListItem key={item["id"]} button
                                   onClick={() => {
-                                      console.log(item['id']);
+                                      onItemClick(item['id']);
                                       setCurrentItemId(item['id']);
                                   }}>
-                            <ListItemAvatar>
+                            {withAvatar && <ListItemAvatar>
                                 <Avatar
                                     className={item["id"] === currentItemId ? classes.selectedAvatar : classes.avatar}>{item[displayNameField].charAt(0).toUpperCase()}</Avatar>
-                            </ListItemAvatar>
-                            <ListItemText id="name" primary={item[displayNameField]}/>
+                            </ListItemAvatar>}
+                            <ListItemText id="name" primary={item[displayNameField]} secondary={secondaryDisplayNameField === null? null: item[secondaryDisplayNameField]}/>
 
-                            {exportItem &&
+                            {secondaryAction &&  hasNeeds(secondaryActionNeeds) &&
                             <ListItemSecondaryAction>
-                                <Tooltip title={t("export") + " .csv"}>
+                                <Tooltip title={t(secondaryActionTooltip)}>
                                     <IconButton edge="end" aria-label={t("export")} onClick={(e) => {
-                                        dataService
-                                            .downloadOneCsv(item['id'])
-                                            .then(...errorHandler({}));
+                                        secondaryActionCallable(item['id']);
                                     }}>
-                                        <GetAppIcon/>
+                                        {secondaryActionIcon}
                                     </IconButton>
                                 </Tooltip>
                             </ListItemSecondaryAction>}
-
                         </ListItem>
                         <Divider/>
                     </div>

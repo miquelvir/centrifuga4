@@ -3,8 +3,6 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import React, {useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import StudentsCourseDataService from "../_services/student_courses.service";
-import CoursesDataService from "../_services/courses.service";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -62,17 +60,21 @@ class CloseIcon extends React.Component {
     }
 }
 
-function Courses({ children, history, value, dataService, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
+function AddDeleteSubresource({  history, defaultSearchBy, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, value, add_message, index, onSubresourceAdded, onSubresourceDeleted, ...other}) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const loading = courseIds === null;
 
-  const [newCourse, setNewCourse] = useState(false);
-  const handleClose = () => {
-    setNewCourse(false);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const handleAddDialogClose = () => {
+        setAddDialogOpen(false);
   };
+  const handleAddDialogOpen = () => {
+      setAddDialogOpen(true);
+  }
 
    const [hasNeeds, NEEDS] = useNeeds();
+  const loading = parent_id === null;
+  const [items, setItems] = useState([]);
 
   return (
     <div
@@ -86,34 +88,35 @@ function Courses({ children, history, value, dataService, index, title, courseId
         <Box p={3}>  {// todo simplify everywhere
         } <Box px={2}>
 
-            <Dialog fullScreen open={newCourse} onClose={handleClose} TransitionComponent={Transition}>
+            <Dialog fullScreen open={addDialogOpen} onClose={handleAddDialogClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar} color="secondary">
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton edge="start" color="inherit" onClick={handleAddDialogClose} aria-label="close">
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-                {t("enroll_to_course")}
+                {t(add_message)}
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={handleAddDialogClose}>
                 {t("cancel")}
             </Button>
           </Toolbar>
         </AppBar>
         <Box className={classes.box} m={3}>
             <ItemsListTerciary
-                    dataService={CoursesDataService}
-                    dataServiceSR={StudentsCourseDataService}
-                    defaultSearchBy="name"
-                    searchByOptions={["name", "id"]}
-                    searchBarLabel="courses"
-                    displayNameField="name"
-                    secondaryDisplayNameField="description"
-                    parent_id={student_id}
-                    add_message={"confirm_enroll_to_course"}
-                    onAdded={(id) => {
-                        addCourseId(id);
-                        setNewCourse(false);
+                    dataService={itemDataService}
+                    dataServiceSR={parentItemDataService}
+                    defaultSearchBy={defaultSearchBy}
+                    searchByOptions={searchByOptions}
+                    searchBarLabel={resourceName}
+                    displayNameField={displayNameField}
+                    secondaryDisplayNameField={secondaryDisplayNameField}
+                    parent_id={parent_id}
+                    add_message={add_message_confirm}
+                    onAdded={(id, body) => {
+                        setItems([...items, body]);
+                        onSubresourceAdded(id);
+                        handleAddDialogClose();
                     }}
                 />
             </Box>
@@ -122,10 +125,8 @@ function Courses({ children, history, value, dataService, index, title, courseId
               {loading?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-              hasNeeds([NEEDS.post]) && <Tooltip className={classes.actionIcon} title={t("enroll_to_course")} aria-label={t("new_payment")}>
-                <IconButton onClick={(e) => {
-                    setNewCourse(true);
-                }}>
+              hasNeeds([NEEDS.post]) && <Tooltip className={classes.actionIcon} title={t(add_message)} aria-label={t(add_message)}>
+                <IconButton onClick={handleAddDialogOpen}>
                   <AddCircleIcon />
                 </IconButton>
               </Tooltip>
@@ -134,16 +135,22 @@ function Courses({ children, history, value, dataService, index, title, courseId
 
               <div className={classes.newLine}>
                 <ItemsListSecondary
-                    dataService={StudentsCourseDataService}
-                    defaultSearchBy="name"
-                    searchByOptions={["name", "id"]}
-                    searchBarLabel="courses"
-                    displayNameField="name"
-                    parent_id={student_id}
+                    dataService={parentItemDataService}
+                    defaultSearchBy={defaultSearchBy}
+                    searchByOptions={searchByOptions}
+                    items={items}
+                    setItems={setItems}
+                    searchBarLabel={resourceName}
+                    displayNameField={displayNameField}
+                    parent_id={parent_id}
                     deleteTooltip={"delete"}
-                    delete_message={"delete_course_question"}
+                    delete_message={t("delete") + " " + t(resourceName)}
                     onItemDeleted={(id) => {
-                        deleteCourseFromStudent(id);
+                        setItems(items.filter(x => x.id !== id));
+                        onSubresourceDeleted(id);
+                    }}
+                    onItemClick={(id) => {
+                        history.push("/"+resourceName+"?id="+id);
                     }}
                 />
               </div>
@@ -154,4 +161,4 @@ function Courses({ children, history, value, dataService, index, title, courseId
   );
 }
 
-export default Courses;
+export default AddDeleteSubresource;

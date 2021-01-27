@@ -14,6 +14,7 @@ import {downloadGodFile} from "../_services/god.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useNeeds} from "../_helpers/needs";
 import {loadingContext} from "../_context/loading-context";
+import ItemsListMain from "./items_list_main.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +59,7 @@ export default function Students({history, ...other}) {
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={4} className={classes.left}>
           <h1>{t("students")}</h1>
-            <ItemsList
+            <ItemsListMain
                 setCurrentItemId={setCurrentStudentId}
                 currentItemId={currentStudentId}
                 items={students}

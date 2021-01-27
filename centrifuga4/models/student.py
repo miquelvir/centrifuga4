@@ -1,9 +1,7 @@
-from typing import List, Set
+from typing import Set
 
-from sqlalchemy import cast, String, case, func
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import column_property, validates
-
+from sqlalchemy.orm import validates
 from centrifuga4 import db
 from centrifuga4.auth_auth.resource_need import StudentsPermission
 from centrifuga4.models.person import Person
@@ -30,9 +28,6 @@ class Student(Person):
         "Course", secondary="student_course", back_populates="students"
     )
     payments = db.relationship("Payment", back_populates="student")
-    """schedules = db.relationship("Schedule",
-                                secondary="student_schedule",
-                                back_populates="students")"""
     guardians = db.relationship(
         "Guardian", secondary="student_guardian", back_populates="students"
     )

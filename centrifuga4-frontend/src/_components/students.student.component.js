@@ -15,7 +15,9 @@ import Courses from "./students.student.courses.component";
 import {useErrorHandler} from "../_helpers/handle-response";
 import Schedule from "./students.student.schedule.component";
 import StudentsCourseDataService from "../_services/student_courses.service";
+import CoursesDataService from "../_services/courses.service";
 import {useNeeds} from "../_helpers/needs";
+import AddDeleteSubresource from "./subresource_add_delete.component";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -169,24 +171,28 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
                          }}
               />}
 
-              {hasNeeds([NEEDS.courses]) && <Courses value={value}
-                        index={3}
-                        dataService={StudentsCourseDataService}
-                        history={props.history}
-                        courseIds={student === null ? null : student['courses']}
-                        addCourseId={(course_id) => {
-                            setStudent({
-                                ...student,
-                                courses: [...student['courses'], course_id]
-                            })
-                        }}
-                        student_id={currentStudentId}
-                        deleteCourseFromStudent={(course_id) => {
-                            setStudent({
-                                ...student,
-                                courses: student['courses'].filter((c) => c !== course_id)
-                            });
-                        }}
+              {hasNeeds([NEEDS.courses]) &&
+
+              <AddDeleteSubresource  // todo everywhere
+                  history={props.history}
+                  defaultSearchBy="name"
+                  parentItemDataService={StudentsCourseDataService}
+                  itemDataService={CoursesDataService}
+                  add_message_confirm="confirm_enroll_course"
+                  parent_id={currentStudentId}
+                  secondaryDisplayNameField="description"
+                  searchByOptions={["name"]}
+                  resourceName={"courses"}
+                  displayNameField={"name"}
+                  value={value}
+                  add_message="enroll_course"
+                  index={3}
+                  onSubresourceAdded={(id) => {
+                    setStudent({...student, courses: [...student["courses"], id]})
+                  }}
+                  onSubresourceDeleted={(id) => {
+                    setStudent({...student, courses: student["courses"].filter(x => x !== id)});
+                  }}
               />
               }
 

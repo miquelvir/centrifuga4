@@ -14,6 +14,7 @@ import TeacherDetails from "./teachers.teacher.details.component";
 import TeacherSchedule from "./teachers.teacher.schedule.component";
 import Courses from "./students.student.courses.component";
 import {useNeeds} from "../_helpers/needs";
+import TeacherCourses from "./teachers.teacher.courses.component";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -130,7 +131,7 @@ export default function Teacher({currentTeacherId, history, setNewTeacher, addTe
                                 student_id={currentTeacherId}
               />}
 
-              {hasNeeds([NEEDS.courses]) && <Courses value={value}
+              {hasNeeds([NEEDS.courses]) && <TeacherCourses value={value}
                         index={2}
                         dataService={TeachersCoursesDataService}
                         history={history}

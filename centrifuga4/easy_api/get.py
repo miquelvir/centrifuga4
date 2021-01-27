@@ -38,6 +38,32 @@ def _get_page_url(original_url, page, _page):
         return request.base_url + url_params
 
 
+def get_pagination_header(pagination, page):
+    return {
+        "_pagination": {
+            "currentPage": pagination.page,
+            "totalItems": pagination.total,
+            "perPage": pagination.per_page,
+            "nextPage": pagination.next_num,
+            "prevPage": pagination.prev_num,
+            "hasNext": pagination.has_next,
+            "hasPrev": pagination.has_prev,
+            "totalPages": pagination.pages,
+        },
+        "_links": {
+            "self": {"href": _get_page_url(request.base_url, page, page)},
+            "first": {"href": _get_page_url(request.base_url, page, 1)},
+            "last": {"href": _get_page_url(request.url, page, pagination.pages)},
+            "prev": {"href": _get_page_url(request.url, page, pagination.prev_num)}
+            if page > 1
+            else None,
+            "next": {"href": _get_page_url(request.url, page, pagination.next_num)}
+            if page < pagination.pages
+            else None,
+        },
+    }
+
+
 class _ImplementsGet:
     """ abstract class both for the Collection and the One get resources """
 
@@ -116,11 +142,14 @@ class _ImplementsGet:
     @produces(
         ("application/json", "text/csv")
     )  # content negotiation (and automatic creation of raw csv from json)
-    def get(self, *args, id_=None, many=False, **kwargs):
+    def get(self, *args, id_=None, parent=None, many=False, **kwargs):
         filters, sort, page, include = self._parse_args(request.args)
         do_pagination = page is not None
 
         query = self.model.query
+
+        if parent:
+            query = query.with_parent(parent)
 
         if include:
             query = query.with_entities(*include)
@@ -129,10 +158,11 @@ class _ImplementsGet:
             query = query.filter(*filters)
 
         if many:
-            try:
-                if sort:
-                    query = query.order_by(sort)
 
+            if sort:
+                query = query.order_by(sort)
+
+            try:
                 if do_pagination:
                     pagination = query.paginate(
                         page,
@@ -142,7 +172,6 @@ class _ImplementsGet:
                     result = pagination.items
                 else:
                     result = query.all()
-
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
@@ -165,44 +194,14 @@ class _ImplementsGet:
                     filters=request.args,
                 )
 
-        _result = result
-        result = self.schema.dump(result, many=many)
+        dumped_result = self.schema.dump(result, many=many)
 
         if not (many and do_pagination):
-            return _result, {"data": result}
+            return result, {"data": dumped_result}
 
         return (
-            _result,
-            {
-                "data": result,
-                "_pagination": {
-                    "currentPage": pagination.page,
-                    "totalItems": pagination.total,
-                    "perPage": pagination.per_page,
-                    "nextPage": pagination.next_num,
-                    "prevPage": pagination.prev_num,
-                    "hasNext": pagination.has_next,
-                    "hasPrev": pagination.has_prev,
-                    "totalPages": pagination.pages,
-                },
-                "_links": {
-                    "self": {"href": _get_page_url(request.base_url, page, page)},
-                    "first": {"href": _get_page_url(request.base_url, page, 1)},
-                    "last": {
-                        "href": _get_page_url(request.url, page, pagination.pages)
-                    },
-                    "prev": {
-                        "href": _get_page_url(request.url, page, pagination.prev_num)
-                    }
-                    if page > 1
-                    else None,
-                    "next": {
-                        "href": _get_page_url(request.url, page, pagination.next_num)
-                    }
-                    if page < pagination.pages
-                    else None,
-                },
-            },
+            result,
+            {"data": dumped_result, **get_pagination_header(pagination, page)},
         )
 
 

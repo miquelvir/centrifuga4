@@ -3,7 +3,8 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import TeachersDataService from "../_services/teachers.service"
+import TeachersCourseDataService from "../_services/teachers_courses.service";
+import CoursesDataService from "../_services/courses.service"
 import {useErrorHandler} from "../_helpers/handle-response";
 import {Skeleton} from "@material-ui/lab";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -27,8 +28,8 @@ import Pagination from "@material-ui/lab/Pagination";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import {useNeeds} from "../_helpers/needs";
 import {confirmContext} from "../_context/confirm-context";
-import CoursesTeachersDataService from "../_services/course_teachers.service";
 import ItemsListSecondary from "./items_list_secondary.component";
+import ItemsListMain from "./items_list_main.component";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -72,21 +73,19 @@ class CloseIcon extends React.Component {
     }
 }
 
-function CourseTeachers({ children, history, value, dataService, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
+function TeacherCourses({ children, history, value, dataService, index, title, courseIds, deleteCourseFromStudent, addCourseId, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
   const loading = courseIds === null;
 
-const confirm = React.useContext(confirmContext);
-const [hasNeeds, NEEDS] = useNeeds();
   const [courses, setCourses] = useState([]);
   const [allCourses, setAllCourses] = useState(null);
   const [newCourse, setNewCourse] = useState(false);
   const handleClose = () => {
     setNewCourse(false);
   };
-
+const confirm = React.useContext(confirmContext);
   useEffect(()=>{
     setNewCourse(false);
   }, [courses])
@@ -99,7 +98,7 @@ const [hasNeeds, NEEDS] = useNeeds();
    function search() {
        if (loading || !newCourse) return;
 
-        TeachersDataService
+        CoursesDataService
             .getAll({name: 'name', value: searchTerm}, page, ['name', 'description', 'id'])
             .then(...errorHandler({}))
             .then(res => {
@@ -113,6 +112,8 @@ const [hasNeeds, NEEDS] = useNeeds();
    const handlePageChange = (event, value) => {
         setPage(value);
     };
+
+   const [hasNeeds, NEEDS] = useNeeds();
 
   const deleteStudentCourse = (id) => {
     dataService
@@ -129,7 +130,7 @@ const [hasNeeds, NEEDS] = useNeeds();
     if (courseIds.length === 0){
       setCourses([]);
     } else {
-      TeachersDataService
+      CoursesDataService
             .getMany(courseIds)
             .then(...errorHandler({}))  // todo everywhere
             .then(function (res) {
@@ -193,15 +194,15 @@ const onChangeSearchTerm = (e) => {
                     <div key={course["id"]}>
                         <ListItem key={course["id"]} button
                                   onClick={() => {
-                                      confirm.confirm("confirm_add_to_course", null, () => {
-                                          dataService
+                                      if (window.confirm(t("confirm_enroll_to_course"))){  // todo
+                                        dataService
                                             .postWithId(student_id, course['id'])
                                             .then(...errorHandler({snackbarSuccess: true}))
                                             .then((body) => {
                                                 addCourseId(course['id']);
                                                 handleClose();
                                             })
-                                      })
+                                      }
                                   }}>
 
                             <ListItemText id="name" primary={course['name']} secondary={course['description']}/>
@@ -218,7 +219,7 @@ const onChangeSearchTerm = (e) => {
               {loading?
                   <IconButtonSkeleton className={classes.actionIcon}/>
               :
-             hasNeeds([NEEDS.post]) && <Tooltip className={classes.actionIcon} title={t("add_teacher")} aria-label={t("new_payment")}>
+              hasNeeds([NEEDS.post]) && <Tooltip className={classes.actionIcon} title={t("enroll_to_course")} aria-label={t("new_payment")}>
                 <IconButton onClick={(e) => {
                     if (allCourses === null) {
                         search();
@@ -230,13 +231,13 @@ const onChangeSearchTerm = (e) => {
               </Tooltip>
               }
 
-              <div className={classes.newLine}>
 
-               <ItemsListSecondary
-                    dataService={CoursesTeachersDataService}
+              <div className={classes.newLine}>
+                <ItemsListSecondary
+                    dataService={TeachersCourseDataService}
                     defaultSearchBy="name"
                     searchByOptions={["name", "id"]}
-                    searchBarLabel="teachers"
+                    searchBarLabel="courses"
                     displayNameField="name"
                     parent_id={student_id}
                     deleteTooltip={"delete"}
@@ -253,4 +254,4 @@ const onChangeSearchTerm = (e) => {
   );
 }
 
-export default CourseTeachers;
+export default TeacherCourses;

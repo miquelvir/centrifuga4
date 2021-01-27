@@ -27,6 +27,8 @@ import Pagination from "@material-ui/lab/Pagination";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import {useNeeds} from "../_helpers/needs";
 import {confirmContext} from "../_context/confirm-context";
+import ItemsListSecondary from "./items_list_secondary.component";
+import CoursesStudentsDataService from "../_services/courses_students.service";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -112,14 +114,7 @@ const [hasNeeds, NEEDS] = useNeeds();
         setPage(value);
     };
 
-  const deleteStudentCourse = (id) => {
-    dataService
-        .delete(student_id, id)
-        .then(...errorHandler({snackbarSuccess:true}))
-        .then(function (r) {
-             deleteCourseFromStudent(id);
-        });
-  }
+
 
 const confirm = React.useContext(confirmContext);
   useEffect(() => {
@@ -231,37 +226,19 @@ const confirm = React.useContext(confirmContext);
 
               <div className={classes.newLine}>
 
-                  <List className={classes.list}>
-                {courses && courses.map((course) => (
-                    <div key={course["id"]}>
-                        <ListItem key={course["id"]} button onClick={(e) => {
-                            history.push('/courses?id='+course['id']);
-                        }}>
-                            <ListItemText id="name" primary={course.name} secondary={course.description}/>
-                            {hasNeeds([NEEDS.delete]) && <ListItemSecondaryAction>
-                                <IconButton onClick={(e) => {
-                                    confirm.confirm("confirm_unenroll_to_course", null, () => {
-                                        deleteStudentCourse(course['id'])
-                                    });
-                                }}>
-                                    <DeleteIcon/>
-                                </IconButton>
-                            </ListItemSecondaryAction>}
-                        </ListItem>
-                        <Divider/>
-                    </div>
-                ))}
-            </List>
-
-
-
-              {loading &&
-                <Skeleton width="100%" height="250px"/>  // todo we can do better
-              }
-
-              {!loading && courses.length === 0 && !newCourse &&
-                <Typography>{t("no_students")}</Typography>
-              }
+                   <ItemsListSecondary
+                    dataService={CoursesStudentsDataService}
+                    defaultSearchBy="name"
+                    searchByOptions={["name", "id"]}
+                    searchBarLabel="students"
+                    displayNameField="name"
+                    parent_id={student_id}
+                    deleteTooltip={"delete"}
+                    delete_message={"delete_course_question"}
+                    onItemDeleted={(id) => {
+                        deleteCourseFromStudent(id);
+                    }}
+                />
               </div>
             </Box>
         </Box>

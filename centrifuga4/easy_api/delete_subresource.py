@@ -1,4 +1,5 @@
 from centrifuga4 import db
+from centrifuga4.easy_api._subresource_utils import get_subresource, get_parent
 from centrifuga4.easy_api.delete import safe_delete
 from centrifuga4.blueprints.api.errors import NotFound
 from centrifuga4.models._base import MyBase
@@ -18,16 +19,14 @@ class ImplementsDeleteOneSubresource:
 
     @safe_delete
     def delete(self, id_, nested_id):
-        parent = self.parent_model.query.filter(
-            self.parent_model.id == id_
-        ).one_or_none()
-
-        if not parent:
-            raise NotFound("resource with the given id not found", requestedId=id_)
-
+        parent = get_parent(self.parent_model, id_)
         field = getattr(parent, self.parent_field)
 
-        index = next(i for i, v in enumerate(field) if v.id == nested_id)
+        index = None
+        for idx, v in enumerate(field):
+            if v.id == nested_id:
+                index = idx
+
         if index is None:
             raise NotFound("id '%s' not found in parent resource" % nested_id)
 

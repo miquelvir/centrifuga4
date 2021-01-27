@@ -24,6 +24,7 @@ import UsersDataService from "../_services/users.service";
 import NeedsSelection from "./needs_selection.component";
 import {useNeeds} from "../_helpers/needs";
 import {safe_email} from "../_yup/validators";
+import ItemsListMain from "./items_list_main.component";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -140,7 +141,7 @@ export default function Users({history, ...other}) {
       </Dialog>
         <Grid item xs={4} className={classes.left}>
           <h1>{t("users")}</h1>
-          <ItemsList
+          <ItemsListMain
                 setCurrentItemId={setCurrentUserId}
                 currentItemId={currentUserId}
                 items={users}

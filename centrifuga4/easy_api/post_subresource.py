@@ -1,6 +1,7 @@
 from flask import abort
 
 from centrifuga4 import db
+from centrifuga4.easy_api._subresource_utils import get_subresource, get_parent
 
 from centrifuga4.easy_api.post import safe_post
 from centrifuga4.models._base import MyBase
@@ -19,15 +20,10 @@ class ImplementsPostOneSubresource:
     parent_field: str
 
     @safe_post
-    def post(self, id_, nested_id):  # todo test completeness
+    def post(self, id_, nested_id):
         # find the parent so that it can be added there
-        query = self.parent_model.query.filter(self.parent_model.id == id_)
-        parent = query.one_or_none()
-
-        if not parent:
-            abort(404, "no parent resource for id '%s' found" % id_)
-
-        field = getattr(parent, self.parent_field)  # todo secure as get field
+        parent = get_parent(self.parent_model, id_)
+        field = getattr(parent, self.parent_field)
 
         added = self.model.query.filter(self.model.id == nested_id).one_or_none()
 
@@ -38,4 +34,4 @@ class ImplementsPostOneSubresource:
 
         db.session.commit()
 
-        return None  # todo formalize
+        return self.schema.dump(added)  # todo use super, same in delete
