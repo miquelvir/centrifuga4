@@ -8,15 +8,16 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import useTheme from "@material-ui/core/styles/useTheme";
 import CoursesDataService from "../_services/courses.service";
+import StudentsDataService from "../_services/students.service";
+import TeachersDataService from "../_services/teachers.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import CourseStudentsDataService from "../_services/course_students.service";
 import CourseTeachersDataService from "../_services/course_teachers.service";
 import CourseDetails from "./courses.course.details.component";
 import CourseLabels from "./courses.course.labels.component";
 import CourseSchedule from "./courses.course.schedule.component";
-import CourseStudents from "./courses.course.students.component";
-import CourseTeachers from "./courses.course.teachers.component";
 import {useNeeds} from "../_helpers/needs";
+import AddDeleteSubresource from "./subresource_add_delete.component";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -145,45 +146,69 @@ const [hasNeeds, NEEDS] = useNeeds();
                                student_id={currentCourseId}
               />}
 
-              {hasNeeds([NEEDS.students]) && <CourseStudents value={value}
-                               index={3}
-                               dataService={CourseStudentsDataService}
-                               history={history}
-                               courseIds={course === null ? null : course['students']}
-                               addCourseId={(student_id) => {
-                                   setCourse({
-                                       ...course,
-                                       students: [...course['students'], student_id]
-                                   })
-                               }}
-                               student_id={currentCourseId}
-                               deleteCourseFromStudent={(student_id) => {
-                                   setCourse({
-                                       ...course,
-                                       students: course['students'].filter((s) => s !== student_id)
-                                   });
-                               }}
-              />}
+              {hasNeeds([NEEDS.students]) &&
 
-              {hasNeeds([NEEDS.teachers]) && <CourseTeachers value={value}
-                               index={4}
-                               dataService={CourseTeachersDataService}
-                               history={history}
-                               courseIds={course === null ? null : course['teachers']}
-                               addCourseId={(course_id) => {
-                                   setCourse({
+              <AddDeleteSubresource
+                  history={history}
+                  defaultSearchBy="full_name"
+                  parentItemDataService={CourseStudentsDataService}
+                  itemDataService={StudentsDataService}
+                  add_message_confirm="confirm_enroll_to_course"
+                  parent_id={currentCourseId}
+                  searchByOptions={["full_name"]}
+                  resourceName={"students"}
+                  displayNameField={"full_name"}
+                  value={value}
+                  add_message="enroll_student"
+                  index={3}
+                  onSubresourceAdded={(id) => {
+                    setCourse({
                                        ...course,
-                                       teachers: [...course['teachers'], course_id]
+                                       students: [...course['students'], id]
                                    })
-                               }}
-                               student_id={currentCourseId}
-                               deleteCourseFromStudent={(course_id) => {
-                                   setCourse({
+                  }}
+                  onSubresourceDeleted={(id) => {
+                    setCourse({
+                           ...course,
+                           students: course['students'].filter((s) => s !== id)
+                       });
+                  }}
+              />
+
+
+
+              }
+
+              {hasNeeds([NEEDS.teachers]) &&
+
+                   <AddDeleteSubresource
+                  history={history}
+                  defaultSearchBy="full_name"
+                  parentItemDataService={CourseTeachersDataService}
+                  itemDataService={TeachersDataService}
+                  add_message_confirm="confirm_enroll_to_course"
+                  parent_id={currentCourseId}
+                  searchByOptions={["full_name"]}
+                  resourceName={"students"}
+                  displayNameField={"full_name"}
+                  value={value}
+                  add_message="enroll_student"
+                  index={4}
+                  onSubresourceAdded={(id) => {
+                    setCourse({
                                        ...course,
-                                       teachers: course['teachers'].filter((c) => c !== course_id)
-                                   });
-                               }}
-              />}
+                                       teachers: [...course['teachers'], id]
+                                   })
+                  }}
+                  onSubresourceDeleted={(id) => {
+                    setCourse({
+                           ...course,
+                           teachers: course['teachers'].filter((c) => c !== id)
+                       });
+                  }}
+              />
+
+              }
 
 
           </SwipeableViews>

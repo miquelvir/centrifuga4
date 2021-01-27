@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
             fontSize: theme.typography.pxToRem(15),
             fontWeight: theme.typography.fontWeightRegular,
         },
+    },
+    noResults: {
+        textAlign: 'center'
     }
 }));
 
@@ -253,6 +256,11 @@ const ItemsList = ({setCurrentItemId=() => {}, onItemClick = () => {}, parent_id
                         <Divider/>
                     </div>
                 ))}
+                {
+                    (items.length === 0) && <Typography className={classes.noResults}>
+                        {t("no_results") +" 👀"}
+                    </Typography>
+                }
             </List>
         </Box>
     );

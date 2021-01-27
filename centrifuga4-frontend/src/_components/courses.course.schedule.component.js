@@ -5,6 +5,7 @@ import {makeStyles, useTheme} from "@material-ui/core/styles";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useSnackbar} from "notistack";
 import Scheduler, {eventFromSchedule} from "./scheduler.component";
+import {confirmContext} from "../_context/confirm-context";
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
@@ -21,7 +22,8 @@ function CourseSchedule({ value, index, title, scheduleIds, student_id, ...other
   const classes = useStyles();
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const errorHandler = useErrorHandler();
-const theme = useTheme();
+    const theme = useTheme();
+    const confirm = React.useContext(confirmContext);
 
 // todo simpleish list, like listitems (or even that one generalised)
    const eventChanged = (info, day_week, start_time, end_time, schedule) => {
@@ -33,8 +35,7 @@ const theme = useTheme();
 
         if (schedule["is_base"]) {
             body['course_id'] = schedule["course_id"];
-            body['student_id'] = student_id;
-            body['is_base'] = false;
+            body['student_id'] = null;  // base
             SchedulesDataService
                     .post(body)
                     .then(...errorHandler({errorOut: true, snackbarSuccess: true}))
@@ -76,18 +77,24 @@ const theme = useTheme();
     >
         <Scheduler
             onEventClick={function (clickInfo) {
-                           const schedule = clickInfo.event.extendedProps["schedule"];
-                           if (schedule["is_base"] === true) return enqueueSnackbar(t("cant_remove_schedule"), {'variant': 'warning'});
-                           if (window.confirm(t("sure_delete_event"))) {
-                               SchedulesDataService
-                                   .delete(schedule['id'])
-                                   .then(...errorHandler({snackbarSuccess: true}))
-                                   .then(function (res) {
-                                       clickInfo.event.remove();
-                                   });
+                const event = clickInfo.event;
+                event.remove();
+              const schedule = clickInfo.event.extendedProps["schedule"];
+                let calendarApi = clickInfo.view.calendar;
+               console.log("capi20", event.id, calendarApi.getEventById(event.id), calendarApi.getEvents().filter(x => x.id === event.id));
+               const is_base = schedule['is_base'];
+                confirm.confirm(null, null, () => {});
+               //confirm.confirm(is_base? "sure_delete_event_base": "sure_delete_event", null, () => {
+                   /**SchedulesDataService
+                       .delete(schedule['id'])
+                       .then(...errorHandler({snackbarSuccess: true}))
+                       .then(function (res) {
+                           calendarApi.getEventById(event.id).remove();
+                           console.log("capi2", event.id, calendarApi.getEventById(event.id), calendarApi.getEvents().filter(x => x.id === event.id));
+                       });*/
+               // })
 
-                           }
-                       }}
+           }}
             onEventDrop={eventChanged}
             onEventResize={eventChanged}
             scheduleIds={scheduleIds}

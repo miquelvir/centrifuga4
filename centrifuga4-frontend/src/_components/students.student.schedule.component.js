@@ -34,13 +34,12 @@ const theme = useTheme();
         if (schedule["is_base"]) {
             body['course_id'] = schedule["course_id"];
             body['student_id'] = student_id;
-            body['is_base'] = false;
             SchedulesDataService
                     .post(body)
                     .then(...errorHandler({errorOut: true, snackbarSuccess: true}))
                     .then(function (res) {
                         let calendarApi = info.view.calendar;
-                        newEvent['is_base'] = true;  // todo why needed
+                        newEvent['is_base'] = false;  // todo why needed
                         calendarApi.addEvent(eventFromSchedule(theme, res));
                         info.revert();
                     }).catch(function(err){

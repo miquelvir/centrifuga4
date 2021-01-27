@@ -1,10 +1,10 @@
 from centrifuga4.easy_api._subresource_utils import get_parent
-from centrifuga4.easy_api.get import _ImplementsGet
+from centrifuga4.easy_api.get import ImplementsGetCollection
 from centrifuga4.models._base import MyBase
 from centrifuga4.schemas.schemas import MySQLAlchemyAutoSchema
 
 
-class ImplementsGetCollectionSubresource(_ImplementsGet):
+class ImplementsGetCollectionSubresource(ImplementsGetCollection):
     """when used on an EasyResource, it implements the delete endpoint
 
     given an id, it deletes that entry
@@ -18,4 +18,4 @@ class ImplementsGetCollectionSubresource(_ImplementsGet):
     def get(self, id_, *args, **kwargs):
         parent = get_parent(self.parent_model, id_)
 
-        return super().get(*args, many=True, parent=parent, **kwargs)
+        return super().get(*args, parent=parent, **kwargs)

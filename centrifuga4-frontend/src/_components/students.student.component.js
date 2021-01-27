@@ -11,7 +11,6 @@ import Attendee from "./students.student.attendee.component";
 import Guardian from "./students.student.guardian.component";
 import StudentsDataService from "../_services/students.service";
 import Payments from "./students.student.payments.component";
-import Courses from "./students.student.courses.component";
 import {useErrorHandler} from "../_helpers/handle-response";
 import Schedule from "./students.student.schedule.component";
 import StudentsCourseDataService from "../_services/student_courses.service";
@@ -173,19 +172,19 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
 
               {hasNeeds([NEEDS.courses]) &&
 
-              <AddDeleteSubresource  // todo everywhere
+              <AddDeleteSubresource
                   history={props.history}
                   defaultSearchBy="name"
                   parentItemDataService={StudentsCourseDataService}
                   itemDataService={CoursesDataService}
-                  add_message_confirm="confirm_enroll_course"
+                  add_message_confirm="confirm_enroll_to_course"
                   parent_id={currentStudentId}
                   secondaryDisplayNameField="description"
                   searchByOptions={["name"]}
                   resourceName={"courses"}
                   displayNameField={"name"}
                   value={value}
-                  add_message="enroll_course"
+                  add_message="enroll_to_course"
                   index={3}
                   onSubresourceAdded={(id) => {
                     setStudent({...student, courses: [...student["courses"], id]})

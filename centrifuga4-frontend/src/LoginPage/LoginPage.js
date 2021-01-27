@@ -109,8 +109,11 @@ const LoginPage = (props) => {
         if (userCtx["user"]["ping"] !== false){
              authenticationService
             .ping()
-            .then(...errorHandler({errorOut: false}))
-            .then((needs) => { logged(needs); });  // ignore failed ping (it is just not logged in)
+            .then(...errorHandler({}))
+            .then((response) => {
+                if (response.isLoggedIn) logged(response.needs);
+            })
+
         }
 
     });

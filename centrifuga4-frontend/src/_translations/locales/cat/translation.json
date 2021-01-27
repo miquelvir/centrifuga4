@@ -11,6 +11,8 @@
   "teachers": "professors",
   "rooms": "espais",
   "payments": "pagaments",
+  "no_results": "no hi ha resultats",
+  "sure_delete_event_base": "Segur? Si segueixes eliminaràs l'esdeveniment del curs.",
   "capacity": "aforament",
   "delete_room": "eliminar la sala",
   "delete_room_question": "vols eliminar aquesta sala?",

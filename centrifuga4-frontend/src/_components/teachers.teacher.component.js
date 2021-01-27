@@ -12,9 +12,9 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import TeachersCoursesDataService from "../_services/teachers_courses.service";
 import TeacherDetails from "./teachers.teacher.details.component";
 import TeacherSchedule from "./teachers.teacher.schedule.component";
-import Courses from "./students.student.courses.component";
 import {useNeeds} from "../_helpers/needs";
-import TeacherCourses from "./teachers.teacher.courses.component";
+import CoursesDataService from "../_services/courses.service";
+import AddDeleteSubresource from "./subresource_add_delete.component";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -131,24 +131,34 @@ export default function Teacher({currentTeacherId, history, setNewTeacher, addTe
                                 student_id={currentTeacherId}
               />}
 
-              {hasNeeds([NEEDS.courses]) && <TeacherCourses value={value}
-                        index={2}
-                        dataService={TeachersCoursesDataService}
-                        history={history}
-                        courseIds={teacher === null ? null : teacher['courses']}
-                        addCourseId={(course_id) => {
-                            setTeacher({
+              {hasNeeds([NEEDS.courses]) &&
+
+              <AddDeleteSubresource
+                  history={history}
+                  defaultSearchBy="name"
+                  parentItemDataService={TeachersCoursesDataService}
+                  itemDataService={CoursesDataService}
+                  add_message_confirm="confirm_enroll_to_course"
+                  parent_id={currentTeacherId}
+                  secondaryDisplayNameField="description"
+                  searchByOptions={["name"]}
+                  resourceName={"courses"}
+                  displayNameField={"name"}
+                  value={value}
+                  add_message="enroll_to_course"
+                  index={2}
+                  onSubresourceAdded={(id) => {
+                    setTeacher({
                                 ...teacher,
-                                courses: [...teacher['courses'], course_id]
+                                courses: [...teacher['courses'], id]
                             })
-                        }}
-                        student_id={currentTeacherId}
-                        deleteCourseFromStudent={(course_id) => {
-                            setTeacher({
+                  }}
+                  onSubresourceDeleted={(id) => {
+                     setTeacher({
                                 ...teacher,
-                                courses: teacher['courses'].filter((c) => c !== course_id)
+                                courses: teacher['courses'].filter((c) => c !== id)
                             });
-                        }}
+                  }}
               />}
 
 

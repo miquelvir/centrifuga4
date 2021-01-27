@@ -1,4 +1,4 @@
-from flask import request, current_app
+from flask import request, current_app, jsonify, Response
 from sqlalchemy.exc import InvalidRequestError
 import json
 
@@ -212,7 +212,15 @@ class ImplementsGetOne(_ImplementsGet):
     schema: MySQLAlchemyAutoSchema
 
     def get(self, id_, *args, **kwargs):
-        return super().get(*args, id_=id_, many=False, **kwargs)
+        results = []
+        for one_id in id_.split(","):
+            result = super().get(*args, id_=one_id, many=False, **kwargs)
+            results.append(result)
+
+        if len(results) == 1:  # todo clean
+            return results[0]
+        else:
+            return jsonify([r.json for r in results])
 
 
 class ImplementsGetCollection(_ImplementsGet):

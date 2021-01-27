@@ -25,6 +25,7 @@ export const eventFromSchedule = (theme, schedule) => {
         daysOfWeek: [schedule['day_week']],
         title: schedule['course']['name'],
         groupId: [schedule['id']],
+        id: schedule['id'],
         startTime: schedule['start_time'],
         endTime: schedule['end_time'],
         color: schedule["is_base"] ? theme.palette.secondary.main : theme.palette.secondary.light,

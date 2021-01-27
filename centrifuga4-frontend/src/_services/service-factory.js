@@ -43,7 +43,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             });
         }
 
-        getOne(id, include=null) {
+        getOne(id, include=null, expect_batch=false) {
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'get',
@@ -66,7 +66,22 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
         }
 
         getMany(ids) {
-            return Promise.all(ids.map(id => (this.getOne(id))));
+            return new Promise((resolve, reject) => {
+                if (ids.length === 0) {
+                    resolve([]);
+                }
+                this.getOne(ids.join(','))
+                    .then(res => {
+                    if (ids.length === 1) {
+                        resolve([res]);
+                    } else {
+                        resolve(res);
+                    }
+                    })
+                    .catch(err => {
+                        reject(err);
+                    })
+            });
         }
 
         patch({id, body, initial_values = null}) {

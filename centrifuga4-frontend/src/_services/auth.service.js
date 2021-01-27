@@ -44,9 +44,9 @@ function ping() {
             method: 'GET',
             headers: {'Cache-Control': 'no-cache'}
         }).then(res => {
-            resolve(res.data["needs"]);
+            resolve({isLoggedIn: true, needs: res.data["needs"]});
         }).catch(function (res) {
-            try { if (res["response"]["status"] === 401) resolve(false) } catch(err){}
+            try { if (res["response"]["status"] === 401) resolve({isLoggedIn: false, needs: null}) } catch(err){}
 
             reject(res);
         });});

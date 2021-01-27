@@ -225,7 +225,8 @@
   "confirm_unenroll_to_course": "Are you sure you want to remove it from the selected course?",
   "search_courses": "search courses",
   "new_user": "invite user",
-
+  "sure_delete_event_base": "Are you sure you want to delete the schedule from the course?",
+"no_results": "no results",
   "invite": "invite",
   "invite_user": "\uD83D\uDCEF invite user",
   "permissions": "permissions",

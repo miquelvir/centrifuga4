@@ -17,6 +17,7 @@ import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import {useNeeds} from "../_helpers/needs";
 import ItemsListSecondary from "./items_list_secondary.component";
 import ItemsListTerciary from "./items_list_terciary.component";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -134,6 +135,9 @@ function AddDeleteSubresource({  history, defaultSearchBy, parentItemDataService
 
 
               <div className={classes.newLine}>
+                  {loading?
+                      <Skeleton width="100%" height="250px"/>
+                  :
                 <ItemsListSecondary
                     dataService={parentItemDataService}
                     defaultSearchBy={defaultSearchBy}
@@ -152,7 +156,7 @@ function AddDeleteSubresource({  history, defaultSearchBy, parentItemDataService
                     onItemClick={(id) => {
                         history.push("/"+resourceName+"?id="+id);
                     }}
-                />
+                />}
               </div>
             </Box>
         </Box>
