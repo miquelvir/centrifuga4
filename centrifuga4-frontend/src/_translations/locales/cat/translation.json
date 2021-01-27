@@ -21,6 +21,8 @@
   "new_teacher": "nou professor",
   "settings": "configuració",
   "locations": "espais",
+  "send_grant_letter_question": "enviar carta de beca?",
+  "this_will_be_sent": "aquesta carta s'enviarà als contactes (si és menor) o a l'estudiant (si és major d'edat o no hi ha contactes disponibles)",
   "chose_list_dates": "escull el primer i l'últim dia pels quals vulguis crear les llistes",
   "user": "usuari",
   "teacher": "professor",

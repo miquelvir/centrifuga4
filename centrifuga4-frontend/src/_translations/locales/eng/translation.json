@@ -225,6 +225,8 @@
   "confirm_unenroll_to_course": "Are you sure you want to remove it from the selected course?",
   "search_courses": "search courses",
   "new_user": "invite user",
+  "send_grant_letter_question": "send grant letter?",
+  "this_will_be_sent": "this letter will be sent to the guardians (if -18) or to the student (if 18+ or no guardians available)",
   "sure_delete_event_base": "Are you sure you want to delete the schedule from the course?",
 "no_results": "no results",
   "invite": "invite",

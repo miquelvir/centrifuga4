@@ -37,7 +37,7 @@ class Course(MyBase):
     id = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=True)
-    price_term = db.Column(db.Integer, nullable=False, default=60)
+    price_term = db.Column(db.Float, nullable=False, default=60)
     is_published = db.Column(db.Boolean, nullable=False, default=False)
 
     rooms = db.relationship("Room", secondary="room_course", back_populates="courses")

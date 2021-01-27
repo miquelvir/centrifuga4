@@ -1,25 +1,18 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import {MenuItem, TextField} from "@material-ui/core";
+import {MenuItem} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React from "react";
 import StudentsDataService from "../_services/students.service";
 import {makeStyles} from "@material-ui/core/styles";
-import {Skeleton} from "@material-ui/lab";
 import * as yup from 'yup';
 import {IconButtonSkeleton} from "../_skeletons/iconButton"
 import Person from "./students.student.person.component";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import GuardiansDataService from "../_services/guardians.service";
 import PaymentsDataService from "../_services/payments.service";
-import Dialog from "@material-ui/core/Dialog";
 import {useErrorHandler} from "../_helpers/handle-response";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -27,12 +20,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DirtyTextField from "./dirtytextfield.component";
 import SendIcon from "@material-ui/icons/Send";
 import {sendEnrollmentEmail} from "../_services/emailsEnrollment.service";
-import ReceiptIcon from "@material-ui/icons/Receipt";
 import Divider from "@material-ui/core/Divider";
 import {sendGrantEmail} from "../_services/emailsGrants.service";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import {payment_methods} from "../_data/payment_methods";
-import {emptyAttendee, emptyGuardian} from "../_data/empty_objects";
+import {emptyAttendee} from "../_data/empty_objects";
 import {useNeeds} from "../_helpers/needs";
 import {loadingContext} from "../_context/loading-context";
 import {confirmContext} from "../_context/confirm-context";
@@ -165,8 +157,12 @@ function Attendee({ children, setNewStudent, addStudentId, value, index, newStud
                       }}
                       patchService={patchService}
                       onUpdate={(changedBody) => {
-                        if ("status" in changedBody && changedBody["status"] === "enrolled"){
-                          // sendGrantLetter(); todo ask
+                        if ("enrolment_status" in changedBody && changedBody["enrolment_status"] === "enrolled"){
+                          confirm.confirm("send_grant_letter_question",
+                          "this_will_be_sent",
+                          () => {
+                                sendGrantLetter();
+                          });
                         }
                       }}
                       additionalValidation={{

@@ -10,7 +10,7 @@ SMTP_REPLY_TO = SMTP_FROM_EMAIL
 BCC_ADMIN = False
 
 DEBUGGING_EMAIL = "vazquezrius.miquel@gmail.com"
-DEBUGGING_MODE = True
+DEBUGGING_MODE = bool(int(os.environ["EMAIL_DEBUGGING_MODE"]))
 DEBUGGING_SEND_EMAILS = True
 
 dirname = os.path.dirname(__file__)  # current directory
