@@ -28,9 +28,10 @@ class CalendarRes(Resource):
 
         filename = "calendar-%s.ics" % course.id
 
-        cal = icalendar.Calendar()  # TODO TO PIP
+        cal = icalendar.Calendar()
         cal.add("prodid", "-//Tester//Version 0.1.1//EN")
         cal.add("version", "2.0")
+        cal.add("txid", "Europe/Madrid")
 
         for s in course.schedules:
             first_day = datetime.datetime.now()
