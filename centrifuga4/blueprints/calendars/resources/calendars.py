@@ -31,7 +31,8 @@ class CalendarRes(Resource):
         cal = icalendar.Calendar()
         cal.add("prodid", "-//Tester//Version 0.1.1//EN")
         cal.add("version", "2.0")
-        cal.add("txid", "Europe/Madrid")
+        cal.add("tzid", "Europe/Madrid")
+        cal.add("x-wr-timezone", "Europe/Madrid")
 
         for s in course.schedules:
             first_day = datetime.datetime.now()
@@ -41,7 +42,7 @@ class CalendarRes(Resource):
             s: Schedule
             event = icalendar.Event()
             event.add("uid", SHORT_NAME + "-" + s.id)
-            event.add("txid", "Europe/Madrid")
+            event.add("tzid", "Europe/Madrid")
             event.add(
                 "dtstart",
                 first_day.replace(
