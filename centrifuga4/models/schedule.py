@@ -7,6 +7,10 @@ from centrifuga4.models._base import MyBase
 
 
 class Schedule(MyBase):
+    """
+    day_week is an integer; 0 signifying sunday, 1 monday, and so on.
+    """
+
     __tablename__ = "schedule"
     permissions = {SchedulesPermission}
 

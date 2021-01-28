@@ -130,15 +130,13 @@ def add_rooms():
 
 
 def generate_schedule(course_id):
-    start_h = randint(0, 22)
+    start_h = randint(0, 21)
     start_m = choice((0, 15, 30, 45))
     return Schedule(
         id=Schedule.generate_new_id(),
         day_week=randint(0, 6),
         start_time=datetime.time(start_h, start_m),
-        end_time=datetime.time(
-            randint(start_h, start_h + 23 if start_h + 23 < 23 else 23), start_m
-        ),
+        end_time=datetime.time(randint(start_h + 1, 23), start_m),
         course_id=course_id,
     )
 
