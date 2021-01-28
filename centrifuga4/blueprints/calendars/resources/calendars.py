@@ -40,6 +40,7 @@ class CalendarRes(Resource):
             s: Schedule
             event = icalendar.Event()
             event.add("uid", SHORT_NAME + "-" + s.id)
+            event.add("txid", "Europe/Madrid")
             event.add(
                 "dtstart",
                 first_day.replace(
