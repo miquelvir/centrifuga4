@@ -6,10 +6,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import * as yup from 'yup';
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
 import {useErrorHandler} from "../_helpers/handle-response";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -22,6 +18,9 @@ import Divider from "@material-ui/core/Divider";
 import {useNeeds} from "../_helpers/needs";
 import {safe_email} from "../_yup/validators";
 import {confirmContext} from "../_context/confirm-context";
+import Button from "@material-ui/core/Button";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import {downloadCalendar} from "../_services/calendar.service";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function TeacherDetails({ children, addStudentId, setNewRoom, newRoom, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
+function TeacherDetails({ children, addStudentId, setNewRoom, newRoom, value, index, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
@@ -148,7 +147,7 @@ const [hasNeeds, NEEDS] = useNeeds();
 
 
                             <div style={{clear: 'both'}}>
-                               {   ["100%", "100%", "100%"].map((value, idx) => {
+                               {   ["100%", "100%", "100%", "100%"].map((value, idx) => {
                                 return (
                                     <Box key={idx} py={0} >
                                         <Skeleton variant="text" width={value} height="60px"/>
@@ -177,6 +176,14 @@ const [hasNeeds, NEEDS] = useNeeds();
                             className={classes.line}
                             formik={formik}
                         />
+
+                        <DirtyTextField
+                            label={t("calendar_url")}
+                            name="calendar_url"
+                            disabled
+                            className={classes.line}
+                            formik={formik}
+                            />
 
                         <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
@@ -254,6 +261,27 @@ const [hasNeeds, NEEDS] = useNeeds();
 
 
                         </Box>
+
+                         {!loading && !newRoom && <Box my={3}>
+            <Divider />
+            </Box>}
+
+                        <Box className={[classes.line, classes.composite]}>
+                {!loading && !newRoom &&
+                <Tooltip style={{flex: 1}} title={t("export_calendar")} aria-label={t("send_grant_letter")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<GetAppIcon/>}
+                      onClick={(e) => {
+                        downloadCalendar("teachers", currentStudent['id'], currentStudent['calendar_id']).then(r => {});
+                      }}
+                  >
+                    {t("export_calendar")}
+                  </Button>
+                </Tooltip>}
+              </Box>
 
 
                     </form>

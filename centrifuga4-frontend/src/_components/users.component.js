@@ -160,7 +160,7 @@ export default function Users({history, ...other}) {
 
         <Grid item xs={8} className={classes.left}>
           <User
-            currentStudentId={currentUserId}
+            currentUserId={currentUserId}
             history={history}
             deleteUser={(userId) => {
                 if (userId === currentUserId) setCurrentUserId(null);

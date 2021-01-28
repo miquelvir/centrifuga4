@@ -10,7 +10,6 @@ from typing import List
 import centrifuga4
 from centrifuga4.models import (
     Student,
-    RawPerson,
     User,
     Guardian,
     Need,
@@ -106,10 +105,11 @@ def add_teachers():
     for idx in range(20):
         print("    teacher %s" % idx)
         t = Teacher(
-            id=RawPerson.generate_new_id(),
+            id=Teacher.generate_new_id(),
             name="ester%s" % idx,
             surname1="bonal%s" % idx,
             surname2="vivé%s" % idx,
+            calendar_id=Teacher.generate_new_id(),
             email="ebv%s@gmail.com" % idx,
         )
         centrifuga4.db.session.add(t)
@@ -157,6 +157,7 @@ def add_courses(
             name="course %s" % idx,
             description=choice(("course description %s" % idx, None)),
             is_published=choice((True, True, True, True, False)),
+            calendar_id=Course.generate_new_id(),
         )
 
         for student in sample(students, randint(0, 50)):
@@ -186,7 +187,7 @@ def add_students():
     for idx in range(500):
         print("    student %s" % idx)
         s = Student(
-            id=RawPerson.generate_new_id(),
+            id=Student.generate_new_id(),
             name="mark%s" % idx,
             surname1="stuart%s" % idx,
             surname2="mill%s" % idx,
@@ -204,7 +205,7 @@ def add_students():
 
         for idx2 in range(randint(0, 3)):
             g = Guardian(
-                id=RawPerson.generate_new_id(),
+                id=Guardian.generate_new_id(),
                 name="maria%s-%s" % (idx, idx2),
                 surname1="lópez%s-%s" % (idx, idx2),
                 surname2="suárez%s-%s" % (idx, idx2),

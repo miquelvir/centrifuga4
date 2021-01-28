@@ -50,6 +50,7 @@ class CourseSchema(MySQLAlchemyAutoSchema):
         model = models.Course
 
     base_schedules = fields.Nested(BaseScheduleSchema, many=True)
+    calendar_url = fields.Str(dump_only=True)
 
 
 class PublicCourseSchema(CourseSchema):
@@ -81,19 +82,12 @@ class RoomSchema(MySQLAlchemyAutoSchema):
     schedules = fields.Pluck(ScheduleSchema, "id", many=True)
 
 
-class RawPersonSchema(MySQLAlchemyAutoSchema):
+class PersonSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
-        model = models.RawPerson
-
-        dump_only = (model.full_name.key,)
+        model = models.Person
 
     full_name = fields.Str(dump_only=True)
     age = fields.Int(dump_only=True)
-
-
-class PersonSchema(RawPersonSchema):
-    class Meta(MySQLAlchemyAutoSchema.Meta):
-        model = models.Person
 
 
 class GuardianSchema(MySQLAlchemyAutoSchema):
@@ -103,6 +97,7 @@ class GuardianSchema(MySQLAlchemyAutoSchema):
         dump_only = (model.full_name.key,)
 
     full_name = fields.Str(dump_only=True)
+    age = fields.Int(dump_only=True)
 
 
 class StudentSchema(PersonSchema):
@@ -129,9 +124,11 @@ class UserSchema(MySQLAlchemyAutoSchema):
     )  # due to security: don't allow loading nor dumping
 
 
-class TeacherSchema(RawPersonSchema):
+class TeacherSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Teacher
 
-    # courses = fields.Nested(CourseSchema, many=True) for nesting
     schedules = fields.Pluck(ScheduleSchema, "id", many=True)
+    full_name = fields.Str(dump_only=True)
+    age = fields.Int(dump_only=True)
+    calendar_url = fields.Str(dump_only=True)

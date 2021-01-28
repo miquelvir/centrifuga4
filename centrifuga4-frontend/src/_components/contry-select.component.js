@@ -66,7 +66,7 @@ export default function DirtyCountrySelect({formik, noDirty, name, label, ...tex
         option: classes.option,
       }}
       autoHighlight
-      getOptionLabel={(option) => option.label }
+      getOptionLabel={(option) => t(option.code) }
       getOptionSelected={(o) => o.code === option.code}
       value={option}
         onChange={(event, newValue) => {
@@ -81,7 +81,7 @@ export default function DirtyCountrySelect({formik, noDirty, name, label, ...tex
       renderOption={(option) => (
         <React.Fragment key={option.code}>
           <span>{countryToFlag(option.code)}</span>
-          {option.label} ({option.code}) +{option.phone}
+          {option.code !== ""? t(option.code): "-"} {option.code !== ""? "("+option.code+") +"+option.phone: ""}
         </React.Fragment>
       )}
 

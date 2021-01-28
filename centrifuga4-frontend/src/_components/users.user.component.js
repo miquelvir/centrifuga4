@@ -55,9 +55,7 @@ UserPermissions.propTypes = {
   currentStudent: PropTypes.any,
   dir: PropTypes.any
 };
-export default function User(props) {
-  const currentUserId = props.currentStudentId;
-  const deleteUser = props.deleteStudent;
+export default function User({currentUserId, deleteUser}) {
   const loading = currentUserId === null;
 
   const errorHandler = useErrorHandler();

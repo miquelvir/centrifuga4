@@ -6,3 +6,4 @@ from .invites import invites_blueprint as invites_service
 from .password_reset import password_reset_blueprint as password_reset_service
 from .validation import validation_blueprint
 from .pre_enrolment import pre_enrolment_blueprint
+from .calendars import calendars_blueprint

@@ -21,7 +21,7 @@ def string_io_to_bytes_io(string_io: io.StringIO, encoding="utf-8") -> io.BytesI
 
 
 def make_response_with_file(
-    proxy: Union[io.BytesIO, io.StringIO],
+    proxy: Union[io.BytesIO, io.StringIO, bytes],
     filename: str,
     mime_type: str,
     encoding="utf-8",
@@ -32,6 +32,8 @@ def make_response_with_file(
         send_file(
             proxy
             if type(proxy) is io.BytesIO
+            else io.BytesIO(proxy)
+            if type(proxy) is bytes
             else string_io_to_bytes_io(proxy, encoding=encoding),
             as_attachment=as_attachment,
             mimetype=mime_type,

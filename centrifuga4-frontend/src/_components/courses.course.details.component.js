@@ -30,6 +30,8 @@ import {DEFAULT_COURSE_PRICE_TERM} from "../_data/price_term";
 import {useNeeds} from "../_helpers/needs";
 import {loadingContext} from "../_context/loading-context";
 import {confirmContext} from "../_context/confirm-context";
+import Link from "@material-ui/core/Link";
+import {downloadCalendar} from "../_services/calendar.service";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -284,6 +286,15 @@ const [hasNeeds, NEEDS] = useNeeds();
                             formik={formik}
                         />
 
+
+                        <DirtyTextField
+                            label={t("calendar_url")}
+                            name="calendar_url"
+                            disabled
+                            className={classes.line}
+                            formik={formik}
+                            />
+
                         <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("name")}
@@ -372,6 +383,24 @@ const [hasNeeds, NEEDS] = useNeeds();
                       }}
                   >
                     {t("students_contact_sheet")}
+                  </Button>
+                </Tooltip>}
+              </Box>
+
+
+                <Box className={[classes.line, classes.composite]}>
+                {!loading && !newCourse &&
+                <Tooltip style={{flex: 1}} title={t("export_calendar")} aria-label={t("send_grant_letter")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<GetAppIcon/>}
+                      onClick={(e) => {
+                        downloadCalendar("courses", currentCourse['id'], currentCourse['calendar_id']).then(r => {});
+                      }}
+                  >
+                    {t("export_calendar")}
                   </Button>
                 </Tooltip>}
               </Box>

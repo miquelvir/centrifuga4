@@ -2,6 +2,7 @@ from threading import Thread
 
 import jwt
 from flask import request, current_app
+from flask_login import fresh_login_required
 from flask_restful import Resource, abort
 
 from centrifuga4.auth_auth.action_need import InvitePermission
@@ -37,6 +38,7 @@ def generate_signup_link(_token, _email, frontend_url=None):
 
 class UserInviteCollectionRes(Resource):
     @Requires(InvitePermission, UsersPermission)
+    @fresh_login_required
     def post(self):
         try:
             user_email = request.json["userEmail"].lower()

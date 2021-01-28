@@ -1,4 +1,6 @@
+from flask import current_app
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import column_property
 
 from centrifuga4 import db
 from centrifuga4.auth_auth.resource_need import CoursesPermission
@@ -40,6 +42,8 @@ class Course(MyBase):
     price_term = db.Column(db.Float, nullable=False, default=60)
     is_published = db.Column(db.Boolean, nullable=False, default=False)
 
+    calendar_id = db.Column(db.Text, nullable=False)
+
     rooms = db.relationship("Room", secondary="room_course", back_populates="courses")
     teachers = db.relationship(
         "Teacher", secondary="teacher_course", back_populates="courses"
@@ -47,10 +51,22 @@ class Course(MyBase):
     students = db.relationship(
         "Student", secondary="student_course", back_populates="courses"
     )
-    schedules = db.relationship("Schedule", back_populates="course")
+    schedules = db.relationship(
+        "Schedule", cascade="all,delete", back_populates="course"
+    )
     labels = db.relationship(
         "Label", secondary="label_course", back_populates="courses"
     )
+
+    @hybrid_property
+    def calendar_url(self):
+        return (
+            current_app.config["BACKEND_SERVER_URL"]
+            + "/calendars/v1/courses/"
+            + self.id
+            + "/"
+            + self.calendar_id
+        )
 
     @hybrid_property
     def base_schedules(self):

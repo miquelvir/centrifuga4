@@ -6,14 +6,12 @@ from centrifuga4 import db
 from centrifuga4.models._base import MyBase
 import datetime
 
-from centrifuga4.models.raw_person import RawPerson
 
-
-class Person(RawPerson):
+class Person(MyBase):
     __tablename__ = "person"
     __mapper_args__ = {"polymorphic_identity": "person"}
 
-    id = db.Column(db.Text, db.ForeignKey("raw_person.id"), primary_key=True)
+    id = db.Column(db.Text, primary_key=True)
     country_of_origin = db.Column(db.Text, nullable=True)
 
     is_studying = db.Column(db.Boolean, nullable=False)
@@ -22,6 +20,44 @@ class Person(RawPerson):
 
     is_working = db.Column(db.Boolean, nullable=False)
     career = db.Column(db.Text, nullable=True)
+
+    name = db.Column(db.Text, nullable=False)
+    surname1 = db.Column(db.Text, nullable=True)
+    surname2 = db.Column(db.Text, nullable=True)
+    email = db.Column(db.Text, nullable=True)
+    phone = db.Column(db.Text, nullable=True)
+    address = db.Column(db.Text, nullable=True)
+    zip = db.Column(db.Integer, nullable=True)
+    city = db.Column(db.Text, nullable=True)
+    dni = db.Column(db.Text, nullable=True)
+    gender = db.Column(db.Text, nullable=True)
+
+    full_name = column_property(
+        case([(name != None, name + " ")], else_="")
+        + case([(surname1 != None, surname1 + " ")], else_="")
+        + case([(surname2 != None, surname2)], else_="")
+    )
+
+    @hybrid_property
+    def age(self):
+        if not self.birth_date:
+            return None
+        time_difference = datetime.date.today() - self.birth_date
+        return int(time_difference.days / 365.25)
+
+    @validates(
+        "name", "surname1", "surname2", "email", "address", "zip", "gender", "city"
+    )
+    def cleaner1(self, key, value):
+        return str(value).lower().strip() if value else value
+
+    @validates("dni")
+    def cleaner2(self, key, value):
+        return value.upper().strip() if value else value
+
+    @validates("phone")
+    def cleaner3(self, key, value):
+        return str(value).lower().replace(" ", "") if value else value
 
     @hybrid_property
     def age(self):

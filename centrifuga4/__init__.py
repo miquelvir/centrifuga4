@@ -4,12 +4,12 @@ import os
 
 from flasgger import Swagger
 from flask_cors import CORS
-from flask_principal import Principal, identity_loaded
+from flask_principal import Principal, identity_loaded, Identity
 from flask_seasurf import SeaSurf
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, render_template_string, redirect
 from flask_talisman import Talisman
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 from config import DevelopmentBuiltConfig, ProductionConfig, DevelopmentConfig
 
@@ -95,6 +95,7 @@ def init_app(config=None):
             password_reset_service,
             validation_blueprint,
             pre_enrolment_blueprint,
+            calendars_blueprint,
         )
         from centrifuga4.models import User
         from centrifuga4.auth_auth.principal_identity_loaded import on_identity_loaded
@@ -115,8 +116,15 @@ def init_app(config=None):
         def page_not_found(e):
             return "not here... 👻", 404
 
-        # add identity loader for Flask Principal
+        # add needs loader for Flask Principal
         identity_loaded.connect_via(app)(on_identity_loaded)
+
+        # add identity loader (required to work with remember me)
+        # https://stackoverflow.com/questions/24487449/flask-principal-flask-login-remember-me-and-identity-loaded
+        @principal.identity_loader
+        def load_identity_when_session_expires():
+            if hasattr(current_user, "id"):
+                return Identity(current_user.id)
 
         # load blueprints for the different parts
         app.register_blueprint(api, url_prefix="/api/v1")
@@ -126,6 +134,7 @@ def init_app(config=None):
         app.register_blueprint(password_reset_service, url_prefix="/password-reset/v1")
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
         app.register_blueprint(pre_enrolment_blueprint, url_prefix="/pre-enrolment/v1")
+        app.register_blueprint(calendars_blueprint, url_prefix="/calendars/v1")
         # print(swagger.get_apispecs())  # todo customize ui
 
         return app

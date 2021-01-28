@@ -52,7 +52,7 @@ def get_auth_token():
 
     user = g.user
 
-    login_user(user, remember=False)
+    login_user(user, remember=True)
     identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
 
     return get_current_needs()

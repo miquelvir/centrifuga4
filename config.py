@@ -1,6 +1,8 @@
 import os
 from datetime import timedelta
 
+# todo clean config
+
 
 class Config(object):
     DEBUG = False
@@ -18,7 +20,7 @@ class Config(object):
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_NAME = "X-CSRF-TOKEN"
 
-    REMEMBER_COOKIE_DURATION = timedelta(days=30)
+    REMEMBER_COOKIE_DURATION = timedelta(days=15)
     REMEMBER_COOKIE_SECURE = True
     REMEMBER_COOKIE_HTTPONLY = True
 
@@ -57,7 +59,7 @@ class DevelopmentConfig(Config):
 
 class DevelopmentBuiltConfig(DevelopmentConfig):
     CSRF_COOKIE_SAMESITE = "Strict"
-    SESSION_PROTECTION = "strong"
+    SESSION_PROTECTION = "basic"  # not strict to allow the remember me
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Strict"
