@@ -36,7 +36,7 @@ class CalendarRes(Resource):
 
         for s in course.schedules:
             first_day = datetime.datetime.now()
-            while int(datetime.datetime.today().strftime("%w")) != s.day_week:
+            while int(first_day.strftime("%w")) != s.day_week:
                 first_day += datetime.timedelta(days=1)
 
             s: Schedule
