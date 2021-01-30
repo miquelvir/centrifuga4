@@ -1,3 +1,4 @@
+import datetime
 from typing import Set
 
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -23,6 +24,9 @@ class Student(Person):
     birth_date = db.Column(db.Date, nullable=False)
 
     enrolment_status = db.Column(db.Text, nullable=False)
+    early_unenrolment_date = db.Column(db.Date, nullable=True)
+    enrolment_date = db.Column(db.Date, nullable=True)
+    pre_enrolment_date = db.Column(db.Date, default=datetime.datetime.utcnow)
 
     courses = db.relationship(
         "Course", secondary="student_course", back_populates="students"
@@ -49,6 +53,22 @@ class Student(Person):
     def is_enrolled(self) -> bool:
         return self.enrolment_status == "enrolled"
 
+    @validates("enrolment_status")
+    def cleaner2(self, key, value):
+        assert value in (
+            "enrolled",
+            "early-unenrolled",
+            "pre-enrolled",
+        ), "status must be either 'enrolled', 'early-unenrolled', 'pre-enrolled'"
+
+        if self.enrolment_status != "enrolled" and value == "enrolled":
+            self.enrolment_date = datetime.date.today()
+
+        if self.enrolment_status != "early-unenrolled" and value == "early-unenrolled":
+            self.early_unenrolment_date = datetime.date.today()
+
+        return value
+
     @hybrid_property
     def schedules(self):
         if self.courses:
@@ -66,16 +86,7 @@ class Student(Person):
         )
         return value
 
-    @validates("status")
-    def cleaner2(self, key, value):
-        assert value in (
-            "enrolled",
-            "early-unenrolled",
-            "pre-enrolled",
-        ), "status must be either 'enrolled', 'early-unenrolled', 'pre-enrolled'"
-        return value
-
-    def get_course_schedules(self):
+    def get_course_schedules(self):  # todo refractor
         def to_literal(n):
             if n == 0:
                 return "DG. / DO / SUN"

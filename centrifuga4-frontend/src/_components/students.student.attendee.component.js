@@ -218,7 +218,25 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                                 <MenuItem value={true}>{t("yes")}</MenuItem>
                                 <MenuItem value={false}>{t("no")}</MenuItem>
                             </DirtyTextField>
-                          ],
+                          ], [<DirtyTextField
+                                label={t("pre_enrolment_date")}
+                                type="date"
+                                style={{flex: 1}}
+                                name="pre_enrolment_date"
+                                InputLabelProps={{shrink: true}}/>,
+                                <DirtyTextField
+                                label={t("enrolment_date")}
+                                type="date"
+                                style={{flex: 1}}
+                                name="enrolment_date"
+                                InputLabelProps={{shrink: true}}/>,
+                                <DirtyTextField
+                                label={t("early_unenrolment_date")}
+                                type="date"
+                                style={{flex: 1}}
+                                name="early_unenrolment_date"
+                                InputLabelProps={{shrink: true}}/>
+                            ],
                         <DirtyTextField
                                 label={t("other_comments")}
                                 style={{flex: 1}}
