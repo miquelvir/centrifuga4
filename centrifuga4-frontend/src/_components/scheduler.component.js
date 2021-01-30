@@ -9,21 +9,18 @@ import styled from "@emotion/styled";
 import {useTheme} from '@material-ui/core/styles';
 import interactionPlugin from '@fullcalendar/interaction';
 import Skeleton from "@material-ui/lab/Skeleton";
+import {Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import Button from "@material-ui/core/Button";
+import {useTranslation} from "react-i18next";
+import {confirmContext} from "../_context/confirm-context";
+import {tabContext} from "../_context/tab-context";
 
-const useStyles = makeStyles((theme) => ({
-    button: {
-        margin: theme.spacing(1),
-    },
-    calendar: {
-        margin: theme.spacing(2)
-    }
-
-}));
 
 export const eventFromSchedule = (theme, schedule) => {
     return {
         daysOfWeek: [schedule['day_week']],
-        title: schedule['course']['name'],
+        title: schedule['display_name'],
         groupId: [schedule['id']],
         id: schedule['id'],
         startTime: schedule['start_time'],
@@ -36,9 +33,27 @@ export const eventFromSchedule = (theme, schedule) => {
     }
 }
 
-function Scheduler({snapDuration = '00:15', scheduleIds, onEventClick, onEventResize, onEventDrop, editable=false, ...other}) {
+function evaluate(expression, ...args){
+    console.log(typeof expression);
+    if (typeof expression === 'function'){
+        return expression(...args);
+    }
+
+    return expression;
+}
+
+function Scheduler({snapDuration = '00:15',
+                       allowView=false, viewUrl=null,
+                        allowDelete=false,
+                    selectable=false,
+                       viewStudent=false, deleteCustom=false,
+                      scheduleIds,
+                    setScheduleIds,
+                       onEventClick, onEventSelected,
+                       onEventChange, editable=false, ...other}) {
     const errorHandler = useErrorHandler();
     const theme = useTheme();
+    const calendarRef = React.createRef();
     const StyleWrapper = styled.div`
       .fc-button, .fc-button.fc-button-primary {
         background: ${theme.palette.primary.main};
@@ -55,8 +70,10 @@ function Scheduler({snapDuration = '00:15', scheduleIds, onEventClick, onEventRe
     `
 
     const [schedules, setSchedules] = useState(null);
-    const loading = scheduleIds === null;
 
+
+    const loading = scheduleIds === null;
+    const {t} = useTranslation();
     // todo right click menu to delete
 
 
@@ -76,6 +93,7 @@ function Scheduler({snapDuration = '00:15', scheduleIds, onEventClick, onEventRe
                 });
         }
     }, [scheduleIds, theme]);
+
     const withScheduleInfo = (method, info) => {
         return method(info,
             info.event['start'].getDay(),
@@ -83,17 +101,68 @@ function Scheduler({snapDuration = '00:15', scheduleIds, onEventClick, onEventRe
             info.event['end'].toLocaleTimeString('en-US', {hour12: false}),
             info.event.extendedProps["schedule"]);
     }
+    const navigator = React.useContext(tabContext);
+
+    const [currentSchedule, setCurrentSchedule] = React.useState({open: false, event: null, schedule: null})
+
+      const handleClickOpen = (info) => {
+        setCurrentSchedule({open: true, event: info.event, schedule: info.event.extendedProps['schedule']});
+      };
+
+      const handleClose = () => {
+        setCurrentSchedule({open: false, event: null, schedule: null});
+      };
+      const handleView = () => {
+          navigator.goTo(...evaluate(viewUrl, currentSchedule.schedule));
+          handleClose();
+      }
+      const handleDelete = () => {
+          SchedulesDataService
+               .delete(currentSchedule.schedule.id)
+               .then(...errorHandler({snackbarSuccess: true}))
+               .then(function (res) {
+                  handleClose();
+                    setScheduleIds(scheduleIds.filter(id => id !== currentSchedule.schedule.id));
+                    setSchedules(schedules.filter(s => s.id !== currentSchedule.schedule.id));
+               });
+      }
 
     return (
-        <Box p={2} style={{height: "100%"}}>
+        <Box p={2} style={{height: '100%', flex: 1, minHeight: "70vh" }}>
             {loading ? <Skeleton variant="rect" width="100%" height="100%"/>
                 :
-                <StyleWrapper style={{height: "100%"}}>
+                <React.Fragment>
+                    <Dialog open={currentSchedule.open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">{currentSchedule.schedule? currentSchedule.schedule["display_name"]: ""}</DialogTitle>
+                        <DialogActions>
+                          <Button onClick={handleClose} color="primary">
+                              {t("cancel")}
+                          </Button>
+
+                             <Button
+                                 disabled={!(currentSchedule.schedule !== null &&
+                                            evaluate(allowView, currentSchedule.schedule))}
+                                 onClick={handleView}
+                                 color="primary">
+                                {t("view")}
+                            </Button>
+
+                            <Button
+                                    disabled={!(currentSchedule.schedule !== null &&
+                                            evaluate(allowDelete, currentSchedule.schedule))}
+                                    onClick={handleDelete}
+                                    color="secondary">
+                                    {t("delete")}
+                            </Button>
+                        </DialogActions>
+                      </Dialog>
+                    <StyleWrapper style={{height: "100%"}}>
                     <FullCalendar
                         plugins={[timeGridPlugin, interactionPlugin]}
                         initialView="timeGridWeek"
                         height="100%"
                         firstDay={1}
+                        ref={calendarRef}
                         editable={editable}
                         buttonText={{
                             prev:     '<', // <
@@ -105,7 +174,7 @@ function Scheduler({snapDuration = '00:15', scheduleIds, onEventClick, onEventRe
                               week:     'week',
                               day:      'day'
                         }}
-                        selectable={true}
+                        selectable={selectable}
                         selectMirror={true}
                         dayMaxEvents={true}
                         weekends={true}
@@ -120,34 +189,30 @@ function Scheduler({snapDuration = '00:15', scheduleIds, onEventClick, onEventRe
                         eventRemove={function () {
                         }}
                         select={function (selectInfo) {
-                            // todo proper prompts
-                            /*let title = prompt('Please enter a new title for your event')
-                            let calendarApi = selectInfo.view.calendar
-
-                            calendarApi.unselect() // clear date selection
-
-                            if (title) {
-                                calendarApi.addEvent({
-                                    id: 24,
-                                    title,
-                                    start: selectInfo.startStr,
-                                    end: selectInfo.endStr,
-                                    allDay: selectInfo.allDay
-                                })
-                            }*/
+                            selectInfo.view.calendar.unselect();
+                            onEventSelected( selectInfo.start.getDay(),
+            selectInfo.start.toLocaleTimeString('en-US', {hour12: false}),
+            selectInfo.end.toLocaleTimeString('en-US', {hour12: false}),)
                         }}
                         eventContent={function () {
                         }} // custom render function
-                        eventClick={onEventClick}
+                        eventClick={(info) => {
+                            /* let calendarApi = calendarRef.current.getApi();
+                              console.log(calendarApi.getEventById(info.event.id).remove());
+                              setSchedules(schedules.filter(s=>s.id !== info.event.id));*/
+                            handleClickOpen(info);
+                        }}
                         eventTimeFormat={{
                             hour: '2-digit',
                             minute: '2-digit',
                             hour12: false
                         }}
-                        eventResize={(info) => (withScheduleInfo(onEventResize, info))}
-                        eventDrop={(info) => (withScheduleInfo(onEventDrop, info))}
+                        eventResize={(info) => (withScheduleInfo(onEventChange, info))}
+                        eventDrop={(info) => (withScheduleInfo(onEventChange, info))}
                     />
-                </StyleWrapper>}
+                </StyleWrapper>
+                </React.Fragment>
+                }
         </Box>
     );
 }

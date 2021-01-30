@@ -18,6 +18,7 @@ import {useNeeds} from "../_helpers/needs";
 import ItemsListSecondary from "./items_list_secondary.component";
 import ItemsListTerciary from "./items_list_terciary.component";
 import Skeleton from "@material-ui/lab/Skeleton";
+import {tabContext} from "../_context/tab-context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -61,7 +62,7 @@ class CloseIcon extends React.Component {
     }
 }
 
-function AddDeleteSubresource({  history, defaultSearchBy, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, value, add_message, index, onSubresourceAdded, onSubresourceDeleted, ...other}) {
+function AddDeleteSubresource({  defaultSearchBy, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, add_message,onSubresourceAdded, onSubresourceDeleted, ...other}) {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -76,16 +77,10 @@ function AddDeleteSubresource({  history, defaultSearchBy, parentItemDataService
    const [hasNeeds, NEEDS] = useNeeds();
   const loading = parent_id === null;
   const [items, setItems] = useState([]);
+const navigator = React.useContext(tabContext);
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
+
         <Box p={3}>  {// todo simplify everywhere
         } <Box px={2}>
 
@@ -154,14 +149,14 @@ function AddDeleteSubresource({  history, defaultSearchBy, parentItemDataService
                         onSubresourceDeleted(id);
                     }}
                     onItemClick={(id) => {
-                        history.push("/"+resourceName+"?id="+id);
+                        navigator.goTo("/"+resourceName, id);
+                        // history.push("/"+resourceName+"?id="+id);
                     }}
                 />}
               </div>
             </Box>
         </Box>
-      )}
-    </div>
+
   );
 }
 

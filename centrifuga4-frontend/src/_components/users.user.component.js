@@ -12,6 +12,7 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import UserPerson from "./users.user.userperson.component";
 import UserPermissions from "./users.user.permissions.component";
 import * as PropTypes from "prop-types";
+import TabFrame, {a11yProps} from "./tab";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -37,24 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
 
-
-
-UserPermissions.propTypes = {
-  updateCurrentStudent: PropTypes.func,
-  index: PropTypes.number,
-  value: PropTypes.number,
-  deleteStudent: PropTypes.any,
-  title: PropTypes.any,
-  currentStudent: PropTypes.any,
-  dir: PropTypes.any
-};
 export default function User({currentUserId, deleteUser}) {
   const loading = currentUserId === null;
 
@@ -111,21 +95,20 @@ export default function User({currentUserId, deleteUser}) {
             className={classes.content}
             onChangeIndex={handleChangeIndex}
           >
-            <UserPerson value={value}
-                      index={0}
+            <TabFrame value={value} index={0}>
+            <UserPerson
                       dir={theme.direction}
                       currentStudent={user}
                       updateCurrentStudent={setUser}
                       deleteStudent={deleteUser}
-            />
-
-            <UserPermissions value={value}
-                      index={1}
+            /></TabFrame>
+<TabFrame value={value} index={1}>
+            <UserPermissions
                       dir={theme.direction}
                       currentStudent={user}
                       updateCurrentStudent={setUser}
                       deleteStudent={deleteUser}
-            />
+            /></TabFrame>
 
           </SwipeableViews>
 

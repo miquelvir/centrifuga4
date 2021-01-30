@@ -73,6 +73,7 @@ class ScheduleSchema(BaseScheduleSchema):
 
     course = fields.Nested(CourseSchema(only=("id", "name")), many=False)
     is_base = fields.Bool(dump_only=True)
+    display_name = fields.Str(dump_only=True)
 
 
 class RoomSchema(MySQLAlchemyAutoSchema):

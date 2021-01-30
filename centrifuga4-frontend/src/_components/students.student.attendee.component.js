@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Attendee({ children, setNewStudent, addStudentId, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
+function Attendee({ children, setNewStudent, addStudentId, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
@@ -102,16 +102,8 @@ function Attendee({ children, setNewStudent, addStudentId, value, index, newStud
 
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
+    <React.Fragment>
 
-
-      {value === index && (
         <Box p={3}>
             <Box px={2}>
               {loading?
@@ -326,15 +318,9 @@ function Attendee({ children, setNewStudent, addStudentId, value, index, newStud
               </Box>
             </Box>
         </Box>
-      )}
-    </div>
+    </React.Fragment>
   );
 }
 
-Attendee.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
 
 export default Attendee;

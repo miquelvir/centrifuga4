@@ -15,6 +15,7 @@ import TeacherSchedule from "./teachers.teacher.schedule.component";
 import {useNeeds} from "../_helpers/needs";
 import CoursesDataService from "../_services/courses.service";
 import AddDeleteSubresource from "./subresource_add_delete.component";
+import TabFrame, {a11yProps} from "./tab";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -40,15 +41,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
 
-
-export default function Teacher({currentTeacherId, history, setNewTeacher, addTeacherId, newTeacher, deleteTeacher}) {
+export default function Teacher({currentTeacherId, setNewTeacher, addTeacherId, newTeacher, deleteTeacher}) {
   const loading = currentTeacherId === null;
 
   const errorHandler = useErrorHandler();
@@ -110,31 +104,28 @@ export default function Teacher({currentTeacherId, history, setNewTeacher, addTe
             onChangeIndex={handleChangeIndex}
           >
 
-              <TeacherDetails
-                    value={value}
-                    index={0}
+              <TabFrame value={value} index={0}>
+                  <TeacherDetails
                     newRoom={newTeacher}
                     setNewRoom={setNewTeacher}
                     dir={theme.direction}
                     currentStudent={teacher}
                     updateCurrentStudent={setTeacher}
                     deleteStudent={deleteTeacher}
-            />
+              /></TabFrame>
 
 
-              {hasNeeds([NEEDS.schedules]) && <TeacherSchedule value={value}
-                                index={1}
-                                history={history}
+              {hasNeeds([NEEDS.schedules]) && <TabFrame value={value} index={1}>
+                  <TeacherSchedule
                                 className={classes.tab}
                                 dir={theme.direction}
                                 scheduleIds={teacher === null ? null : teacher['schedules']}
                                 student_id={currentTeacherId}
-              />}
+              /></TabFrame>}
 
               {hasNeeds([NEEDS.courses]) &&
-
+<TabFrame value={value} index={2}>
               <AddDeleteSubresource
-                  history={history}
                   defaultSearchBy="name"
                   parentItemDataService={TeachersCoursesDataService}
                   itemDataService={CoursesDataService}
@@ -159,7 +150,7 @@ export default function Teacher({currentTeacherId, history, setNewTeacher, addTe
                                 courses: teacher['courses'].filter((c) => c !== id)
                             });
                   }}
-              />}
+              /></TabFrame>}
 
 
           </SwipeableViews>

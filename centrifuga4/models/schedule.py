@@ -24,9 +24,16 @@ class Schedule(MyBase):
 
     student_id = db.Column(db.Text, db.ForeignKey("student.id"), nullable=True)
 
+    student = db.relationship("Student", foreign_keys=student_id)
     course = db.relationship(
         "Course", foreign_keys=course_id, back_populates="schedules"
     )
+
+    @hybrid_property
+    def display_name(self) -> str:
+        if self.is_base:
+            return self.course.name
+        return "%s - %s" % (self.course.name, self.student.full_name)
 
     @hybrid_property
     def is_base(self) -> bool:

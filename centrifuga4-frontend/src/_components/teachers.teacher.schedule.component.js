@@ -13,32 +13,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function TeacherSchedule({ value, history, index, scheduleIds, ...other }) {
+function TeacherSchedule({  setSchedulesIds, scheduleIds, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
 
   return (
     <div
-      role="tabpanel"
-      className={classes.root}
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
       {...other}
         style={{height: '100%', flex: 1, minHeight: "70vh" }}
 
     >
         <Scheduler
-            onEventClick={function (clickInfo) {  // todo receive schedule
-                           const schedule = clickInfo.event.extendedProps["schedule"];
-                           if (schedule["is_base"]){
-                               history.push('/courses?id='+schedule['course_id']);
-                           } else {
-                               history.push('/students?id='+schedule['student_id']);
-                           }
-                       }}
             scheduleIds={scheduleIds}
             editable={false}
+            allowView={true}
+            viewUrl={(s) => ['/courses', s.course_id]}
         />
     </div>
   );

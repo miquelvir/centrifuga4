@@ -18,6 +18,7 @@ import CourseLabels from "./courses.course.labels.component";
 import CourseSchedule from "./courses.course.schedule.component";
 import {useNeeds} from "../_helpers/needs";
 import AddDeleteSubresource from "./subresource_add_delete.component";
+import TabFrame, {a11yProps} from "./tab";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -43,15 +44,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
-
-
-export default function Course({currentCourseId, history, setNewCourse, addCourseId, newCourse, deleteCourse}) {
+export default function Course({currentCourseId, setNewCourse, addCourseId, newCourse, deleteCourse}) {
   const loading = currentCourseId === null;
 
   const errorHandler = useErrorHandler();
@@ -118,38 +111,34 @@ const [hasNeeds, NEEDS] = useNeeds();
             onChangeIndex={handleChangeIndex}
           >
 
-              <CourseDetails
-                    value={value}
-                    index={0}
+            <TabFrame value={value} index={0}>  <CourseDetails
                     newCourse={newCourse}
                     setNewCourse={setNewCourse}
                     dir={theme.direction}
                     currentCourse={course}
                     updateCurrentCourse={setCourse}
                     deleteCourse={deleteCourse}
-            />
+            /></TabFrame>
 
-              <CourseLabels value={value}
-                      index={1}
+         <TabFrame value={value} index={1}>     <CourseLabels
                       dir={theme.direction}
                       currentCourse={course}
                       updateCurrentCourse={setCourse}
                       deleteCourse={deleteCourse}
-            />
+         /></TabFrame>
 
-              {hasNeeds([NEEDS.schedules]) && <CourseSchedule value={value}
-                               index={2}
-                               history={history}
-                               className={classes.tab}
-                               dir={theme.direction}
-                               scheduleIds={course === null ? null : course['schedules']}
-                               student_id={currentCourseId}
-              />}
+              {hasNeeds([NEEDS.schedules]) && <TabFrame value={value} index={2}>
+                  <CourseSchedule
+                        setScheduleIds={(ids) => setCourse({...course, schedules: ids})}
+                       className={classes.tab}
+                       dir={theme.direction}
+                       scheduleIds={course === null ? null : course.schedules}
+                       student_id={currentCourseId}
+              /></TabFrame>}
 
               {hasNeeds([NEEDS.students]) &&
 
-              <AddDeleteSubresource
-                  history={history}
+            <TabFrame value={value} index={3}>  <AddDeleteSubresource
                   defaultSearchBy="full_name"
                   parentItemDataService={CourseStudentsDataService}
                   itemDataService={StudentsDataService}
@@ -158,9 +147,7 @@ const [hasNeeds, NEEDS] = useNeeds();
                   searchByOptions={["full_name"]}
                   resourceName={"students"}
                   displayNameField={"full_name"}
-                  value={value}
                   add_message="enroll_student"
-                  index={3}
                   onSubresourceAdded={(id) => {
                     setCourse({
                                        ...course,
@@ -173,7 +160,7 @@ const [hasNeeds, NEEDS] = useNeeds();
                            students: course['students'].filter((s) => s !== id)
                        });
                   }}
-              />
+            /></TabFrame>
 
 
 
@@ -181,8 +168,7 @@ const [hasNeeds, NEEDS] = useNeeds();
 
               {hasNeeds([NEEDS.teachers]) &&
 
-                   <AddDeleteSubresource
-                  history={history}
+                 <TabFrame value={value} index={4}>  <AddDeleteSubresource
                   defaultSearchBy="full_name"
                   parentItemDataService={CourseTeachersDataService}
                   itemDataService={TeachersDataService}
@@ -191,9 +177,7 @@ const [hasNeeds, NEEDS] = useNeeds();
                   searchByOptions={["full_name"]}
                   resourceName={"students"}
                   displayNameField={"full_name"}
-                  value={value}
                   add_message="enroll_student"
-                  index={4}
                   onSubresourceAdded={(id) => {
                     setCourse({
                                        ...course,
@@ -206,7 +190,7 @@ const [hasNeeds, NEEDS] = useNeeds();
                            teachers: course['teachers'].filter((c) => c !== id)
                        });
                   }}
-              />
+                 /></TabFrame>
 
               }
 

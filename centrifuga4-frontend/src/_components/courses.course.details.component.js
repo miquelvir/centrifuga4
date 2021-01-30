@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CourseDetails({ children, addCourseId, setNewCourse, newCourse, value, index, currentCourse, updateCurrentCourse, patchService, deleteCourse, ...other }) {
+function CourseDetails({ children, addCourseId, setNewCourse, newCourse, currentCourse, updateCurrentCourse, patchService, deleteCourse, ...other }) {
   const { t } = useTranslation();
   const loading = currentCourse === null;
   const classes = useStyles();
@@ -163,10 +163,6 @@ const confirm = React.useContext(confirmContext);
 const [hasNeeds, NEEDS] = useNeeds();
   return (
     <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
 
@@ -224,7 +220,7 @@ const [hasNeeds, NEEDS] = useNeeds();
         </DialogActions></form>
       </Dialog>
 
-      {value === index && (
+
         <Box p={3}>
             <Box px={2}>
 
@@ -407,7 +403,6 @@ const [hasNeeds, NEEDS] = useNeeds();
 
             </Box>
         </Box>
-      )}
     </div>
   );
 }

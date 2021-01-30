@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Payments({ children, value, index, title, paymentIds, deletePaymentFromStudent, addPaymentId, student_id, ...other }) {
+function Payments({ children,  title, paymentIds, deletePaymentFromStudent, addPaymentId, student_id, ...other }) {
   const { t } = useTranslation();
   const classes = useStyles();
   const errorHandler = useErrorHandler();
@@ -80,15 +80,7 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
   }, [paymentIds])
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>  {// todo simplify everywhere
+    <Box p={3}>  {// todo simplify everywhere
         } <Box px={2}>
 
               {loading?
@@ -128,8 +120,6 @@ function Payments({ children, value, index, title, paymentIds, deletePaymentFrom
               </div>
             </Box>
         </Box>
-      )}
-    </div>
   );
 }
 

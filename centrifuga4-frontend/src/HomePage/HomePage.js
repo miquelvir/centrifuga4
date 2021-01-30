@@ -16,10 +16,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Routes from "./routes";
-import {BrowserRouter, Link, Redirect, Route, Router} from "react-router-dom";
+import {BrowserRouter, Link, Route} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
-import {createBrowserHistory} from "history";
 import {useNeeds} from "../_helpers/needs";
 import {
     Backdrop,
@@ -32,8 +31,10 @@ import {
 } from "@material-ui/core";
 import {loadingContext} from '../_context/loading-context';
 import {confirmContext} from '../_context/confirm-context';
+import {tabContext} from '../_context/tab-context';
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
@@ -146,8 +147,6 @@ const HomePage = (props) => {
         setCurrentRoute(p.path);
     };
 
-    const history = createBrowserHistory();
-
     const [loading, setLoading] = React.useState(false);
       const handleClose = () => {
         setLoading(false);
@@ -177,11 +176,14 @@ const HomePage = (props) => {
           setConfirmDialog({...confirmDialog, open: false});
       }
 
+      const routerRef = React.createRef();
+
     return (
         <div className={classes.root}>
             <CssBaseline/>
                 <loadingContext.Provider value={{loading: loading, startLoading: () => {setLoading(true)}, stopLoading: () =>{setLoading(false)}}}>
                     <confirmContext.Provider value={{confirm: confirm}}>
+
                             <AppBar
                                 position="fixed"
                                 className={clsx(classes.appBar, {
@@ -194,7 +196,15 @@ const HomePage = (props) => {
                                     open={open}
                                 />
                             </AppBar>
-                            <BrowserRouter history={history} basename="/app/home">
+                            <BrowserRouter ref={routerRef} basename="/app/home">
+                                <tabContext.Provider value={{currentTab: currentRoute, goTo: (res, id=null) => {
+                                setCurrentRoute(res);
+                                if (id === null) {
+                                    routerRef.current.history.push(res);
+                                } else {
+                                    routerRef.current.history.push(`${res}?id=${id}`);
+                                }
+                            }}}>
                                 <Drawer
                                     variant="permanent"
                                     className={clsx(classes.drawer, {
@@ -242,6 +252,7 @@ const HomePage = (props) => {
                                         })}
                                     </main>
                                 </div>
+                                     </tabContext.Provider>
                             </BrowserRouter>
 
                     <Backdrop className={classes.backdrop} open={loading} onClick={handleClose}>
@@ -278,7 +289,8 @@ const HomePage = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-                </confirmContext.Provider>
+
+                    </confirmContext.Provider>
             </loadingContext.Provider>
         </div>
     );

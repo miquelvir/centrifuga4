@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function RoomDetails({ children, addStudentId, setNewRoom, newRoom, value, index, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
+function RoomDetails({ children, addStudentId, setNewRoom, newRoom, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
@@ -103,15 +103,7 @@ const confirm = React.useContext(confirmContext);
     });const [hasNeeds, NEEDS] = useNeeds();
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
 
-      {value === index && (
         <Box p={3}>
             <Box px={2}>
 
@@ -196,8 +188,6 @@ const confirm = React.useContext(confirmContext);
 
             </Box>
         </Box>
-      )}
-    </div>
   );
 }
 

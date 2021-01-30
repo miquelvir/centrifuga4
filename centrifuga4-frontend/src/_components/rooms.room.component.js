@@ -12,6 +12,7 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import RoomSchedule from "./rooms.room.schedule.component";
 import RoomDetails from "./rooms.room.details.component";
 import {useNeeds} from "../_helpers/needs";
+import TabFrame from "./tab";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -45,7 +46,7 @@ function a11yProps(index) {
 }
 
 
-export default function Room({history, setNewRoom, currentRoomId, deleteRoom, newRoom, addRoomId}) {
+export default function Room({setNewRoom, currentRoomId, deleteRoom, newRoom, addRoomId}) {
   const loading = currentRoomId === null;
 
   const errorHandler = useErrorHandler();
@@ -103,25 +104,24 @@ export default function Room({history, setNewRoom, currentRoomId, deleteRoom, ne
             className={classes.content}
             onChangeIndex={handleChangeIndex}
           >
-                   <RoomDetails value={value}
-                      index={0}
+                  <TabFrame value={value} index={0}> <RoomDetails
+
                                 newRoom={newRoom}
                                 setNewRoom={setNewRoom}
                       dir={theme.direction}
                       currentStudent={room}
                       updateCurrentStudent={setRoom}
                       deleteStudent={deleteRoom}
-            />
+                  /></TabFrame>
 
 
-              {hasNeeds([NEEDS.schedules]) && <RoomSchedule value={value}
+              {hasNeeds([NEEDS.schedules]) && <TabFrame value={value} index={1}><RoomSchedule value={value}
                              index={1}
-                             history={history}
                              className={classes.tab}
                              dir={theme.direction}
                              scheduleIds={room === null ? null : room['schedules']}
                              student_id={currentRoomId}
-              />}
+              /></TabFrame>}
 
           </SwipeableViews>
 

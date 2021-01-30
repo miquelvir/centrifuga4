@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Payments({history, ...other}) {
+export default function Payments({...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
   const errorHandler = useErrorHandler();

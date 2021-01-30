@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Users({history, ...other}) {
+export default function Users({...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -161,7 +161,6 @@ export default function Users({history, ...other}) {
         <Grid item xs={8} className={classes.left}>
           <User
             currentUserId={currentUserId}
-            history={history}
             deleteUser={(userId) => {
                 if (userId === currentUserId) setCurrentUserId(null);
 

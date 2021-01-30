@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Teachers({history, ...other}) {
+export default function Teachers({...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -77,7 +77,6 @@ const [hasNeeds, NEEDS] = useNeeds();
             currentTeacherId={currentTeacherId}
             newTeacher={newTeacher}
             setNewTeacher={setNewTeacher}
-            history={history}
             addTeacherId={(id) =>{
                 setCurrentTeacherId(id);
             }}

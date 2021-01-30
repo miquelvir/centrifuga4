@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Rooms({history, ...other}) {
+export default function Rooms({...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -78,7 +78,6 @@ const [hasNeeds, NEEDS] = useNeeds();
             currentRoomId={currentRoomId}
             newRoom={newRoom}
             setNewRoom={setNewRoom}
-            history={history}
             addRoomId={(id) =>{
                 setCurrentRoomId(id);
             }}

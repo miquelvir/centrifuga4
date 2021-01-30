@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function UserPerson({ children, addStudentId, value, index, newStudent, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
+function UserPerson({ children, addStudentId,  newStudent, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
@@ -79,15 +79,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, currentS
     }, true);
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
 
-      {value === index && (
         <Box p={3}>
             <Box px={2}>
 
@@ -101,7 +93,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, currentS
 
                             <div style={{clear: 'both'}}>
                                <Box py={0} >
-                                        <Skeleton variant="text" width={value} height="150px"/>
+                                        <Skeleton variant="text" width={"100%"} height="150px"/>
                                     </Box>
                             </div>
                     </Box>
@@ -129,8 +121,7 @@ function UserPerson({ children, addStudentId, value, index, newStudent, currentS
 
             </Box>
         </Box>
-      )}
-    </div>
+
   );
 }
 

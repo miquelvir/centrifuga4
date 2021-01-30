@@ -3,7 +3,6 @@ import Box from "@material-ui/core/Box";
 import {MenuItem} from "@material-ui/core";
 import PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import StudentGuardianDataService from "../_services/student_guardians.service"
 import {student_guardian_relations} from "../_data/relations"
 import Person from "./students.student.person.component";
@@ -12,19 +11,13 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Tooltip from "@material-ui/core/Tooltip";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
 import * as yup from "yup";
 import DirtyTextField from "./dirtytextfield.component";
 import {emptyGuardian} from "../_data/empty_objects";
 import {useNeeds} from "../_helpers/needs";
 import {confirmContext} from "../_context/confirm-context";
 
-function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
+function Guardian({  studentId, title, guardianId, deleteGuardianId, addGuardianId, deleteNewGuardian, newGuardian=false, ...other }) {
   const { t } = useTranslation();
   const errorHandler = useErrorHandler();
 
@@ -44,15 +37,9 @@ function Guardian({ value, index, studentId, title, guardianId, deleteGuardianId
   }, [guardianId]);
 const confirm = React.useContext(confirmContext);
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
+    <React.Fragment>
 
-      {value === index && (
+
         <Box p={3}>
             <Box px={2}>
 
@@ -108,15 +95,9 @@ const confirm = React.useContext(confirmContext);
 
             </Box>
         </Box>
-      )}
-    </div>
+
+    </React.Fragment>
   );
 }
-
-Guardian.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
 
 export default Guardian;

@@ -17,6 +17,9 @@ import StudentsCourseDataService from "../_services/student_courses.service";
 import CoursesDataService from "../_services/courses.service";
 import {useNeeds} from "../_helpers/needs";
 import AddDeleteSubresource from "./subresource_add_delete.component";
+import TabFrame, {a11yProps} from "./tab";
+import SchedulesDataService from "../_services/schedules.service";
+import Scheduler, {eventFromSchedule} from "./scheduler.component";
 
 const useStyles = makeStyles((theme) => ({
   contentPanel: {
@@ -42,12 +45,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
 
 
 export default function Student({setNewStudent,newStudent,addStudentId, currentStudentId, deleteStudent, ...props}) {
@@ -130,8 +127,8 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
             className={classes.content}
             onChangeIndex={handleChangeIndex}
           >
-            <Attendee value={value}
-                      index={0}
+            <TabFrame value={value} index={0}>
+                <Attendee
                       setNewStudent={setNewStudent}
                       dir={theme.direction}
                       newStudent={newStudent}
@@ -144,19 +141,58 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
                       addNewGuardian={() => {
                         setNewGuardian(true);
                         setValue(4+guardians.length);
-                      }}
-            />
+                      }}/>
+            </TabFrame>
 
-              {hasNeeds([NEEDS.schedules]) && <Schedule value={value}
-                         index={1}
-                         className={classes.tab}
-                         dir={theme.direction}
-                         title={t("attendee")}
-                         scheduleIds={student === null ? null : student['schedules']}
-                         student_id={currentStudentId}
-              />}
-              {hasNeeds([NEEDS.payments]) && <Payments value={value}
-                         index={2}
+              {hasNeeds([NEEDS.schedules]) && <TabFrame value={value} index={1}>
+              <Scheduler
+                    allowDelete={(s) => !s.is_base}
+                    allowView={true}
+                    viewUrl={(s) => ['/courses', s.course_id]}
+                    setScheduleIds={(ids) => setStudent({...student, schedules: ids})}
+                    onEventChange={(info, day_week, start_time, end_time, schedule) => {
+                       const newEvent = info.event;
+                       let body = {};
+                        body['day_week'] = day_week;
+                        body['start_time'] = start_time;
+                        body['end_time'] = end_time;
+
+                        if (schedule["is_base"]) {
+                            body['course_id'] = schedule["course_id"];
+                            body['student_id'] = currentStudentId;
+                            SchedulesDataService
+                                    .post(body)
+                                    .then(...errorHandler({errorOut: true, snackbarSuccess: true}))
+                                    .then(function (res) {
+                                        let calendarApi = info.view.calendar;
+                                        newEvent['is_base'] = false;  // todo needed?
+                                        calendarApi.addEvent(eventFromSchedule(theme, res));
+                                        info.revert();
+                                        setStudent({...student, schedules: [...student.schedules, res.id]})
+                                    }).catch(function(err){
+                                        info.revert();
+                            });
+
+                        } else {
+                            SchedulesDataService
+                                    .patch({id: schedule['id'],
+                                                                body: body,
+                                                                initial_values: schedule})
+                                    .then(...errorHandler({errorOut: true, snackbarSuccess: true}))
+                                    .then(function (res) {
+                                    }).catch(function (err){
+                                        info.revert();
+                                    });
+                        }
+                    }}
+                    scheduleIds={student === null ? null : student['schedules']}
+                    editable={true}
+                    selectable={false}
+                />
+
+              </TabFrame>}
+              {hasNeeds([NEEDS.payments]) && <TabFrame value={value} index={2}>
+                  <Payments
                          paymentIds={student === null ? null : student.payments}
                          addPaymentId={(payment_id) => {
                              setStudent({...student, payments: [...student.payments, payment_id]})
@@ -168,12 +204,11 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
                                  payments: student.payments.filter((p) => p !== payment_id)
                              });
                          }}
-              />}
+              /></TabFrame>}
 
               {hasNeeds([NEEDS.courses]) &&
 
-              <AddDeleteSubresource
-                  history={props.history}
+             <TabFrame value={value} index={3}> <AddDeleteSubresource
                   defaultSearchBy="name"
                   parentItemDataService={StudentsCourseDataService}
                   itemDataService={CoursesDataService}
@@ -183,22 +218,20 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
                   searchByOptions={["name"]}
                   resourceName={"courses"}
                   displayNameField={"name"}
-                  value={value}
                   add_message="enroll_to_course"
-                  index={3}
                   onSubresourceAdded={(id) => {
                     setStudent({...student, courses: [...student["courses"], id]})
                   }}
                   onSubresourceDeleted={(id) => {
                     setStudent({...student, courses: student["courses"].filter(x => x !== id)});
                   }}
-              />
+             /></TabFrame>
               }
 
             {
               guardians && hasNeeds([NEEDS.guardians]) && guardians.map((guardian, index) => (
-                  <Guardian value={value}
-                            index={index+4}
+                  <TabFrame value={value} index={index+4}>
+                      <Guardian
                             key={guardian}
                             dir={theme.direction}
                             guardianId={guardian}
@@ -206,11 +239,11 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
                               setStudent({...student, guardians: student['guardians'].filter((gId) => gId !== id)});
                               setValue(0);
                             }}
-            />
+                  /></TabFrame>
                   ))}
 
-                  <Guardian value={value}
-                        index={4+guardians.length}
+                  <TabFrame value={value} index={4+guardians.length}>
+                      <Guardian
                         dir={theme.direction}
                         newGuardian={true}
                         deleteNewGuardian={() => {
@@ -228,7 +261,7 @@ export default function Student({setNewStudent,newStudent,addStudentId, currentS
                             setStudent({...student, guardians: student['guardians'].filter((gId) => gId !== id)});
                             setValue(0);
                         }}
-              />
+                  /></TabFrame>
 
           </SwipeableViews>
 

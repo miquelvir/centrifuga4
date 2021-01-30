@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CourseLabels({ value, index, currentCourse, updateCurrentCourse, patchService, deleteCourse, ...other }) {
+function CourseLabels({  currentCourse, updateCurrentCourse, patchService, deleteCourse, ...other }) {
   const { t } = useTranslation();
   const loading = currentCourse === null;
   const classes = useStyles();
@@ -79,15 +79,6 @@ function CourseLabels({ value, index, currentCourse, updateCurrentCourse, patchS
     }, true);
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-
-      {value === index && (
         <Box p={3}>
             <Box px={2}>
 
@@ -101,7 +92,7 @@ function CourseLabels({ value, index, currentCourse, updateCurrentCourse, patchS
 
                             <div style={{clear: 'both'}}>
                                <Box py={0} >
-                                        <Skeleton variant="text" width={value} height="150px"/>
+                                        <Skeleton variant="text" width={"100%"} height="150px"/>
                                     </Box>
                             </div>
                     </Box>
@@ -129,8 +120,6 @@ function CourseLabels({ value, index, currentCourse, updateCurrentCourse, patchS
 
             </Box>
         </Box>
-      )}
-    </div>
   );
 }
 

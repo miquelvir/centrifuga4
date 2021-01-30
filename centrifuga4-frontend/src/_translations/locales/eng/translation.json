@@ -212,6 +212,7 @@
   "description": "description",
   "public": "public",
   "private": "private",
+  "view": "view",
   "only_private": "show only private courses",
   "only_enrolled": "show only enrolled students",
   "only_preenrolled": "show only pre-enrolled students",

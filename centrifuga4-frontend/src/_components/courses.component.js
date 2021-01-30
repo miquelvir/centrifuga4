@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Courses({history, ...other}) {
+export default function Courses({...other}) {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -93,7 +93,6 @@ const [hasNeeds, NEEDS] = useNeeds();
             currentCourseId={currentCourseId}
             newCourse={newCourse}
             setNewCourse={setNewCourse}
-            history={history}
             addCourseId={(id) =>{
                 setCurrentCourseId(id);
             }}
