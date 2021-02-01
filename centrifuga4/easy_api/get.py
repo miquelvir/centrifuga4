@@ -53,7 +53,11 @@ def get_pagination_header(pagination, page):
         "_links": {
             "self": {"href": _get_page_url(request.base_url, page, page)},
             "first": {"href": _get_page_url(request.base_url, page, 1)},
-            "last": {"href": _get_page_url(request.url, page, pagination.pages)},
+            "last": {
+                "href": _get_page_url(
+                    request.url, page, pagination.pages if pagination.pages != 0 else 1
+                )
+            },
             "prev": {"href": _get_page_url(request.url, page, pagination.prev_num)}
             if page > 1
             else None,

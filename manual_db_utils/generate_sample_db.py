@@ -180,26 +180,28 @@ def add_courses(
         centrifuga4.db.session.add(c)
 
 
-def add_students():
+def generate_student(idx):
+    return Student(
+        id=Student.generate_new_id(),
+        name="mark%s" % idx,
+        surname1="stuart%s" % idx,
+        surname2="mill%s" % idx,
+        price_term=randint(0, 300),
+        email="msm%s@gmail.com" % idx,
+        birth_date=datetime.date(randint(1970, 2019), randint(1, 12), randint(1, 28)),
+        is_studying=choice((True, True, True, False)),
+        is_working=choice((True, False, False, False)),
+        enrolment_status=choice(("enrolled", "early-unenrolled", "pre-enrolled")),
+        years_in_xamfra=randint(0, 15),
+        image_agreement=choice((True, False)),
+    )
+
+
+def add_students(amount=500):
     students = []
-    for idx in range(500):
+    for idx in range(amount):
         print("    student %s" % idx)
-        s = Student(
-            id=Student.generate_new_id(),
-            name="mark%s" % idx,
-            surname1="stuart%s" % idx,
-            surname2="mill%s" % idx,
-            price_term=randint(0, 300),
-            email="msm%s@gmail.com" % idx,
-            birth_date=datetime.date(
-                randint(1970, 2019), randint(1, 12), randint(1, 28)
-            ),
-            is_studying=choice((True, True, True, False)),
-            is_working=choice((True, False, False, False)),
-            enrolment_status=choice(("enrolled", "early-unenrolled", "pre-enrolled")),
-            years_in_xamfra=randint(0, 15),
-            image_agreement=choice((True, False)),
-        )
+        s = generate_student(idx)
 
         for idx2 in range(randint(0, 3)):
             g = Guardian(

@@ -21,7 +21,7 @@ class Student(Person):
     payment_comments = db.Column(db.Text, nullable=True)
     other_comments = db.Column(db.Text, nullable=True)
     image_agreement = db.Column(db.Boolean, nullable=False, default=False)
-    birth_date = db.Column(db.Date, nullable=False)
+    birth_date = db.Column(db.Date, nullable=True)
 
     enrolment_status = db.Column(db.Text, nullable=False)
     early_unenrolment_date = db.Column(db.Date, nullable=True)

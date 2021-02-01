@@ -134,7 +134,7 @@ def get_students(conn, course_ids):
             price_term=float(row[5]),
             default_payment_method="cash" if bool(row[6]) else "bank-transfer",
             other_comments=n(row[7]),
-            name=n(a[2]),
+            name=a[2],
             surname1=n(a[3]),
             surname2=n(a[4]),
             email=n(a[5]),
@@ -148,7 +148,9 @@ def get_students(conn, course_ids):
             is_studying=True,
             is_working=False,
             education_year=education_year(a[13]),
-            birth_date=datetime.datetime.strptime(a[15], "%Y-%m-%d").date(),
+            birth_date=datetime.datetime.strptime(a[15], "%Y-%m-%d").date()
+            if n(a[15])
+            else None,
             country_of_origin=country_to_code(n(a[16])) if n(a[16]) else None,
         )
 
@@ -315,7 +317,7 @@ def country_to_code(country):
         "eslovàquia": "sk",
         "eslovènia": "si",
         "espanya": "es",
-        '"estats units': "us",
+        "estats units": "us",
         "estònia": "ee",
         "eswatini": "sz",
         "etiòpia": "et",

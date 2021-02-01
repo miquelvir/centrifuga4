@@ -73,6 +73,15 @@ export default function PaymentCard({ payment, updatePayment, deletePayment, new
 
   const confirm = React.useContext(confirmContext);
 const loadingCtx = React.useContext(loadingContext);
+
+const sendReceipt = (id) => {
+     loadingCtx.startLoading();
+      sendReceiptEmail(id)
+          .then(...errorHandler({snackbarSuccess:true}))
+          .finally(() => {
+              loadingCtx.stopLoading();
+          });
+}
   const formik = useNormik(!newPayment, {
         initialValues: payment,
         validationSchema: yup.object({method: one_of(t, payment_methods),
@@ -89,11 +98,13 @@ const loadingCtx = React.useContext(loadingContext);
                         .then(...errorHandler({snackbarSuccess:true}))
                         .then(function (res) {
                             addPaymentId(res['id']);
+                            confirm.confirm("send_receipt", () => sendReceipt(res['id']))
                             }).catch(function (err){
                                 setStatus(true);
                             })
                         .finally(() => {
                                 setSubmitting(false);
+
                         });
                 } else {
                     PaymentsDataService.patch({
@@ -174,14 +185,7 @@ const loadingCtx = React.useContext(loadingContext);
         </Tooltip>}
             {hasNeeds([NEEDS.paymentReceipts, NEEDS.send_email]) &&
         <Tooltip title={t("send_receipt")} aria-label={t("send_receipt")}>
-          <IconButton  disabled={loadingCtx.loading} aria-label={t("send_receipt")} onClick={(e) => {
-              loadingCtx.startLoading();
-              sendReceiptEmail(payment["id"])
-                  .then(...errorHandler({snackbarSuccess:true}))
-                  .finally(() => {
-                      loadingCtx.stopLoading();
-                  });
-          }}>
+          <IconButton  disabled={loadingCtx.loading} aria-label={t("send_receipt")} onClick={() => sendReceipt(payment['id'])}>
             <SendIcon />
           </IconButton>
         </Tooltip>}
