@@ -10,7 +10,7 @@ from centrifuga4.auth_auth.resource_need import (
     PaymentsPermission,
 )
 from centrifuga4.blueprints.api.errors import NotFound
-from centrifuga4.models import Payment, Student
+from centrifuga4.models import Payment
 from email_queue.emails.payment_receipt_email import my_job
 
 

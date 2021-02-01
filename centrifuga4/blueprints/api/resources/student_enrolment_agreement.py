@@ -3,6 +3,7 @@ import io
 from flasgger import SwaggerView
 from flask import current_app
 from flask_restful import Resource
+from werkzeug.exceptions import BadRequest
 
 from centrifuga4.auth_auth.action_need import PostPermission
 from centrifuga4.auth_auth.requires import Requires
@@ -23,6 +24,8 @@ class StudentsEnrollmentAgreementRes(
 
         if not student:
             raise NotFound("resource with the given id not found", requestedId=id_)
+        if not student.price_term:
+            raise BadRequest("no price per term set")
 
         pdf = generate_enrolment_agreement_pdf(
             student.id, backend_server_address=current_app.config["BACKEND_SERVER_URL"]
