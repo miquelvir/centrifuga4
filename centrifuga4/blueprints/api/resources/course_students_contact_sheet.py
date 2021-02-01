@@ -113,7 +113,7 @@ def write_students(students, spamwriter):
                 ", ".join([g.id for g in student.payments]),
                 ", ".join([p.user_representation() for p in student.payments]),
                 sum([p.quantity for p in student.payments]),
-                3 * student.price_term,
+                student.annual_price,
                 ", ".join([c.id for c in student.courses]),
                 ", ".join([c.user_representation() for c in student.courses]),
                 ", ".join(student.official_notification_emails),

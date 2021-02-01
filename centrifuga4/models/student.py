@@ -37,6 +37,10 @@ class Student(Person):
     )
 
     @hybrid_property
+    def annual_price(self):
+        return self.price_term * 3 if self.price_term else None
+
+    @hybrid_property
     def official_notification_emails(self) -> Set[str]:
         emails = set()
         for guardian in self.guardians:

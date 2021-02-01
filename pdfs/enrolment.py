@@ -28,12 +28,14 @@ def generate_enrolment_agreement_pdf(
         student_name=student.full_name.title(),
         courses=[cs.dump(c) for c in student.courses],
         paid_price=student.price_term,
-        anual_paid_price=student.price_term * 3,
+        anual_paid_price=student.annual_price,
         total_price=total_price,
-        grant=total_price > student.price_term,
+        grant=total_price > student.price_term if student.price_term else None,
         grant_percentage=round(student.price_term / total_price * 100, 2)
         if total_price != 0
-        else 0,
+        else 0
+        if student.price_term
+        else None,
         datetime=datetime.date(datetime.now()),
         student=StudentSchema().dump(student),
         guardians=[gs.dump(g) for g in student.guardians],

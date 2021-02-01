@@ -19,7 +19,7 @@ def generate_grant_letter_pdf(
     student = Student.query.filter(Student.id == student_id).one_or_none()
     if not student:
         raise ValueError("student %s not found" % student_id)
-    total_price = sum([c.price_term for c in student.courses])
+    total_price = sum([c.price_term if c.price_term else 0 for c in student.courses])
     cs = CourseSchema()
     pdf_content = templater.render_template(
         "grant_letter.html",
@@ -27,14 +27,16 @@ def generate_grant_letter_pdf(
         student_name=student.full_name.title(),
         courses=[cs.dump(c) for c in student.courses],
         paid_price=student.price_term,
-        anual_paid_price=student.price_term * 3,
+        anual_paid_price=student.annual_price,
         total_price=total_price,
-        grant=total_price > student.price_term,
+        grant=total_price > student.price_term if student.price_term else None,
         grant_percentage=round(
             (total_price - student.price_term) / total_price * 100, 2
         )
         if total_price != 0
-        else 0,
+        else 0
+        if student.price_term
+        else None,
         datetime=datetime.date(datetime.now()),
     )
     pdf = pdfkit.from_string(pdf_content, False, configuration=get_config())
