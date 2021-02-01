@@ -27,6 +27,8 @@
   "chose_list_dates": "escull el primer i l'últim dia pels quals vulguis crear les llistes",
   "user": "usuari",
   "teacher": "professor",
+  "confirm_link_to_room": "Segur que vols afegir aquesta sala al curs?",
+  "link_room": "afegir sala al curs",
   "pre_enrolment_date": "data de prematrícula",
   "enrolment_date": "data de matrícula",
   "early_unenrolment_date": "data de baixa",

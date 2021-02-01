@@ -10,6 +10,8 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import CoursesDataService from "../_services/courses.service";
 import StudentsDataService from "../_services/students.service";
 import TeachersDataService from "../_services/teachers.service";
+import CourseRoomsDataService from "../_services/course_rooms.service";
+import RoomsDataService from "../_services/rooms.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import CourseStudentsDataService from "../_services/course_students.service";
 import CourseTeachersDataService from "../_services/course_teachers.service";
@@ -101,6 +103,9 @@ const [hasNeeds, NEEDS] = useNeeds();
                    { !newCourse && hasNeeds([NEEDS.teachers]) &&
                   <Tab label={t("teachers")} {...a11yProps(4)} />}
 
+                   { !newCourse && hasNeeds([NEEDS.rooms]) &&
+                  <Tab label={t("rooms")} {...a11yProps(5)} />}
+
                 </Tabs>
               </AppBar>
           <SwipeableViews
@@ -188,6 +193,34 @@ const [hasNeeds, NEEDS] = useNeeds();
                     setCourse({
                            ...course,
                            teachers: course['teachers'].filter((c) => c !== id)
+                       });
+                  }}
+                 /></TabFrame>
+
+              }
+
+               {hasNeeds([NEEDS.rooms]) &&
+
+                 <TabFrame value={value} index={5}>  <AddDeleteSubresource
+                  defaultSearchBy="name"
+                  parentItemDataService={CourseRoomsDataService}
+                  itemDataService={RoomsDataService}
+                  add_message_confirm="confirm_link_to_room"
+                  parent_id={currentCourseId}
+                  searchByOptions={["name"]}
+                  resourceName={"rooms"}
+                  displayNameField={"name"}
+                  add_message="link_room"
+                  onSubresourceAdded={(id) => {
+                    setCourse({
+                                       ...course,
+                                       rooms: [...course['rooms'], id]
+                                   })
+                  }}
+                  onSubresourceDeleted={(id) => {
+                    setCourse({
+                           ...course,
+                           rooms: course['rooms'].filter((c) => c !== id)
                        });
                   }}
                  /></TabFrame>

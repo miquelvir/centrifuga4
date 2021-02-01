@@ -212,6 +212,8 @@
   "description": "description",
   "public": "public",
   "private": "private",
+  "confirm_link_to_room": "Are you sure you want to link this room to the course?",
+  "link_room": "link room to course",
   "view": "view",
   "pre_enrolment_date": "pre-enrolment date",
   "enrolment_date": "enrolment date",
