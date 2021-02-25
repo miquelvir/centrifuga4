@@ -221,6 +221,7 @@
         ____/____/________ [DD/MM/YYYY], Barcelona<br>
         <br><br><br><br>
         signatura / firma / signature, (nom / nombre / name, cognoms / apellidos / surnames, DNI / DNI / ID)<br>
+    {% if student.is_underage %} [alumne / alumno / student] {% else %} [pare, mare o tutor legal / padre, madre o tutor legal / father, mother or legal guardian] {% endif %} <br>
         <hr>
         </div>
 

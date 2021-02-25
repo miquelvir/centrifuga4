@@ -16,7 +16,7 @@ import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import Divider from "@material-ui/core/Divider";
 import {useNeeds} from "../_helpers/needs";
-import {safe_email} from "../_yup/validators";
+import {safe_email_required} from "../_yup/validators";
 import {confirmContext} from "../_context/confirm-context";
 import Button from "@material-ui/core/Button";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -62,7 +62,7 @@ const confirm = React.useContext(confirmContext);
     const formik = useNormik(!newRoom, {
         initialValues: initialValues,
         validationSchema: yup.object({
-            email: safe_email(t),  // todo
+            email: safe_email_required(t),  // todo
             name: yup.string().required(t("name_required")),
         }),
         enableReinitialize: true,

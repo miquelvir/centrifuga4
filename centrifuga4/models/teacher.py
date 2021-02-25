@@ -1,3 +1,5 @@
+import uuid
+
 from flask import current_app
 from sqlalchemy import case
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -29,7 +31,7 @@ class Teacher(MyBase):
     city = db.Column(db.Text, nullable=True)
     dni = db.Column(db.Text, nullable=True)
 
-    calendar_id = db.Column(db.Text, nullable=False)
+    calendar_id = db.Column(db.Text, nullable=False, default=lambda: str(uuid.uuid4()))
 
     full_name = column_property(
         case([(name != None, name + " ")], else_="")

@@ -1,3 +1,5 @@
+import uuid
+
 from flask import current_app
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import column_property
@@ -42,7 +44,7 @@ class Course(MyBase):
     price_term = db.Column(db.Float, nullable=False, default=60)
     is_published = db.Column(db.Boolean, nullable=False, default=False)
 
-    calendar_id = db.Column(db.Text, nullable=False)
+    calendar_id = db.Column(db.Text, nullable=False, default=lambda: str(uuid.uuid4()))
 
     rooms = db.relationship("Room", secondary="room_course", back_populates="courses")
     teachers = db.relationship(

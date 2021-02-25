@@ -88,6 +88,7 @@ class PersonSchema(MySQLAlchemyAutoSchema):
         model = models.Person
 
     full_name = fields.Str(dump_only=True)
+    is_underage = fields.Bool(dump_only=True)
     age = fields.Int(dump_only=True)
 
 

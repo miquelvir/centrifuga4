@@ -19,7 +19,7 @@ import {useNormik} from "../_helpers/normik";
 import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import {useNeeds} from "../_helpers/needs";
-import {safe_email} from "../_yup/validators";
+import {safe_email_required} from "../_yup/validators";
 import {confirmContext} from "../_context/confirm-context";
 
 
@@ -63,7 +63,7 @@ const deleteFullUser = () => {
     const formik = useNormik(true, {
         initialValues: initialValues,
         validationSchema: yup.object({
-            email: safe_email,
+            email: safe_email_required,
             name: yup.string().required(t("name_required")),
         }),
         enableReinitialize: true,

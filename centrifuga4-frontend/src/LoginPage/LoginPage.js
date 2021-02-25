@@ -17,7 +17,7 @@ import {passwordResetService} from "../_services/password-reset.service";
 import {useSnackbar} from "notistack";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
-import {safe_username} from "../_yup/validators";
+import {safe_username_required} from "../_yup/validators";
 import ReCAPTCHA from "react-google-recaptcha";
 import {PUBLIC_URL, RECAPTCHA} from "../config";
 import TranslateButton from "../_components/translate_button.component";
@@ -79,7 +79,7 @@ const LoginPage = (props) => {
             password: ''
         },
         validationSchema: yup.object({
-            username: safe_username(t),
+            username: safe_username_required(t),
             password: yup.string().required(t("password_required"))
         }),
         enableReinitialize: true,

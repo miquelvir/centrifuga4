@@ -1,6 +1,6 @@
 from base64 import b64encode
 import centrifuga4
-from centrifuga4.models import Student, Guardian, UserSchema
+from centrifuga4.models import Student, Guardian
 from centrifuga4.models import User
 from .test_centrifuga4 import client
 from passlib.apps import custom_app_context as pwd_context

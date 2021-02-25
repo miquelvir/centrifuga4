@@ -40,7 +40,7 @@ import ThemeButton from "../_components/theme_button.component";
 import Link from "@material-ui/core/Link";
 import TranslateButton from "../_components/translate_button.component";
 import {preEnrolmentService} from "../_services/pre-enrolment.service";
-import {safe_email} from "../_yup/validators";
+import {safe_email, safe_email_required} from "../_yup/validators";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -163,7 +163,7 @@ const PreEnrolmentPage = (props) => {
       };
 
       useOnMount(() => {
-          i18next.changeLanguage('cat').then();
+          i18next.changeLanguage('cat').then();  // set catalan for all visiting families as default
          preEnrolmentService.getCourses()
              .then(...errorHandler({}))
              .then(courses => {
@@ -272,10 +272,6 @@ __person1__surname1: '',
                                                   is: true,
                                                   then: yup.string().required(required)
                                                 }),
-            __person1__education_entity: yup.string(required).when('__person1__is_studying', {
-                                                  is: true,
-                                                  then: yup.string().required(required)
-                                                }),
             __person1__education_year: yup.string(required).when('__person1__is_studying', {
                                                   is: true,
                                                   then: yup.string().required(required)
@@ -372,7 +368,6 @@ __person1__surname1: '',
                     guardian['is_studying'] = values[prefix+"is_studying"];
                     guardian['is_working'] = values[prefix+"is_working"];
                     guardian['education_entity'] = values[prefix+"education_entity"];
-                    guardian['education_year'] = values[prefix+"education_year"];
                     guardian['career'] = values[prefix+"career"];
                     guardian['relation'] = values[prefix+"relation"];
 
@@ -404,7 +399,7 @@ __person1__surname1: '',
 
  useEffect(() => {
           let labels = [];
-          if (!isUnderage(formik.values['birth_date']) ){
+          if (!isUnderage(formik.values['birth_date']) || formik.values['is_working'] ){
               labels.push("adult");
           }
           if (formik.values['is_studying']){
@@ -631,7 +626,7 @@ La nostra política protecció de dades es basa en que:
                                 <MenuItem value={false}>{t("no")}</MenuItem>
                             </DirtyTextField>
                             <DirtyTextField
-                                label={t("school_university")}
+                                label={t("education_entity")}
                                 style={{flex: 2}}
                                 formik={formik}
                                 name="education_entity"
@@ -786,23 +781,12 @@ La nostra política protecció de dades es basa en que:
                                 <MenuItem value={false}>{t("no")}</MenuItem>
                             </DirtyTextField>
                             <DirtyTextField
-                                label={t("school_university")}
-                                style={{flex: 2}}
+                                label={t("education_entity")}
+                                style={{flex: 4}}
                                 formik={formik}
                                 name={"__person" + (activeStep-1) + "__education_entity"}
                                 noDirty={true}
                             />
-                            <DirtyTextField
-                                label={t("education_year")}
-                                style={{flex: 2}}
-                                noDirty={true}
-                                name={"__person" + (activeStep-1) + "__education_year"}
-                                formik={formik}
-                                select>
-                                {education_years.map((level) => (
-                                    <MenuItem key={level} value={level}>{t(level)}</MenuItem>
-                                ))}
-                            </DirtyTextField>
                         </Box>
 
                         <Box className={[classes.line, classes.composite]}>

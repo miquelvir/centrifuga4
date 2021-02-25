@@ -80,8 +80,8 @@ export default function DirtyCountrySelect({formik, noDirty, name, label, ...tex
       onBlur={formik.handleBlur}
       renderOption={(option) => (
         <React.Fragment key={option.code}>
-          <span>{countryToFlag(option.code)}</span>
-          {option.code !== ""? t(option.code): "-"} {option.code !== ""? "("+option.code+") +"+option.phone: ""}
+          <span>{option.code !== "" && option.code !== "OTHER"? countryToFlag(option.code): ""}</span>
+          {option.code !== "" && option.code !== "OTHER"? t(option.code): t(option.label)} {option.code !== "" && option.code !== "OTHER"? "("+option.code+") +"+option.phone: ""}
         </React.Fragment>
       )}
 

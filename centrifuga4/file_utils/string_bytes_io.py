@@ -5,7 +5,7 @@ from flask import make_response, send_file
 
 
 def string_io_to_bytes_io(string_io: io.StringIO, encoding="utf-8") -> io.BytesIO:
-    """ converts string io to bytes io
+    """converts string io to bytes io
 
     :returns the BytesIO at the start of the file
     """

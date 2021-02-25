@@ -15,7 +15,7 @@ import {passwordResetService} from "../_services/password-reset.service";
 import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
-import {safe_password, safe_password_repetition, safe_username} from "../_yup/validators";
+import {safe_password, safe_password_repetition, safe_username_required} from "../_yup/validators";
 import {PUBLIC_URL, RECAPTCHA} from "../config";
 import ReCAPTCHA from "react-google-recaptcha";
 import TranslateButton from "../_components/translate_button.component";
@@ -71,7 +71,7 @@ const ResetPage = (props) => {
             password2: ''
         },
         validationSchema: yup.object({
-            email: safe_username(t),
+            email: safe_username_required(t),
             password: safe_password(t),
             password2: safe_password_repetition(t)
         }),

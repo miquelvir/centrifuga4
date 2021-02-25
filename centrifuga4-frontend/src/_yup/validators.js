@@ -29,12 +29,17 @@ export const safe_password_repetition = (t) => (
 
 const safe_username_email = (t) => (
     yup.string()
-        .required(t("email_required"))
         .email(t("invalid_email"))
         .matches(no_plus, t("no_plus"))
 )
 
-export const safe_username = safe_username_email;
+const safe_username_email_required = (t) => (
+    safe_username_email(t).required(t("email_required"))
+);
+
+
+export const safe_username_required = safe_username_email_required;
+export const safe_email_required = safe_username_email_required;
 export const safe_email = safe_username_email;
 
 export const one_of = (t, options) => yup.string().required(t('field_required'))

@@ -15,7 +15,7 @@ import {useSnackbar} from "notistack";
 import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
 import {useOnMount} from "../_helpers/on-mount";
-import {safe_password_repetition, safe_email, safe_password, safe_username} from "../_yup/validators";
+import {safe_password_repetition, safe_email_required, safe_password, safe_username_required} from "../_yup/validators";
 import TranslateButton from "../_components/translate_button.component";
 import ThemeButton from "../_components/theme_button.component";
 import {PUBLIC_URL} from "../config";
@@ -64,8 +64,8 @@ const SignupPage = (props) => {
             password2: ''
         },
         validationSchema: yup.object({  // todo translate
-            username: safe_username(t),
-            email: safe_email(t),
+            username: safe_username_required(t),
+            email: safe_email_required(t),
             password: safe_password(t),
             password2: safe_password_repetition(t),
             name: yup.string().required(t("name_required")),
