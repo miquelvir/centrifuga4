@@ -227,7 +227,7 @@ class CourseContactSheet(Resource, SwaggerView):
 
         with io.StringIO() as proxy:
 
-            spamwriter = csv.writer(proxy)
+            spamwriter = csv.writer(proxy, encoding="utf-8")
             spamwriter.writerow(["id >", course.id])
             spamwriter.writerow(["nom / nombre / name >", course.name])
             spamwriter.writerow(

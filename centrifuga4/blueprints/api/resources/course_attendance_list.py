@@ -72,25 +72,15 @@ class CoursesAttendanceListRes(Resource, SwaggerView):
         )
 
         with io.StringIO() as proxy:
-            spamwriter = csv.writer(proxy)
-            spamwriter.writerow(["id >", course.id])
-            spamwriter.writerow(["nom / nombre / name >", course.name])
-            spamwriter.writerow(
+            writer = csv.writer(proxy, encoding="utf-8")
+            writer.writerow(["id >", course.id])
+            writer.writerow(["nom / nombre / name >", course.name])
+            writer.writerow(
                 ["descripció / descripción / description >", course.description]
             )
-            spamwriter.writerow(
-                [
-                    "id",
-                    "nom / nombre / name",
-                    "primer cognom / primer apellido / first surname",
-                    "segon cognom / segundo apellido / second surname",
-                ]
-                + working_days
-            )
+            writer.writerow(["nom / nombre / name"] + working_days)
             for student in course.students:
                 if student.is_enrolled:
-                    spamwriter.writerow(
-                        [student.id, student.name, student.surname1, student.surname2]
-                    )
+                    writer.writerow([student.full_name])
 
             return make_response_with_file(proxy, filename, "text/csv")

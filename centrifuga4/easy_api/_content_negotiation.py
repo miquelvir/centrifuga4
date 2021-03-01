@@ -37,7 +37,7 @@ class Flattener:
         matrix, keys = self.flatten(src, _result)
         keys = list(keys)
         keys.sort()
-        dict_writer = csv.DictWriter(proxy, keys)
+        dict_writer = csv.DictWriter(proxy, keys, encoding="utf-8")
         dict_writer.writeheader()
         dict_writer.writerows(matrix)
 

@@ -1,6 +1,5 @@
 export const countries = [
-  { code: '', label: "empty", phone: '-'},
-  { code: 'OTHER', label: 'other', phone: '-'},
+    { code: 'ES', label: 'Spain', phone: '34' },
   { code: 'AD', label: 'Andorra', phone: '376' },
   { code: 'AE', label: 'United Arab Emirates', phone: '971' },
   { code: 'AF', label: 'Afghanistan', phone: '93' },
@@ -67,7 +66,6 @@ export const countries = [
   { code: 'EG', label: 'Egypt', phone: '20' },
   { code: 'EH', label: 'Western Sahara', phone: '212' },
   { code: 'ER', label: 'Eritrea', phone: '291' },
-  { code: 'ES', label: 'Spain', phone: '34' },
   { code: 'ET', label: 'Ethiopia', phone: '251' },
   { code: 'FI', label: 'Finland', phone: '358' },
   { code: 'FJ', label: 'Fiji', phone: '679' },
@@ -249,6 +247,8 @@ export const countries = [
   { code: 'ZA', label: 'South Africa', phone: '27' },
   { code: 'ZM', label: 'Zambia', phone: '260' },
   { code: 'ZW', label: 'Zimbabwe', phone: '263' },
+    { code: '', label: "empty", phone: '-'},
+    { code: 'OTHER', label: 'other', phone: '-'}
 ];
 
 export default countries;
