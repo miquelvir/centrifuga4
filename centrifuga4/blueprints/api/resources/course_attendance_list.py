@@ -72,7 +72,7 @@ class CoursesAttendanceListRes(Resource, SwaggerView):
         )
 
         with io.StringIO() as proxy:
-            writer = csv.writer(proxy, encoding="utf-8")
+            writer = csv.writer(proxy)
             writer.writerow(["id >", course.id])
             writer.writerow(["nom / nombre / name >", course.name])
             writer.writerow(
@@ -83,4 +83,6 @@ class CoursesAttendanceListRes(Resource, SwaggerView):
                 if student.is_enrolled:
                     writer.writerow([student.full_name])
 
-            return make_response_with_file(proxy, filename, "text/csv")
+            return make_response_with_file(
+                proxy, filename, "text/csv", encoding="utf-8-sig"
+            )

@@ -37,7 +37,7 @@ class Flattener:
         matrix, keys = self.flatten(src, _result)
         keys = list(keys)
         keys.sort()
-        dict_writer = csv.DictWriter(proxy, keys, encoding="utf-8")
+        dict_writer = csv.DictWriter(proxy, keys)
         dict_writer.writeheader()
         dict_writer.writerows(matrix)
 
@@ -111,7 +111,7 @@ def produces(_accepted_mimetypes: Tuple[str, ...] = None):
 
                 f = Flattener().flatten_to_csv(_result, result["data"])
 
-                return make_response_with_file(f, filename, match)
+                return make_response_with_file(f, filename, match, encoding="utf-8-sig")
             else:
                 raise NotImplementedError("mimeType cast not implemented")
 

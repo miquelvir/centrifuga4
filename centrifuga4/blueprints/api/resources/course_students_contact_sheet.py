@@ -227,7 +227,7 @@ class CourseContactSheet(Resource, SwaggerView):
 
         with io.StringIO() as proxy:
 
-            spamwriter = csv.writer(proxy, encoding="utf-8")
+            spamwriter = csv.writer(proxy)
             spamwriter.writerow(["id >", course.id])
             spamwriter.writerow(["nom / nombre / name >", course.name])
             spamwriter.writerow(
@@ -238,4 +238,6 @@ class CourseContactSheet(Resource, SwaggerView):
             spamwriter.writerow(["students"])
             write_students(course.students, spamwriter)
 
-            return make_response_with_file(proxy, filename, "text/csv")
+            return make_response_with_file(
+                proxy, filename, "text/csv", encoding="utf-8-sig"
+            )

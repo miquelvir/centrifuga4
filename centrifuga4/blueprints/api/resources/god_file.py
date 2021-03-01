@@ -32,7 +32,9 @@ class GodFile(Resource, SwaggerView):
         )
 
         with io.StringIO() as proxy:
-            spamwriter = csv.writer(proxy, encoding="utf-8")
+            spamwriter = csv.writer(proxy)
             write_students(students, spamwriter)
 
-            return make_response_with_file(proxy, filename, "text/csv")
+            return make_response_with_file(
+                proxy, filename, "text/csv", encoding="utf-8-sig"
+            )
