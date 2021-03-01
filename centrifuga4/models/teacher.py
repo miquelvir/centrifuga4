@@ -43,7 +43,7 @@ class Teacher(MyBase):
     def calendar_url(self):
         return (
             current_app.config["BACKEND_SERVER_URL"]
-            + "/calendars/v1/courses/"
+            + "/calendars/v1/teachers/"
             + self.id
             + "/"
             + self.calendar_id
