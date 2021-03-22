@@ -18,7 +18,6 @@ import {useErrorHandler} from "../_helpers/handle-response";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import ExportSearchChip from "./ExportSearchChip.component";
-import DeleteIcon from "@material-ui/icons/Delete";
 import {useNeeds} from "../_helpers/needs";
 
 const useStyles = makeStyles((theme) => ({

@@ -44,5 +44,8 @@ export const allNeeds = [
     }, {
         name: 'payments-receipts',
         description: 'can-operate-with-payment-receipts'
+    }, {
+        name: 'attendance',
+        description: 'can-register-attendance'
     }
 ];

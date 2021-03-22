@@ -54,6 +54,19 @@ class Student(Person):
         return emails
 
     @hybrid_property
+    def all_emails(self) -> Set[str]:
+        emails = self.contact_emails
+        emails.add(self.email)
+        return emails
+
+    @hybrid_property
+    def contact_emails(self) -> Set[str]:
+        emails = set()
+        for guardian in self.guardians:
+            emails.add(guardian.email)
+        return emails
+
+    @hybrid_property
     def is_enrolled(self) -> bool:
         return self.enrolment_status == "enrolled"
 

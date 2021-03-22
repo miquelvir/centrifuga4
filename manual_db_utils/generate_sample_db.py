@@ -48,6 +48,9 @@ need_users = Need(id="users", description="can use users resource", type="res")
 need_recipes = Need(
     id="payments-receipts", description="can use the recipes of payments", type="res"
 )
+need_attendance = Need(
+    id="attendance", description="can mark attendance on classes", type="res"
+)
 all_needs = (
     need_get,
     need_patch,
@@ -64,6 +67,7 @@ all_needs = (
     need_teachers,
     need_users,
     need_recipes,
+    need_attendance,
 )
 
 

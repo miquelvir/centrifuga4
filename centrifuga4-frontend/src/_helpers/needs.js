@@ -21,7 +21,8 @@ export const NEEDS = {
         schedules: "schedules",
         teachers: "teachers",
         users: "users",
-        paymentReceipts: "payments-receipts"
+        paymentReceipts: "payments-receipts",
+        attendance: "attendance"
     };
 
 

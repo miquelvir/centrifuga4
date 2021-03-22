@@ -26,26 +26,26 @@ class EmailSender:
     def __init__(
         self,
         domain: str = config.SMTP_DOMAIN,
-        tls_port: int = config.SMTP_TLS_PORT,
+        port: int = config.SMTP_TLS_PORT,
         user: str = config.SMTP_USER,
         from_: str = config.SMTP_FROM_EMAIL,
         password: str = config.SMTP_PASSWORD,
         reply_to: str = config.SMTP_REPLY_TO,
+        use_ssl: bool = True,
     ):
         """ initialise an ssl context, and an SMTP connection using the previous context; login using credentials """
-
         self._from = (
             from_ if from_ else user
         )  # save from email, defaults to user if not given
         self._reply_to = reply_to if reply_to else user  # defaults to user if not given
 
-        self._context = ssl.create_default_context()  # ssl context
-        self._server = smtplib.SMTP_SSL(
-            domain, tls_port, context=self._context
-        )  # smtp connection
-
-        # add context to the server (TLS protection)
-        # self._start_tls()
+        if use_ssl:
+            self._context = ssl.create_default_context()  # ssl context
+            self._server = smtplib.SMTP_SSL(
+                domain, port, context=self._context
+            )  # smtp connection
+        else:
+            self._server = smtplib.SMTP(domain, port)  # smtp connection
 
         # login with credentials
         try:
@@ -55,10 +55,21 @@ class EmailSender:
 
         log.debug(
             "started smtp connection with server...\n  domain: {domain}\n  TLS port: {port}\n  user: {user}\n  from "
-            "email: {from_}".format(
-                domain=domain, port=tls_port, user=user, from_=from_
-            )
+            "email: {from_}".format(domain=domain, port=port, user=user, from_=from_)
         )
+
+    @classmethod
+    def init_bulk(
+        cls,
+        domain: str = config.SMTP_BULK_DOMAIN,
+        port: int = config.SMTP_BULK_PORT,
+        user: str = config.SMTP_BULK_USER,
+        from_: str = config.SMTP_BULK_FROM_EMAIL,
+        password: str = config.SMTP_BULK_PASSWORD,
+        reply_to: str = config.SMTP_BULK_REPLY_TO,
+        use_ssl: bool = False,
+    ):
+        return cls(domain, port, user, from_, password, reply_to, use_ssl)
 
     def _start_tls(self):
         """ start TLS in the server connection using context """
