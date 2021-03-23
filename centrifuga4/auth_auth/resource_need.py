@@ -22,6 +22,7 @@ SchedulesNeed = partial(ResourceNeed, "schedules")
 StudentsNeed = partial(ResourceNeed, "students")
 TeachersNeed = partial(ResourceNeed, "teachers")
 UsersNeed = partial(ResourceNeed, "users")
+AttendanceNeed = partial(ResourceNeed, "attendance")
 
 
 """
@@ -77,3 +78,8 @@ class RoomsPermission(Permission):
 class SchedulesPermission(Permission):
     def __init__(self):
         super().__init__(SchedulesNeed())
+
+
+class AttendancePermission(Permission):
+    def __init__(self):
+        super().__init__(AttendanceNeed())

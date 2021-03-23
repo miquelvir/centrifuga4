@@ -51,6 +51,7 @@ class CourseSchema(MySQLAlchemyAutoSchema):
 
     base_schedules = fields.Nested(BaseScheduleSchema, many=True)
     calendar_url = fields.Str(dump_only=True)
+    attendances = fields.Str(dump_only=True, load_only=True)
 
 
 class PublicCourseSchema(CourseSchema):
@@ -107,6 +108,7 @@ class StudentSchema(PersonSchema):
         model = models.Student
 
     schedules = fields.Pluck(ScheduleSchema, "id", many=True)
+    attendances = fields.Str(dump_only=True, load_only=True)
 
 
 class PaymentSchema(MySQLAlchemyAutoSchema):
@@ -134,3 +136,8 @@ class TeacherSchema(MySQLAlchemyAutoSchema):
     full_name = fields.Str(dump_only=True)
     age = fields.Int(dump_only=True)
     calendar_url = fields.Str(dump_only=True)
+
+
+class AttendanceSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
+        model = models.Attendance

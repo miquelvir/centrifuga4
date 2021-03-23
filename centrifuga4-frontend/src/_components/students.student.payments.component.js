@@ -8,7 +8,6 @@ import PaymentsDataService from "../_services/payments.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import PaymentCard from "./students.student.payments.payment.component";
 import {Skeleton} from "@material-ui/lab";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from '@material-ui/icons/AddCircle';

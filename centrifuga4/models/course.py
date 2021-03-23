@@ -1,8 +1,9 @@
+import datetime
 import uuid
+from typing import Iterable
 
 from flask import current_app
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import column_property
 
 from centrifuga4 import db
 from centrifuga4.auth_auth.resource_need import CoursesPermission
@@ -59,6 +60,7 @@ class Course(MyBase):
     labels = db.relationship(
         "Label", secondary="label_course", back_populates="courses"
     )
+    attendances = db.relationship("Attendance", back_populates="course")
 
     @hybrid_property
     def calendar_url(self):
@@ -79,3 +81,9 @@ class Course(MyBase):
 
     def user_representation(self):
         return self.name
+
+    def get_attendance(self, date: datetime.date = None) -> Iterable:
+        for attendance in self.attendances:
+            print(attendance.date, date)
+            if date is None or attendance.date == date:
+                yield attendance

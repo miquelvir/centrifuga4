@@ -13,7 +13,7 @@ SMTP_BULK_USER = os.environ["SMTP_BULK_USER"]
 SMTP_BULK_DOMAIN = os.environ["SMTP_BULK_DOMAIN"]
 SMTP_BULK_FROM_EMAIL = SMTP_USER  # email which will be shown in the 'from' field
 SMTP_BULK_REPLY_TO = SMTP_REPLY_TO
-SMTP_BULK_PORT = 25
+SMTP_BULK_PORT = 587
 
 BCC_ADMIN = False
 

@@ -1,33 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import {useTranslation} from "react-i18next";
 import Fab from "@material-ui/core/Fab";
-import {
-    Checkbox,
-    Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, MenuItem,
-    TextField,
-    Tooltip
-} from "@material-ui/core";
+import {Checkbox, ListItem, ListItemIcon, ListItemText, Tooltip} from "@material-ui/core";
 import CourseStudentsDataService from "../_services/course_students.service";
+import {attendanceService} from "../_services/course_attendance.service"
 import CloseIcon from '@material-ui/icons/Close';
-import SendIcon from '@material-ui/icons/Send';
 import dataService from "../_services/courses.service";
 import * as yup from "yup";
 import {useFormik} from "formik";
-import {bulkEmailService} from "../_services/bulkEmail.service";
 import {useErrorHandler} from "../_helpers/handle-response";
-import {safe_email_required} from "../_yup/validators";
 import EmailTo from "./emailTo.component";
-import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import SaveIcon from '@material-ui/icons/Save';
 import DirtyTextField from "./dirtytextfield.component";
-import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import List from "@material-ui/core/List";
@@ -96,19 +82,18 @@ export default function Attendance({...other}) {
   const { t } = useTranslation();
 
   const [groups, setGroups] = useState([]);
-  const [hasAttended, setHasAttended] = useState([]);
-  const [hasAttendedInitial, setHasAttendedInitial] = useState([]);
+  const [hasAttended, setHasAttended] = useState(null);
+  const [hasAttendedInitial, setHasAttendedInitial] = useState(null);
   const [students, setStudents] = useState(null);
    const [pristine, setPristine] = useState(true);
     const [courseId, setCourseId] = useState(null);
 
     useEffect(() => {
+        if (hasAttended === null || hasAttendedInitial === null) return;
         setPristine(areArraysEqualSets(hasAttended, hasAttendedInitial));
     }, [hasAttendedInitial, hasAttended])
     useEffect(() => {
         if (courseId === null) return;
-        setHasAttended([]);
-        setHasAttendedInitial([]);
         CourseStudentsDataService
             .getAll(null, '*', ["full_name", "id"], null, courseId)
             .then(...errorHandler({}))
@@ -127,6 +112,21 @@ export default function Attendance({...other}) {
 
         }
     });
+  useEffect(() => {
+      if (courseId === null) return;
+      if (formik.values["start"] === '') return;
+      setHasAttendedInitial(null);
+                setHasAttended(null);
+      attendanceService
+                .get(courseId, formik.values["start"])
+            .then(...errorHandler({}))
+            .then(function (res) {
+                console.log("m", res);
+                setHasAttendedInitial(res["data"][0]["student_ids"]);
+                setHasAttended(res["data"][0]["student_ids"]);
+            });
+  }, [formik.values["start"], courseId])
+
   useEffect(() => {
       dataService
             .getAll(null, "*", ['id', "name"])
@@ -161,11 +161,8 @@ export default function Attendance({...other}) {
                 name="start"
                 formik={formik}
                 InputLabelProps={{shrink: true}}/>
-                <IconButton onClick={(e) => formik.submitForm()}>
-            <SearchIcon />
-          </IconButton>
         </Box>
-          {students && <List className={classes.root}>
+          {students && hasAttendedInitial && hasAttended && <List className={classes.root}>
               <ListItem key={"all"} role={undefined} dense button onClick={() => {
                   if (hasAttended.length === students.length) {
                       setHasAttended([]);
@@ -210,17 +207,24 @@ export default function Attendance({...other}) {
     </List>}
           <div className={classes.fabs}>
               <Tooltip title={t("download")}>
-                <Fab className={classes.fab} color="secondary" onClick={() => {}} disabled={formik.isSubmitting}>
+                <Fab className={classes.fab} color="secondary" onClick={() => {}} disabled={formik.isSubmitting || courseId === null}>
                     <CloudDownload/>
                 </Fab>
             </Tooltip>
               <Tooltip title={t("reset")}>
-                <Fab className={classes.fab} color="secondary" onClick={() => {}} disabled={formik.isSubmitting || pristine}>
+                <Fab className={classes.fab} color="secondary" onClick={() => {setHasAttended(hasAttendedInitial)}} disabled={formik.isSubmitting || pristine}>
                     <CloseIcon/>
                 </Fab>
             </Tooltip>
            <Tooltip title={t("save")}>
-                <Fab className={classes.fab} color="primary" onClick={() => {}} disabled={formik.isSubmitting || pristine}>
+                <Fab className={classes.fab} color="primary" onClick={() => {
+                        attendanceService
+                            .put(courseId, formik.values["start"], hasAttended)
+                            .then(...errorHandler({}))
+                            .then(function (res) {
+                                setHasAttendedInitial(hasAttended);
+                            });
+                }} disabled={formik.isSubmitting || pristine}>
                     <SaveIcon/>
                 </Fab>
             </Tooltip>

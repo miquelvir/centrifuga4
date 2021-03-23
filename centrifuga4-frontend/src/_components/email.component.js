@@ -43,6 +43,7 @@ import {payment_methods} from "../_data/payment_methods";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Card from "@material-ui/core/Card";
 import {loadingContext} from "../_context/loading-context";
+import {confirmContext} from "../_context/confirm-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,11 +91,14 @@ export default function Email({...other}) {
         setTo(to.filter(x => x.id !== id));
     }
     const loadingCtx = React.useContext(loadingContext);
+     const confirm = React.useContext(confirmContext);
     const handleSendEmail = () => {
         if (loadingCtx.loading) return;
-                      loadingCtx.startLoading();
+        if (formik.isSubmitting) return;
+
+        confirm.confirm("send_bulk_email", "send_bulk_email_description", () => {
+                  loadingCtx.startLoading();
         formik.setSubmitting(true);
-        // todo ask for confirmation
         bulkEmailService
             .bulkSend(to.map(g => g.id), formik.values["subject"],
                 formik.values["body"], formik.values["emailPreference"], selectedFiles)
@@ -104,6 +108,8 @@ export default function Email({...other}) {
                 formik.setSubmitting(false);
                 loadingCtx.stopLoading();
         })
+              });
+
     }
 
   const errorHandler = useErrorHandler();
@@ -256,7 +262,7 @@ export default function Email({...other}) {
           </label>
           </div>
           <Tooltip title={t("send_email")}>
-                <Fab className={classes.fab} color="primary" onClick={handleSendEmail} disabled={formik.isSubmitting}>
+                <Fab className={classes.fab} color="primary" onClick={handleSendEmail} disabled={formik.isSubmitting || to.length === 0}>
                     <SendIcon/>
                 </Fab>
             </Tooltip>

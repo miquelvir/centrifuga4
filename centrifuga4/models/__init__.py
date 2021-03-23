@@ -1,4 +1,5 @@
 # export models for use
+from .attendance import Attendance
 from .course import Course
 from .guardian import Guardian
 from .payment import Payment

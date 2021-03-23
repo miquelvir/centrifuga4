@@ -9,6 +9,7 @@ from centrifuga4.models import (
     Teacher,
     Need,
     Label,
+    Attendance,
 )
 from centrifuga4.schemas.schemas import (
     StudentSchema,
@@ -21,6 +22,7 @@ from centrifuga4.schemas.schemas import (
     TeacherSchema,
     NeedSchema,
     LabelSchema,
+    AttendanceSchema,
 )
 
 
@@ -45,4 +47,6 @@ def get_schema_from_model(model):
         return NeedSchema
     if model == Label:
         return LabelSchema
+    if model == Attendance:
+        return AttendanceSchema
     raise NotImplementedError(model)

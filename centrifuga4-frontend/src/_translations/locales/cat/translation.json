@@ -27,6 +27,8 @@
   "first": "primer dia",
   "mark_all": "marcar totxs",
   "last": "darrer dia",
+  "send_bulk_email": "enviar correu massiu ⚡",
+  "send_bulk_email_description": "aquest missatge s'enviarà a les adreces triades dels cursos seleccionats (a les families reals)!",
   "all": "tots",
   "subject": "assumpte",
   "upload": "adjuntar fitxers",

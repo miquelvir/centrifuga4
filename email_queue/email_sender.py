@@ -46,6 +46,9 @@ class EmailSender:
             )  # smtp connection
         else:
             self._server = smtplib.SMTP(domain, port)  # smtp connection
+            self._server.ehlo()  # Can be omitted
+            self._server.starttls()  # Secure the connection
+            self._server.ehlo()  # Can be omitted
 
         # login with credentials
         try:

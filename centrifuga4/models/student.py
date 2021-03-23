@@ -32,6 +32,7 @@ class Student(Person):
         "Course", secondary="student_course", back_populates="students"
     )
     payments = db.relationship("Payment", back_populates="student")
+    attendances = db.relationship("Attendance", back_populates="student")
     guardians = db.relationship(
         "Guardian", secondary="student_guardian", back_populates="students"
     )
