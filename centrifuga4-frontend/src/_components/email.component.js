@@ -42,6 +42,7 @@ import DirtyTextField from "./dirtytextfield.component";
 import {payment_methods} from "../_data/payment_methods";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Card from "@material-ui/core/Card";
+import {loadingContext} from "../_context/loading-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,8 +89,10 @@ export default function Email({...other}) {
     const removeTo = (id) => {
         setTo(to.filter(x => x.id !== id));
     }
-
+    const loadingCtx = React.useContext(loadingContext);
     const handleSendEmail = () => {
+        if (loadingCtx.loading) return;
+                      loadingCtx.startLoading();
         formik.setSubmitting(true);
         // todo ask for confirmation
         bulkEmailService
@@ -99,6 +102,7 @@ export default function Email({...other}) {
             .then(...errorHandler({snackbarSuccess: true}))
             .finally(() => {
                 formik.setSubmitting(false);
+                loadingCtx.stopLoading();
         })
     }
 

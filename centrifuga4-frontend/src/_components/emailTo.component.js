@@ -37,7 +37,7 @@ export default function EmailTo({formik, name, label, options, addTo, ...textFie
 
   React.useEffect(() => {
     _setOption(null);
-  }, [formik.values, name]);
+  }, [name]);
 
   const setOption = (option) => {
       const newOption = (option !== null)? option.code: '';
