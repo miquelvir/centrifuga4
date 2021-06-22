@@ -165,7 +165,7 @@ class EmailSender:
                 ", ".join(
                     set(email.bcc)
                     if not config.BCC_ADMIN
-                    else email.bcc + [config.DEBUGGING_EMAIL]
+                    else set(email.bcc + [config.DEBUGGING_EMAIL])
                 )
                 if not config.DEBUGGING_MODE
                 else config.DEBUGGING_EMAIL
