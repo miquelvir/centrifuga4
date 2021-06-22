@@ -148,14 +148,14 @@ class EmailSender:
 
         if email.to:
             message[_TO] = (
-                ", ".join(email.to)
+                ", ".join(set(email.to))
                 if not config.DEBUGGING_MODE
                 else config.DEBUGGING_EMAIL
             )
 
         if email.cc:
             message[_CC] = (
-                ", ".join(email.cc)
+                ", ".join(set(email.cc))
                 if not config.DEBUGGING_MODE
                 else config.DEBUGGING_EMAIL
             )
@@ -163,7 +163,7 @@ class EmailSender:
         if email.bcc:
             message[_BCC] = (
                 ", ".join(
-                    email.bcc
+                    set(email.bcc)
                     if not config.BCC_ADMIN
                     else email.bcc + [config.DEBUGGING_EMAIL]
                 )
