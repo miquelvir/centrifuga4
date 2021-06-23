@@ -503,7 +503,7 @@ La nostra política protecció de dades es basa en que:
                   <div>
                       <Typography variant="h2">{t("student")}</Typography>
 
-<Box className={[classes.line, classes.composite]}>
+                        <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("name")}
                                 style={{flex: 1}}
@@ -511,6 +511,9 @@ La nostra política protecció de dades es basa en que:
                                 formik={formik}
                                 noDirty={true}
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("surname1")}
                                 style={{flex: 1}}
@@ -518,6 +521,9 @@ La nostra política protecció de dades es basa en que:
                                 formik={formik}
                                 noDirty={true}
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("surname2")}
                                 style={{flex: 1}}
@@ -551,6 +557,9 @@ La nostra política protecció de dades es basa en que:
                                 style={{flex: 4}}
                                 name="address"
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("city")}
                                 style={{flex: 2}}
@@ -558,6 +567,9 @@ La nostra política protecció de dades es basa en que:
                                 noDirty={true}
                                 name="city"
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("zip")}
                                 formik={formik}
@@ -576,6 +588,9 @@ La nostra política protecció de dades es basa en que:
                                 formik={formik}
                                 name="dni"
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("phone")}
                                 type="tel"
@@ -584,14 +599,10 @@ La nostra política protecció de dades es basa en que:
                                 noDirty={true}
                                 name="phone"
                             />
-
-
-
                         </Box>
 
 
                       <Box className={[classes.line, classes.composite]}>
-
                             <DirtyCountrySelect
                                 formik={formik}
                                 style={{flex: 1}}
@@ -599,7 +610,10 @@ La nostra política protecció de dades es basa en que:
                                 name={"country_of_origin"}
                                 label={t("country_of_origin")}
                             />
-<DirtyTextField
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
+                            <DirtyTextField
                                 label={t("gender")}
                                 style={{flex: 1}}
                                 formik={formik}
@@ -611,9 +625,9 @@ La nostra política protecció de dades es basa en que:
                                 <MenuItem value="nb">{t("nb")}</MenuItem>
                             </DirtyTextField>
                         </Box>
-<Box my={3}>
-            <Divider />
-            </Box>
+                        <Box my={3}>
+                        <Divider />
+                        </Box>
                         <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("is_studying")}
@@ -669,7 +683,7 @@ La nostra política protecció de dades es basa en que:
 
                        <Box className={[classes.line, classes.composite]}>
 
- <DirtyTextField
+                                <DirtyTextField
                                 label={t("birthdate")}
                                 type="date"
                                 style={{flex: 1}}
@@ -677,6 +691,10 @@ La nostra política protecció de dades es basa en que:
                                 formik={formik}
                                 name="birth_date"
                                 InputLabelProps={{shrink: true}}/>
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
+
                             <DirtyTextField
                               label={t("years_in_xamfra")}
                               type="number"
@@ -703,6 +721,9 @@ La nostra política protecció de dades es basa en que:
                                 formik={formik}
                                 noDirty={true}
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("surname1")}
                                 style={{flex: 1}}
@@ -710,6 +731,9 @@ La nostra política protecció de dades es basa en que:
                                 formik={formik}
                                 noDirty={true}
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("surname2")}
                                 style={{flex: 1}}
@@ -736,7 +760,6 @@ La nostra política protecció de dades es basa en que:
             </Box>
 
                         <Box className={[classes.line, classes.composite]}>
-
                             <DirtyTextField
                                 label={t("phone")}
                                 type="tel"
@@ -745,7 +768,9 @@ La nostra política protecció de dades es basa en que:
                                 noDirty={true}
                                 name={"__person" + (activeStep-1) + "__phone"}
                             />
+                        </Box>
 
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("relation")}
                                 style={{flex: 1}}
@@ -758,15 +783,11 @@ La nostra política protecció de dades es basa en que:
                                    <MenuItem key={r} value={r}>{t(r)}</MenuItem>
                                 ))}
                                 ))}
-
                         </DirtyTextField>
-
-
-
                         </Box>
 
 
-<Box my={3}>
+            <Box my={3}>
             <Divider />
             </Box>
                         <Box className={[classes.line, classes.composite]}>
