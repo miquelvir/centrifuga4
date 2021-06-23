@@ -39,11 +39,11 @@ class PasswordResetCollectionRes(Resource):
         def generate_password_reset_link(_token, _email):
             return (
                 merge_url_query_params(
-                    "%s/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
+                    "%s/app/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
                     {"token": _token, "email": _email, "lan": "cat"},
                 ),
                 merge_url_query_params(
-                    "%s/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
+                    "%s/app/password-reset" % current_app.config["FRONTEND_SERVER_URL"],
                     {"token": _token, "email": _email, "lan": "eng"},
                 ),
             )
