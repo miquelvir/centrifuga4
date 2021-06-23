@@ -1,19 +1,15 @@
-import io
-
-import centrifuga4
 from email_queue.my_email import Email
 from email_queue.email_sender import EmailSender
-from pdfs.grant_letter import generate_grant_letter_pdf
+from jinja_utils.template_renderer import TemplateRenderer
 
 
 def my_job(to):
     emailer = EmailSender()
-
+    templater = TemplateRenderer()
     emailer.send(
         Email(
             "centrífuga4 - password reset completed 🔐",
             to=[to],
-            plain_body="Your password has been changed successfully! "
-            "Contact admin ASAP if you did not request and complete this change.",
+            html_body=templater.render_template("password_reset_email.html"),
         )
     )
