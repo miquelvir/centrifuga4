@@ -46,7 +46,11 @@ class NewPasswordCollectionRes(Resource):
             if data["email"] != user.email:
                 return "invalid token for current username", 401
 
-            user.password_hash = User.hash_password(password)
+            new_hash = User.hash_password(password)
+            if new_hash == user.password_hash:  # password has not changed
+                return "you can't use the same password you had", 400
+
+            user.password_hash = new_hash
             db.session.commit()
 
             thread = Thread(target=my_job, args=(user.email,))
