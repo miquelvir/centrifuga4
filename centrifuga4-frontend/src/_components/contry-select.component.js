@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => (createStyles({
     },
   },})));
 
-export default function DirtyCountrySelect({formik, noDirty, name, label, ...textFieldProps}) {
+export default function DirtyCountrySelect({formik, noDirty, name, label, style={ width: 300 }, ...textFieldProps}) {
   const getInitialOption = (code) => {
       if (code === undefined) return countries.find(x=>x.code==='');
       return countries.find(x=>x.code===code);
@@ -60,7 +60,7 @@ export default function DirtyCountrySelect({formik, noDirty, name, label, ...tex
 
   return (
     <Autocomplete
-      style={{ width: 300 }}
+      style={style}
       options={countries}
       classes={{
         option: classes.option,
