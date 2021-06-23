@@ -12,7 +12,7 @@ def my_job(url_cat, url_eng, email):
             "centrífuga4 - password reset 🔐",
             to=[email],
             html_body=templater.render_template(
-                "password_reset_completed_email.html", url_cat=url_cat, url_eng=url_eng
+                "password_reset_email.html", url_cat=url_cat, url_eng=url_eng
             ),
         )
     )

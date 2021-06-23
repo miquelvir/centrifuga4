@@ -10,6 +10,6 @@ def my_job(to):
         Email(
             "centrífuga4 - password reset completed 🔐",
             to=[to],
-            html_body=templater.render_template("password_reset_email.html"),
+            html_body=templater.render_template("password_reset_completed_email.html"),
         )
     )
