@@ -7,7 +7,7 @@ from flask_cors import CORS
 from flask_principal import Principal, identity_loaded, Identity
 from flask_seasurf import SeaSurf
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, render_template_string, redirect
+from flask import Flask, render_template, redirect
 from flask_talisman import Talisman
 from flask_login import LoginManager, current_user
 
