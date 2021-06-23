@@ -30,7 +30,7 @@ class PasswordResetCollectionRes(Resource):
         token = jwt.encode(
             {
                 "email": user.email,
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
             },
             current_app.config["PASSWORD_RESET_SECRET"] + user.password_hash,
             algorithm="HS256",
