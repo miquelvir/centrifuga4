@@ -5,7 +5,7 @@ Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management 
 2. Install [Python 3 and Pip](https://www.python.org/downloads/)
 3. Install Python requirements using `pip install -r requirements.txt`
 4. Install [npm](https://www.npmjs.com/get-npm)
-5. Run `npm install` inside centrifuga4-frontend to install the npm modules
+5. Run `npm install` inside web_app to install the npm modules
 
 ### DEVELOPMENT
 1. Python backend
@@ -13,11 +13,11 @@ Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management 
     2. Use development/generate_sample_db.py to create a new database. It will contain a user 'admin@gmail.com' : 'admin'
     3. Run development/wsgi_development.py to run the backend development server
 2. Frontend development server
-    1. Run `npm start` inside centrifuga4-frontend to start the frontend development server
+    1. Run `npm start` inside web_app to start the frontend development server
 3. Run Redis Server and email_queue/worker.py.
 
 ### DEVELOPMENT (USING THE BUILT REACT FILES)
-1. Run `npm build` inside centrifuga4-frontend to build the React files into static files
+1. Run `npm build` inside web_app to build the React files into static files
 2. Run wsgi_production.py to run the server
 3. Run Redis Server worker.py.
 

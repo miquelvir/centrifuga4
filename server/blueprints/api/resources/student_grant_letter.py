@@ -13,46 +13,6 @@ from server.file_utils.string_bytes_io import make_response_with_file
 from server.models import Student
 from server.pdfs.grant_letter import generate_grant_letter_pdf
 
-"""
-class StudentsRes(easy.EasyResource,
-                  easy.ImplementsGetOne,
-                  easy.ImplementsPatchOne,
-                  easy.ImplementsDeleteOne):
-    schema = StudentSchema
-    model = Student
-    permissions = {StudentsPermission}
-
-    definitions = {'StudentSchema': schema}
-    parameters = [{
-        "id": "id_",
-            "description": "UUID4 of the student to get",
-        "in": "path",
-        "type": "string",
-        "required": "true"
-                }]
-
-    summary = "hello"
-    description = "a student is high"
-
-    def get(self, *args, **kwargs):
-        GET
-                Retrieve a student
-                ---
-                tags: ["student"]
-                summary: Retrieve a student
-                description: HWT RETR
-                responses:
-                  200:
-                    description: A student
-                    schema:
-                      $ref: '#/definitions/StudentSchema'
-                    examples:
-                      rgb: ['red', 'green', 'blue']
-
-        return super().get(*args, **kwargs)
-
-"""
-
 
 class StudentsGrantLettersRes(Resource, SwaggerView):  # todo documented class higher up
     @Requires(PostPermission, StudentsPermission)

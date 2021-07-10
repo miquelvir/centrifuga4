@@ -1,4 +1,4 @@
-from typing import Union, List, Tuple, Iterable, Callable
+from typing import Iterable, Callable
 
 from flask import g, current_app
 from flask_login import login_required
@@ -19,7 +19,7 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
         return True
 
     # check if used provides enough needs to pass all permissions
-    if not all((p().can() for p in required_permissions)):
+    if any(not p().can() for p in required_permissions):
         return False
 
     return True

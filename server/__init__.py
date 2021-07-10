@@ -53,10 +53,12 @@ def init_app(config=None):
     # app creation
     app = Flask(
         __name__,
-        static_folder="../centrifuga4-frontend/build",
+        static_folder="../web_app/build",
         static_url_path="/",
-        template_folder="../centrifuga4-frontend/build",
+        template_folder="../web_app/build",
     )
+
+    print(os.path.abspath(app.template_folder))
 
     app.config.from_object(config)
 

@@ -22,6 +22,6 @@ exclude = '''
   | build
   | dist
   | venv
-  | centrifuga4-frontend
+  | web_app
 )/
 '''
