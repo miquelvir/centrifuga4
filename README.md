@@ -56,6 +56,10 @@ Heroku Postgres would probably need to be upgraded. An alternative is deploying 
 ### SECURITY COPIES
 
 One can manually export a PostgreSQL dump file from Heroku ([see instructions](https://devcenter.heroku.com/articles/heroku-postgres-import-export)).
+Heroku (on the Free tier) does an automatic daily backup, and stores up to 2 copies of it. To convert the `db.dump` to a usable .sql file,
+you can use:
+
+`pg_restore --verbose --clean --no-acl --no-owner db.dump -f db.sql`
 
 
 ### REQUIRED ENVIRONMENT VARIABLES
