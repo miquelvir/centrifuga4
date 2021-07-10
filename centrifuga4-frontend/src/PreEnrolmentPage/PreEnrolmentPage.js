@@ -1,17 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as yup from 'yup';
 import {
+    BottomNavigation,
     Card, CardActions,
     Checkbox,
-    FormControlLabel,
-    MenuItem,
+    FormControlLabel, ListItemIcon, ListItemSecondaryAction,
+    MenuItem, MobileStepper,
     Step,
     StepLabel,
-    Stepper
+    Stepper, Tooltip, withStyles
 } from "@material-ui/core";
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import {useTranslation} from "react-i18next";
 import {makeStyles} from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import SkipNextIcon from '@material-ui/icons/SkipNext';
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -41,7 +45,10 @@ import Link from "@material-ui/core/Link";
 import TranslateButton from "../_components/translate_button.component";
 import {preEnrolmentService} from "../_services/pre-enrolment.service";
 import {safe_email, safe_email_required} from "../_yup/validators";
-
+import {KeyboardArrowLeft, KeyboardArrowRight} from "@material-ui/icons";
+import useTheme from "@material-ui/core/styles/useTheme";
+import DoneIcon from '@material-ui/icons/Done';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%"
@@ -84,7 +91,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 12,
   },
     list: {
-        maxHeight: '30vh',
         minHeight: '150px',
         overflow: 'auto'
     },
@@ -127,6 +133,7 @@ const PreEnrolmentPage = (props) => {
 
 
 
+
     const {enqueueSnackbar} = useSnackbar();
     const [skipped, setSkipped] = React.useState(new Set());
     const [availableCourses, setAvailableCourses] = React.useState([]);
@@ -138,7 +145,7 @@ const PreEnrolmentPage = (props) => {
   };
 
     const [activeStep, setActiveStep] = React.useState(0);
-      const steps = [t("data_protection"), t("student_info"), t("contact_person_1"), t("contact_person_2"), t("courses"), t("confirmation")];
+      const steps = [t("data_protection"), t("student_info"), t("contact_person_1"), t("contact_person_2"), t("courses"), t("payment"), t("confirmation")];
 
     const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
@@ -171,6 +178,8 @@ const PreEnrolmentPage = (props) => {
                  setFilteredCourses(courses);
              })
       });
+
+      const theme = useTheme();
 
 
       const [searchTerm, setSearchTerm] = useState('');
@@ -419,7 +428,17 @@ __person1__surname1: '',
     ['birth_date', 'name', 'surname1', 'surname2', 'address', 'city', 'zip', 'gender', 'is_studying', 'is_working', 'education_entity', 'education_year', 'career', 'years_in_xamfra', 'country_of_origin', 'phone', 'email'],
         ['__person1__name', '__person1__surname1', '__person1__surname2', '__person1__email', '__person1__phone', '__person1__phone', '__person1__relation', '__person1__is_studying', '__person1__education_entity', '__person1__education_year', '__person1__is_working', '__person1__career'],
         ['__person2__name', '__person2__surname1', '__person2__surname2', '__person2__email', '__person2__phone', '__person2__phone', '__person2__relation', '__person2__is_studying', '__person2__education_entity', '__person2__education_year', '__person2__is_working', '__person2__career'],
-    [], ['image_agreement']]
+    [], [], ['image_agreement'], []];
+
+    const scrollToTop = () => {
+        window.scrollTo(0,0);
+    }
+
+    const textSchedulesForCourse = (course) => {
+        if (!course["base_schedules"]) return null;
+        return course["base_schedules"].map(s => getLocalisedWeekday(s.day_week) + ", " + s.start_time.slice(0, -3) + " - " + s.end_time.slice(0, -3)).join("; ");
+    }
+
 const handleNext = () => {
         formik.setFieldTouched('');
 
@@ -433,45 +452,87 @@ const handleNext = () => {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
             setSkipped(newSkipped);
 
+            scrollToTop();
 
 
       };
+
+    const secondaryListItemTextForCourse = (course) => {
+        const schedules = textSchedulesForCourse(course);
+        const description = course['description'];
+        if (!description && !schedules) return null;
+        if (description && schedules) return description + " · " + schedules;
+        if (!description) return schedules;
+        if (!schedules) return description;
+    }
+
+
     const themeCtx = React.useContext(themeContext);
+    const canNotGoNext = (activeStep === steps.length - 1)
+        || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))
+            || (activeStep === steps.length - 3 && chosenCourses.length === 0);
+
+    const courseToListItem = (course) =>
+        <Box><ListItem key={course["id"]} button alignItems="flex-start"
+                                  onClick={() => {
+                                        if (chosenCourses.includes(course)) {
+                                            setChosenCourses(chosenCourses.filter(x => x.id !== course.id));
+                                        } else {
+                                            setChosenCourses([...chosenCourses, course]);
+                                        }
+                                  }}>
+            <ListItemIcon>
+                <Checkbox
+                    edge="start"
+                    disableRipple
+                    tabIndex={-1}
+                    checked={chosenCourses.includes(course)}
+                    onChange={ () =>  {}}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />
+            </ListItemIcon>
+
+
+                            <ListItemText id="description"
+                                          primary={course['name']}
+                                          secondary={secondaryListItemTextForCourse(course)}/>
+
+                        </ListItem>
+                        <Divider/></Box>;
+
+
+
     return (
-        <Box p={5} style={{width: '100%'}}>
+        <Box>
+        <Box p={2} style={{width: '100%'}}>
              <TranslateButton style={{float: 'right'}}/>
                 <ThemeButton style={{float: 'right'}}/>
 
-            <Box m={2} style={{textAlign: "center"}}>
+            <Box mx={2} style={{textAlign: "left"}}>
         <img src={ `${PUBLIC_URL}/logo_xamfra_${themeCtx.label}.png`} alt="Logo Xamfrà"
-             style={{height: "85px"}}/>
+             style={{height: "35px"}}/>
             </Box>
-                <Paper className={`${classes.paper} ${classes.root}`}>
-                   <Box p={2}> <Stepper activeStep={activeStep}>
-                    {steps.map((label, index) => {
-                      const stepProps = {};
-                      const labelProps = {};
-                      if (isStepOptional(index)) {
-                        labelProps.optional = <Typography variant="caption">opcional</Typography>;
-                      }
-                      if (isStepSkipped(index)) {
-                        stepProps.completed = false;
-                      }
-                      return (
-                        <Step key={label} {...stepProps}>
-                          <StepLabel {...labelProps}>{label}</StepLabel>
-                        </Step>
-                      );
-                    })}
-                  </Stepper>
+        </Box>
                     <div>
+
+
+     <Box marginBottom={2}>
+            <Divider />
+            </Box>
         {activeStep === steps.length ? (
           <div style={{textAlign:"center"}}>
-            <Typography>Prematrícula completada amb èxit! | ¡Prematrícula completada con éxito! | Pre-enrolment successful!</Typography>
+            <Box>
+                Prematrícula completada amb èxit!<br/>
+                ¡Prematrícula completada con éxito!<br/>
+                Pre-enrolment successful!
+            </Box>
+              <Box m={4}>
+              <CheckCircleIcon fontSize="large"
+                               style={{ color: theme.palette.neutral.status.success }}/></Box>
           </div>
         ) : (
              <form onSubmit={formik.handleSubmit}>
-          <Box m={2}>
+          <Box p={2}>
               <div>
                   {activeStep === 0 &&
                   <div>
@@ -501,13 +562,14 @@ La nostra política protecció de dades es basa en que:
 
                   {activeStep === 1 &&
                   <div>
-                      <Typography variant="h2">{t("student")}</Typography>
+                      <Typography variant="h4">{t("student")}</Typography>
 
                         <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("name")}
                                 style={{flex: 1}}
                                 name="name"
+                                autocomplete="name given-name"
                                 formik={formik}
                                 noDirty={true}
                             />
@@ -519,6 +581,7 @@ La nostra política protecció de dades es basa en que:
                                 style={{flex: 1}}
                                 name="surname1"
                                 formik={formik}
+                                autocomplete="name additional-name"
                                 noDirty={true}
                             />
                         </Box>
@@ -529,8 +592,22 @@ La nostra política protecció de dades es basa en que:
                                 style={{flex: 1}}
                                 formik={formik}
                                 name="surname2"
+                                autocomplete="name family-name"
                                 noDirty={true}
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
+
+                                <DirtyTextField
+                                label={t("birthdate")}
+                                type="date"
+                                style={{flex: 1}}
+                                noDirty={true}
+                                formik={formik}
+                                name="birth_date"
+                                autoComplete="bday"
+                                InputLabelProps={{shrink: true}}/>
                         </Box>
 
                         <Box className={[classes.line, classes.composite]}>
@@ -554,6 +631,7 @@ La nostra política protecció de dades es basa en que:
                                 label={t("address")}
                                 formik={formik}
                                 noDirty={true}
+                                autocomplete="street-address"
                                 style={{flex: 4}}
                                 name="address"
                             />
@@ -566,6 +644,7 @@ La nostra política protecció de dades es basa en que:
                                 formik={formik}
                                 noDirty={true}
                                 name="city"
+                                autoComplete="address-level2"
                             />
                         </Box>
 
@@ -574,6 +653,7 @@ La nostra política protecció de dades es basa en que:
                                 label={t("zip")}
                                 formik={formik}
                                 type="number"
+                                autoComplete="postal-code"
                                 noDirty={true}
                                 style={{flex: 1}}
                                 name="zip"
@@ -609,6 +689,7 @@ La nostra política protecció de dades es basa en que:
                                 noDirty={true}
                                 name={"country_of_origin"}
                                 label={t("country_of_origin")}
+                                autoComplete="country"
                             />
                         </Box>
 
@@ -639,6 +720,9 @@ La nostra política protecció de dades es basa en que:
                                 <MenuItem value={true}>{t("yes")}</MenuItem>
                                 <MenuItem value={false}>{t("no")}</MenuItem>
                             </DirtyTextField>
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("education_entity")}
                                 style={{flex: 2}}
@@ -646,6 +730,9 @@ La nostra política protecció de dades es basa en que:
                                 name="education_entity"
                                 noDirty={true}
                             />
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("education_year")}
                                 style={{flex: 2}}
@@ -657,6 +744,10 @@ La nostra política protecció de dades es basa en que:
                                     <MenuItem key={level} value={level}>{t(level)}</MenuItem>
                                 ))}
                             </DirtyTextField>
+                        </Box>
+
+                      <Box my={3}>
+                        <Divider />
                         </Box>
 
                         <Box className={[classes.line, classes.composite]}>
@@ -672,6 +763,10 @@ La nostra política protecció de dades es basa en que:
                                 <MenuItem value={true}>{t("yes")}</MenuItem>
                                 <MenuItem value={false}>{t("no")}</MenuItem>
                             </DirtyTextField>
+                        </Box>
+
+                      <Box className={[classes.line, classes.composite]}>
+
                             <DirtyTextField
                                 label={t("career")}
                                 style={{flex: 4}}
@@ -681,17 +776,11 @@ La nostra política protecció de dades es basa en que:
                             />
                         </Box>
 
-                       <Box className={[classes.line, classes.composite]}>
-
-                                <DirtyTextField
-                                label={t("birthdate")}
-                                type="date"
-                                style={{flex: 1}}
-                                noDirty={true}
-                                formik={formik}
-                                name="birth_date"
-                                InputLabelProps={{shrink: true}}/>
+                         <Box my={3}>
+                        <Divider />
                         </Box>
+
+
 
                       <Box className={[classes.line, classes.composite]}>
 
@@ -712,8 +801,20 @@ La nostra política protecció de dades es basa en que:
 
                   {(activeStep === 2 || activeStep === 3) &&
                   <div>
-                      <Typography variant="h2">{t("contact") + " " + (activeStep - 1)}</Typography>
-                        <Box className={[classes.line, classes.composite]}>
+                      <Typography variant="h4">{t("contact") + " " + (activeStep - 1)}</Typography>
+                      {isStepOptional(activeStep) && <Tooltip title={t("skip")}>
+                          <Box my={2}><Button
+                              size="medium"
+                              onClick={handleSkip}
+                              variant="contained"
+                              aria-label={t("skip")}
+                              startIcon={<SkipNextIcon/>}
+                              color="primary"
+                              disabled={!isStepOptional(activeStep)}>
+                              {t("skip")}
+                          </Button></Box></Tooltip>}
+
+                      <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("name")}
                                 style={{flex: 1}}
@@ -801,6 +902,9 @@ La nostra política protecció de dades es basa en que:
                                 <MenuItem value={true}>{t("yes")}</MenuItem>
                                 <MenuItem value={false}>{t("no")}</MenuItem>
                             </DirtyTextField>
+                        </Box>
+
+                       <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("education_entity")}
                                 style={{flex: 4}}
@@ -809,6 +913,10 @@ La nostra política protecció de dades es basa en que:
                                 noDirty={true}
                             />
                         </Box>
+
+                       <Box my={3}>
+            <Divider />
+            </Box>
 
                         <Box className={[classes.line, classes.composite]}>
 
@@ -823,6 +931,10 @@ La nostra política protecció de dades es basa en que:
                                 <MenuItem value={true}>{t("yes")}</MenuItem>
                                 <MenuItem value={false}>{t("no")}</MenuItem>
                             </DirtyTextField>
+                        </Box>
+
+
+                        <Box className={[classes.line, classes.composite]}>
                             <DirtyTextField
                                 label={t("career")}
                                 style={{flex: 4}}
@@ -841,39 +953,35 @@ La nostra política protecció de dades es basa en que:
     {activeStep === 4 &&
     <div>
 
-        <Box className={classes.cards}>
+        {/*<Box className={classes.cards}>
             {chosenCourses && chosenCourses.map(course => (
                 <Card className={classes.card} raised={true}>
-                  <CardContent>
+                    <CardContent>
 
-                    <Typography variant="h5" component="h2">
-                        {course['name']}
-                    </Typography>
-      <Typography className={classes.pos} color="textSecondary">
-                      {course['description']? course['description']: "..."}
-                    </Typography>
-                      {  course['base_schedules'] && course['base_schedules'].map(s => (
-                          <Typography variant="body2" component="p">
-                              {getLocalisedWeekday(s.day_week)}, {s.start_time.slice(0, -3)} - {s.end_time.slice(0, -3)}
-                    </Typography>
-                      ))}
-
-
+                        <Typography variant="h5" component="h2">
+                            {course['name']}
+                        </Typography>
+                        <Typography className={classes.pos} color="textSecondary">
+                            {course['description'] ? course['description'] : "..."}
+                        </Typography>
+                        {course['base_schedules'] && course['base_schedules'].map(s => (
+                            <Typography variant="body2" component="p">
+                                {getLocalisedWeekday(s.day_week)}, {s.start_time.slice(0, -3)} - {s.end_time.slice(0, -3)}
+                            </Typography>
+                        ))}
 
 
-                  </CardContent>
-                  <CardActions>
-                      <IconButton size="small" onClick={() => {setChosenCourses(chosenCourses.filter(c => (c !== course)))}}><DeleteIcon/></IconButton>
-                  </CardActions>
+                    </CardContent>
+                    <CardActions>
+                        <IconButton size="small" onClick={() => {
+                            setChosenCourses(chosenCourses.filter(c => (c !== course)))
+                        }}><DeleteIcon/></IconButton>
+                    </CardActions>
                 </Card>
             ))}
-        </Box>
+        </Box>*/}
 
-     <Box my={3}>
-            <Divider />
-            </Box>
 
-         <Box className={classes.box} m={3}>
                 <SearchBar
                     label={t("courses")}
                     value={searchTerm}
@@ -884,42 +992,29 @@ La nostra política protecció de dades es basa en que:
                 />
             <List className={classes.list}>
                 {filteredCourses && filteredCourses.filter(x =>
-                    !chosenCourses.includes(x) &&
                     (x.name.includes(searchTerm) || (x.description !== null && x.description.includes(searchTerm)))).map((course) => (
                     <div key={course["id"]}>
-                        <ListItem key={course["id"]} button
-                                  onClick={() => {
-                                        setChosenCourses([...chosenCourses, course]);
-                                  }}>
-
-                            <ListItemText id="description" primary={course['name']} secondary={course['description']}/>
-                            {course["base_schedules"] && course["base_schedules"].map(s => (
-                                <ListItemText id="schedule" key={s['id']} secondary={getLocalisedWeekday(s.day_week) + ", " + s.start_time.slice(0, -3) + " - " + s.end_time.slice(0, -3)}/>
-
-                            ))}
-
-                        </ListItem>
-                        <Divider/>
+                        {courseToListItem(course)}
                     </div>
                 ))}
             </List>
              {filteredCourses.length === 0 &&
                 <Typography>{t("no_courses_found_add_edu")}</Typography>
              }
-            </Box>
     </div>}
 
   {activeStep === 5 &&
       <div>
+          <Box fontWeight={500} my={2}>
+              Xamfrà és un centre que treballa perquè tots els infants i joves puguin fer música, teatre i dansa. Les famílies aporten el que poden per ajudar a fer sostenible el centre. En cap cas, la quota cobreix el cost dels tallers que fan els nens i nenes. Marqueu, si us plau, una o vàries opcions.
+              <br/><br/>
+              CAP INFANT O JOVE HA DE DEIXAR DE FER TEATRE, MÚSICA O DANSA A XAMFRÀ PER MOTIUS ECONÒMICS.
+              <br/><br/>
+              A qui no pugui, l'ajudarem; i qui pugui ajudar: moltes gràcies!
+          </Box>
 
-          <Typography>
-                    Xamfrà és un centre que treballa perquè tots els infants i joves puguin fer música, teatre i dansa. Les famílies aporten el que poden per ajudar a fer sostenible el centre. En cap cas, la quota cobreix el cost dels tallers que fan els nens i nenes. Marqueu, si us plau, una o vàries opcions.
-                </Typography>
-          <Typography>
-              IMPORTANT: CAP INFANT O JOVE HA DE DEIXAR DE FER TEATRE, MÚSICA O DANSA A XAMFRÀ PER MOTIUS ECONÒMICS. A QUI NO PUGUI, L'AJUDAREM; I QUI PUGUI AJUDAR: MOLTES GRÀCIES!
-          </Typography>
-
-          {
+          <List className={classes.list}>
+                {
               [can_pay_60,
               can_pay_50,
               can_pay_40,
@@ -932,30 +1027,44 @@ La nostra política protecció de dades es basa en que:
               "Puc ajudar en tasques puntuals",
               "Puc ajudar a la Campanya RISUONA (donació d'instruments)",
               "Puc fer serveis professionals relacionats amb els meus estudis o professió"].map(option => (
-                  <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={(event, checked) => {
-                                    if (checked) {
-                                        raw_economic_comments.push(option);
-                                    } else {
-                                        setRawEconomicComments( raw_economic_comments.filter((x) => x !== option));
-                                    }
+                  <Box><ListItem key={option} alignItems="flex-start">
+                      <ListItemText id="description"
+                                          primary={option}/>
+                      <ListItemSecondaryAction>
 
-                                    }
-                                }
-                            />
+                      <Checkbox
+                    edge="start"
+                    disableRipple
+                    tabIndex={-1}
+                    onChange={(event, checked) => {
+                        if (checked) {
+                            raw_economic_comments.push(option);
+                        } else {
+                            setRawEconomicComments( raw_economic_comments.filter((x) => x !== option));
                         }
-                        key={option}
-                        label={option}
-                      />
+
+                        }
+                    }
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />
+
+                  </ListItemSecondaryAction>
+
+
+
+                        </ListItem>
+                        <Divider/></Box>
+
               ))
           }
+            </List>
 
-          <Box my={3}>
-            <Divider />
-            </Box>
 
+      </div>
+               }
+
+               {activeStep === 6 &&
+      <div>
           <Box className={[classes.line, classes.composite]}>
                              <DirtyTextField
                                 label={t("other_comments")}
@@ -967,11 +1076,7 @@ La nostra política protecció de dades es basa en que:
                                 name="other_comments"
                             />
                         </Box>
-
-
-            <Box my={3}>
-            <Divider />
-            </Box>
+          <Box my={2}>
           <FormControlLabel
                         control={
                             <Checkbox
@@ -989,66 +1094,104 @@ La nostra política protecció de dades es basa en que:
                         "En cas de matricular-lo, autoritzo l’ús de la imatge de l’estudiant, menor d'edat, per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà."
                         : "En cas de matricular-me, autoritzo l’ús de la meva imatge per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà." }
                       />
-
+</Box>
+          <Box textAlign="center">
                       <ReCAPTCHA sitekey={RECAPTCHA}
                                  onChange={onChange}
                                  theme={themeCtx.theme? "dark": "light"}
                                  className={classes.recaptcha}
+                                 style={{
+                                     display: "inline-block",
+                                     margin: "0 auto",
+  width: "fit-content"
+                                 }}
                       />
+              </Box>
       </div>
                }
 
               </div>
-            <Box m={2} className={classes.buttons}>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.backButton}
-              >
-                  {t("back")}
-              </Button>
-                {isStepOptional(activeStep) && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSkip}
-                  className={classes.button}
-                >
-                    {t("skip")}
-                </Button>
-              )}
 
 
-
-
-
- <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={(activeStep === steps.length - 1) || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}
-                  onClick={handleNext}>
-                { t("next")}
-              </Button>
-
-                {activeStep === steps.length - 1 && <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  disabled={formik.isSubmitting || recaptcha===null || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}>
-                { t("finish")}
-              </Button> }
-
-
-
-            </Box>
               </Box>
+
+<Box py={5}/>
+<BottomNavigation
+  showLabels
+  style={{
+      position: 'fixed',
+    bottom: 0,
+      width: '100%'
+  }}
+>
+  <MobileStepper
+                          variant="dots"
+                          steps={steps.length}
+                          position="static"
+                          style={{
+                              width:"100%",
+                              margin: 0,
+                              backgroundColor: theme.palette.primary.light,
+                          }}
+                          color={theme.palette.primary.contrastText}
+                          activeStep={activeStep}
+                          nextButton={
+                              <Box>
+{activeStep !== steps.length -1 &&
+    <Box>
+                            <Tooltip title={t("next")}><IconButton size="small"
+                                    onClick={handleNext}
+                                    disabled={canNotGoNext}
+                            aria-label={t("next")}>
+                                <NavigateNextIcon /></IconButton></Tooltip>
+
+                            <Tooltip title={t("skip")}>
+                               <IconButton
+                                size="small"
+                                onClick={handleSkip}
+                                aria-label={t("skip")}
+
+                                disabled={!isStepOptional(activeStep)}>
+                              <SkipNextIcon/>
+                               </IconButton></Tooltip></Box>}
+
+                                  {activeStep === steps.length -1 && <Tooltip title={t("finish")}>
+                                      <IconButton
+                                          size="small"
+                                          onClick={() => {}}
+                                          aria-label={t("finish")}
+                                          type="submit"
+                                          disabled={formik.isSubmitting || recaptcha === null || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}>
+                                          <DoneIcon/>
+                                      </IconButton>
+
+                                  </Tooltip>}
+                              </Box>
+                          }
+                          backButton={
+                              <Tooltip title={t("back")}>
+                            <IconButton
+                                size="small"
+                                onClick={handleBack}
+                                aria-label={t("back")}
+                                disabled={activeStep === 0}>
+                              <NavigateBeforeIcon/>
+                            </IconButton></Tooltip>
+
+                          }
+                        />
+</BottomNavigation>
+
              </form>
           )}
                     </div>
 
 
-                </Box></Paper>
+
         </Box>
+
+
+
 
         );
 

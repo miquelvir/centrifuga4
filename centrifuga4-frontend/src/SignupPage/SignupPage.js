@@ -180,6 +180,7 @@ const SignupPage = (props) => {
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={formik.status}
+                                            autoComplete="new-password"
                                         />
                                         <TextField
                                             label={t("confirm_password")}
@@ -192,6 +193,7 @@ const SignupPage = (props) => {
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             error={formik.status}
+                                            autoComplete="new-password"
                                         />
                                         <Box my={3}>
                                             <Button

@@ -7,13 +7,24 @@ export const lightTheme = createMuiTheme({
       main: '#e98300',
       light: '#ffb342',
       dark: '#b05500',
-      contrastText: '#000000',
+      contrastText: '#000000',  // todo deprecate
+      emphasisText: {
+        high: '#000000DF',
+        medium: '#00000098',
+        low: '#0000005E',
+      },
     },
     secondary: {
       main: '#934d98',
       light: '#c57bc9',
       dark: '#63206a',
-      contrastText: '#ffffff',
+      contrastText: '#000000',  // todo deprecate
+      emphasisText: {
+        high: '#000000DF',
+        medium: '#00000098',
+        low: '#0000005E',
+      },
+
     },
     neutral: {
       main: '#ffffff',
@@ -24,7 +35,8 @@ export const lightTheme = createMuiTheme({
         low: '#0000005E',
       },
       status: {
-        dirty: '#ffcf3d'
+        dirty: '#ffcf3d',
+        success: '#c0e882'
       }
     }
   }
@@ -33,28 +45,39 @@ export const lightTheme = createMuiTheme({
 export const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
+    primary: {
+      main: '#934d98',
+      light: '#c57bc9',
+      dark: '#63206a',
+      contrastText: '#000000',  // todo deprecate
+      emphasisText: {
+        high: '#000000DF',
+        medium: '#00000098',
+        low: '#0000005E',
+      },
+    },
     secondary: {
       main: '#ffcc80',
       light: '#ffffb0',
       dark: '#ca9b52',
-      contrastText: '#000000',
-    },
-    primary: {
-      main: '#ce93d8',
-      light: '#ffc4ff',
-      dark: '#9c64a6',
-      contrastText: '#000000',
+      contrastText: '#000000',  // todo deprecate
+      emphasisText: {
+        high: '#000000DF',
+        medium: '#00000098',
+        low: '#0000005E',
+      },
     },
     neutral: {
       main: '#1f1f1f',
-      contrastText: '#ffffff',
+      contrastText: '#ffffff',  // todo deprecate
       emphasisText: {
         high: '#ffffffDF',
         medium: '#ffffff98',
         low: '#ffffff5E',
       },
       status: {
-        dirty: '#ffcf3d'
+        dirty: '#ffcf3d',
+        success: '#c0e882'
       }
     }
   }
