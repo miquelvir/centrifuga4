@@ -1,3 +1,5 @@
 venv
 people.db
 .env
+web_app/build
+web_app/node_modules
