@@ -1,7 +1,7 @@
-import centrifuga4
+import server
 from config import ProductionConfig
 
-app = centrifuga4.init_app(ProductionConfig)
+app = server.init_app(ProductionConfig)
 
 
 if __name__ == "__main__":

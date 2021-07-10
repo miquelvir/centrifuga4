@@ -1,7 +1,7 @@
 from base64 import b64encode
-import centrifuga4
-from centrifuga4.models import Student, Guardian
-from centrifuga4.models import User
+import server
+from server.models import Student, Guardian
+from server.models import User
 from .test_centrifuga4 import client
 from passlib.apps import custom_app_context as pwd_context
 
@@ -16,13 +16,13 @@ def test_empty_db(client):
         password_hash=pwd_context.hash("admin"),
         privilege_read=True,
     )
-    centrifuga4.db.session.add(u)
+    server.db.session.add(u)
 
     s = Student(id="john", name="john")
     s.guardians.append(Guardian(id="ua81-john", name="ua81-john", relation="mother"))
-    centrifuga4.db.session.add(s)
+    server.db.session.add(s)
 
-    centrifuga4.db.session.commit()
+    server.db.session.commit()
 
     credentials = b64encode(b"admin:admin").decode("utf-8")
     res = client.post(

@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv(join(dirname(__file__), "../.env"))
 
-import centrifuga4
+import server
 
-app = centrifuga4.init_app()
+app = server.init_app()
 
 
 if __name__ == "__main__":

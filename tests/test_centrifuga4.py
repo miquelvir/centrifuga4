@@ -1,25 +1,24 @@
 from dotenv import load_dotenv
 from os.path import join, dirname
 
-from centrifuga4.models import Student
-from manual_db_utils.generate_sample_db import add_students
+from server.models import Student
+from development.manual_db_utils.generate_sample_db import add_students
 
 load_dotenv(join(dirname(__file__), "../.env"))
 
 
 import tempfile
-import pytest
-import centrifuga4
+import server
 import os
 import unittest
-from centrifuga4 import db
+from server import db
 from config import TestingConfig
 
 
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.db_fd, self.db_path = tempfile.mkstemp()
-        self.app = centrifuga4.init_app(TestingConfig)
+        self.app = server.init_app(TestingConfig)
         self.app.config["TESTING"] = True
         self.app.config["PREFERRED_URL_SCHEME"] = "https"
         self.app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + self.db_path
