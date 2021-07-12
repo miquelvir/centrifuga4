@@ -58,8 +58,6 @@ def init_app(config=None):
         template_folder="../web_app/build",
     )
 
-    print(os.path.abspath(app.template_folder))
-
     app.config.from_object(config)
 
     # plugin initialization

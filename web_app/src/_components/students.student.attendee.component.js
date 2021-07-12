@@ -190,6 +190,7 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                                 rowsMax={8}
                                 name="payment_comments"
                             />,
+                            null,
                             [<DirtyTextField
                                 label={t("birthdate")}
                                 type="date"

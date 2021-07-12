@@ -14,5 +14,4 @@ def validation(token: str):
         )
         return render_template("valid_document.html", data=data)
     except Exception as e:
-        print(e)
         return render_template("invalid_document.html")

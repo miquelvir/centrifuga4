@@ -117,6 +117,9 @@ function Person(props) {
             </Box>
             {
             elements.map((res, idx) => (
+                res == null? <Box my={3}>
+            <Divider />
+            </Box>:
                 <Box key={idx} className={`${classes.line} ${classes.composite}`}>
                     {res instanceof Array ?
                         res.map((r, idx2) => (
