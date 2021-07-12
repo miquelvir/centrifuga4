@@ -98,7 +98,8 @@ const sendReceipt = (id) => {
                         .then(...errorHandler({snackbarSuccess:true}))
                         .then(function (res) {
                             addPaymentId(res['id']);
-                            confirm.confirm("send_receipt", () => sendReceipt(res['id']))
+                            confirm.confirm("send_receipt", "send_receipt",
+                                () => sendReceipt(res['id']))
                             }).catch(function (err){
                                 setStatus(true);
                             })
