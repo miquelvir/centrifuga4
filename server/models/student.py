@@ -38,6 +38,21 @@ class Student(Person):
     )
 
     @hybrid_property
+    def age(self):
+        if not self.birth_date:
+            return None
+        time_difference = datetime.date.today() - self.birth_date
+        return int(time_difference.days / 365.25)
+
+    @hybrid_property
+    def is_underage(self):
+        return self.age < 18
+
+    @hybrid_property
+    def is_overage(self):
+        return not self.is_underage
+
+    @hybrid_property
     def annual_price(self):
         return self.price_term * 3 if self.price_term else None
 
@@ -103,6 +118,58 @@ class Student(Person):
             "method must be either cash or bank-transfer, found %s" % value
         )
         return value
+
+    @validates(
+        "name", "surname1", "surname2", "email", "address", "zip", "gender", "city"
+    )
+    def cleaner1(self, key, value):
+        return str(value).lower().strip() if value else value
+
+    @validates("dni")
+    def cleaner2(self, key, value):
+        return value.upper().strip() if value else value
+
+    @validates("phone")
+    def cleaner3(self, key, value):
+        return str(value).lower().replace(" ", "") if value else value
+
+    @validates("education_entity", "career")
+    def cleaner1(self, key, value):
+        return value.lower().strip() if value else value
+
+    @validates("education_year")
+    def cleaner_ed_year(self, key, value):
+        assert value in (
+            None,  # todo assert breaks, so we should raise an exception everywhere
+            "kindergarten_p1",
+            "kindergarten_p2",
+            "kindergarten_p3",
+            "kindergarten_p4",
+            "kindergarten_p5",
+            "primary_1",
+            "primary_2",
+            "primary_3",
+            "primary_4",
+            "primary_5",
+            "primary_6",
+            "eso_1",
+            "eso_2",
+            "eso_3",
+            "eso_4",
+            "baccalaureate_1",
+            "baccalaureate_2",
+            "FP_lower",
+            "FP_higher",
+            "undergraduate",
+            "master",
+            "phd",
+            "other",
+        )
+        return value
+
+    @validates("country_of_origin")
+    def cleaner2(self, key, value):
+        return value.upper().strip() if value else value
 
     def get_course_schedules(self):  # todo refractor
         def to_literal(n):

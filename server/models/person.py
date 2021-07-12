@@ -38,13 +38,6 @@ class Person(MyBase):
         + case([(surname2 != None, surname2)], else_="")
     )
 
-    @hybrid_property
-    def age(self):
-        if not self.birth_date:
-            return None
-        time_difference = datetime.date.today() - self.birth_date
-        return int(time_difference.days / 365.25)
-
     @validates(
         "name", "surname1", "surname2", "email", "address", "zip", "gender", "city"
     )
@@ -58,21 +51,6 @@ class Person(MyBase):
     @validates("phone")
     def cleaner3(self, key, value):
         return str(value).lower().replace(" ", "") if value else value
-
-    @hybrid_property
-    def age(self):
-        if not self.birth_date:
-            return None
-        time_difference = datetime.date.today() - self.birth_date
-        return int(time_difference.days / 365.25)
-
-    @hybrid_property
-    def is_underage(self):
-        return self.age < 18
-
-    @hybrid_property
-    def is_overage(self):
-        return not self.is_underage
 
     @validates("education_entity", "career")
     def cleaner1(self, key, value):
