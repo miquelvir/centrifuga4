@@ -118,7 +118,7 @@ const ItemsList = ({setCurrentItemId=() => {}, onItemClick = () => {}, parent_id
         }
     }, [filters]);  // todo
 
-    useEffect(search, [page, searchBy]);
+    useEffect(search, [page, searchBy, parent_id]);
 
     const handlePageChange = (event, value) => {
         setPage(value);
