@@ -116,6 +116,7 @@
   "delete_guardian_question": "do you want to delete this guardian?",
   "delete_course_question": "do you want to delete this course?",
   "confirm_add_to_course": "do you want to add the teacher to this course?",
+  "add_to_course": "add to course",
   "confirm_remove_from_course": "do you want to remove the teacher from this course?",
   "cancel": "cancel",
   "delete_teacher": "do you want to delete this teacher?",

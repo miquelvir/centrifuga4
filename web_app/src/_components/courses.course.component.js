@@ -152,7 +152,7 @@ const [hasNeeds, NEEDS] = useNeeds();
                   searchByOptions={["full_name"]}
                   resourceName={"students"}
                   displayNameField={"full_name"}
-                  add_message="enroll_student"
+                  add_message="enroll_to_course"
                   onSubresourceAdded={(id) => {
                     setCourse({
                                        ...course,
@@ -177,12 +177,12 @@ const [hasNeeds, NEEDS] = useNeeds();
                   defaultSearchBy="full_name"
                   parentItemDataService={CourseTeachersDataService}
                   itemDataService={TeachersDataService}
-                  add_message_confirm="confirm_enroll_to_course"
+                  add_message_confirm="confirm_add_to_course"
                   parent_id={currentCourseId}
                   searchByOptions={["full_name"]}
-                  resourceName={"students"}
+                  resourceName={"teachers"}
                   displayNameField={"full_name"}
-                  add_message="enroll_student"
+                  add_message="add_teacher"
                   onSubresourceAdded={(id) => {
                     setCourse({
                                        ...course,

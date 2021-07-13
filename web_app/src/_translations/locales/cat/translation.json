@@ -151,6 +151,7 @@
   "delete_guardian_question": "vols eliminar aquest contacte?",
   "delete_course_question": "vols eliminar aquest curs?",
   "confirm_add_to_course": "vols afegir el professor al curs?",
+  "add_to_course": "afegir al curs",
   "confirm_remove_from_course": "vols eliminar el professor del curs?",
   "cancel": "cancelar",
   "delete_teacher": "vols eliminar aquest professor?",
