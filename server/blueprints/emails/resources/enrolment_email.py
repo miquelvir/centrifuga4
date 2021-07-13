@@ -22,7 +22,7 @@ class EnrollmentEmailCollectionRes(Resource):
             raise NotFound(
                 "resource with the given id not found", requestedId=student_id
             )
-        if not student.price_term:
+        if student.price_term is None:
             raise BadRequest("no price per term set")
 
         thread = Thread(

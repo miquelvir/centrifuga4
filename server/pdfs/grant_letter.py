@@ -27,7 +27,9 @@ def generate_grant_letter_pdf(
         paid_price=student.price_term,
         anual_paid_price=student.annual_price,
         total_price=total_price,
-        grant=total_price > student.price_term if student.price_term else None,
+        grant=total_price > student.price_term
+        if student.price_term is not None
+        else None,
         grant_percentage=round(
             (total_price - student.price_term) / total_price * 100, 2
         )

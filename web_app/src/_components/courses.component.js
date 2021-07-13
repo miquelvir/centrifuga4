@@ -78,7 +78,7 @@ const [hasNeeds, NEEDS] = useNeeds();
             />
 
 
-            {hasNeeds([NEEDS.post]) && <Tooltip title={t("new_student")}>
+            {hasNeeds([NEEDS.post]) && <Tooltip title={t("new_course")}>
                 <Fab className={classes.fab} color="primary" onClick={(e) => {
                     setCurrentCourseId(null);
                     setNewCourse(true);
