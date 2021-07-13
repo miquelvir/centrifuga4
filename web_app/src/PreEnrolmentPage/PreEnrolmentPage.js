@@ -100,12 +100,20 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const getLocalisedWeekday = (num) => {
-    let d = new Date();
-    const currentDay = d.getDay();
-    const distance = num - currentDay;
-    d.setDate(currentDay + distance);
-    return d.toLocaleString(window.navigator.language, {weekday: 'short'});
+function getNextDayOfWeek(date, dayOfWeek) {
+    // Code to check that date and dayOfWeek are valid left as an exercise ;)
+
+    var resultDate = new Date(date.getTime());
+
+    resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
+
+    return resultDate;
+}
+
+const getLocalisedWeekday = (dayOfWeek) => {
+    let today = new Date();
+    let nextDayOfWeek = getNextDayOfWeek(today, dayOfWeek);
+    return nextDayOfWeek.toLocaleString(window.navigator.language, {weekday: 'short'});
 }
 
 const isUnderage = (birthDateString) => {
