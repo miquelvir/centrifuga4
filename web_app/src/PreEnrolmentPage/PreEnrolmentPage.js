@@ -545,7 +545,7 @@ const handleNext = () => {
                   {activeStep === 0 &&
                   <div>
                       <Typography>
-                          Podeu consultar el quadre horari del curs 20-21 <Link target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</Link>.
+                          Podeu consultar el quadre horari del curs 21-22 <Link target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</Link>.
                       </Typography>
                       <br/>
                       <Typography variant={"caption"}>
@@ -558,7 +558,7 @@ La nostra política protecció de dades es basa en que:
 1) El Responsable del Tractament de les teves dades personals és de Xamfrà, Centre de Música i Escena del Raval (Fundació l'ARC Música)
 2) Les finalitats del tractament de les dades personals és la de gestionar la teva vinculació amb Xamfrà. La base de dades disposa de noms, telèfons, adreça postal i adreça electrònica.
 3) Les teves dades no seran comunicades a tercers sense previ consentiment.
-4) Pots exercir els drets d'accés, rectificació i oposició segons preveu a la normativa.
+4) Pots exercir els drets d'accés, rectificació i oposició segons preveu a la normativa enviant un correu electrònic a: xamfra@xamfra.net
             </Typography>
 
                   </div>
