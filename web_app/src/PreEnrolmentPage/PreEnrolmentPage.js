@@ -551,7 +551,7 @@ const handleNext = () => {
                       <Typography variant={"caption"}>
 Enviar aquest formulari implica consentiment per fer ús de les dades per tal de rebre informació durant el període de preinscripció i inici de curs.
 
-La posterior matrícula presencial al centre implica també l'ús de les dades durant tot el curs 2020-2021.
+La posterior matrícula presencial al centre implica també l'ús de les dades durant tot el curs 2021-2022.
 
 La nostra política protecció de dades es basa en que:
 
