@@ -1044,15 +1044,14 @@ La nostra política protecció de dades es basa en que:
                     edge="start"
                     disableRipple
                     tabIndex={-1}
-                    onChange={(event, checked) => {
-                        if (checked) {
-                            raw_economic_comments.push(option);
+                    checked={raw_economic_comments.includes(option)}
+                    onClick={(event) => {
+                        if (!raw_economic_comments.includes(option)) {
+                             setRawEconomicComments([...raw_economic_comments, option]);
                         } else {
                             setRawEconomicComments( raw_economic_comments.filter((x) => x !== option));
                         }
-
-                        }
-                    }
+                    }}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                   />
 
