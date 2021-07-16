@@ -5,10 +5,13 @@ import server.models as models
 from server import db
 
 
-def _clean(x):
+def _clean(data, key):
+    if key not in data:
+        return
+    x = data[key]
     if type(x) is not str:
-        return x
-    return x.lower().strip() if x is not None else None
+        return
+    data[key] = x.lower().strip()
 
 
 class MySQLAlchemyAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
@@ -100,13 +103,13 @@ class PersonSchema(MySQLAlchemyAutoSchema):
 
     @pre_load
     def clean_fields(self, in_data, **kwargs):
-        in_data["name"] = _clean(in_data.get("name", None))
-        in_data["surname1"] = _clean(in_data.get("surname1", None))
-        in_data["surname2"] = _clean(in_data.get("surname2", None))
-        in_data["address"] = _clean(in_data.get("address", None))
-        in_data["zip"] = _clean(in_data.get("zip", None))
-        in_data["city"] = _clean(in_data.get("city", None))
-        in_data["dni"] = _clean(in_data.get("dni", None))
+        _clean(in_data, "name")
+        _clean(in_data, "surname1")
+        _clean(in_data, "surname2")
+        _clean(in_data, "address")
+        _clean(in_data, "zip")
+        _clean(in_data, "city")
+        _clean(in_data, "dni")
 
         return in_data
 
