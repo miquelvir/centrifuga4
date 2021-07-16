@@ -5,6 +5,12 @@ import server.models as models
 from server import db
 
 
+def _clean(x):
+    if type(x) is not str:
+        return x
+    return x.lower().strip() if x is not None else None
+
+
 class MySQLAlchemyAutoSchema(SQLAlchemyAutoSchema):  # todo flasgger.Schema
     """
     Base class for automatic Marshmallow schemas
@@ -91,6 +97,18 @@ class PersonSchema(MySQLAlchemyAutoSchema):
     full_name = fields.Str(dump_only=True)
     is_underage = fields.Bool(dump_only=True)
     age = fields.Int(dump_only=True)
+
+    @pre_load
+    def clean_fields(self, in_data, **kwargs):
+        in_data["name"] = _clean(in_data.get("name", None))
+        in_data["surname1"] = _clean(in_data.get("surname1", None))
+        in_data["surname2"] = _clean(in_data.get("surname2", None))
+        in_data["address"] = _clean(in_data.get("address", None))
+        in_data["zip"] = _clean(in_data.get("zip", None))
+        in_data["city"] = _clean(in_data.get("city", None))
+        in_data["dni"] = _clean(in_data.get("dni", None))
+
+        return in_data
 
 
 class GuardianSchema(MySQLAlchemyAutoSchema):
