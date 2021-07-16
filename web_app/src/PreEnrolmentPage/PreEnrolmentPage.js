@@ -1114,6 +1114,17 @@ La nostra política protecció de dades es basa en que:
   width: "fit-content"
                                  }}
                       />
+                <Box my={2}><Button
+                              size="medium"
+                              variant="contained"
+                              aria-label={t("finish")}
+                              startIcon={<DoneIcon/>}
+                              color="primary"
+                              type="submit"
+                          disabled={formik.isSubmitting || recaptcha === null || !fieldsToValidatePerStep[activeStep].every(f => (!formik.errors[f]))}>
+                              {t("finish")}
+                          </Button></Box>
+
               </Box>
       </div>
                }
