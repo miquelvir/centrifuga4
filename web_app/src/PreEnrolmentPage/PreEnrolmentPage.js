@@ -392,12 +392,12 @@ __person1__surname1: '',
                 }
             })
             body['payment_comments'] = raw_economic_comments.join('. ');
-            if (raw_economic_comments.includes(can_pay_50)){
-                body['price_term'] = 50;
+            if (raw_economic_comments.includes(can_pay_70)){
+                body['price_term'] = 70;
             } else if (raw_economic_comments.includes(can_pay_60)){
                 body['price_term'] = 60;
-            } else if (raw_economic_comments.includes(can_pay_70)){
-                body['price_term'] = 70;
+            } else if (raw_economic_comments.includes(can_pay_50)){
+                body['price_term'] = 50;
             } else {
                 body['price_term'] = null;
             }
