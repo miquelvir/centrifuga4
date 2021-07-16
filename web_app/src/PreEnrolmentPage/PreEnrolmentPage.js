@@ -127,9 +127,9 @@ const isUnderage = (birthDateString) => {
 const PreEnrolmentPage = (props) => {
     const {t} = useTranslation();
 
-    const can_pay_60 = "Puc pagar la quota trimestral de 60€/estudiant";
-     const can_pay_50 =   "Puc pagar una quota trimestral de 50€/estudiant";
-     const can_pay_40 =  "Puc pagar una quota trimestral de 40€/estudiant";
+    const can_pay_70 = "Puc pagar la quota trimestral de 70€/estudiant";
+     const can_pay_60 =   "Puc pagar una quota trimestral de 60€/estudiant";
+     const can_pay_50 =  "Puc pagar una quota trimestral de 50€/estudiant";
 
     const classes = useStyles();
 
@@ -392,12 +392,12 @@ __person1__surname1: '',
                 }
             })
             body['payment_comments'] = raw_economic_comments.join('. ');
-            if (raw_economic_comments.includes(can_pay_40)){
-                body['price_term'] = 40;
-            } else if (raw_economic_comments.includes(can_pay_50)){
+            if (raw_economic_comments.includes(can_pay_50)){
                 body['price_term'] = 50;
             } else if (raw_economic_comments.includes(can_pay_60)){
                 body['price_term'] = 60;
+            } else if (raw_economic_comments.includes(can_pay_70)){
+                body['price_term'] = 70;
             } else {
                 body['price_term'] = null;
             }
@@ -1023,9 +1023,9 @@ La nostra política protecció de dades es basa en que:
 
           <List className={classes.list}>
                 {
-              [can_pay_60,
+              [can_pay_70,
+              can_pay_60,
               can_pay_50,
-              can_pay_40,
               "Puc pagar una quota a acordar personalment",
               "No puc pagar la quota trimestral",
               "Puc aportar una segona quota per un altre nen/a (desgravació fiscal)",
