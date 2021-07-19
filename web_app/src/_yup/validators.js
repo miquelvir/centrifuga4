@@ -9,6 +9,9 @@ import {
     shorter_64
 } from "../_data/password_regex";
 
+export const DNI_REGEX = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+export const NIE_REGEX =  /^[XYZ][0-9]{7}[A-Z]$/i;
+export const DNI_OR_NIE_REGEX = new RegExp(DNI_REGEX.source + "|" + NIE_REGEX.source).source;
 export const safe_password = (t) => (
     yup.string()
         .required(t("password_required"))

@@ -35,7 +35,7 @@
   "address": "address",
   "city": "city",
   "zip": "zip",
-  "dni": "dni",
+  "dni": "DNI / NIE",
   "gender": "gender",
   "birth date": "birth date",
   "country_of_origin": "country of origin of the family",

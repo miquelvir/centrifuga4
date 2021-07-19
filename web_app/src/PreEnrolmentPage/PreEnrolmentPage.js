@@ -44,7 +44,7 @@ import ThemeButton from "../_components/theme_button.component";
 import Link from "@material-ui/core/Link";
 import TranslateButton from "../_components/translate_button.component";
 import {preEnrolmentService} from "../_services/pre-enrolment.service";
-import {safe_email, safe_email_required} from "../_yup/validators";
+import {DNI_OR_NIE_REGEX, safe_email, safe_email_required} from "../_yup/validators";
 import {KeyboardArrowLeft, KeyboardArrowRight} from "@material-ui/icons";
 import useTheme from "@material-ui/core/styles/useTheme";
 import DoneIcon from '@material-ui/icons/Done';
@@ -220,7 +220,7 @@ __person1__surname1: '',
             address: yup.string(required).required(required),
             city: yup.string(required).required(required),
             zip: yup.number(required).required(required),
-            dni: yup.string(required).matches(/^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i , "format de DNI invàlid"),
+            dni: yup.string(required).matches(DNI_OR_NIE_REGEX , "format de DNI/NIE invàlid"),
             country_of_origin: yup.string(required).notOneOf(['empty']).test(  // one of the array
                                   'countryNonEmpty',
                                   required,
