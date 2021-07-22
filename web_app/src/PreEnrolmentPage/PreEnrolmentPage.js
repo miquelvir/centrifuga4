@@ -283,13 +283,10 @@ __person1__surname1: '',
             __person1__is_working: yup.boolean(required).test(  // one of the array
                                   'requiredIfNotSkipped',
                                   required,
-                                  v => v !== undefined && v !== ""|| isStepSkipped(2)
+                                  v => v !== undefined && v !== "" ||  isStepSkipped(2)
+
                                 ),
             __person1__career: yup.string(required).when('__person1__is_working', {
-                                                  is: true,
-                                                  then: yup.string().required(required)
-                                                }),
-            __person1__education_year: yup.string(required).when('__person1__is_studying', {
                                                   is: true,
                                                   then: yup.string().required(required)
                                                 }),
@@ -338,10 +335,6 @@ __person1__surname1: '',
                                                   then: yup.string().required(required)
                                                 }),
             __person2__education_entity: yup.string(required).when('__person2__is_studying', {
-                                                  is: true,
-                                                  then: yup.string().required(required)
-                                                }),
-            __person2__education_year: yup.string(required).when('__person2__is_studying', {
                                                   is: true,
                                                   then: yup.string().required(required)
                                                 }),
