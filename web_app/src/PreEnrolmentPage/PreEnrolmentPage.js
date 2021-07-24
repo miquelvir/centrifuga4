@@ -220,7 +220,6 @@ __person1__surname1: '',
             address: yup.string(required).required(required),
             city: yup.string(required).required(required),
             zip: yup.number(required).required(required),
-            dni: yup.string(required).matches(DNI_OR_NIE_REGEX , "format de DNI/NIE invàlid"),
             country_of_origin: yup.string(required).notOneOf(['empty']).test(  // one of the array
                                   'countryNonEmpty',
                                   required,

@@ -13,7 +13,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv/lib/python3.8/site-packages/rq_dashboard-0.6.1.egg-info" />
       <excludeFolder url="file://$MODULE_DIR$/venv/lib/python3.8/site-packages/wkhtmltopdf_pack-0.12.3.0.egg-info" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.8 (centrifuga4)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (centrifuga4)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">

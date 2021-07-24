@@ -62,7 +62,7 @@
   "address": "adreça",
   "city": "ciutat",
   "zip": "codi postal",
-  "dni": "DNI / NIE",
+  "dni": "DNI / NIE / passaport",
   "gender": "gènere",
   "adult": "adult",
   "no_students": "no hi ha estudiants en aquest curs",

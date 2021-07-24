@@ -45,7 +45,7 @@
     "yup": "^0.32.8"
   },
   "scripts": {
-    "start": "REACT_CHECK_NEEDS=false REACT_APP_RECAPTCHA=6Lc3WzYaAAAAAAaoAoHHFyJvXE6lYqdgX4eOXzP4 REACT_APP_API_VERSION=v1 REACT_APP_BACKEND_URL=https://127.0.0.1:4999 PUBLIC_URL=https://127.0.0.1:3000 react-scripts start",
+    "start": "SET REACT_CHECK_NEEDS=false&&SET REACT_APP_RECAPTCHA=6Lc3WzYaAAAAAAaoAoHHFyJvXE6lYqdgX4eOXzP4&&SET REACT_APP_API_VERSION=v1&&SET REACT_APP_BACKEND_URL=https://127.0.0.1:4999&&SET PUBLIC_URL=https://127.0.0.1:3000&&react-scripts start",
     "build": "REACT_CHECK_NEEDS=true REACT_APP_RECAPTCHA=6Lc3WzYaAAAAAAaoAoHHFyJvXE6lYqdgX4eOXzP4 REACT_APP_API_VERSION=v1 REACT_APP_BACKEND_URL=https://127.0.0.1:4999 PUBLIC_URL=https://127.0.0.1:4999 INLINE_RUNTIME_CHUNK=false react-scripts build",
     "postbuild": "node add_nonce_placeholders.js",
     "postbuildHeroku": "node add_nonce_placeholders.js",
