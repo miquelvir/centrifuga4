@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import marshmallow
 from werkzeug.exceptions import BadRequest
@@ -11,6 +11,10 @@ from server.signals import student_pre_enrolled
 
 
 class PreEnrolmentService:
+    @staticmethod
+    def get_published_courses() -> List[Course]:
+        return Course.query.filter(Course.is_published == True).all()
+
     @staticmethod
     def _generate_new_student_id():
         return Student.generate_new_id()
@@ -44,7 +48,9 @@ class PreEnrolmentService:
         for course_id in courses:
             c = self._get_course(course_id)
             if not c:
-                raise BadRequest("no course found with id '%s'" % course_id)
+                raise BadRequest(f"no course found with id {course_id!r}")
+            if not c.is_published:
+                raise BadRequest(f"course {course_id!r} is not public")
             student.courses.append(c)
 
         # load guardians
