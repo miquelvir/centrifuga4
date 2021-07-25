@@ -6,6 +6,15 @@ from sqlalchemy.orm import validates
 from server import db
 from server.auth_auth.resource_need import StudentsPermission
 from server.models.person import Person
+import abc
+
+
+class EnrolmentStatus(abc.ABC):
+    enrolled = "enrolled"
+    pre_enrolled = "pre-enrolled"
+    early_unenrolled = "early-unenrolled"
+
+    any_ = (enrolled, pre_enrolled, early_unenrolled)
 
 
 class Student(Person):
@@ -90,16 +99,13 @@ class Student(Person):
 
     @validates("enrolment_status")
     def cleaner2(self, key, value):
-        assert value in (
-            "enrolled",
-            "early-unenrolled",
-            "pre-enrolled",
-        ), "status must be either 'enrolled', 'early-unenrolled', 'pre-enrolled'"
+        assert value in EnrolmentStatus.any_, f"status must be one of {EnrolmentStatus.any_}"
 
-        if self.enrolment_status != "enrolled" and value == "enrolled":
+        # if status is changing to enrolled or early-unenrolled, update the enrolment / early-unenrolment date
+        if self.enrolment_status != EnrolmentStatus.enrolled and value == EnrolmentStatus.enrolled:
             self.enrolment_date = datetime.date.today()
 
-        if self.enrolment_status != "early-unenrolled" and value == "early-unenrolled":
+        if self.enrolment_status != EnrolmentStatus.early_unenrolled and value == EnrolmentStatus.early_unenrolled:
             self.early_unenrolment_date = datetime.date.today()
 
         return value

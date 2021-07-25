@@ -6,7 +6,7 @@ from flask_principal import identity_changed, Identity, AnonymousIdentity
 
 from server.models import User
 
-auth_service = Blueprint("auth", __name__)
+auth_blueprint = Blueprint("auth", __name__)
 
 
 def basic_http_auth_required(f):
@@ -37,7 +37,7 @@ def get_current_needs():
     return jsonify({"needs": [n.id for n in current_user.needs]})
 
 
-@auth_service.route("/login", methods=["POST"])
+@auth_blueprint.route("/login", methods=["POST"])
 @basic_http_auth_required  # require user and password to be validated
 def get_auth_token():
     """
@@ -58,7 +58,7 @@ def get_auth_token():
     return get_current_needs()
 
 
-@auth_service.route("/logout", methods=["GET"])
+@auth_blueprint.route("/logout", methods=["GET"])
 @login_required
 def logout():
     """
@@ -82,7 +82,7 @@ def logout():
     return "", 200
 
 
-@auth_service.route("/ping", methods=["GET"])
+@auth_blueprint.route("/ping", methods=["GET"])
 @login_required
 def ping():
     # will break if login is disabled, as in wsgi_development config
