@@ -3,10 +3,10 @@ from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
 from server.blueprints.api.errors import Unauthorized, Forbidden
-from server.blueprints.password_reset.resources.new_password import (
+from server.blueprints.password_reset.resources.password_reset_redeem import (
     NewPasswordCollectionRes,
 )
-from server.blueprints.password_reset.resources.password_reset import (
+from server.blueprints.password_reset.resources.password_reset_request import (
     PasswordResetCollectionRes,
 )
 from server.errors.authorization import Forbidden as RawForbidden
@@ -26,5 +26,5 @@ def handle(e):
 
 api = Api(password_reset_blueprint)
 
-api.add_resource(PasswordResetCollectionRes, "/passwordReset")
-api.add_resource(NewPasswordCollectionRes, "/newPassword")
+api.add_resource(PasswordResetCollectionRes, "/request")
+api.add_resource(NewPasswordCollectionRes, "/redeem")
