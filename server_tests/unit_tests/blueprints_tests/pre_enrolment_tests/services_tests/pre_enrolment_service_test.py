@@ -1,6 +1,4 @@
 from parameterized import parameterized
-
-import server
 from server.models import Student, Course
 from unittest.mock import Mock
 from werkzeug.exceptions import BadRequest
@@ -10,7 +8,6 @@ import unittest
 
 from server_tests.database_test_utils import WithDatabase
 from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
-from server_tests.mothers.course_mother import CourseMother
 from server_tests.mothers.student_mother import StudentJsonMother, StudentMother
 
 
@@ -36,46 +33,13 @@ class TestPreEnrolmentServiceSaveToDb(WithDatabase):
         self.assertEqual(expected_student_count, student_count)
 
 
-class TestPreEnrolmentServiceCourses(WithDatabase):
-    def setUp(self):
-        super().setUp()
-        self.sut = PreEnrolmentService()
-
-    def test_returns_empty_list_if_no_courses(self):
-        # Arrange
-        expected_return_value = []
-
-        with self.app.app_context():
-            # Act
-            courses = self.sut.get_published_courses()
-
-        # Assert
-        self.assertListEqual(expected_return_value, list(courses))
-
-    def test_returns_all_published_courses(self):
-        # Arrange
-        expected_return_value = [CourseMother.published(id_="1"),
-                                 CourseMother.published(id_="2")]
-        all_courses = [*expected_return_value, CourseMother.not_published(id_="3")]
-        with self.app.app_context():
-            for course in all_courses:
-                server.db.session.add(course)
-            server.db.session.commit()
-
-            # Act
-            courses = self.sut.get_published_courses()
-
-        # Assert
-        self.assertListEqual(expected_return_value, list(courses))
-
-
 class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
     def setUp(self):
         self.sample_student_id = "968ec8e1-f430-4c9d-9986-bda3ad338603"
 
         self.sut = PreEnrolmentService()
         self.sut._generate_new_student_id = Mock(return_value=self.sample_student_id)
-        self.sut._get_course = lambda id_: Course(id=id_, is_published=True)
+        self.sut._get_course = lambda id_: Course(id=id_)
 
     def test_raises_bad_request_if_no_body(self):
         # Arrange
@@ -111,22 +75,6 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
         self.sut._get_course = lambda id_: None
         first_course_id = sample_body["courses"][0]
         expected_error_message = f"no course found with id '{first_course_id}'"
-
-        # Act
-        # Assert
-        with self.assertRaises(BadRequest) as ctx:
-            self.sut.parse_student(sample_body)
-        self.assertEqual(expected_error_message, ctx.exception.description)
-
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
-    def test_raises_bad_request_if_course_not_public(self, sample_body):
-        # Arrange
-        self.sut._get_course = lambda id_: Course(is_published=False)
-        first_course_id = sample_body["courses"][0]
-        expected_error_message = f"course '{first_course_id}' is not public"
 
         # Act
         # Assert

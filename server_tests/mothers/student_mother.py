@@ -1,6 +1,6 @@
 from server.models import Student
 from server.models.student import EnrolmentStatus
-from server_tests.mothers.course_mother import CourseJsonMother
+from server_tests.mothers.course_mother import CourseMother
 from server_tests.mothers.person_mother import JsonPersonMother
 
 
@@ -30,7 +30,7 @@ class StudentJsonMother:
             "payment_comments": "Puc pagar la quota trimestral de 70€/estudiant",
             "price_term": 70,
             "other_comments": "this is a comment",
-            "courses": list(CourseJsonMother.three_ids()[0:1])
+            "courses": list(CourseMother.three_ids()[0:1])
         }
 
     @classmethod
@@ -46,6 +46,6 @@ class StudentJsonMother:
             "payment_comments": "Puc pagar la quota trimestral de 70€/estudiant",
             "price_term": 70,
             "other_comments": "this is a comment",
-            "courses": list(CourseJsonMother.three_ids()[0:1])
+            "courses": list(CourseMother.three_ids()[0:1])
         }
 

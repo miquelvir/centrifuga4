@@ -11,7 +11,7 @@ from server import db
 from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
 from server.models import Student, Course, Guardian
 from server_tests.database_test_utils import WithDatabase
-from server_tests.mothers.course_mother import CourseJsonMother
+from server_tests.mothers.course_mother import CourseMother
 from server_tests.mothers.pre_enrolment_mother import PreEnrolmentMother
 
 PRE_ENROLMENT_URL = '/pre-enrolment/v1/pre-enrolment'
@@ -35,7 +35,7 @@ class TestPreEnrolmentPost(WithDatabase):
         super().setUp()
 
         with self.app.app_context():
-            add_sample_courses(CourseJsonMother.three_ids())
+            add_sample_courses(CourseMother.three_ids())
 
         self.recaptcha_service_mock = Mock(spec=RecaptchaService)
         self.recaptcha_service_mock.validate.return_value = True
