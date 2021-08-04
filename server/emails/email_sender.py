@@ -7,7 +7,6 @@ from email.mime import text
 import logging as log
 from email.mime.application import MIMEApplication
 
-from . import config
 from .my_email import Email
 from flask import current_app
 
@@ -19,6 +18,8 @@ _SUBJECT = "Subject"
 _PLAIN = "plain"
 _HTML = "html"
 _REPLY_TO = "Reply-To"
+
+config = current_app.config
 
 
 class EmailSender:
@@ -150,29 +151,29 @@ class EmailSender:
         if email.to:
             message[_TO] = (
                 ", ".join(set(email.to))
-                if not config.DEBUGGING_MODE
-                else config.DEBUGGING_EMAIL
+                if not config["DEBUGGING_MODE"]
+                else config["DEBUGGING_EMAIL"]
             )
 
         if email.cc:
             message[_CC] = (
                 ", ".join(set(email.cc))
-                if not config.DEBUGGING_MODE
-                else config.DEBUGGING_EMAIL
+                if not config["DEBUGGING_MODE"]
+                else config["DEBUGGING_EMAIL"]
             )
 
         if email.bcc:
             message[_BCC] = (
                 ", ".join(
                     set(email.bcc)
-                    if not config.BCC_ADMIN
-                    else set(email.bcc + [config.DEBUGGING_EMAIL])
+                    if not config["BCC_ADMIN"]
+                    else set(email.bcc + [config["DEBUGGING_EMAIL"]])
                 )
-                if not config.DEBUGGING_MODE
-                else config.DEBUGGING_EMAIL
+                if not config["DEBUGGING_MODE"]
+                else config["DEBUGGING_EMAIL"]
             )  # if BCC admin is True, send it to all bcc AND the debugging email
-        elif config.BCC_ADMIN:
-            message[_BCC] = config.DEBUGGING_EMAIL
+        elif config["BCC_ADMIN"]:
+            message[_BCC] = config["DEBUGGING_EMAIL"]
 
         # add plain text to the body if given
         if email.plain_body:
@@ -191,7 +192,7 @@ class EmailSender:
                     message.attach(self.get_attachment_part_f(filepath, filename))
 
         # send message using server
-        if not config.DEBUGGING_MODE or config.DEBUGGING_SEND_EMAILS:
+        if not config["DEBUGGING_MODE"] or config["DEBUGGING_SEND_EMAILS"]:
             result = self._server.send_message(message)
         else:
             result = {}
@@ -204,16 +205,16 @@ class EmailSender:
             "attachments}".format(
                 subject=email.subject,
                 to="'%s' (if not in debugging mode, it would have been sent to: '%s')"
-                % (config.DEBUGGING_EMAIL if email.to else None, email.to)
-                if config.DEBUGGING_MODE
+                % (config["DEBUGGING_EMAIL"] if email.to else None, email.to)
+                if config["DEBUGGING_MODE"]
                 else email.to,
                 cc="'%s' (if not in debugging mode, it would have been sent to: '%s')"
-                % (config.DEBUGGING_EMAIL if email.cc else None, email.cc)
-                if config.DEBUGGING_MODE
+                % (config["DEBUGGING_EMAIL"] if email.cc else None, email.cc)
+                if config["DEBUGGING_MODE"]
                 else email.cc,
                 bcc="'%s' (if not in debugging mode, it would have been sent to: '%s')"
-                % (config.DEBUGGING_EMAIL if email.bcc else None, email.bcc)
-                if config.DEBUGGING_MODE
+                % (config["DEBUGGING_EMAIL"] if email.bcc else None, email.bcc)
+                if config["DEBUGGING_MODE"]
                 else email.bcc,
                 attachments=email.files,
             )
