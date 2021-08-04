@@ -6,6 +6,20 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      MANUAL_DATABASE_URL: ${{ secrets.MANUAL_DATABASE_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SECRET: ${{ secrets.SECRET }}
+      wkhtmltopdf: ${{ secrets.wkhtmltopdf }}
+      ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+      RECAPTCHA: ${{ secrets.RECAPTCHA }}
+      EMAIL_DEBUGGING_MODE: ${{ secrets.EMAIL_DEBUGGING_MODE }}
+      SMTP_BULK_PASSWORD: ${{ secrets.SMTP_BULK_PASSWORD }}
+      SMTP_BULK_USER: ${{ secrets.SMTP_BULK_USER }}
+      SMTP_BULK_DOMAIN: ${{ secrets.SMTP_BULK_DOMAIN }}
+      SMTP_DOMAIN: ${{ secrets.SMTP_DOMAIN }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
     strategy:
       matrix:
         python-version: [3.9]
@@ -28,19 +42,5 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
-        env:
-          MANUAL_DATABASE_URL=${{ secrets.MANUAL_DATABASE_URL }}
-          DATABASE_URL=${{ secrets.DATABASE_URL }}
-          SECRET=${{ secrets.SECRET }}
-          wkhtmltopdf=${{ secrets.wkhtmltopdf }}
-          ENVIRONMENT=${{ secrets.ENVIRONMENT }}
-          RECAPTCHA=${{ secrets.RECAPTCHA }}
-          EMAIL_DEBUGGING_MODE=${{ secrets.EMAIL_DEBUGGING_MODE }}
-          SMTP_BULK_PASSWORD=${{ secrets.SMTP_BULK_PASSWORD }}
-          SMTP_BULK_USER=${{ secrets.SMTP_BULK_USER }}
-          SMTP_BULK_DOMAIN=${{ secrets.SMTP_BULK_DOMAIN }}
-          SMTP_DOMAIN=${{ secrets.SMTP_DOMAIN }}
-          SMTP_USER=${{ secrets.SMTP_USER }}
-          SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
         run: |
           pytest
