@@ -1,6 +1,6 @@
 Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management platform.
 
-![tests](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+<a href="https://github.com/miquelvir/centrifuga4/actions"><img alt="Actions Status" src="https://github.com/github/docs/actions/workflows/main.yml/badge.svg"></a>
 
 ### INSTALLING
 1. Clone this repository
