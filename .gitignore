@@ -1,4 +1,4 @@
-venv
 people.db
 .env
 web_app/node_modules
+/venv/
