@@ -49,18 +49,6 @@ class User(MyBase, UserMixin):
 
     @classmethod
     def is_strong_enough_password(cls, password: str) -> bool:
-        """ :returns true if the password is strong enough, false otherwise
-
-        a valid password must fulfill:
-        - is a string
-        - has length between 8 and 64 chars
-        - has 1+ lowercase character
-        - has 1+ uppercase character
-        - has 1+ digit
-        - has a special character in -/:-@[-`{-~]{1,}
-        """
-        if type(password) is not str:
-            return False
         return all(
             (
                 re.compile("^.{8,64}$").match(password) is not None,

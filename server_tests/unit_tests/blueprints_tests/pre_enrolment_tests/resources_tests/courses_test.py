@@ -1,19 +1,21 @@
 import contextlib
 import json
 
+from server import init_app
+from config import TestingConfigNoDb
 from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
 from unittest.mock import Mock
 import unittest
 
-from server_tests.database_test_utils import WithApp
 from server_tests.mothers.course_mother import CourseMother
 
 PRE_ENROLMENT_URL = '/pre-enrolment/v1/courses'
 
 
-class TestPreEnrolmentPost(WithApp):
+class TestPreEnrolmentPost(unittest.TestCase):
     def setUp(self):
-        super().setUp()
+        self.app = init_app(TestingConfigNoDb)
+        self.client = self.app.test_client()
 
         self.courses = [CourseMother.published(id_="1"),
                         CourseMother.published(id_="2"),

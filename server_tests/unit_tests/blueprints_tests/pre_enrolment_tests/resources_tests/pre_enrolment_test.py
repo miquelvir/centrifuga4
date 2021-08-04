@@ -10,14 +10,14 @@ from werkzeug.exceptions import BadRequest, InternalServerError
 from server.recaptcha_service import RecaptchaService
 import unittest
 
-from server_tests.database_test_utils import WithApp
 
 PRE_ENROLMENT_URL = '/pre-enrolment/v1/pre-enrolment'
 
 
-class TestPreEnrolmentPost(WithApp):
+class TestPreEnrolmentPost(unittest.TestCase):
     def setUp(self):
-        super().setUp()
+        self.app = init_app(TestingConfigNoDb)
+        self.client = self.app.test_client()
 
         self.sample_recaptcha = "a-token"
         self.sample_body = {"sample": "body"}  # actual validation/parsing is not tested in this unit
