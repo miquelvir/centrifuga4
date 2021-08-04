@@ -1,4 +1,4 @@
-name: test_main_on_push
+name: tests
 
 on: [push]
 
