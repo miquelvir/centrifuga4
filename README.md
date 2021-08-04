@@ -75,13 +75,7 @@ Create a .env on the root folder of the project with the following variables:
    1. 'development' (using a separate React development server),
    2. 'production' (for the final Heroku deployment),
    3. 'development-built' (development, but using the build version of the React frontend)
-8. RECAPTCHA (the private key)
-9. EMAIL_DEBUGGING_MODE=1  #todo explain
-10. SMTP_BULK_PASSWORD
-11. SMTP_BULK_USER=news_xamfra96
-12. SMTP_BULK_DOMAIN=newsletter.xamfra.net
-13. SMTP_DOMAIN=smtp.xamfra.net
-14. SMTP_USER=xamfra@xamfra.net
+
 
 ### FRONTEND
 

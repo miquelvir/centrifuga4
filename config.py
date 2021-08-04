@@ -34,27 +34,6 @@ class Config(object):
     PUBLIC_VALIDATION_SECRET = SECRET_KEY
 
     RECAPTCHA = os.getenv("RECAPTCHA")
-    RECAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify"
-
-    SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-    SMTP_DOMAIN = os.getenv("SMTP_DOMAIN")
-    SMTP_USER = os.getenv("SMTP_USER")
-    SMTP_FROM_EMAIL = SMTP_USER  # email which will be shown in the 'from' field
-    SMTP_REPLY_TO = SMTP_FROM_EMAIL
-    SMTP_TLS_PORT = 465
-
-    SMTP_BULK_PASSWORD = os.getenv("SMTP_BULK_PASSWORD")
-    SMTP_BULK_USER = os.getenv("SMTP_BULK_USER")
-    SMTP_BULK_DOMAIN = os.getenv("SMTP_BULK_DOMAIN")
-    SMTP_BULK_FROM_EMAIL = SMTP_USER  # email which will be shown in the 'from' field
-    SMTP_BULK_REPLY_TO = SMTP_REPLY_TO
-    SMTP_BULK_PORT = 587
-
-    BCC_ADMIN = False
-
-    DEBUGGING_EMAIL = "vazquezrius.miquel@gmail.com"
-    DEBUGGING_MODE = bool(int(os.getenv("EMAIL_DEBUGGING_MODE")))
-    DEBUGGING_SEND_EMAILS = True
 
 
 class DevelopmentConfig(Config):
@@ -128,8 +107,3 @@ class HerokuManualLiveConfig(ProductionConfig):
 
 class TestingConfig(DevelopmentConfig):
     TESTING = True
-
-
-class TestingConfigNoDb(DevelopmentConfig):
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = None
