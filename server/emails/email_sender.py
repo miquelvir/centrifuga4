@@ -9,6 +9,7 @@ from email.mime.application import MIMEApplication
 
 from . import config
 from .my_email import Email
+from flask import current_app
 
 _FROM = "From"
 _TO = "To"
@@ -25,12 +26,12 @@ class EmailSender:
 
     def __init__(
         self,
-        domain: str = config.SMTP_DOMAIN,
-        port: int = config.SMTP_TLS_PORT,
-        user: str = config.SMTP_USER,
-        from_: str = config.SMTP_FROM_EMAIL,
-        password: str = config.SMTP_PASSWORD,
-        reply_to: str = config.SMTP_REPLY_TO,
+        domain: str = current_app.config["SMTP_DOMAIN"],
+        port: int = current_app.config["SMTP_TLS_PORT"],
+        user: str = current_app.config["SMTP_USER"],
+        from_: str = current_app.config["SMTP_FROM_EMAIL"],
+        password: str = current_app.config["SMTP_PASSWORD"],
+        reply_to: str = current_app.config["SMTP_REPLY_TO"],
         use_ssl: bool = True,
     ):
         """ initialise an ssl context, and an SMTP connection using the previous context; login using credentials """
@@ -64,12 +65,12 @@ class EmailSender:
     @classmethod
     def init_bulk(
         cls,
-        domain: str = config.SMTP_BULK_DOMAIN,
-        port: int = config.SMTP_BULK_PORT,
-        user: str = config.SMTP_BULK_USER,
-        from_: str = config.SMTP_BULK_FROM_EMAIL,
-        password: str = config.SMTP_BULK_PASSWORD,
-        reply_to: str = config.SMTP_BULK_REPLY_TO,
+        domain: str = current_app.config["SMTP_BULK_DOMAIN"],
+        port: int = current_app.config["SMTP_BULK_PORT"],
+        user: str = current_app.config["SMTP_BULK_USER"],
+        from_: str = current_app.config["SMTP_BULK_FROM_EMAIL"],
+        password: str = current_app.config["SMTP_BULK_PASSWORD"],
+        reply_to: str = current_app.config["SMTP_BULK_REPLY_TO"],
         use_ssl: bool = False,
     ):
         return cls(domain, port, user, from_, password, reply_to, use_ssl)

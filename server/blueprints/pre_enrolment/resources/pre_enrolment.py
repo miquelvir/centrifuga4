@@ -1,47 +1,36 @@
-from threading import Thread
-
-import marshmallow
+from dependency_injector.wiring import inject, Provide
 from flask import request
 from flask_restful import Resource
-
-from server import db
-from server.auth_auth.recaptcha import validate_recaptcha
-from server.models import Course, Student, Guardian
-from server.schemas.schemas import StudentSchema, GuardianSchema
-from server.emails.emails.pre_enrolment_email import my_job
+from werkzeug.exceptions import BadRequest, InternalServerError
+from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
+from server.recaptcha_service import RecaptchaService
+from server.containers import Container
 
 
 class PreEnrollment(Resource):
-    def post(self):
-        recaptcha = request.json["recaptcha"]
+    @inject
+    def post(self,
+             recaptcha_service: RecaptchaService = Provide[Container.recaptcha_service],
+             pre_enrolment_service: PreEnrolmentService = Provide[Container.pre_enrolment_service]):
+        if request.json is None:
+            raise BadRequest("no json found")
 
-        validate_recaptcha(recaptcha)
-
-        body = request.json["body"]
-
-        guardians = body["guardians"]
-        courses = body["courses"]
-        del body["guardians"]
-        del body["courses"]
-        body["id"] = Student.generate_new_id()
-        body["enrolment_status"] = "pre-enrolled"
-
+        # validate recaptcha passes
+        recaptcha = request.json.get("recaptcha", None)
         try:
-            s: Student = StudentSchema().load(body)
-            for course_id in courses:
-                c = Course.query.filter(Course.id == course_id).one_or_none()
-                if not c:
-                    return 400, "no course found with id %s" % course_id
-                s.courses.append(c)
+            recaptcha_service.validate(recaptcha)
+        except (BadRequest, InternalServerError):
+            raise
 
-            for guardian in guardians:
-                guardian["id"] = Guardian.generate_new_id()
-                g: Guardian = GuardianSchema().load(guardian)
-                s.guardians.append(g)
-        except marshmallow.exceptions.ValidationError as e:
-            return 400, "invalid request: " + str(e)
-        db.session.add(s)
-        db.session.commit()
+        # if recaptcha is valid, then try to parse a new student
+        body = request.json.get("body", None)
+        try:
+            student = pre_enrolment_service.parse_student(body)
+        except BadRequest:
+            raise
 
-        thread = Thread(target=my_job, args=(s.official_notification_emails, s.id))
-        thread.start()
+        # save the new student to the db
+        pre_enrolment_service.save_student(student)
+
+        # signal new student added
+        pre_enrolment_service.trigger_event_student_pre_enrolled(student)
