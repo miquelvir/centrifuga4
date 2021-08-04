@@ -10,7 +10,7 @@ export const passwordResetService = {
 function reset(username, password, token, recaptcha) {
 
     return new Promise(function(resolve, reject) {
-        axios({url: `${BACKEND_URL}/password-reset/v1/newPassword`,
+        axios({url: `${BACKEND_URL}/password-reset/v1/redeem`,
             method: 'POST',
             data: {
                 email: username,
@@ -30,7 +30,7 @@ function reset(username, password, token, recaptcha) {
 function startReset(username, recaptcha) {
 
     return new Promise(function(resolve, reject) {
-        axios({url: `${BACKEND_URL}/password-reset/v1/passwordReset`,
+        axios({url: `${BACKEND_URL}/password-reset/v1/request`,
             method: 'POST',
             data: {
                 email: username,
