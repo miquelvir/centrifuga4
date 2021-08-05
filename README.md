@@ -1,5 +1,6 @@
 Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management platform.
 
+![flake8](https://github.com/miquelvir/centrifuga4/actions/workflows/flake8.yml/badge.svg)
 ![tests](https://github.com/miquelvir/centrifuga4/actions/workflows/test.yml/badge.svg)
 ![black](https://github.com/miquelvir/centrifuga4/actions/workflows/black.yml/badge.svg)
 
