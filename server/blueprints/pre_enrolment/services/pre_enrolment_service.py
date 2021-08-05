@@ -74,4 +74,3 @@ class PreEnrolmentService:
     def save_student(student: Student):
         db.session.add(student)
         db.session.commit()
-

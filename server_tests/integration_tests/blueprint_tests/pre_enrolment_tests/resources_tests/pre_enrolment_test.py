@@ -8,13 +8,15 @@ import unittest
 from parameterized import parameterized
 
 from server import db
-from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
+from server.blueprints.pre_enrolment.services.pre_enrolment_service import (
+    PreEnrolmentService,
+)
 from server.models import Student, Course, Guardian
 from server_tests.database_test_utils import WithDatabase
 from server_tests.mothers.course_mother import CourseJsonMother
 from server_tests.mothers.pre_enrolment_mother import PreEnrolmentMother
 
-PRE_ENROLMENT_URL = '/pre-enrolment/v1/pre-enrolment'
+PRE_ENROLMENT_URL = "/pre-enrolment/v1/pre-enrolment"
 
 
 def add_sample_courses(courses):
@@ -46,18 +48,21 @@ class TestPreEnrolmentPost(WithDatabase):
     @contextlib.contextmanager
     def override_external_services(self):
         """ shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
-        with self.app.container.recaptcha_service.override(self.recaptcha_service_mock) as ctx1:
-            with self.app.container.pre_enrolment_service.override(self.pre_enrolment_service) as ctx2:
+        with self.app.container.recaptcha_service.override(
+            self.recaptcha_service_mock
+        ) as ctx1:
+            with self.app.container.pre_enrolment_service.override(
+                self.pre_enrolment_service
+            ) as ctx2:
                 yield ctx1, ctx2
 
     def _post_pre_enrolment(self, data):
         with self.override_external_services():
             return self.client.post(PRE_ENROLMENT_URL, json=data)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(), ),
-        (PreEnrolmentMother.child_mark(), )
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_student_is_stored(self, post_data):
         # Arrange
         expected_status_code = 200
@@ -75,10 +80,9 @@ class TestPreEnrolmentPost(WithDatabase):
 
         self.assertEqual(expected_student_count, student_count)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_has_courses(self, post_data):
         # Arrange
         chosen_courses = post_data["body"]["courses"]
@@ -97,10 +101,9 @@ class TestPreEnrolmentPost(WithDatabase):
         self.assertEqual(expected_courses_count, courses_count)
         self.assertListEqual(chosen_courses, courses_ids)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_has_guardians(self, post_data):
         # Arrange
         expected_guardians_count = len(post_data["body"]["guardians"])
@@ -113,10 +116,9 @@ class TestPreEnrolmentPost(WithDatabase):
             guardians = Guardian.query.all()
             self.assertEqual(expected_guardians_count, len(guardians))
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_has_name_saved(self, post_data):
         # Arrange
         expected_name = post_data["body"]["name"]
@@ -132,10 +134,9 @@ class TestPreEnrolmentPost(WithDatabase):
         self.assertEqual(expected_surname1, student.surname1)
         self.assertEqual(expected_surname2, student.surname2)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_has_name_cleaned(self, post_data):
         # Arrange
         expected_name = post_data["body"]["name"]
@@ -157,10 +158,9 @@ class TestPreEnrolmentPost(WithDatabase):
         self.assertEqual(expected_surname1, student.surname1)
         self.assertEqual(expected_surname2, student.surname2)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_status_is_pre_enrolled(self, post_data):
         # Arrange
         expected_status = EnrolmentStatus.pre_enrolled
@@ -174,10 +174,9 @@ class TestPreEnrolmentPost(WithDatabase):
 
         self.assertEqual(expected_status, status)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_pre_enrolment_date_is_today(self, post_data):
         # Arrange
         expected_pre_enrolment_date = datetime.datetime.now().date()
@@ -191,10 +190,9 @@ class TestPreEnrolmentPost(WithDatabase):
 
         self.assertEqual(expected_pre_enrolment_date, pre_enrolment_date)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_enrolment_date_is_none(self, post_data):
         # Arrange
         expected_enrolment_date = None
@@ -208,10 +206,9 @@ class TestPreEnrolmentPost(WithDatabase):
 
         self.assertEqual(expected_enrolment_date, enrolment_date)
 
-    @parameterized.expand([
-        (PreEnrolmentMother.adult_anna(),),
-        (PreEnrolmentMother.child_mark(),)
-    ])
+    @parameterized.expand(
+        [(PreEnrolmentMother.adult_anna(),), (PreEnrolmentMother.child_mark(),)]
+    )
     def test_early_un_enrolment_date_is_none(self, post_data):
         # Arrange
         expected_early_un_enrolment_date = None

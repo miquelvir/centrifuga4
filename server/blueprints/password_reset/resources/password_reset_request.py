@@ -3,7 +3,9 @@ from flask import request, current_app
 from flask_restful import Resource
 from werkzeug.exceptions import BadRequest, InternalServerError
 
-from server.blueprints.password_reset.services.password_reset_service import PasswordResetService
+from server.blueprints.password_reset.services.password_reset_service import (
+    PasswordResetService,
+)
 from server.containers import Container
 from server.recaptcha_service import RecaptchaService
 
@@ -12,9 +14,13 @@ SUCCESS_MESSAGE = "if there is a user for this email, it will receive a password
 
 
 class PasswordResetCollectionRes(Resource):
-    def post(self,
-             recaptcha_service: RecaptchaService = Provide[Container.recaptcha_service],
-             password_reset_service: PasswordResetService = Provide[Container.password_reset_service]):
+    def post(
+        self,
+        recaptcha_service: RecaptchaService = Provide[Container.recaptcha_service],
+        password_reset_service: PasswordResetService = Provide[
+            Container.password_reset_service
+        ],
+    ):
         if request.json is None:
             raise BadRequest("no json found")
 

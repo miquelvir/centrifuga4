@@ -34,5 +34,5 @@ class JsonPersonMother:
             "is_working": False,
             "education_entity": "escola pia sarrià",
             "education_year": "eso_4",
-            "career": None
+            "career": None,
         }

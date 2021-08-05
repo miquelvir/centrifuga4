@@ -3,7 +3,9 @@ import json
 from unittest.mock import Mock
 
 import server
-from server.blueprints.password_reset.services.password_reset_service import PasswordResetService
+from server.blueprints.password_reset.services.password_reset_service import (
+    PasswordResetService,
+)
 from server.recaptcha_service import RecaptchaService
 import unittest
 
@@ -11,7 +13,7 @@ from server.models import Student, User
 from server_tests.database_test_utils import WithDatabase
 from server_tests.mothers.user_mother import UserMother
 
-PASSWORD_RESET_REDEEM_URL = '/password-reset/v1/redeem'
+PASSWORD_RESET_REDEEM_URL = "/password-reset/v1/redeem"
 
 
 class TestPreEnrolmentPost(WithDatabase):
@@ -36,17 +38,24 @@ class TestPreEnrolmentPost(WithDatabase):
     @contextlib.contextmanager
     def override_external_services(self):
         """ shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
-        with self.app.container.recaptcha_service.override(self.recaptcha_service_mock) as ctx1:
-            with self.app.container.password_reset_service.override(self.password_reset_service) as ctx2:
+        with self.app.container.recaptcha_service.override(
+            self.recaptcha_service_mock
+        ) as ctx1:
+            with self.app.container.password_reset_service.override(
+                self.password_reset_service
+            ) as ctx2:
                 yield ctx1, ctx2
 
     def _post_password_reset_redeem(self, token: bytes, password, recaptcha=""):
         with self.override_external_services():
-            return self.client.post(PASSWORD_RESET_REDEEM_URL, json={
-                "token": token.decode('UTF-8'),
-                "recaptcha": recaptcha,
-                "password": password
-            })
+            return self.client.post(
+                PASSWORD_RESET_REDEEM_URL,
+                json={
+                    "token": token.decode("UTF-8"),
+                    "recaptcha": recaptcha,
+                    "password": password,
+                },
+            )
 
     @staticmethod
     def _get_stored_user():

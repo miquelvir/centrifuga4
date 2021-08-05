@@ -49,7 +49,7 @@ class User(MyBase, UserMixin):
 
     @classmethod
     def is_strong_enough_password(cls, password: str) -> bool:
-        """ :returns true if the password is strong enough, false otherwise
+        """:returns true if the password is strong enough, false otherwise
 
         a valid password must fulfill:
         - is a string

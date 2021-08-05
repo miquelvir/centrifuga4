@@ -99,13 +99,21 @@ class Student(Person):
 
     @validates("enrolment_status")
     def cleaner2(self, key, value):
-        assert value in EnrolmentStatus.any_, f"status must be one of {EnrolmentStatus.any_}"
+        assert (
+            value in EnrolmentStatus.any_
+        ), f"status must be one of {EnrolmentStatus.any_}"
 
         # if status is changing to enrolled or early-unenrolled, update the enrolment / early-unenrolment date
-        if self.enrolment_status != EnrolmentStatus.enrolled and value == EnrolmentStatus.enrolled:
+        if (
+            self.enrolment_status != EnrolmentStatus.enrolled
+            and value == EnrolmentStatus.enrolled
+        ):
             self.enrolment_date = datetime.date.today()
 
-        if self.enrolment_status != EnrolmentStatus.early_unenrolled and value == EnrolmentStatus.early_unenrolled:
+        if (
+            self.enrolment_status != EnrolmentStatus.early_unenrolled
+            and value == EnrolmentStatus.early_unenrolled
+        ):
             self.early_unenrolment_date = datetime.date.today()
 
         return value

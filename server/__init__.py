@@ -135,7 +135,9 @@ def init_app(config=None):
         app.register_blueprint(auth_blueprint, url_prefix="/auth/v1")
         app.register_blueprint(emails_blueprint, url_prefix="/emails/v1")
         app.register_blueprint(invites_blueprint, url_prefix="/invites/v1")
-        app.register_blueprint(password_reset_blueprint, url_prefix="/password-reset/v1")
+        app.register_blueprint(
+            password_reset_blueprint, url_prefix="/password-reset/v1"
+        )
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
         app.register_blueprint(pre_enrolment_blueprint, url_prefix="/pre-enrolment/v1")
         app.register_blueprint(calendars_blueprint, url_prefix="/calendars/v1")

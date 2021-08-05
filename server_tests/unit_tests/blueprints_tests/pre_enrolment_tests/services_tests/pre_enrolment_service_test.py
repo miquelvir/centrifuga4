@@ -9,7 +9,9 @@ from server.models.student import EnrolmentStatus
 import unittest
 
 from server_tests.database_test_utils import WithDatabase
-from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
+from server.blueprints.pre_enrolment.services.pre_enrolment_service import (
+    PreEnrolmentService,
+)
 from server_tests.mothers.course_mother import CourseMother
 from server_tests.mothers.student_mother import StudentJsonMother, StudentMother
 
@@ -54,8 +56,10 @@ class TestPreEnrolmentServiceCourses(WithDatabase):
 
     def test_returns_all_published_courses(self):
         # Arrange
-        expected_return_value = [CourseMother.published(id_="1"),
-                                 CourseMother.published(id_="2")]
+        expected_return_value = [
+            CourseMother.published(id_="1"),
+            CourseMother.published(id_="2"),
+        ]
         all_courses = [*expected_return_value, CourseMother.not_published(id_="3")]
         with self.app.app_context():
             for course in all_courses:
@@ -88,10 +92,12 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
             self.sut.parse_student(sample_body)
         self.assertEqual(expected_error_message, ctx.exception.description)
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_student_has_generated_id(self, sample_body):
         # Arrange
         expected_student_id = self.sample_student_id
@@ -102,10 +108,12 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
         # Assert
         self.assertEqual(expected_student_id, student.id)
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_raises_bad_request_if_no_course_found(self, sample_body):
         # Arrange
         self.sut._get_course = lambda id_: None
@@ -118,10 +126,12 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
             self.sut.parse_student(sample_body)
         self.assertEqual(expected_error_message, ctx.exception.description)
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_raises_bad_request_if_course_not_public(self, sample_body):
         # Arrange
         self.sut._get_course = lambda id_: Course(is_published=False)
@@ -134,10 +144,12 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
             self.sut.parse_student(sample_body)
         self.assertEqual(expected_error_message, ctx.exception.description)
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_raises_bad_request_if_student_validation_error(self, sample_body):
         # Arrange
         del sample_body["name"]
@@ -147,9 +159,11 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
         with self.assertRaises(BadRequest):
             self.sut.parse_student(sample_body)
 
-    @parameterized.expand([
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_raises_bad_request_if_guardian_validation_error(self, sample_body):
         # Arrange
         del sample_body["guardians"][0]["name"]
@@ -159,10 +173,12 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
         with self.assertRaises(BadRequest):
             self.sut.parse_student(sample_body)
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_student_enrolment_status_is_pre_enrolled(self, sample_body):
         # Arrange
         expected_student_status = EnrolmentStatus.pre_enrolled
@@ -173,10 +189,12 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
         # Assert
         self.assertEqual(expected_student_status, student.enrolment_status)
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_student_has_guardians(self, sample_body):
         # Arrange
         expected_guardians = len(sample_body["guardians"])
@@ -186,12 +204,17 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
 
         # Assert
         self.assertEqual(expected_guardians, len(student.guardians))
-        self.assertEqual([g["id"] for g in sample_body["guardians"]], [g.id for g in student.guardians])
+        self.assertEqual(
+            [g["id"] for g in sample_body["guardians"]],
+            [g.id for g in student.guardians],
+        )
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_student_has_name(self, sample_body):
         # Arrange
         expected_name = sample_body["name"]
@@ -206,10 +229,12 @@ class TestPreEnrolmentServiceParseStudent(unittest.TestCase):
         self.assertEqual(expected_surname1, student.surname1)
         self.assertEqual(expected_surname2, student.surname2)
 
-    @parameterized.expand([
-        (StudentJsonMother.adult_anna(),),
-        (StudentJsonMother.child_mark(),),
-    ])
+    @parameterized.expand(
+        [
+            (StudentJsonMother.adult_anna(),),
+            (StudentJsonMother.child_mark(),),
+        ]
+    )
     def test_student_has_name_cleaned(self, sample_body):
         # Arrange
         expected_name = sample_body["name"]

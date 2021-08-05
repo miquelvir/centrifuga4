@@ -1,31 +1,39 @@
 import contextlib
 import json
 
-from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
+from server.blueprints.pre_enrolment.services.pre_enrolment_service import (
+    PreEnrolmentService,
+)
 from unittest.mock import Mock
 import unittest
 
 from server_tests.database_test_utils import WithApp
 from server_tests.mothers.course_mother import CourseMother
 
-PRE_ENROLMENT_URL = '/pre-enrolment/v1/courses'
+PRE_ENROLMENT_URL = "/pre-enrolment/v1/courses"
 
 
 class TestPreEnrolmentPost(WithApp):
     def setUp(self):
         super().setUp()
 
-        self.courses = [CourseMother.published(id_="1"),
-                        CourseMother.published(id_="2"),
-                        CourseMother.published(id_="3")]
+        self.courses = [
+            CourseMother.published(id_="1"),
+            CourseMother.published(id_="2"),
+            CourseMother.published(id_="3"),
+        ]
 
         self.pre_enrolment_service_mock = Mock(spec=PreEnrolmentService)
-        self.pre_enrolment_service_mock.get_published_courses.return_value = self.courses
+        self.pre_enrolment_service_mock.get_published_courses.return_value = (
+            self.courses
+        )
 
     @contextlib.contextmanager
     def override_pre_enrolment_service(self):
         """ shortcut for overriding the pre enrolment service with the mock """
-        with self.app.container.pre_enrolment_service.override(self.pre_enrolment_service_mock) as ctx:
+        with self.app.container.pre_enrolment_service.override(
+            self.pre_enrolment_service_mock
+        ) as ctx:
             yield ctx
 
     def test_returns_empty_list_if_no_courses(self):
@@ -53,7 +61,9 @@ class TestPreEnrolmentPost(WithApp):
         # Assert
         self.assertEqual(r.status_code, 200)
         self.assertEqual(len(json.loads(r.get_data(as_text=True))), expected_count)
-        self.assertEqual([c["id"] for c in json.loads(r.get_data(as_text=True))], expected_ids)
+        self.assertEqual(
+            [c["id"] for c in json.loads(r.get_data(as_text=True))], expected_ids
+        )
 
     def test_not_returns_private_fields(self):
         # Arrange

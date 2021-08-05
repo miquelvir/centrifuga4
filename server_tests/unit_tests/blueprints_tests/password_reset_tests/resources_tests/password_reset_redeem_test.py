@@ -5,11 +5,14 @@ from flask.wrappers import Response
 from werkzeug.exceptions import BadRequest, InternalServerError, Unauthorized
 import unittest
 
-from server.blueprints.password_reset.services.password_reset_service import PasswordResetService
-from server_tests.unit_tests.blueprints_tests.password_reset_tests.resources_tests.base_test_class import \
-    TestPasswordResetPost
+from server.blueprints.password_reset.services.password_reset_service import (
+    PasswordResetService,
+)
+from server_tests.unit_tests.blueprints_tests.password_reset_tests.resources_tests.base_test_class import (
+    TestPasswordResetPost,
+)
 
-PASSWORD_RESET_REDEEM_URL = '/password-reset/v1/redeem'
+PASSWORD_RESET_REDEEM_URL = "/password-reset/v1/redeem"
 
 
 class TestPreEnrolmentPost(TestPasswordResetPost):
@@ -18,13 +21,19 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
         self.sample_password = "the-&54New_PASSWORD"
         self.password_reset_service_mock._update_user_password = Mock()
 
-    def _recaptcha_and_others(self, no_password: bool = False, no_token: bool = False) -> dict:
+    def _recaptcha_and_others(
+        self, no_password: bool = False, no_token: bool = False
+    ) -> dict:
         """ :returns a sample request json with a sample recaptcha token and a sample body (pre-enrolment data) """
         result = self._only_recaptcha()
 
         if not no_token:
             with self.app.app_context():
-                token = PasswordResetService().generate_token(self.sample_user).decode('UTF-8')
+                token = (
+                    PasswordResetService()
+                    .generate_token(self.sample_user)
+                    .decode("UTF-8")
+                )
             result["token"] = token
 
         if not no_password:
@@ -39,7 +48,9 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
 
         # Assert
         self.assertEqual(r.status_code, 400)
-        self.assertEqual(json.loads(r.get_data(as_text=True))["message"], "no json found")
+        self.assertEqual(
+            json.loads(r.get_data(as_text=True))["message"], "no json found"
+        )
 
     def test_calls_validates_recaptcha(self):
         # Arrange
@@ -57,7 +68,9 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
 
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -68,7 +81,9 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
 
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 500)
@@ -77,7 +92,10 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
         # Arrange
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others(no_password=True))
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL,
+                json=self._recaptcha_and_others(no_password=True),
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -86,7 +104,10 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
         # Arrange
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others(no_token=True))
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL,
+                json=self._recaptcha_and_others(no_token=True),
+            )
 
         # Assert
         self.assertEqual(r.status_code, 401)
@@ -97,7 +118,9 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
 
         # Act
         with self.override_all():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -106,10 +129,14 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
         # Arrange
         # Act
         with self.override_all():
-            self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others())
+            self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others()
+            )
 
         # Assert
-        self.password_reset_service_mock.get_user_from_email.assert_called_with(self.sample_email)
+        self.password_reset_service_mock.get_user_from_email.assert_called_with(
+            self.sample_email
+        )
 
     def test_bad_request_when_no_user_for_email(self):
         # Arrange
@@ -117,7 +144,9 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
 
         # Act
         with self.override_all():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -128,7 +157,9 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
 
         # Act
         with self.override_all():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 401)
@@ -137,17 +168,23 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
         # Arrange
         # Act
         with self.override_all():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others()
+            )
 
         # Assert
-        self.password_reset_service_mock.update_user_password.validate.called_with(self.sample_user, self.sample_password)
+        self.password_reset_service_mock.update_user_password.validate.called_with(
+            self.sample_user, self.sample_password
+        )
         self.assertEqual(r.status_code, 200)
 
     def test_success_if_decode_succeeds(self):
         # Arrange
         # Act
         with self.override_all():
-            r: Response = self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 200)
@@ -156,10 +193,14 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
         # Arrange
         # Act
         with self.override_all():
-            self.client.post(PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others())
+            self.client.post(
+                PASSWORD_RESET_REDEEM_URL, json=self._recaptcha_and_others()
+            )
 
         # Assert
-        self.password_reset_service_mock.trigger_event_user_password_reset_redeem.assert_called_with(self.sample_user)
+        self.password_reset_service_mock.trigger_event_user_password_reset_redeem.assert_called_with(
+            self.sample_user
+        )
 
 
 if __name__ == "__main__":

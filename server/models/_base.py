@@ -22,7 +22,9 @@ class MyBase(db.Model):
 
     @classmethod
     def generate_new_id(cls, avoid=None):
-        return str(uuid.uuid4())  # to avoid coupling to db since probability of collision is negligible
+        return str(
+            uuid.uuid4()
+        )  # to avoid coupling to db since probability of collision is negligible
 
         if avoid is None:
             avoid = []

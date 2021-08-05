@@ -5,7 +5,9 @@ from flask import current_app
 from parameterized import parameterized
 
 import server
-from server.blueprints.password_reset.services.password_reset_service import PasswordResetService
+from server.blueprints.password_reset.services.password_reset_service import (
+    PasswordResetService,
+)
 from server.models import User
 from unittest.mock import Mock
 from werkzeug.exceptions import BadRequest, Unauthorized
@@ -34,7 +36,9 @@ class TestPasswordResetServiceTryDecodeToken(WithApp):  # todo refractor config 
     def test_raises_unauthorized_if_invalid_password_hash(self):
         # Arrange
         with self.app.app_context():
-            token = self.sut.generate_token(User(password_hash=self.sample_password_hash)).decode("UTF-8")
+            token = self.sut.generate_token(
+                User(password_hash=self.sample_password_hash)
+            ).decode("UTF-8")
 
             # Act
             self.sample_password_hash += "make-it-invalid"
@@ -45,16 +49,20 @@ class TestPasswordResetServiceTryDecodeToken(WithApp):  # todo refractor config 
 
 
 class TestPasswordResetServiceUpdatePassword(WithDatabase):
-    @parameterized.expand([
-        ("",),
-        (None,),
-        ("weak", ),
-        ("123", ),
-        (".......................", ),
-        ("aaaaaaaaaaaaaaaaaaaaaaa", ),
-        ("11111111111111111111111", )
-    ])
-    def test_raises_bad_request_when_weak_password_deprecated(self, new_password):  # todo out of this unit and into whatever validates passwords (rn: User)
+    @parameterized.expand(
+        [
+            ("",),
+            (None,),
+            ("weak",),
+            ("123",),
+            (".......................",),
+            ("aaaaaaaaaaaaaaaaaaaaaaa",),
+            ("11111111111111111111111",),
+        ]
+    )
+    def test_raises_bad_request_when_weak_password_deprecated(
+        self, new_password
+    ):  # todo out of this unit and into whatever validates passwords (rn: User)
         # Arrange
         sut = PasswordResetService()
         with self.app.app_context():
@@ -125,7 +133,9 @@ class TestPasswordResetServiceGenerateToken(WithApp):  # todo refractor config o
 
     @staticmethod
     def _get_token_data(token: str) -> dict:
-        return jwt.decode(token, options={"verify_signature": False, "verify_exp": False})
+        return jwt.decode(
+            token, options={"verify_signature": False, "verify_exp": False}
+        )
 
     def test_token_has_correct_email(self):
         # Arrange
@@ -142,9 +152,13 @@ class TestPasswordResetServiceGenerateToken(WithApp):  # todo refractor config o
     def test_token_has_correct_expires_in(self):
         # Arrange
         PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES = 10
-        start = datetime.datetime(day=1, month=1, year=2001, hour=20, minute=0, tzinfo=datetime.timezone.utc)
+        start = datetime.datetime(
+            day=1, month=1, year=2001, hour=20, minute=0, tzinfo=datetime.timezone.utc
+        )
         self.sut._get_datetime_now = lambda: start
-        expected_end = start + datetime.timedelta(minutes=PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES)
+        expected_end = start + datetime.timedelta(
+            minutes=PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES
+        )
 
         # Act
         with self.app.app_context():
@@ -160,7 +174,12 @@ class TestPasswordResetServiceGenerateToken(WithApp):  # todo refractor config o
             token = self.sut.generate_token(self.sample_user)
 
             # Act
-            jwt.decode(token, current_app.secret_key + self.sample_user.password_hash, algorithms=["HS256"], options={"verify_exp": False})
+            jwt.decode(
+                token,
+                current_app.secret_key + self.sample_user.password_hash,
+                algorithms=["HS256"],
+                options={"verify_exp": False},
+            )
 
         # Assert
 
@@ -172,7 +191,12 @@ class TestPasswordResetServiceGenerateToken(WithApp):  # todo refractor config o
             # Act
             # Assert
             with self.assertRaises(jwt.InvalidSignatureError):
-                jwt.decode(token, current_app.secret_key, algorithms=["HS256"], options={"verify_exp": False})
+                jwt.decode(
+                    token,
+                    current_app.secret_key,
+                    algorithms=["HS256"],
+                    options={"verify_exp": False},
+                )
 
 
 if __name__ == "__main__":

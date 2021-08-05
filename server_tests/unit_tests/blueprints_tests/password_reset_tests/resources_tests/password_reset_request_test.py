@@ -1,16 +1,19 @@
 import contextlib
 import json
-from server.blueprints.password_reset.services.password_reset_service import PasswordResetService
+from server.blueprints.password_reset.services.password_reset_service import (
+    PasswordResetService,
+)
 from unittest.mock import Mock
 from flask.wrappers import Response
 from werkzeug.exceptions import BadRequest, InternalServerError
 from server.recaptcha_service import RecaptchaService
 import unittest
 from server_tests.mothers.user_mother import UserMother
-from server_tests.unit_tests.blueprints_tests.password_reset_tests.resources_tests.base_test_class import \
-    TestPasswordResetPost
+from server_tests.unit_tests.blueprints_tests.password_reset_tests.resources_tests.base_test_class import (
+    TestPasswordResetPost,
+)
 
-PASSWORD_RESET_REQUEST_URL = '/password-reset/v1/request'
+PASSWORD_RESET_REQUEST_URL = "/password-reset/v1/request"
 
 
 class TestPasswordResetRequestPost(TestPasswordResetPost):
@@ -25,7 +28,9 @@ class TestPasswordResetRequestPost(TestPasswordResetPost):
 
         # Assert
         self.assertEqual(r.status_code, 400)
-        self.assertEqual(json.loads(r.get_data(as_text=True))["message"], "no json found")
+        self.assertEqual(
+            json.loads(r.get_data(as_text=True))["message"], "no json found"
+        )
 
     def test_calls_recaptcha_with_token(self):
         # Arrange
@@ -42,7 +47,9 @@ class TestPasswordResetRequestPost(TestPasswordResetPost):
 
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PASSWORD_RESET_REQUEST_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REQUEST_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -53,7 +60,9 @@ class TestPasswordResetRequestPost(TestPasswordResetPost):
 
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PASSWORD_RESET_REQUEST_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REQUEST_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 500)
@@ -62,10 +71,14 @@ class TestPasswordResetRequestPost(TestPasswordResetPost):
         # Arrange
         # Act
         with self.override_all():
-            self.client.post(PASSWORD_RESET_REQUEST_URL, json=self._recaptcha_and_email())
+            self.client.post(
+                PASSWORD_RESET_REQUEST_URL, json=self._recaptcha_and_email()
+            )
 
         # Assert
-        self.password_reset_service_mock.get_user_from_email.assert_called_with(self.sample_email)
+        self.password_reset_service_mock.get_user_from_email.assert_called_with(
+            self.sample_email
+        )
 
     def test_bad_request_if_no_email(self):
         # Arrange
@@ -73,7 +86,9 @@ class TestPasswordResetRequestPost(TestPasswordResetPost):
 
         # Act
         with self.override_all():
-            r: Response = self.client.post(PASSWORD_RESET_REQUEST_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PASSWORD_RESET_REQUEST_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -82,19 +97,27 @@ class TestPasswordResetRequestPost(TestPasswordResetPost):
         # Arrange
         # Act
         with self.override_all():
-            self.client.post(PASSWORD_RESET_REQUEST_URL, json=self._recaptcha_and_email())
+            self.client.post(
+                PASSWORD_RESET_REQUEST_URL, json=self._recaptcha_and_email()
+            )
 
         # Assert
-        self.password_reset_service_mock.generate_token.assert_called_with(self.sample_user)
+        self.password_reset_service_mock.generate_token.assert_called_with(
+            self.sample_user
+        )
 
     def test_calls_trigger_event_if_valid_student(self):
         # Arrange
         # Act
         with self.override_all():
-            self.client.post(PASSWORD_RESET_REQUEST_URL, json=self._recaptcha_and_email())
+            self.client.post(
+                PASSWORD_RESET_REQUEST_URL, json=self._recaptcha_and_email()
+            )
 
         # Assert
-        self.password_reset_service_mock.trigger_event_user_password_reset_request.assert_called_with(self.sample_user, self.sample_jwt)
+        self.password_reset_service_mock.trigger_event_user_password_reset_request.assert_called_with(
+            self.sample_user, self.sample_jwt
+        )
 
 
 if __name__ == "__main__":

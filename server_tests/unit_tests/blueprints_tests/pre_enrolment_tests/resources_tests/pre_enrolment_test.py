@@ -2,7 +2,9 @@ import contextlib
 import json
 from server import init_app
 from config import TestingConfigNoDb
-from server.blueprints.pre_enrolment.services.pre_enrolment_service import PreEnrolmentService
+from server.blueprints.pre_enrolment.services.pre_enrolment_service import (
+    PreEnrolmentService,
+)
 from server.models import Student
 from unittest.mock import Mock
 from flask.wrappers import Response
@@ -12,7 +14,7 @@ import unittest
 
 from server_tests.database_test_utils import WithApp
 
-PRE_ENROLMENT_URL = '/pre-enrolment/v1/pre-enrolment'
+PRE_ENROLMENT_URL = "/pre-enrolment/v1/pre-enrolment"
 
 
 class TestPreEnrolmentPost(WithApp):
@@ -20,7 +22,9 @@ class TestPreEnrolmentPost(WithApp):
         super().setUp()
 
         self.sample_recaptcha = "a-token"
-        self.sample_body = {"sample": "body"}  # actual validation/parsing is not tested in this unit
+        self.sample_body = {
+            "sample": "body"
+        }  # actual validation/parsing is not tested in this unit
         self.sample_student = Student()
 
         self.recaptcha_service_mock = Mock(spec=RecaptchaService)
@@ -32,14 +36,18 @@ class TestPreEnrolmentPost(WithApp):
     @contextlib.contextmanager
     def override_recaptcha_service(self):
         """ shortcut for overriding the recaptcha service with the mock """
-        with self.app.container.recaptcha_service.override(self.recaptcha_service_mock) as ctx:
+        with self.app.container.recaptcha_service.override(
+            self.recaptcha_service_mock
+        ) as ctx:
             yield ctx
 
     @contextlib.contextmanager
     def override_all(self):
         """ shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
         with self.override_recaptcha_service() as ctx1:
-            with self.app.container.pre_enrolment_service.override(self.pre_enrolment_service_mock) as ctx2:
+            with self.app.container.pre_enrolment_service.override(
+                self.pre_enrolment_service_mock
+            ) as ctx2:
                 yield ctx1, ctx2
 
     def _only_recaptcha(self) -> dict:
@@ -57,7 +65,9 @@ class TestPreEnrolmentPost(WithApp):
 
         # Assert
         self.assertEqual(r.status_code, 400)
-        self.assertEqual(json.loads(r.get_data(as_text=True))["message"], "no json found")
+        self.assertEqual(
+            json.loads(r.get_data(as_text=True))["message"], "no json found"
+        )
 
     def test_calls_recaptcha_with_token(self):
         # Arrange
@@ -84,7 +94,9 @@ class TestPreEnrolmentPost(WithApp):
 
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PRE_ENROLMENT_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PRE_ENROLMENT_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -95,7 +107,9 @@ class TestPreEnrolmentPost(WithApp):
 
         # Act
         with self.override_recaptcha_service():
-            r: Response = self.client.post(PRE_ENROLMENT_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PRE_ENROLMENT_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 500)
@@ -107,7 +121,9 @@ class TestPreEnrolmentPost(WithApp):
             self.client.post(PRE_ENROLMENT_URL, json=self._recaptcha_and_body())
 
         # Assert
-        self.pre_enrolment_service_mock.parse_student.assert_called_with(self.sample_body)
+        self.pre_enrolment_service_mock.parse_student.assert_called_with(
+            self.sample_body
+        )
 
     def test_bad_request_if_no_body(self):
         # Arrange
@@ -115,7 +131,9 @@ class TestPreEnrolmentPost(WithApp):
 
         # Act
         with self.override_all():
-            r: Response = self.client.post(PRE_ENROLMENT_URL, json=self._only_recaptcha())
+            r: Response = self.client.post(
+                PRE_ENROLMENT_URL, json=self._only_recaptcha()
+            )
 
         # Assert
         self.assertEqual(r.status_code, 400)
@@ -127,7 +145,9 @@ class TestPreEnrolmentPost(WithApp):
             self.client.post(PRE_ENROLMENT_URL, json=self._recaptcha_and_body())
 
         # Assert
-        self.pre_enrolment_service_mock.save_student.assert_called_with(self.sample_student)
+        self.pre_enrolment_service_mock.save_student.assert_called_with(
+            self.sample_student
+        )
 
     def test_calls_trigger_event_if_valid_student(self):
         # Arrange
@@ -136,7 +156,9 @@ class TestPreEnrolmentPost(WithApp):
             self.client.post(PRE_ENROLMENT_URL, json=self._recaptcha_and_body())
 
         # Assert
-        self.pre_enrolment_service_mock.trigger_event_student_pre_enrolled.assert_called_with(self.sample_student)
+        self.pre_enrolment_service_mock.trigger_event_student_pre_enrolled.assert_called_with(
+            self.sample_student
+        )
 
 
 if __name__ == "__main__":

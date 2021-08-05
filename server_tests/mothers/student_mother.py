@@ -7,13 +7,15 @@ from server_tests.mothers.person_mother import JsonPersonMother
 class StudentMother:
     @staticmethod
     def simple() -> Student:
-        return Student(id="1",
-                       is_studying=False,
-                       is_working=False,
-                       name="name",
-                       surname1="surname1",
-                       surname2="surname2",
-                       enrolment_status=EnrolmentStatus.pre_enrolled)
+        return Student(
+            id="1",
+            is_studying=False,
+            is_working=False,
+            name="name",
+            surname1="surname1",
+            surname2="surname2",
+            enrolment_status=EnrolmentStatus.pre_enrolled,
+        )
 
 
 class StudentJsonMother:
@@ -30,7 +32,7 @@ class StudentJsonMother:
             "payment_comments": "Puc pagar la quota trimestral de 70€/estudiant",
             "price_term": 70,
             "other_comments": "this is a comment",
-            "courses": list(CourseJsonMother.three_ids()[0:1])
+            "courses": list(CourseJsonMother.three_ids()[0:1]),
         }
 
     @classmethod
@@ -46,6 +48,5 @@ class StudentJsonMother:
             "payment_comments": "Puc pagar la quota trimestral de 70€/estudiant",
             "price_term": 70,
             "other_comments": "this is a comment",
-            "courses": list(CourseJsonMother.three_ids()[0:1])
+            "courses": list(CourseJsonMother.three_ids()[0:1]),
         }
-

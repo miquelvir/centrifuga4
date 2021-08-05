@@ -37,15 +37,15 @@ class PasswordResetService:
         :return: password reset token with the user email and expiration time
         """
 
-        expires_delta = datetime.timedelta(minutes=PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES)
+        expires_delta = datetime.timedelta(
+            minutes=PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES
+        )
         expiration_datetime = self._get_datetime_now() + expires_delta
-        body = {
-            "email": user.email,
-            "exp": expiration_datetime
-        }
+        body = {"email": user.email, "exp": expiration_datetime}
         return jwt.encode(
             body,
-            current_app.config["PASSWORD_RESET_SECRET"] + user.password_hash,  # sign the token using secret + old password hash
+            current_app.config["PASSWORD_RESET_SECRET"]
+            + user.password_hash,  # sign the token using secret + old password hash
             algorithm=JWT_ALGORITHM,
         )
 
@@ -94,7 +94,9 @@ class PasswordResetService:
         return User.is_strong_enough_password(password)
 
     # unittest:none
-    def trigger_event_user_password_reset_request(self, user: User, token: bytes) -> None:
+    def trigger_event_user_password_reset_request(
+        self, user: User, token: bytes
+    ) -> None:
         user_password_reset_request.send(self, user=user, token=token)
 
     # unittest:none

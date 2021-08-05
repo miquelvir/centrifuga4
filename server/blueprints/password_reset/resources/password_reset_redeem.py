@@ -7,7 +7,9 @@ from flask_restful import Resource
 from werkzeug.exceptions import BadRequest, Unauthorized, InternalServerError
 
 
-from server.blueprints.password_reset.services.password_reset_service import PasswordResetService
+from server.blueprints.password_reset.services.password_reset_service import (
+    PasswordResetService,
+)
 from server.containers import Container
 from server.models import User
 from server import db
@@ -17,18 +19,24 @@ DONT_VERIFY = {"verify_signature": False}
 
 
 class BadRequestNotStrongPassword(BadRequest):
-    NOT_STRONG_PASSWORD_MESSAGE = "password is not strong enough, must follow: " \
-                                  "^.{8,}$, ^.{0,64}$, (?=.*[a-z]), (?=.*[A-Z]), (?=.*\d), " \
-                                  "(?=.*[ -\/:-@\[-\`{-~]{1,})"
+    NOT_STRONG_PASSWORD_MESSAGE = (
+        "password is not strong enough, must follow: "
+        "^.{8,}$, ^.{0,64}$, (?=.*[a-z]), (?=.*[A-Z]), (?=.*\d), "
+        "(?=.*[ -\/:-@\[-\`{-~]{1,})"
+    )
 
     def __init__(self):
         super().__init__(self.NOT_STRONG_PASSWORD_MESSAGE)
 
 
 class NewPasswordCollectionRes(Resource):
-    def post(self,
-             recaptcha_service: RecaptchaService = Provide[Container.recaptcha_service],
-             password_reset_service: PasswordResetService = Provide[Container.password_reset_service]):
+    def post(
+        self,
+        recaptcha_service: RecaptchaService = Provide[Container.recaptcha_service],
+        password_reset_service: PasswordResetService = Provide[
+            Container.password_reset_service
+        ],
+    ):
 
         if request.json is None:
             raise BadRequest("no json found")
@@ -55,10 +63,10 @@ class NewPasswordCollectionRes(Resource):
 
         data = jwt.decode(token, options=DONT_VERIFY)
 
-        if 'email' not in data:
+        if "email" not in data:
             raise BadRequest("token has no email field in the body")
 
-        email = data['email']
+        email = data["email"]
         if email is None:
             raise BadRequest("token has value 'None' for field email")
 
@@ -82,4 +90,3 @@ class NewPasswordCollectionRes(Resource):
         password_reset_service.trigger_event_user_password_reset_redeem(user)
 
         return "password change successful", 200  # todo return json instead
-
