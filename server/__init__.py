@@ -2,6 +2,10 @@ __version__ = "4.0.1"
 
 import os
 
+from apispec.ext.marshmallow import MarshmallowPlugin
+from apispec_webframeworks.flask import FlaskPlugin
+from flasgger.utils import apispec_to_template
+from apispec import APISpec
 from flasgger import Swagger
 from flask_cors import CORS
 from flask_principal import Principal, identity_loaded, Identity
@@ -11,6 +15,7 @@ from flask import Flask, render_template, redirect
 from flask_talisman import Talisman
 from flask_login import LoginManager, current_user
 
+from server.openapi import OPENAPI_CONFIG, FLASGGER_CONFIG
 
 db = SQLAlchemy()
 man = Talisman()
@@ -86,6 +91,14 @@ def init_app(config=None):
     principal.init_app(app)
     csrf.init_app(app)
 
+    spec = APISpec(
+        **OPENAPI_CONFIG,
+        plugins=[
+            FlaskPlugin(),
+            MarshmallowPlugin(),
+        ]
+    )
+
     with app.app_context():
         from . import blueprints
         from .blueprints.api.config import api_blueprint
@@ -96,6 +109,7 @@ def init_app(config=None):
         from .blueprints.pre_enrolment.config import pre_enrolment_blueprint
         from .blueprints.calendars import calendars_blueprint
         from .blueprints.invites import invites_blueprint
+        from .blueprints.redoc.routes import redoc
 
         from server.models import User
         from server.auth_auth.principal_identity_loaded import on_identity_loaded
@@ -141,7 +155,19 @@ def init_app(config=None):
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
         app.register_blueprint(pre_enrolment_blueprint, url_prefix="/pre-enrolment/v1")
         app.register_blueprint(calendars_blueprint, url_prefix="/calendars/v1")
-        # print(swagger.get_apispecs())  # todo customize ui
+        app.register_blueprint(redoc, url_prefix="/docs")
+
+        # dynamically create doc with APISpec
+        # todo waiting until tested and then switch to pydantic
+        """from server.schemas import schemas
+
+        template = apispec_to_template(
+            app,
+            spec,
+            definitions=schemas.ALL_SCHEMAS,
+            paths=[v for k, v in app.view_functions.items() if "static" not in k],
+        )
+        Swagger(app, config=FLASGGER_CONFIG, template=template)"""
 
         from server.containers import Container
 

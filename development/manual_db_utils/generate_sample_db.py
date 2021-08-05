@@ -299,5 +299,7 @@ def add_all():
 
 if __name__ == "__main__":
     app = server.init_app("config.DevelopmentConfig")
+    print(app.config["SQLALCHEMY_DATABASE_URI"])
+    input()
     with app.app_context():
         add_all()

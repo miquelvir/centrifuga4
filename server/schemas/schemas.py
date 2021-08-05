@@ -3,6 +3,7 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, fields, auto_field
 from marshmallow import fields
 import server.models as models
 from server import db
+from flasgger import Schema, fields
 
 
 def _clean(data, key):
@@ -162,3 +163,9 @@ class TeacherSchema(MySQLAlchemyAutoSchema):
 class AttendanceSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Attendance
+
+
+ALL_SCHEMAS = [
+BaseScheduleSchema, CourseSchema, PublicCourseSchema, NeedSchema, LabelSchema, ScheduleSchema
+    , RoomSchema, PersonSchema, GuardianSchema, StudentSchema, PaymentSchema, UserSchema, TeacherSchema, AttendanceSchema
+]
