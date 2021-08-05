@@ -45,4 +45,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           black: true
           auto_fix: true
-          commit_message: '🚨 black reformatting'
+          commit_message: '💄 black'
