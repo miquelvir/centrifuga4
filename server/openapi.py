@@ -6,8 +6,11 @@ OPENAPI_CONFIG = {
         "securitySchemes": {},
     },
     "servers": [
-        {"url": "https://centrifuga4.herokuapp.com", "description": "Production server"},
-        {"url": "https://localhost:4999", "description": "Local development server"}
+        {
+            "url": "https://centrifuga4.herokuapp.com",
+            "description": "Production server",
+        },
+        {"url": "https://localhost:4999", "description": "Local development server"},
     ],
     "title": "centrífuga4 API",
     "version": "4.1.0",

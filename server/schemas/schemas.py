@@ -166,6 +166,18 @@ class AttendanceSchema(MySQLAlchemyAutoSchema):
 
 
 ALL_SCHEMAS = [
-BaseScheduleSchema, CourseSchema, PublicCourseSchema, NeedSchema, LabelSchema, ScheduleSchema
-    , RoomSchema, PersonSchema, GuardianSchema, StudentSchema, PaymentSchema, UserSchema, TeacherSchema, AttendanceSchema
+    BaseScheduleSchema,
+    CourseSchema,
+    PublicCourseSchema,
+    NeedSchema,
+    LabelSchema,
+    ScheduleSchema,
+    RoomSchema,
+    PersonSchema,
+    GuardianSchema,
+    StudentSchema,
+    PaymentSchema,
+    UserSchema,
+    TeacherSchema,
+    AttendanceSchema,
 ]

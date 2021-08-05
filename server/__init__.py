@@ -96,7 +96,7 @@ def init_app(config=None):
         plugins=[
             FlaskPlugin(),
             MarshmallowPlugin(),
-        ]
+        ],
     )
 
     with app.app_context():
