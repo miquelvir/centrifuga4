@@ -1,5 +1,4 @@
 from flask import Blueprint
-from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
 from server.blueprints.api.resources.course_attendance import CoursesAttendanceRes
@@ -31,11 +30,6 @@ from server.models import (
 )
 
 api_blueprint = Blueprint("api", __name__, template_folder="templates")
-
-
-@api_blueprint.errorhandler(NoAuthorizationError)
-def handle(e):
-    raise Unauthorized(str(e))
 
 
 @api_blueprint.errorhandler(RawForbidden)

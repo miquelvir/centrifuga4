@@ -1,5 +1,4 @@
 from flask import Blueprint
-from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
 from server.blueprints.api.errors import Unauthorized, Forbidden
@@ -10,11 +9,6 @@ from .resources.payment_receipt_email import PaymentReceiptEmailCollectionRes
 from .resources.bulk_email import BulkEmailCollectionRes
 
 emails_blueprint = Blueprint("emails", __name__)
-
-
-@emails_blueprint.errorhandler(NoAuthorizationError)
-def handle(e):
-    raise Unauthorized(str(e))
 
 
 @emails_blueprint.errorhandler(RawForbidden)

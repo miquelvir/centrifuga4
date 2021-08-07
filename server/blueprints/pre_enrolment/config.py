@@ -1,5 +1,4 @@
 from flask import Blueprint
-from flask_jwt_extended.exceptions import NoAuthorizationError
 from flask_restful import Api as Api
 
 from server.blueprints.api.errors import Unauthorized, Forbidden
@@ -8,11 +7,6 @@ from server.blueprints.pre_enrolment.resources.pre_enrolment import PreEnrollmen
 from server.errors.authorization import Forbidden as RawForbidden
 
 pre_enrolment_blueprint = Blueprint("pre_enrolment", __name__)
-
-
-@pre_enrolment_blueprint.errorhandler(NoAuthorizationError)
-def handle(e):
-    raise Unauthorized(str(e))
 
 
 @pre_enrolment_blueprint.errorhandler(RawForbidden)
