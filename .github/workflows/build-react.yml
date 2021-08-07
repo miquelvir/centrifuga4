@@ -1,0 +1,41 @@
+name: build-react
+
+on:
+  repository_dispatch:
+    types: [black-done]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: git rm -f --ignore-unmatch -r web_app/build
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 📦️♻️ auto-build
+          commit_user_name: 📦️ react builder
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+        working-directory: web_app
+      - run: npm run build
+        working-directory: web_app
+        env:
+          CI: false
+          REACT_CHECK_NEEDS: true
+          REACT_APP_RECAPTCHA: ${{ secrets.REACT_APP_RECAPTCHA }}
+          REACT_APP_API_VERSION: v1
+          REACT_APP_BACKEND_URL: https://centrifuga4.herokuapp.com
+          PUBLIC_URL: https://centrifuga4.herokuapp.com
+          INLINE_RUNTIME_CHUNK: false
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 📦️✔️ auto-build
+          commit_user_name: 📦️ react builder

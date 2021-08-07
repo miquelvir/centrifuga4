@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://miquelvir.github.io/centrifuga4/blog</id>
+    <title>centrífuga4 Blog</title>
+    <updated>2021-08-08T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://miquelvir.github.io/centrifuga4/blog"/>
+    <subtitle>centrífuga4 Blog</subtitle>
+    <icon>https://miquelvir.github.io/centrifuga4/img/favicon.png</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>welcome</id>
+        <link href="https://miquelvir.github.io/centrifuga4/blog/welcome"/>
+        <updated>2021-08-08T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Blog posts on how to use centrífuga4 will follow here!]]></summary>
+    </entry>
+</feed>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .aligncenter {
+            text-align: center;
+        }
+        #page-container {
+          position: relative;
+          min-height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="page-container">
+    <div class="aligncenter">
+        <span style="font-size: small">
+            <p style="text-align: center">Xamfrà | C. de les Tàpies, 9, 08001 Barcelona | xamfra@xamfra.net | (+34) 934 439 151</p>
+            <p style="text-align: center">L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA</p>
+        </span>
+    </div>
+    <div class="aligncenter" style="margin-top: 75px; margin-bottom: 50px">
+        <a href="http://xamfra.net/">
+            <img src="{{server_address}}/logo_xamfra_light.png" width="125px" />
+        </a>
+    </div>
+
+    <div style="margin-left: 100px; margin-right: 100px; text-align: justify">
+        <h4 style="text-align: center">Informació econòmica sobre els tallers de Xamfrà</h4>
+        <br>
+        <p>Benvolguts/udes,</p>
+        <br>
+        <p>Aquest curs, {{student_name}} s'ha matriculat als següents tallers de Xamfrà:</p>
+        {% for course in courses %}
+        <p>+ {{course.name}} {% if course.description %} ({{course.description}}) {% endif %}</p>
+        {% endfor %}
+        <br>
+        <p>La vostra aportació trimestral és de {{paid_price}}€, que pels tres trimestres fa un total de
+            {{anual_paid_price}}€ per curs. El cost real dels tallers seleccionats és de {{total_price}}€ trimestrals,
+
+            {% if grant %}
+
+
+            per tant, Xamfrà es fa càrrec de cobrir el {{grant_percentage}}% de l'import. Això és possible gràcies a
+            l'aportació de la Fundació L'ARC Música, de les aportacions de particulars a través de la Campanya
+            <a href="https://xamfra.net/com-col%c2%b7laborar-hi/amics-de-xamfra/">Amics de Xamfrà</a> i de la
+            <a href="https://www.teaming.net/xamfra">Campanya de Teaming</a>, d'aportacions extres que fan algunes
+            famílies de Xamfrà i de la cerca de recursos públics i privats que realitza l'equip de Xamfrà per tal de
+            <b>garantir l'accés universal a la pràctica artística.</b>
+
+            {% else %}
+
+            us agraïm de tot cor el suport. La vostra ajuda permet <b>garantir l'accés universal a la pràctica artística.</b>
+            {% endif %}
+
+        </p>
+
+        <br>
+        <p>Salutacions cordials,</p>
+        <p>l'equip de Xamfrà</p>
+        <br>
+        <p>Barcelona, {{datetime}}</p>
+    </div>
+     <div style = "display:block; clear:both; page-break-after:always;"></div>
+
+    <div class="aligncenter">
+        <span style="font-size: small">
+            <p style="text-align: center">Xamfrà | C. de les Tàpies, 9, 08001 Barcelona | xamfra@xamfra.net | (+34) 934 439 151</p>
+            <p style="text-align: center">L'ARC TALLER DE MÚSICA, FUNDACIÓ PRIVADA</p>
+        </span>
+    </div>
+    <div class="aligncenter" style="margin-top: 75px; margin-bottom: 50px">
+        <a href="http://xamfra.net/">
+            <img src="{{server_address}}/logo_xamfra_light.png" width="125px" />
+        </a>
+    </div>
+    <div style="margin-left: 100px; margin-right: 100px; text-align: justify">
+        <h4 style="text-align: center">Información económica sobre los talleres de Xamfrà</h4>
+    <br>
+    <p>Estimados/as,</p>
+    <br>
+    <p>Este curso, {{student_name}} se ha matriculado a los siguientes talleres de Xamfrà:</p>
+    {% for course in courses %}
+    <p>+ {{course.name}}  {% if course.description %} ({{course.description}}) {% endif %}</p>
+    {% endfor %}
+    <br>
+    <p>Vuestra aportación trimestral es de {{paid_price}}€, que por los tres trimestres hace un total de
+        {{anual_paid_price}}€ por curso. El coste real de los talleres seleccionados es de {{total_price}}€
+        trimestrales,
+
+        {% if grant %}
+
+
+           por tanto, Xamfrà se hace cargo de cubrir el {{grant_percentage}}% del importe.
+         Dicha ayuda es posible gracias a la aportación de la Fundación L'ARC Música, de las cuotas de la Campaña de
+        <a href="https://xamfra.net/com-col%c2%b7laborar-hi/amics-de-xamfra/">Amigos de Xamfrà</a> y de la
+        <a href="https://www.teaming.net/xamfra">Campaña de Teaming</a>, de las aportaciones extras de algunas
+        familias de Xamfrà y de la búsqueda de recursos públicos y privados que realiza el equipo de Xamfrà <b> para
+            garantizar el acceso universal a la práctica artística.</b>
+
+            {% else %}
+
+            les agradecemos de todo corazón su soporte. Su ayuda permite <b>
+            garantizar el acceso universal a la práctica artística.</b>
+            {% endif %}
+</p>
+
+    <br>
+    <p>Saludos cordiales,</p>
+    <p>el equipo de Xamfrà</p>
+    <br>
+    <p>Barcelona, {{datetime}}</p>
+    </div>
+
+</div>
+
+
+</body>
+
+</html>
