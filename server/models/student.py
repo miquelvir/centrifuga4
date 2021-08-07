@@ -35,7 +35,7 @@ class Student(Person):
     enrolment_status = db.Column(db.Text, nullable=False)
     early_unenrolment_date = db.Column(db.Date, nullable=True)
     enrolment_date = db.Column(db.Date, nullable=True)
-    pre_enrolment_date = db.Column(db.Date, default=datetime.datetime.utcnow)
+    pre_enrolment_date = db.Column(db.Date, default=datetime.datetime.now)
 
     courses = db.relationship(
         "Course", secondary="student_course", back_populates="students"
