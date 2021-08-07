@@ -15,7 +15,7 @@ from server.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 def safe_get(function):
-    """ a safe get is one which checks for the user permissions to get such resource """
+    """a safe get is one which checks for the user permissions to get such resource"""
 
     @EasyRequires(GetPermission)
     def decorator(*args, **kwargs):
@@ -69,7 +69,7 @@ def get_pagination_header(pagination, page):
 
 
 class _ImplementsGet:
-    """ abstract class both for the Collection and the One get resources """
+    """abstract class both for the Collection and the One get resources"""
 
     model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
@@ -210,7 +210,7 @@ class _ImplementsGet:
 
 
 class ImplementsGetOne(_ImplementsGet):
-    """ get one item of a resource with its id """
+    """get one item of a resource with its id"""
 
     model: MyBase
     schema: MySQLAlchemyAutoSchema
@@ -228,7 +228,7 @@ class ImplementsGetOne(_ImplementsGet):
 
 
 class ImplementsGetCollection(_ImplementsGet):
-    """ get all items of a resource """
+    """get all items of a resource"""
 
     model: MyBase
     schema: MySQLAlchemyAutoSchema

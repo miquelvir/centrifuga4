@@ -89,7 +89,7 @@ class PasswordResetService:
         db.session.commit()
 
     def update_user_password(self, user: User, password: str) -> None:
-        """ updates the user to use the new password saving the new hash (if the password is not repeated) """
+        """updates the user to use the new password saving the new hash (if the password is not repeated)"""
         if not self.is_strong_enough_password(password):
             raise BadRequest("password does not meet security constraints, too weak")
 

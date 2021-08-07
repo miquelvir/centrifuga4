@@ -36,14 +36,14 @@ class User(MyBase, UserMixin):
         return value.lower().strip() if value else value
 
     def login(self, password: str) -> bool:
-        """ checks if password hash matches stored patch """
+        """checks if password hash matches stored patch"""
         encoded_password: bytes = password.encode("utf-8")
         stored_hash: bytes = self.password_hash.encode("utf-8")
         return bcrypt.checkpw(encoded_password, stored_hash)
 
     @staticmethod
     def hash_password(password: str):
-        """ returns the hashed password """
+        """returns the hashed password"""
         encoded_password = password.encode("utf-8")
         return bcrypt.hashpw(encoded_password, bcrypt.gensalt()).decode("utf-8")
 

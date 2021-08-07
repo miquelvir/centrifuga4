@@ -27,7 +27,7 @@ def make_response_with_file(
     encoding="utf-8",
     as_attachment=True,
 ):
-    """ create a flask response attaching a string_io or bytes_io object """
+    """create a flask response attaching a string_io or bytes_io object"""
     r = make_response(
         send_file(
             proxy

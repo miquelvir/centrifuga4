@@ -23,7 +23,7 @@ config = current_app.config
 
 
 class EmailSender:
-    """ allows for SSL secure email sending; optionally with html emails and/or attachments """
+    """allows for SSL secure email sending; optionally with html emails and/or attachments"""
 
     def __init__(
         self,
@@ -35,7 +35,7 @@ class EmailSender:
         reply_to: str = current_app.config["SMTP_REPLY_TO"],
         use_ssl: bool = True,
     ):
-        """ initialise an ssl context, and an SMTP connection using the previous context; login using credentials """
+        """initialise an ssl context, and an SMTP connection using the previous context; login using credentials"""
         self._from = (
             from_ if from_ else user
         )  # save from email, defaults to user if not given
@@ -77,7 +77,7 @@ class EmailSender:
         return cls(domain, port, user, from_, password, reply_to, use_ssl)
 
     def _start_tls(self):
-        """ start TLS in the server connection using context """
+        """start TLS in the server connection using context"""
         try:
             self._server.starttls(context=self._context)
         except (
@@ -90,7 +90,7 @@ class EmailSender:
             raise ValueError("can't start TLS using context") from e
 
     def _login(self, user: str, password: str):
-        """ given a user and password, login to the server connection """
+        """given a user and password, login to the server connection"""
         try:
             self._server.login(user, password)
         except (
@@ -103,7 +103,7 @@ class EmailSender:
 
     @staticmethod
     def get_attachment_part(filepath: str, filename: str) -> base.MIMEBase:
-        """ given a filepath and its final filename, return a MIMEBase part for it """
+        """given a filepath and its final filename, return a MIMEBase part for it"""
         # use original filename if no new filename given
         filename = filepath.split("\\")[-1] if filename is None else filename
 
@@ -125,7 +125,7 @@ class EmailSender:
 
     @staticmethod
     def get_attachment_part_f(attachment, filename) -> base.MIMEBase:
-        """ given a filepath and its final filename, return a MIMEBase part for it """
+        """given a filepath and its final filename, return a MIMEBase part for it"""
         """part = base.MIMEBase("application", "octet-stream")  # create octet-stream MIME part for the attachment
         part.set_payload(attachment.read())
 
@@ -140,7 +140,7 @@ class EmailSender:
         return part
 
     def send(self, email: Email):
-        """ send a message using the server """
+        """send a message using the server"""
 
         # create a multipart message and set headers
         message = multipart.MIMEMultipart()
@@ -223,13 +223,13 @@ class EmailSender:
         return result
 
     def close(self):
-        """ close the connection with the server """
+        """close the connection with the server"""
         self._server.close()
 
     def __enter__(self):
-        """ with statement initiated """
+        """with statement initiated"""
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """ on with statement exit, close server connection """
+        """on with statement exit, close server connection"""
         self.close()

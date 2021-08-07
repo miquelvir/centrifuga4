@@ -34,12 +34,12 @@ class Requires:
     """
 
     def __init__(self, *method_permissions: type(Permission)):
-        """ store all permissions passed as *args in a tuple """
+        """store all permissions passed as *args in a tuple"""
         self.method_permissions: set = set(method_permissions)
 
     @login_required
     def wrapper(self, function: Callable, *args, _additional_permisions=None, **kwargs):
-        """ function wrapper, raises Forbidden exception if permissions are not met """
+        """function wrapper, raises Forbidden exception if permissions are not met"""
         if _additional_permisions is None:
             _additional_permisions = {}
         if not check_permissions(self.method_permissions.union(_additional_permisions)):

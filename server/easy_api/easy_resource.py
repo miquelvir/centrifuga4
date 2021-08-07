@@ -62,7 +62,7 @@ class EasyResource(Resource, SwaggerView):
             )
 
     def __init__(self, *args, **kwargs):
-        """ initialises the schema field and adds an empty permissions field if not given """
+        """initialises the schema field and adds an empty permissions field if not given"""
         super().__init__(*args, **kwargs)
 
         self.schema = self.schema()  # init schema

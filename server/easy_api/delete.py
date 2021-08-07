@@ -7,7 +7,7 @@ from server.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 def safe_delete(function):
-    """ a safe delete is one with permissions to delete """
+    """a safe delete is one with permissions to delete"""
 
     @EasyRequires(DeletePermission)
     def decorator(*args, **kwargs):

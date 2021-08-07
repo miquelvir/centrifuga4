@@ -11,7 +11,7 @@ auth_blueprint = Blueprint("auth", __name__)
 
 def basic_http_auth_required(f):
     def verify_password(username: str, password: str) -> bool:
-        """ Given a username and optionally a password, verify its validity. """
+        """Given a username and optionally a password, verify its validity."""
 
         user = User.query.filter(User.email == username).first()
         if user is None:
@@ -33,7 +33,7 @@ def basic_http_auth_required(f):
 
 
 def get_current_needs():
-    """ returns a json object with the needs of the current user """
+    """returns a json object with the needs of the current user"""
     return jsonify({"needs": [n.id for n in current_user.needs]})
 
 

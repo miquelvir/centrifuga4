@@ -37,7 +37,7 @@ class TestPreEnrolmentPost(WithDatabase):
 
     @contextlib.contextmanager
     def override_external_services(self):
-        """ shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
+        """shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
         with self.app.container.recaptcha_service.override(
             self.recaptcha_service_mock
         ) as ctx1:

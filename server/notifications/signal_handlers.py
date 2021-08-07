@@ -32,7 +32,7 @@ def when_user_password_reset_request(_, user: User, token: str) -> None:
         language: str = "eng",
         frontend_url: str = current_app.config["FRONTEND_SERVER_URL"],
     ) -> str:
-        """ :returns url where password can be reset (with the token, email and language as url parameters) """
+        """:returns url where password can be reset (with the token, email and language as url parameters)"""
         reset_page_url = f"{frontend_url}/app/password-reset"
         query_parameters = {"token": token, "email": user.email, "lan": language}
         return merge_url_query_params(reset_page_url, query_parameters)

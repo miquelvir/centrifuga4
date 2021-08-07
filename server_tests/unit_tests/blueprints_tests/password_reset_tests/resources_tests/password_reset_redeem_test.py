@@ -25,7 +25,7 @@ class TestPreEnrolmentPost(TestPasswordResetPost):
     def _recaptcha_and_others(
         self, no_password: bool = False, no_token: bool = False
     ) -> dict:
-        """ :returns a sample request json with a sample recaptcha token and a sample body (pre-enrolment data) """
+        """:returns a sample request json with a sample recaptcha token and a sample body (pre-enrolment data)"""
         result = self._only_recaptcha()
 
         if not no_token:
