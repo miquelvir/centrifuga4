@@ -10,7 +10,7 @@ import logging as log
 
 
 class TemplateRenderer:
-    """ creates a context to render jinja2 templates to strings """
+    """creates a context to render jinja2 templates to strings"""
 
     def __init__(self, templates_folder: str = config.TEMPLATES_FOLDER):
         """
@@ -30,7 +30,7 @@ class TemplateRenderer:
         log.debug("environment created at '%s'" % templates_folder)
 
     def render_template(self, template_name: str, **kwargs) -> str:
-        """ renders a template in the templates folder given its name and variables to use for rendering """
+        """renders a template in the templates folder given its name and variables to use for rendering"""
 
         try:
             template = self._env.get_template(template_name)

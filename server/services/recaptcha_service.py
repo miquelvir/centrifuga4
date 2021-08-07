@@ -12,7 +12,7 @@ class RecaptchaService:
         )
 
     def validate(self, token) -> bool:
-        """ :returns True if the recaptcha response is valid, raises an exception otherwise """
+        """:returns True if the recaptcha response is valid, raises an exception otherwise"""
 
         if token is None:
             raise BadRequest("missing recaptcha token (response)")

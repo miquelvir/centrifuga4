@@ -15,7 +15,7 @@ from server.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 def safe_post(function):
-    """ a safe post is one with permissions and no nested objects """
+    """a safe post is one with permissions and no nested objects"""
 
     @EasyRequires(PostPermission)
     @safe_marshmallow

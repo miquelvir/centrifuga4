@@ -33,7 +33,7 @@ class TestPreEnrolmentPost(WithApp):
 
     @contextlib.contextmanager
     def override_recaptcha_service(self):
-        """ shortcut for overriding the recaptcha service with the mock """
+        """shortcut for overriding the recaptcha service with the mock"""
         with self.app.container.recaptcha_service.override(
             self.recaptcha_service_mock
         ) as ctx:
@@ -41,7 +41,7 @@ class TestPreEnrolmentPost(WithApp):
 
     @contextlib.contextmanager
     def override_all(self):
-        """ shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
+        """shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
         with self.override_recaptcha_service() as ctx1:
             with self.app.container.pre_enrolment_service.override(
                 self.pre_enrolment_service_mock
@@ -49,11 +49,11 @@ class TestPreEnrolmentPost(WithApp):
                 yield ctx1, ctx2
 
     def _only_recaptcha(self) -> dict:
-        """ :returns a sample request json with a sample recaptcha token """
+        """:returns a sample request json with a sample recaptcha token"""
         return {"recaptcha": self.sample_recaptcha}
 
     def _recaptcha_and_body(self) -> dict:
-        """ :returns a sample request json with a sample recaptcha token and a sample body (pre-enrolment data) """
+        """:returns a sample request json with a sample recaptcha token and a sample body (pre-enrolment data)"""
         return {**self._only_recaptcha(), "body": self.sample_body}
 
     def test_raises_bad_request_if_no_json(self):

@@ -11,7 +11,7 @@ from server.schemas.schemas import MySQLAlchemyAutoSchema
 
 
 def safe_patch(function):
-    """ a safe patch is one with permission, and no nested patches """
+    """a safe patch is one with permission, and no nested patches"""
 
     @EasyRequires(PatchPermission)
     @safe_marshmallow

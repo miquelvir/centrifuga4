@@ -18,7 +18,7 @@ PASSWORD_RESET_REQUEST_URL = "/password-reset/v1/request"
 
 class TestPasswordResetRequestPost(TestPasswordResetPost):
     def _recaptcha_and_email(self) -> dict:
-        """ :returns a sample request json with a sample recaptcha token and a sample body (pre-enrolment data) """
+        """:returns a sample request json with a sample recaptcha token and a sample body (pre-enrolment data)"""
         return {**self._only_recaptcha(), "email": self.sample_email}
 
     def test_raises_bad_request_if_no_json(self):

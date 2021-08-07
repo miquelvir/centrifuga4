@@ -11,7 +11,7 @@ class JwtService:
 
     @staticmethod
     def _secret(secret: Optional[str]):
-        """ :returns the secret used for signing """
+        """:returns the secret used for signing"""
         return current_app.config["PASSWORD_RESET_SECRET"] if secret is None else secret
 
     def encode(
@@ -21,7 +21,7 @@ class JwtService:
         expires_in: Optional[datetime] = None,
         **kwargs,
     ) -> str:
-        """ :returns a signed JWT for the given data """
+        """:returns a signed JWT for the given data"""
         secret = self._secret(secret)
         if data is None:
             data = {}
@@ -45,7 +45,7 @@ class JwtService:
         verify: bool = True,
         **kwargs,
     ) -> dict:
-        """ :returns the payload of a JWT token """
+        """:returns the payload of a JWT token"""
         secret = self._secret(secret)
         token = self._token(token)
 

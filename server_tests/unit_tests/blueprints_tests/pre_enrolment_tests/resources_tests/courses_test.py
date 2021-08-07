@@ -30,7 +30,7 @@ class TestPreEnrolmentPost(WithApp):
 
     @contextlib.contextmanager
     def override_pre_enrolment_service(self):
-        """ shortcut for overriding the pre enrolment service with the mock """
+        """shortcut for overriding the pre enrolment service with the mock"""
         with self.app.container.pre_enrolment_service.override(
             self.pre_enrolment_service_mock
         ) as ctx:

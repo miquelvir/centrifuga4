@@ -40,7 +40,7 @@ class TestPasswordResetPost(WithApp):
 
     @contextlib.contextmanager
     def override_recaptcha_service(self):
-        """ shortcut for overriding the recaptcha service with the mock """
+        """shortcut for overriding the recaptcha service with the mock"""
         with self.app.container.recaptcha_service.override(
             self.recaptcha_service_mock
         ) as ctx:
@@ -48,7 +48,7 @@ class TestPasswordResetPost(WithApp):
 
     @contextlib.contextmanager
     def override_all(self):
-        """ shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
+        """shortcut for overriding the recaptcha service AND the pre-enrolment service with the mocks"""
         with self.override_recaptcha_service() as ctx1:
             with self.app.container.password_reset_service.override(
                 self.password_reset_service_mock
@@ -56,5 +56,5 @@ class TestPasswordResetPost(WithApp):
                 yield ctx1, ctx2
 
     def _only_recaptcha(self) -> dict:
-        """ :returns a sample request json with a sample recaptcha token """
+        """:returns a sample request json with a sample recaptcha token"""
         return {"recaptcha": self.sample_recaptcha}

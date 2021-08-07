@@ -80,7 +80,7 @@ class ResourceModelBadRequest(ResourceBaseBadRequest):
 
 def safe_marshmallow(function):
     def function_wrapper(*args, **kwargs):
-        """ raise proper api error if can't load given data with marshmallow schema """
+        """raise proper api error if can't load given data with marshmallow schema"""
 
         try:
             return function(*args, **kwargs)
