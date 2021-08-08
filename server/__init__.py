@@ -122,9 +122,10 @@ def init_app(config=None):
         def index2(path):
             return render_template("index.html")
 
+        @app.route("/404")
         @app.errorhandler(404)
         def page_not_found(e):
-            return "not here... 👻", 404
+            return render_template("not_found.html"), 404
 
         # add needs loader for Flask Principal
         identity_loaded.connect_via(app)(on_identity_loaded)

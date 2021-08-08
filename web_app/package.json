@@ -45,17 +45,10 @@
     "yup": "^0.32.8"
   },
   "scripts": {
-    "setEnvCommon": "cross-env CI=false REACT_CHECK_NEEDS=true REACT_APP_API_VERSION=v1 INLINE_RUNTIME_CHUNK=false",
-    "setEnvProduction": "npm run setEnvCommon && cross-env REACT_APP_RECAPTCHA=6LdHBOcbAAAAAAFOSVzvos0dxnVunKUB7ntQCaOP REACT_APP_BACKEND_URL=https://centrifuga4.herokuapp.com PUBLIC_URL=https://centrifuga4.herokuapp.com",
-    "setEnvDevelopment": "npm run setEnvCommon && cross-env REACT_APP_RECAPTCHA=6LcuGLobAAAAAInXS-NBilR0wEyzWvyDUzI4vkD_ REACT_APP_BACKEND_URL=https://127.0.0.1:4999 PUBLIC_URL=https://127.0.0.1:4999",
-
     "start": "npm run setEnvDevelopment && react-scripts start",
 
     "build": "react-scripts build",
     "postbuild": "node add_nonce_placeholders.js",
-
-    "buildDevelopment": "npm run setEnvDevelopment && npm run build",
-    "buildProduction": "npm run setEnvProduction && npm run build",
 
     "test": "jest",
     "eject": "react-scripts eject"
