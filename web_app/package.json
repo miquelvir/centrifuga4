@@ -45,7 +45,7 @@
     "yup": "^0.32.8"
   },
   "scripts": {
-    "start": "npm run setEnvDevelopment && react-scripts start",
+    "start": "react-scripts start",
 
     "build": "react-scripts build",
     "postbuild": "node add_nonce_placeholders.js",

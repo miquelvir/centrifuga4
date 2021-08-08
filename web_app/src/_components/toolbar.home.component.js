@@ -17,7 +17,8 @@ import {authenticationService} from "../_services/auth.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import TranslateButton from "./translate_button.component";
 import ThemeButton from "./theme_button.component";
-
+import {DOCS_URL} from "../config";
+import DescriptionIcon from '@material-ui/icons/Description';
 const languageMap = {
     eng: { label: "english", dir: "ltr", active: true },
     cat: { label: "català", dir: "ltr", active: false }
@@ -137,8 +138,17 @@ export default function HomeToolbar(props){
                     </Typography>
                     <div className={classes.grow}/>
 
+                    <Tooltip title={t("docs")}>
+                        <IconButton
+                            color="inherit"
+                            onClick={() => window.open(DOCS_URL, "_blank")}
+                            aria-label={t("docs")}
+                            aria-haspopup="false">
+                            <DescriptionIcon/>
+                        </IconButton>
+                    </Tooltip>
                     <TranslateButton/>
-                <ThemeButton />
+                    <ThemeButton />
 
 
                         <Tooltip title={t("my_account")}>
