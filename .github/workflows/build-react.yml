@@ -35,6 +35,7 @@ jobs:
           REACT_APP_BACKEND_URL: https://centrifuga4.herokuapp.com
           PUBLIC_URL: https://centrifuga4.herokuapp.com
           INLINE_RUNTIME_CHUNK: false
+          DOCS_URL: https://miquelvir.github.io/centrifuga4/
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 📦️✔️ auto-build
