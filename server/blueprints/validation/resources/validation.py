@@ -1,7 +1,7 @@
 import jwt
 from dependency_injector.wiring import Provide
 from server.containers import Container
-from flask import render_template
+from flask import render_template, make_response
 from flask_restful import Resource
 from typing import TYPE_CHECKING
 
@@ -15,5 +15,5 @@ class Validation(Resource):
     ):
         is_valid, data = jwt_service.is_valid(token)
         if is_valid:
-            return render_template("valid_document.html", data=data)
-        return render_template("invalid_document.html")
+            return make_response(render_template("valid_document.html", data=data))
+        return make_response(render_template("invalid_document.html"))
