@@ -5,9 +5,8 @@ from flask import request, current_app
 from flask_login import fresh_login_required
 from flask_restful import Resource
 
-from server.auth_auth.action_need import InvitePermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import UsersPermission
+from server.auth_auth.new_needs import UsersNeed
+from server.auth_auth.requires import Requires, assert_permissions
 from server.models import User, Need
 from server.emails.emails.invite_email import my_job
 from server.emails.url_utils import merge_url_query_params
@@ -37,9 +36,9 @@ def generate_signup_link(_token, _email, frontend_url=None):
 
 
 class UserInviteCollectionRes(Resource):
-    @Requires(InvitePermission, UsersPermission)
     @fresh_login_required
     def post(self):
+        assert_permissions((UsersNeed.make_invites(), ))
         try:
             user_email = request.json["userEmail"].lower()
         except KeyError:

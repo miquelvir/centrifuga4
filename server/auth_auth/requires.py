@@ -1,9 +1,10 @@
-from typing import Iterable, Callable
+from typing import Sequence, Callable, Iterable
 
 from flask import g, current_app
-from flask_login import login_required
+from flask_login import login_required, current_user
 from flask_principal import Permission
 
+from server.auth_auth.new_needs import MyPermission
 from server.errors.authorization import Forbidden
 
 
@@ -16,13 +17,33 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
     """
     if current_app.config["DEVELOPMENT"]:
         # session cookie does not work properly if using the front end server independently
-        return True
+        pass # return True  # todo migrate to jwt or something?
+
+    if all(p.can() if type(p) is MyPermission else p.permission.can() for p in required_permissions):
+        return True  # optimize for non-teachers
+
+    # lazy load remaining permissions
+    if hasattr(current_user, 'roles'):
+        for role in current_user.roles:
+            role.load_needs_to_identity_for_permissions(current_user, required_permissions)
 
     # check if used provides enough needs to pass all permissions
-    if any(not p().can() for p in required_permissions):
+    if any(not p.can() if type(p) is MyPermission else not p.permission.can() for p in required_permissions):
         return False
 
     return True
+
+
+def assert_permissions(permissions: Iterable[type(Permission)]):
+    if not check_permissions(permissions):
+        raise Forbidden(
+            "Insufficient privileges for requested action.",
+            receivedPrivileges=[str(p) for p in g.identity.provides],
+            expectedPrivileges=[
+                str(p)
+                for p in permissions
+            ],
+        )
 
 
 class Requires:
@@ -37,20 +58,15 @@ class Requires:
         """store all permissions passed as *args in a tuple"""
         self.method_permissions: set = set(method_permissions)
 
+    def require(self, permissions: iter = None):
+        if permissions is None:
+            permissions = {}
+        assert_permissions(self.method_permissions.union(permissions))
+
     @login_required
     def wrapper(self, function: Callable, *args, _additional_permisions=None, **kwargs):
         """function wrapper, raises Forbidden exception if permissions are not met"""
-        if _additional_permisions is None:
-            _additional_permisions = {}
-        if not check_permissions(self.method_permissions.union(_additional_permisions)):
-            raise Forbidden(
-                "Insufficient privileges for requested action.",
-                receivedPrivileges=[str(p) for p in g.identity.provides],
-                expectedPrivileges=[
-                    p.__name__
-                    for p in self.method_permissions.union(_additional_permisions)
-                ],
-            )
+        self.require(_additional_permisions)
         return function(*args, **kwargs)
 
     def __call__(self, function: Callable):

@@ -134,6 +134,7 @@ def init_app(config=None):
         # https://stackoverflow.com/questions/24487449/flask-principal-flask-login-remember-me-and-identity-loaded
         @principal.identity_loader
         def load_identity_when_session_expires():
+            print("load_identity_when_session_expires", current_user, getattr(current_user, 'id', None))
             if hasattr(current_user, "id"):
                 return Identity(current_user.id)
 

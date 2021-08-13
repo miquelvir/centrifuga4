@@ -1,6 +1,7 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
 import React from "react";
+import {MenuItem} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {Skeleton} from "@material-ui/lab";
 import * as yup from 'yup';
@@ -21,7 +22,6 @@ import DiscardButton from "./formik_discard_button";
 import {useNeeds} from "../_helpers/needs";
 import {safe_email_required} from "../_yup/validators";
 import {confirmContext} from "../_context/confirm-context";
-
 
 const useStyles = makeStyles((theme) => ({
   actionIcon: {
@@ -52,7 +52,7 @@ const deleteFullUser = () => {
               .delete(currentStudent['id'])
               .then(...errorHandler({snackbarSuccess: true}))  // todo everywhere
               .then(function (res) {
-                deleteStudent(currentStudent['id']);
+                    deleteStudent(currentStudent['id']);
               });
   }
 
@@ -63,8 +63,9 @@ const deleteFullUser = () => {
     const formik = useNormik(true, {
         initialValues: initialValues,
         validationSchema: yup.object({
-            email: safe_email_required,
+            email: safe_email_required(t),
             name: yup.string().required(t("name_required")),
+            role_id: yup.string().nullable()
         }),
         enableReinitialize: true,
         onSubmit: (changedValues, {setStatus, setSubmitting}) => {
@@ -84,8 +85,6 @@ const deleteFullUser = () => {
                     }).finally(() => {
                         setSubmitting(false);
                     });
-
-
             } else {
                 setSubmitting(false);
             }
@@ -179,6 +178,28 @@ const [hasNeeds, NEEDS] = useNeeds();
                                 name="email"
                                 helperText={formik.touched["email"] && formik.errors["email"]}
                             />
+                        </Box>
+
+                        <Box className={[classes.line, classes.composite]}>
+                            <DirtyTextField
+                                label={t("role")}
+                                style={{flex: 1}}
+                                name="role_id"
+                                formik={formik}
+                                select>
+                                {[{name: 'administrator',
+                                   id: 'administrator'},
+                                   {name: 'administrative',
+                                   id: 'administrative'},
+                                   {name: 'layman',
+                                   id: 'layman'},
+                                   {name: 'empty',
+                                   id: 'empty'},
+                                   {name: 'no role',
+                                   id: null}].map((role) => (
+                                    <MenuItem key={role.name} value={role.id}>{t(role.name)}</MenuItem>
+                                ))}
+                            </DirtyTextField>
                         </Box>
 
                     </form>

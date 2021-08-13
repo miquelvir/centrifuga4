@@ -3,8 +3,7 @@ from typing import List
 from flask import request
 
 from server import db
-from server.auth_auth.action_need import PatchPermission
-from server.easy_api._requires import EasyRequires
+from server.auth_auth.requires import Requires
 from server.blueprints.api.errors import integrity, no_nested, safe_marshmallow
 from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema
@@ -13,7 +12,6 @@ from server.schemas.schemas import MySQLAlchemyAutoSchema
 def safe_patch(function):
     """a safe patch is one with permission, and no nested patches"""
 
-    @EasyRequires(PatchPermission)
     @safe_marshmallow
     @no_nested
     @integrity
@@ -35,6 +33,8 @@ class ImplementsPatchOne:
 
     @safe_patch
     def patch(self, id_):
+        Requires().require(list(need.update(id_).permission for need in self.model.permissions))
+
         body = request.get_json()
         body["id"] = id_  # force id_
 

@@ -4,7 +4,7 @@ from typing import Set
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 from server import db
-from server.auth_auth.resource_need import StudentsPermission
+from server.auth_auth.new_needs import StudentsNeed
 from server.models.person import Person
 import abc
 
@@ -20,7 +20,7 @@ class EnrolmentStatus(abc.ABC):
 class Student(Person):
     __tablename__ = "student"
     __mapper_args__ = {"polymorphic_identity": "student"}
-    permissions = {StudentsPermission}
+    permissions = {StudentsNeed}
 
     id = db.Column(db.Text, db.ForeignKey("person.id"), primary_key=True)
 

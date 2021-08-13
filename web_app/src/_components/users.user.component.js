@@ -54,7 +54,7 @@ export default function User({currentUserId, deleteUser}) {
             .then(function (res) {
                     setUser(res["data"]);
                 });
-  }, [currentUserId])
+  }, [currentUserId, loading])
 
   const classes = useStyles();
   const theme = useTheme();
@@ -85,7 +85,6 @@ export default function User({currentUserId, deleteUser}) {
                   scrollButtons="on"
                 >
                   <Tab label={t("user")} {...a11yProps(0)} />
-                  <Tab label={t("permissions")} {...a11yProps(1)} />
                 </Tabs>
               </AppBar>
           <SwipeableViews
@@ -97,13 +96,6 @@ export default function User({currentUserId, deleteUser}) {
           >
             <TabFrame value={value} index={0}>
             <UserPerson
-                      dir={theme.direction}
-                      currentStudent={user}
-                      updateCurrentStudent={setUser}
-                      deleteStudent={deleteUser}
-            /></TabFrame>
-<TabFrame value={value} index={1}>
-            <UserPermissions
                       dir={theme.direction}
                       currentStudent={user}
                       updateCurrentStudent={setUser}

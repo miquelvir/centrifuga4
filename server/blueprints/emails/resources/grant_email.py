@@ -4,17 +4,17 @@ from flask import current_app
 from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
-from server.auth_auth.action_need import EmailPermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import StudentsPermission
+from server.auth_auth.new_needs import EmailNeed, StudentsNeed
+from server.auth_auth.requires import Requires, assert_permissions
 from server.blueprints.api.errors import NotFound
 from server.models import Student
 from server.emails.emails.grant_letter_email import my_job
 
 
 class GrantEmailCollectionRes(Resource):
-    @Requires(EmailPermission, StudentsPermission)
     def post(self, student_id):
+        assert_permissions(EmailNeed.create(), StudentsNeed.read(student_id))
+
         query = Student.query.filter(Student.id == student_id)
         student: Student = query.first()
 

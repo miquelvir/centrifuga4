@@ -4,6 +4,8 @@ from flask_restful import Resource
 from flask_sqlalchemy import Model
 from marshmallow_sqlalchemy import SQLAlchemySchema
 
+from server.auth_auth.new_needs import CrudNeed
+
 
 class EasyResource(Resource, SwaggerView):
     """
@@ -48,7 +50,7 @@ class EasyResource(Resource, SwaggerView):
 
         try:
             for permission in cls.permissions:
-                assert type(permission) == type(Permission), (
+                assert type(permission) == CrudNeed, (
                     "instances of EasyResource must initialise field permissions "
                     "with an iterable of Flask Principal permissions, "
                     "found an iterable of '%s'" % type(permission)

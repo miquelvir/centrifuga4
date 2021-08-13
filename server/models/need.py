@@ -1,6 +1,5 @@
 from server import db
-from server.auth_auth.action_need import ActionNeed
-from server.auth_auth.resource_need import ResourceNeed
+from server.auth_auth.new_needs import BaseNeed
 
 db.Table(
     "user_need",
@@ -16,15 +15,16 @@ class Need(db.Model):
 
     description = db.Column(db.Text, unique=False, nullable=False)
     id = db.Column(db.Text, unique=True, nullable=False, primary_key=True)
-    type = db.Column(db.Text, unique=False, nullable=False)
+
+    resource = db.Column(db.Text, unique=False, nullable=False)
+    action = db.Column(db.Text, unique=False, nullable=True)
+    param = db.Column(db.Text, unique=False, nullable=True)
 
     @property
     def need(self):
-        if self.type == "res":
-            return ResourceNeed(self.id)
-        elif self.type == "action":
-            return ActionNeed(self.id)
-        raise NotImplementedError("type '%s' is not implemented" % self.type)
+        return BaseNeed(resource=self.resource,
+                        action=self.action,
+                        param=self.param)
 
     def user_representation(self):
         return self.id

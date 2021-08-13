@@ -1,9 +1,8 @@
 from flask import request
 
 from server import db
-from server.auth_auth.action_need import PostPermission
+from server.auth_auth.requires import Requires
 
-from server.easy_api._requires import EasyRequires
 from server.blueprints.api.errors import (
     no_nested,
     safe_marshmallow,
@@ -17,7 +16,6 @@ from server.schemas.schemas import MySQLAlchemyAutoSchema
 def safe_post(function):
     """a safe post is one with permissions and no nested objects"""
 
-    @EasyRequires(PostPermission)
     @safe_marshmallow
     @no_nested
     @integrity
@@ -38,6 +36,8 @@ class ImplementsPostOne:
 
     @safe_post
     def post(self):
+        Requires().require(list(need.create().permission for need in self.model.permissions))
+
         body = request.get_json()
 
         if "id" in body:

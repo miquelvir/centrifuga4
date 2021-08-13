@@ -4,12 +4,9 @@ from flasgger import SwaggerView
 from flask import current_app
 from flask_restful import Resource
 
-from server.auth_auth.action_need import PostPermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import (
-    PaymentsPermission,
-    PaymentsReceiptsPermission,
-)
+from server.auth_auth.new_needs import PaymentsNeed
+from server.auth_auth.requires import Requires, assert_permissions
+
 from server.blueprints.api.errors import NotFound
 from server.file_utils.string_bytes_io import make_response_with_file
 from server.models import Payment
@@ -17,8 +14,8 @@ from server.pdfs.payment_receipt import generate_payment_recipe_pdf
 
 
 class PaymentsReceiptsRes(Resource, SwaggerView):  # todo documented class higher up
-    @Requires(PostPermission, PaymentsPermission, PaymentsReceiptsPermission)
     def post(self, id_):
+        assert_permissions((PaymentsNeed.read(), PaymentsNeed.make_receipts()))
         query = Payment.query.filter(Payment.id == id_)
         payment: Payment = query.first()
 

@@ -1,5 +1,4 @@
 from flask_login import current_user
-import logging as log
 
 
 def on_identity_loaded(_, identity):
@@ -17,6 +16,8 @@ def on_identity_loaded(_, identity):
 
     # add the needs that the user provides to the identity
     if hasattr(current_user, "needs"):  # needed since identity could be Anonymous
-        log.info("loaded user with needs: %s" % current_user.needs)
         for need in current_user.needs:
             identity.provides.add(need.need)  # gets the need object instead of the key
+
+    if hasattr(current_user, "role"):
+        current_user.role.load_needs_to_identity()

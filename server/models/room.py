@@ -1,13 +1,13 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from server import db
-from server.auth_auth.resource_need import RoomsPermission
+from server.auth_auth.new_needs import RoomsNeed
 from server.models._base import MyBase
 
 
 class Room(MyBase):
     __tablename__ = "room"
-    permissions = {RoomsPermission}
+    permissions = {RoomsNeed}
 
     id = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)

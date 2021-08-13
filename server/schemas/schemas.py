@@ -72,6 +72,11 @@ class NeedSchema(MySQLAlchemyAutoSchema):
         model = models.Need
 
 
+class RoleSchema(MySQLAlchemyAutoSchema):
+    class Meta(MySQLAlchemyAutoSchema.Meta):
+        model = models.Role
+
+
 class LabelSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Label

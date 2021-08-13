@@ -1,13 +1,13 @@
 from sqlalchemy.orm import validates
 
 from server import db
-from server.auth_auth.resource_need import PaymentsPermission
+from server.auth_auth.new_needs import PaymentsNeed
 from server.models._base import MyBase
 
 
 class Payment(MyBase):
     __tablename__ = "payment"
-    permissions = {PaymentsPermission}
+    permissions = {PaymentsNeed}
 
     id = db.Column(db.Text, primary_key=True)
     quantity = db.Column(db.Float, nullable=False)

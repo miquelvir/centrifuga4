@@ -10,6 +10,7 @@ from server.models import (
     Need,
     Label,
     Attendance,
+    Role
 )
 from server.schemas.schemas import (
     StudentSchema,
@@ -23,6 +24,7 @@ from server.schemas.schemas import (
     NeedSchema,
     LabelSchema,
     AttendanceSchema,
+    RoleSchema
 )
 
 
@@ -49,4 +51,6 @@ def get_schema_from_model(model):
         return LabelSchema
     if model == Attendance:
         return AttendanceSchema
+    if model == Role:
+        return RoleSchema
     raise NotImplementedError(model)

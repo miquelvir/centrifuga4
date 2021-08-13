@@ -39,17 +39,14 @@ def get_current_needs():
 
 @auth_blueprint.route("/login", methods=["POST"])
 @basic_http_auth_required  # require user and password to be validated
-def get_auth_token():
+def login():
     """
-    endpoint to get a JWT for next calls
-
-
     In the before_request, the user is required to login. When reaching this endpoint, the user is already validated.
         // pre-condition: g.user has the user name
     Given a username, it generates the jwt_token and send it to the client.
     The client must store it for future calls.
     """
-
+    print("login")
     user = g.user
 
     login_user(user, remember=True)

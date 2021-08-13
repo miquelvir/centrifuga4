@@ -1,12 +1,12 @@
 from server import db
-from server.auth_auth.resource_need import AttendancePermission
+from server.auth_auth.new_needs import AttendanceNeed
 from server.models._base import MyBase
 
 
 class Attendance(MyBase):
     __tablename__ = "attendance"
 
-    permissions = {AttendancePermission}
+    permissions = {AttendanceNeed}
 
     date = db.Column(db.Date, nullable=False)
     course_id = db.Column(db.Text, db.ForeignKey("course.id"), nullable=False)

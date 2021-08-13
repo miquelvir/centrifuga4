@@ -1,10 +1,9 @@
-from flask import request, current_app, jsonify, Response
+from flask import request, current_app, jsonify
 from sqlalchemy.exc import InvalidRequestError
 import json
 
-from server.auth_auth.action_need import GetPermission
+from server.auth_auth.requires import Requires
 from server.easy_api._content_negotiation import produces
-from server.easy_api._requires import EasyRequires
 from server.blueprints.api.errors import (
     NotFound,
     ResourceModelBadRequest,
@@ -13,15 +12,6 @@ from server.blueprints.api.errors import (
 from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema
 
-
-def safe_get(function):
-    """a safe get is one which checks for the user permissions to get such resource"""
-
-    @EasyRequires(GetPermission)
-    def decorator(*args, **kwargs):
-        return function(*args, **kwargs)
-
-    return decorator
 
 
 def _get_page_url(original_url, page, _page):
@@ -142,11 +132,12 @@ class _ImplementsGet:
                 )
         return filters if len(filters) > 0 else None, sort, page, include
 
-    @safe_get
     @produces(
         ("application/json", "text/csv")
     )  # content negotiation (and automatic creation of raw csv from json)
     def get(self, *args, id_=None, parent=None, many=False, **kwargs):
+        Requires().require(list(need.read(id_).permission for need in self.model.permissions))
+        print("........", list(need.read(id_).permission for need in self.model.permissions))
         filters, sort, page, include = self._parse_args(request.args)
         do_pagination = page is not None
 

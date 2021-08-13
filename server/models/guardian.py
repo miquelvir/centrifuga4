@@ -1,5 +1,5 @@
 from server import db
-from server.auth_auth.resource_need import GuardiansPermission
+from server.auth_auth.new_needs import GuardiansNeed
 from server.models.person import Person
 from sqlalchemy.orm import validates
 
@@ -13,7 +13,7 @@ db.Table(
 class Guardian(Person):
     __tablename__ = "guardian"
     __mapper_args__ = {"polymorphic_identity": "guardian"}
-    permissions = {GuardiansPermission}
+    permissions = {GuardiansNeed}
 
     id = db.Column(db.Text, db.ForeignKey("person.id"), primary_key=True)
     relation = db.Column(db.Text, nullable=True)

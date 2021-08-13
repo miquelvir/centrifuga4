@@ -6,16 +6,16 @@ from typing import List
 from flask import request
 from flask_restful import Resource
 
-from server.auth_auth.action_need import EmailPermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import StudentsPermission, CoursesPermission
+from server.auth_auth.new_needs import EmailNeed, CoursesNeed
+from server.auth_auth.requires import Requires, assert_permissions
 from server.models import Course
 from server.emails.emails.bulk_email import my_job
 
 
 class BulkEmailCollectionRes(Resource):
-    @Requires(EmailPermission, StudentsPermission, CoursesPermission)
     def post(self):
+        assert_permissions((EmailNeed.create(), CoursesNeed.read()))  # todo for requested ids maybe
+
         try:
             course_ids = json.loads(request.form["courseIds"])
         except KeyError:

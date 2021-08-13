@@ -9,27 +9,18 @@ from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
 from server import db
-from server.auth_auth.action_need import PostPermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import (
-    StudentsPermission,
-    CoursesPermission,
-    AttendancePermission,
-)
+from server.auth_auth.new_needs import AttendanceNeed, CoursesNeed
+from server.auth_auth.requires import Requires, assert_permissions
 from server.blueprints.api.errors import NotFound
-from server.constants import SHORT_NAME
-from server.file_utils.string_bytes_io import make_response_with_file
 from server.models import Course, Attendance, Student
 
 
 class CoursesAttendanceRes(Resource, SwaggerView):
-    @Requires(PostPermission, AttendancePermission)
     def get(self, id_):
-        print(id_)
+        assert_permissions((AttendanceNeed.read(id_), CoursesNeed.read(id_)))
+
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()
-
-        print("x1")
 
         if not course:
             print("x33")
@@ -41,8 +32,7 @@ class CoursesAttendanceRes(Resource, SwaggerView):
             date = None
 
         attendances = list(course.get_attendance(date))
-        print(course.attendances)
-        print("ATTS", attendances)
+
         result = {}
         for attendance in attendances:
             date_as_string = attendance.date.strftime("%Y-%m-%d")
@@ -59,8 +49,9 @@ class CoursesAttendanceRes(Resource, SwaggerView):
         print(date)
         return jsonify([{"date": date, "student_ids": l} for date, l in result.items()])
 
-    @Requires(PostPermission, AttendancePermission)
     def put(self, id_):
+        assert_permissions((AttendanceNeed.create(id_), CoursesNeed.read(id_)))
+
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()
 

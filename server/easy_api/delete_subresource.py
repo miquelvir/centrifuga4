@@ -1,6 +1,6 @@
 from server import db
+from server.auth_auth.requires import Requires
 from server.easy_api._subresource_utils import get_subresource, get_parent
-from server.easy_api.delete import safe_delete
 from server.blueprints.api.errors import NotFound
 from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema
@@ -17,8 +17,11 @@ class ImplementsDeleteOneSubresource:
     parent_model: type(MyBase)
     parent_field: str
 
-    @safe_delete
     def delete(self, id_, nested_id):
+        Requires().require(list(need.patch(id_).permission for need in self.parent_model.permissions)
+                           +
+                           list(need.delete(nested_id).permission for need in self.model.permissions))
+
         parent = get_parent(self.parent_model, id_)
         field = getattr(parent, self.parent_field)
 
