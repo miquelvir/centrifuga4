@@ -1,27 +1,44 @@
 import {useTranslation} from "react-i18next";
 import Box from "@material-ui/core/Box";
-import React from "react";
-import {MenuItem} from "@material-ui/core";
+import React, {useState} from "react";
+import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
-import {Skeleton} from "@material-ui/lab";
-import * as yup from 'yup';
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import {
+    AppBar,
+    Dialog,
+    Slide
+} from "@material-ui/core";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import EditIcon from '@material-ui/icons/Edit';
+import TeachersDataService from "../_services/teachers.service";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
+import {useNeeds} from "../_helpers/needs";
+import ItemsListSecondary from "./items_list_secondary.component";
+import ItemsListTerciary from "./items_list_terciary.component";
+import Skeleton from "@material-ui/lab/Skeleton";
+import {MenuItem} from "@material-ui/core";
+import * as yup from 'yup';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
 import UsersDataService from "../_services/users.service";
-import Dialog from "@material-ui/core/Dialog";
 import {useErrorHandler} from "../_helpers/handle-response";
-import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Tooltip from "@material-ui/core/Tooltip";
 import DirtyTextField from "./dirtytextfield.component";
 import {useNormik} from "../_helpers/normik";
 import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
-import {useNeeds} from "../_helpers/needs";
 import {safe_email_required} from "../_yup/validators";
 import {confirmContext} from "../_context/confirm-context";
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
 const useStyles = makeStyles((theme) => ({
   actionIcon: {
@@ -37,15 +54,51 @@ const useStyles = makeStyles((theme) => ({
     composite: {
         display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
         gap: theme.spacing(1), width: "100%"
+    },
+    list: {
+        overflow: "auto",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1
+    },
+    box: {
+        display: "flex",
+        flexDirection: "column",
+    },
+    pagination: {
+        margin: '30px'
+    },
+    appBar: {
+    position: 'relative',
+  },
+  newLine: {
+    width: '100%',
+       marginTop: theme.spacing(1),
+        display: "flex",
+    flexDirection: "column"
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  }, actionIcon: {
+      float: 'right'
     }
 }));
 
+
+  
 function UserPerson({ children, addStudentId, newStudent, title, currentStudent, updateCurrentStudent, patchService, deleteStudent, addNewGuardian, ...other }) {
   const { t } = useTranslation();
   const loading = currentStudent === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
-
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const handleAddDialogClose = () => {
+        setAddDialogOpen(false);
+  };
+  const handleAddDialogOpen = () => {
+      setAddDialogOpen(true);
+  }
 const confirm = React.useContext(confirmContext);
 const deleteFullUser = () => {
     UsersDataService
@@ -94,6 +147,36 @@ const [hasNeeds, NEEDS] = useNeeds();
   return (
         <Box p={3}>
             <Box px={2}>
+                <Dialog fullScreen open={addDialogOpen} onClose={handleAddDialogClose} TransitionComponent={Transition}>
+        <AppBar className={classes.appBar} color="secondary">
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+                {t("teacher-user")}
+            </Typography>
+            <Button autoFocus color="inherit" onClick={handleAddDialogClose}>
+                {t("cancel")}
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Box className={classes.box} m={3}>
+            <ItemsListTerciary
+                    dataService={TeachersDataService}
+                    dataServiceSR={null}
+                    defaultSearchBy="name"
+                    searchByOptions={["name"]}
+                    searchBarLabel={"teachers"}
+                    displayNameField={"name"}
+                    secondaryDisplayNameField={null}
+                    parent_id={currentStudent === null? null: currentStudent['id']}
+                    add_message={"link-user-to-teacher"}
+                    onAdded={(id, body) => {
+                        handleAddDialogClose();
+                        formik.setFieldValue('teacher_id', id);
+                        formik.setFieldTouched('teacher_id', true);
+                    }}
+                />
+            </Box>
+          </Dialog>
 
               {loading ?
                   <IconButtonSkeleton className={classes.actionIcon}/>
@@ -193,6 +276,8 @@ const [hasNeeds, NEEDS] = useNeeds();
                                    id: 'administrative'},
                                    {name: 'layman',
                                    id: 'layman'},
+                                   {name: 'teacher',
+                                   id: 'teacher'},
                                    {name: 'empty',
                                    id: 'empty'},
                                    {name: 'no role',
@@ -201,6 +286,25 @@ const [hasNeeds, NEEDS] = useNeeds();
                                 ))}
                             </DirtyTextField>
                         </Box>
+
+                        {formik.values["role"] == "teacher" && <Box className={[classes.line, classes.composite]}>
+                            <DirtyTextField
+                                label={t("teacher")}
+                                style={{flex: 1}}
+                                name="teacher_id"
+                                formik={formik}
+                                disabled
+                                InputProps={{endAdornment:
+                                    <InputAdornment position="end">
+                                      <IconButton
+                                        aria-label="link teacher"
+                                        onClick={handleAddDialogOpen}
+                                      >
+                                        <EditIcon></EditIcon>
+                                      </IconButton>
+                                    </InputAdornment>
+                                  }}/>
+                        </Box>}
 
                     </form>
                 )

@@ -49,6 +49,7 @@ import {KeyboardArrowLeft, KeyboardArrowRight} from "@material-ui/icons";
 import useTheme from "@material-ui/core/styles/useTheme";
 import DoneIcon from '@material-ui/icons/Done';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import {textSchedulesForCourse} from "../utils/localized-weekdays";
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%"
@@ -100,21 +101,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function getNextDayOfWeek(date, dayOfWeek) {
-    // Code to check that date and dayOfWeek are valid left as an exercise ;)
 
-    var resultDate = new Date(date.getTime());
-
-    resultDate.setDate(date.getDate() + (7 + dayOfWeek - date.getDay()) % 7);
-
-    return resultDate;
-}
-
-const getLocalisedWeekday = (dayOfWeek) => {
-    let today = new Date();
-    let nextDayOfWeek = getNextDayOfWeek(today, dayOfWeek);
-    return nextDayOfWeek.toLocaleString(window.navigator.language, {weekday: 'short'});
-}
 
 const isUnderage = (birthDateString) => {
     let today = new Date();
@@ -434,10 +421,7 @@ __person1__surname1: '',
         window.scrollTo(0,0);
     }
 
-    const textSchedulesForCourse = (course) => {
-        if (!course["base_schedules"]) return null;
-        return course["base_schedules"].map(s => getLocalisedWeekday(s.day_week) + ", " + s.start_time.slice(0, -3) + " - " + s.end_time.slice(0, -3)).join("; ");
-    }
+    
 
 const handleNext = () => {
         formik.setFieldTouched('');

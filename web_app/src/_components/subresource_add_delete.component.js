@@ -56,11 +56,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-class CloseIcon extends React.Component {
-    render() {
-        return null;
-    }
-}
 
 function AddDeleteSubresource({  defaultSearchBy, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, add_message,onSubresourceAdded, onSubresourceDeleted, ...other}) {
   const { t } = useTranslation();
@@ -87,9 +82,6 @@ const navigator = React.useContext(tabContext);
             <Dialog fullScreen open={addDialogOpen} onClose={handleAddDialogClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar} color="secondary">
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleAddDialogClose} aria-label="close">
-              <CloseIcon />
-            </IconButton>
             <Typography variant="h6" className={classes.title}>
                 {t(add_message)}
             </Typography>
@@ -150,7 +142,6 @@ const navigator = React.useContext(tabContext);
                     }}
                     onItemClick={(id) => {
                         navigator.goTo("/"+resourceName, id);
-                        // history.push("/"+resourceName+"?id="+id);
                     }}
                 />}
               </div>

@@ -22,6 +22,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import {PUBLIC_URL, RECAPTCHA} from "../config";
 import TranslateButton from "../_components/translate_button.component";
 import ThemeButton from "../_components/theme_button.component";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,11 +35,11 @@ const useStyles = makeStyles((theme) => ({
         margin: "5px"
     },
     paper: {
-        width: "50%",
         height: "50%",
-        minWidth: "500px",
-        padding: "50px",
-        margin: "auto"
+        [theme.breakpoints.up('md')]:{minWidth: "500px", width: "50%"},
+        [theme.breakpoints.down('md')]:{width: "100%"},
+        margin: "auto",
+        padding: "50px"
     },
     reset: {
         width: "100%",
@@ -52,7 +53,7 @@ const LoginPage = (props) => {
     const classes = useStyles();
     const userCtx = React.useContext(userContext);
     const themeCtx = React.useContext(themeContext);
-
+    const mobile = useMediaQuery('(max-width:960px)');
     const [recaptcha, setRecaptcha] = React.useState(null);
     const [showRecaptcha, setShowRecaptcha] = React.useState(false);
     function onChange(value) {
@@ -141,9 +142,9 @@ const LoginPage = (props) => {
         <div className={classes.root}>
 
             <Grid container>
-                <Grid xs={2} item/>
+                {!mobile && <Grid xs={2} item/>}
 
-                <Grid xs={8} item>
+                <Grid xs={mobile? 12: 8} item>
                     <Grid
                         container
                         spacing={0}
@@ -152,9 +153,15 @@ const LoginPage = (props) => {
                         direction="column"
                         style={{height: "100%"}}
                     >
+
                         <Grid item>
                             <Box m={2}>
+                            {mobile && <>
+                    <TranslateButton style={{float: 'right'}}/>
+                    <ThemeButton style={{float: 'right'}}/> </>
+                }
                                 <Paper className={classes.paper}>
+
                                     <img src={`${PUBLIC_URL}/logo_centrifuga4_${themeCtx.label}.svg`} alt="Logo Centrífuga" style={{height: "85px"}}/>
 
                                     <form onSubmit={formik.handleSubmit}>
@@ -226,12 +233,13 @@ const LoginPage = (props) => {
                                         </Box>
                                 </Paper></Box>
                         </Grid>
+
                     </Grid>
                 </Grid>
-                <Grid xs={2} item>
+                {!mobile && <Grid xs={2} item>
                     <TranslateButton style={{float: 'right'}}/>
-            <ThemeButton style={{float: 'right'}}/>
-                </Grid>
+                    <ThemeButton style={{float: 'right'}}/>
+                </Grid>}
             </Grid></div>);
 
 }

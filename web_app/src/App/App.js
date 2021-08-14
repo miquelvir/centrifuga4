@@ -14,6 +14,7 @@ import {themeContext} from '../_context/theme-context';
 import SignupPage from "../SignupPage/SignupPage";
 import ResetPage from "../ResetPage/ResetPage";
 import PreEnrolmentPage from "../PreEnrolmentPage/PreEnrolmentPage";
+import TeacherDashboardPage from "../TeacherDashboardPage/TeacherDashboardPage";
 import NotFound from "../_components/not_found";
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
                         <Route path={'/prematricula'} component={PreEnrolmentPage}/>
+                        <Route path={'/teacher-dashboard'} component={TeacherDashboardPage}/>
                         <Route component={NotFound}/>
                         </Switch>
                     </BrowserRouter>

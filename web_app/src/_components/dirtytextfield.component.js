@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => (createStyles({
 const DirtyTextField = (props) => {
     const name = props.name;
     const formik = props.formik;
+    const endAdornment = props.endAdornment;
     const dirty = props.noDirty === true? false: formik.values[name] !== formik.initialValues[name];
     const classes = useStyles(dirty);
     const formikProps = {
@@ -29,6 +30,7 @@ const DirtyTextField = (props) => {
        InputLabelProps={{shrink: formik.values[name] !== ''}}
       {...formikProps}
        {...props}
+       {...endAdornment}
                   />
 }
 

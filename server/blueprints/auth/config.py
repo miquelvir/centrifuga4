@@ -46,7 +46,6 @@ def login():
     Given a username, it generates the jwt_token and send it to the client.
     The client must store it for future calls.
     """
-    print("login")
     user = g.user
 
     login_user(user, remember=True)

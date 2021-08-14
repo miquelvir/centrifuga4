@@ -17,7 +17,7 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
     """
     if current_app.config["DEVELOPMENT"]:
         # session cookie does not work properly if using the front end server independently
-        pass # return True  # todo migrate to jwt or something?
+        return True  # return True  # todo migrate to jwt or something?
 
     if all(p.can() if type(p) is MyPermission else p.permission.can() for p in required_permissions):
         return True  # optimize for non-teachers
