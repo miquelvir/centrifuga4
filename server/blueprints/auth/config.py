@@ -4,7 +4,7 @@ from flask import Blueprint, g, request, current_app, session, abort, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_principal import identity_changed, Identity, AnonymousIdentity
 
-from server.models import User
+from server.models import User, Role
 
 auth_blueprint = Blueprint("auth", __name__)
 
@@ -34,7 +34,17 @@ def basic_http_auth_required(f):
 
 def get_current_needs():
     """returns a json object with the needs of the current user"""
-    return jsonify({"needs": [n.id for n in current_user.needs]})
+    result = {"needs": [n.id for n in current_user.needs]}
+
+    print(current_user.role, current_user.teacher_id)
+    if current_user.role.id == Role.TEACHER:
+        result["teacher"] = {}
+        result["teacher"]["id"] = current_user.teacher_id
+        result["teacher"]["name"] = current_user.name
+    else:
+        result["teacher"] = None
+
+    return jsonify(result)
 
 
 @auth_blueprint.route("/login", methods=["POST"])

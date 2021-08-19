@@ -1,8 +1,9 @@
 import datetime
 from typing import Set
 
+from sqlalchemy import case
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, column_property
 from server import db
 from server.auth_auth.new_needs import StudentsNeed
 from server.models.person import Person

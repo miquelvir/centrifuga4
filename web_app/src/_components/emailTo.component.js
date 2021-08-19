@@ -46,8 +46,6 @@ export default function EmailTo({formik, name, label, options, addTo, ...textFie
       if (option) addTo(option);
   }
 
-
-
   const classes = useStyles();
 
   const [inputValue, setInputValue] = React.useState('');
@@ -61,18 +59,19 @@ export default function EmailTo({formik, name, label, options, addTo, ...textFie
       classes={{
         option: classes.option,
       }}
+      defaultValue={{id: 111, name: 'name'}}
       autoHighlight
       getOptionLabel={(option) => option.name }
       getOptionSelected={(o) => o.id === option.id}
       value={option}
-        onChange={(event, newValue) => {
-          setOption(newValue);
-        }}
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        name={name}
+      onChange={(event, newValue) => {
+        setOption(newValue);
+      }}
+      inputValue={inputValue}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
+      name={name}
       onBlur={formik.handleBlur}
       renderOption={(option) => (
         <React.Fragment key={option.id}>
@@ -91,7 +90,7 @@ export default function EmailTo({formik, name, label, options, addTo, ...textFie
             autoComplete: 'new-password', // disable autocomplete and autofill
           }}
           error={formik.status  || formik.errors[name] !== undefined}
-        helperText={formik.touched[name] && formik.errors[name]}
+          helperText={formik.touched[name] && formik.errors[name]}
         />
       )}
     />

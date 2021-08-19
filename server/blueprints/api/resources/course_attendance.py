@@ -2,8 +2,8 @@ import csv
 from datetime import datetime, timedelta
 import io
 from typing import List, Dict
+from sqlalchemy import and_
 
-from flasgger import SwaggerView
 from flask import request, jsonify
 from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
@@ -13,9 +13,10 @@ from server.auth_auth.new_needs import AttendanceNeed, CoursesNeed
 from server.auth_auth.requires import Requires, assert_permissions
 from server.blueprints.api.errors import NotFound
 from server.models import Course, Attendance, Student
+from server.schemas.schemas import AttendanceSchema
 
 
-class CoursesAttendanceRes(Resource, SwaggerView):
+class CoursesAttendanceRes(Resource):
     def get(self, id_):
         assert_permissions((AttendanceNeed.read(id_), CoursesNeed.read(id_)))
 
@@ -23,7 +24,6 @@ class CoursesAttendanceRes(Resource, SwaggerView):
         course: Course = query.first()
 
         if not course:
-            print("x33")
             raise NotFound("resource with the given id not found", requestedId=id_)
 
         try:
@@ -31,14 +31,17 @@ class CoursesAttendanceRes(Resource, SwaggerView):
         except KeyError:
             date = None
 
-        attendances = list(course.get_attendance(date))
+        if date is None:
+            attendances = Attendance.query.filter(Attendance.course_id == id_).all()
+        else:
+            attendances = Attendance.query.filter(and_(Attendance.date == date, Attendance.course_id == id_)).all()
 
         result = {}
         for attendance in attendances:
             date_as_string = attendance.date.strftime("%Y-%m-%d")
             if date_as_string not in result:
                 result[date_as_string] = []
-            result[date_as_string].append(attendance.student_id)
+            result[date_as_string].append(AttendanceSchema().dump(attendance))
 
         if date:
             date_as_string = date.strftime("%Y-%m-%d")
@@ -46,11 +49,10 @@ class CoursesAttendanceRes(Resource, SwaggerView):
                 result[date_as_string] = []
                 print("x")
 
-        print(date)
-        return jsonify([{"date": date, "student_ids": l} for date, l in result.items()])
+        return jsonify([{"date": date, "data": l} for date, l in result.items()])
 
     def put(self, id_):
-        assert_permissions((AttendanceNeed.create(id_), CoursesNeed.read(id_)))
+        assert_permissions((AttendanceNeed.create(), CoursesNeed.read(id_)))
 
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()
@@ -87,7 +89,7 @@ class CoursesAttendanceRes(Resource, SwaggerView):
 
         for student_id in to_be_added_student_ids:
             db.session.add(
-                Attendance(date=date, student_id=student_id, course_id=course.id)
+                Attendance(date=date, student_id=student_id, course_id=course.id, status=Attendance.STATUS_ATTENDED)
             )
 
         db.session.commit()

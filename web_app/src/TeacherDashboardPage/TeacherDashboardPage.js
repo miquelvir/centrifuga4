@@ -1,103 +1,38 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as yup from 'yup';
-import {
-    BottomNavigation,
-    Card, CardActions,
-    Checkbox,
-    FormControlLabel, ListItemIcon, ListItemSecondaryAction,
-    MenuItem, MobileStepper,
-    Step,
-    StepLabel,
-    Stepper, Tooltip, withStyles
-} from "@material-ui/core";
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import XamfraHeader from '../_components/xamfra.header.component';
+import Grid from '@material-ui/core/Grid';
+import HomeButton from '../_components/home_button';
 import {useTranslation} from "react-i18next";
 import {makeStyles} from "@material-ui/core/styles";
+import WelcomeTitle from "./components/WelcomeTitle";
 import Box from "@material-ui/core/Box";
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import {themeContext} from "../_context/theme-context";
 import {useSnackbar} from "notistack";
-import i18next from "i18next";
 import {useErrorHandler} from "../_helpers/handle-response";
-import {useOnMount} from "../_helpers/on-mount";
-import ReCAPTCHA from "react-google-recaptcha"
-import DirtyTextField from "../_components/dirtytextfield.component";
-import Divider from "@material-ui/core/Divider";
-import DirtyCountrySelect from "../_components/contry-select.component";
-import {education_years} from "../_data/education";
-import {emptyAttendee} from "../_data/empty_objects";
 import {useNormik} from "../_helpers/normik";
-import IconButton from "@material-ui/core/IconButton";
-import {student_guardian_relations} from "../_data/relations";
-import SearchBar from "../_components/searchbar.component";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import CardContent from "@material-ui/core/CardContent";
-import DeleteIcon from "@material-ui/icons/Delete";
-import {PUBLIC_URL, RECAPTCHA} from "../config";
 import ThemeButton from "../_components/theme_button.component";
-import Link from "@material-ui/core/Link";
 import TranslateButton from "../_components/translate_button.component";
-import {preEnrolmentService} from "../_services/pre-enrolment.service";
-import {DNI_OR_NIE_REGEX, safe_email, safe_email_required} from "../_yup/validators";
-import {KeyboardArrowLeft, KeyboardArrowRight} from "@material-ui/icons";
 import useTheme from "@material-ui/core/styles/useTheme";
-import DoneIcon from '@material-ui/icons/Done';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CourseCard from "./components/CourseCard.js";
+import TeacherCoursesService from "../_services/teacher_dashboard_courses.service";
+import {userContext} from "../_context/user-context";
+import MoreButton from "./components/MoreButton";
+import NotATeacherTitle from './components/NotATeacherTitle';
+
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: "100%"
+        flexGrow: 1,
+        
     },
-    field: {
-        width: "100%",
-        margin: "5px"
+    rootBase: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: "100vh",
     },
-    cards: {
-        '& > *': {
-            margin: theme.spacing(3),
-        },
-    },
-    buttons: {
-        '& > *': {
-            margin: theme.spacing(1),
-        },
-    }, line: {
-        width: "100%",
-        marginTop: theme.spacing(1)
-    },
-    card: {
-    minWidth: 200,
-        width: 'fit-content',
-        maxWidth: 500,
-        display: 'inline-block'
-  },
-    recaptcha: {
-        margin: theme.spacing(4)
-    },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-    list: {
-        minHeight: '150px',
-        overflow: 'auto'
-    },
-    composite: {
-        display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
-        gap: theme.spacing(1), width: "100%"
+    more: {
+        width: '100%',
+        textAlign: 'center'
     }
 }));
 
@@ -106,6 +41,7 @@ const TeacherDashboardPage = (props) => {
     const classes = useStyles();
     const {enqueueSnackbar} = useSnackbar();
     const theme = useTheme();
+
 
     const errorHandler = useErrorHandler();
     
@@ -121,24 +57,76 @@ const TeacherDashboardPage = (props) => {
 
     const themeCtx = React.useContext(themeContext);
 
+    const [courses, setCourses] = useState([]);
+    const [maxPage, setMaxPage] = useState(null);
+    const [loadedUntilPage, setLoadedUntilPage] = useState(0);
+    const [attemptLoadedUntilPage, setAttemptLoadedUntilPage] = useState(1);
+    const [attemptingLoad, setAttemptingLoad] = useState(false);
+
+    const loading = attemptingLoad && loadedUntilPage == 0;
+
+    const incrementPage = (i=1) => {
+        if (maxPage === null) return;
+        if (loadedUntilPage >= maxPage) return;
+        setAttemptLoadedUntilPage(loadedUntilPage+1);
+    }
+    
+    const userCtx = React.useContext(userContext);
+    useEffect(() => {
+        if (userCtx.teacher === null) return;
+        
+        const page = attemptLoadedUntilPage;
+        setAttemptingLoad(true);
+        TeacherCoursesService.getAll(null, page, null, null, userCtx.teacher.id).then(...errorHandler({})).then(newCourses => {
+            setCourses([...courses, ...newCourses["data"]]);
+            setMaxPage(newCourses["_pagination"]["totalPages"]);
+            setLoadedUntilPage(page);
+        }).finally(() => setAttemptingLoad(false));
+    }, [attemptLoadedUntilPage, userCtx.teacher]);
+
+    
     return (
-        <Box m={4}>
-        <CourseCard course={{
-            name: "clarinet",
-            "base_schedules": [
-                {
-                    "course": "613d8c3a-f020-4abd-8964-6942eb0f2a4d", 
-                    "course_id": "613d8c3a-f020-4abd-8964-6942eb0f2a4d", 
-                    "day_week": 4, 
-                    "end_time": "21:45:00", 
-                    "id": "baac35d1-f54f-41c6-89ae-78b2b4a6b583", 
-                    "start_time": "15:45:00", 
-                    "student": null, 
-                    "student_id": null
-                }
-            ], 
-            }}/>
-        </Box>);
+        <Box className={classes.rootBase}>
+            <XamfraHeader>
+                <TranslateButton/>
+                <ThemeButton/>
+                <HomeButton/>
+            </XamfraHeader>
+
+            <Box p={4} className={classes.root}>
+            {
+            userCtx.teacher === null && 
+              <NotATeacherTitle/>
+            }
+
+            {
+            userCtx.teacher !== null && 
+            <Box>
+                <WelcomeTitle/>
+
+                    <Grid container spacing={3} justify="left">
+                   
+                   {
+                       loading &&  [1,2,3,4,5,6,7,8,9, 10].map(_ => <Grid xs={12} sm={6} md={3} key={"loading"} item>
+                       <CourseCard course={null}/>
+                   </Grid> )
+                   }
+                    {courses.map(course =>  
+                    <Grid xs={12} sm={6} md={3} key={course.id} item>
+                <CourseCard course={course}/>
+            </Grid> 
+                )}
+            
+            
+        </Grid>
+            <Box p={2} className={classes.more}>
+            {loadedUntilPage < maxPage && <MoreButton onClick={incrementPage} disabled={attemptingLoad}/>}
+            </Box>
+        </Box>
+            }
+            </Box>
+        </Box>
+        );
 }
 
 export default TeacherDashboardPage;

@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ItemsList = ({setCurrentItemId=() => {}, onItemClick = () => {}, parent_id=null, secondaryDisplayNameField=null,
+const ItemsList = ({setCurrentItemId=() => {}, auxFields = [], displayText = null, onItemClick = () => {}, parent_id=null, secondaryDisplayNameField=null,
                         secondaryAction=null, secondaryActionNeeds=[], secondaryActionTooltip=null, secondaryActionIcon=null, secondaryActionCallable=null,
                        withAvatar=true, withFiltersBox = true,
                        chips=[], currentItemId = null, items, setItems, displayNameField="full_name",
@@ -100,7 +100,7 @@ const ItemsList = ({setCurrentItemId=() => {}, onItemClick = () => {}, parent_id
 
     function search() {
         dataService
-            .getAll({name: searchBy, value: searchTerm}, page, [...new Set(['id', displayNameField, secondaryDisplayNameField === null? 'id': secondaryDisplayNameField])], getFilters(), parent_id)
+            .getAll({name: searchBy, value: searchTerm}, page, [...new Set(['id', displayNameField, secondaryDisplayNameField === null? 'id': secondaryDisplayNameField, ...auxFields])], getFilters(), parent_id)
             .then(...errorHandler({}))
             .then(function (res) {
                 setItems(res["data"]);
@@ -239,7 +239,7 @@ const ItemsList = ({setCurrentItemId=() => {}, onItemClick = () => {}, parent_id
                                 <Avatar
                                     className={item["id"] === currentItemId ? classes.selectedAvatar : classes.avatar}>{item[displayNameField].charAt(0).toUpperCase()}</Avatar>
                             </ListItemAvatar>}
-                            <ListItemText id="name" primary={item[displayNameField]} secondary={secondaryDisplayNameField === null? null: item[secondaryDisplayNameField]}/>
+                            <ListItemText id="name" primary={displayText === null? item[displayNameField]: displayText(item)} secondary={secondaryDisplayNameField === null? null: item[secondaryDisplayNameField]}/>
 
                             {secondaryAction &&  hasNeeds(secondaryActionNeeds) &&
                             <ListItemSecondaryAction>

@@ -17,15 +17,14 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
     """
     if current_app.config["DEVELOPMENT"]:
         # session cookie does not work properly if using the front end server independently
-        return True  # return True  # todo migrate to jwt or something?
+        return True  # todo migrate to jwt or something?
 
     if all(p.can() if type(p) is MyPermission else p.permission.can() for p in required_permissions):
         return True  # optimize for non-teachers
 
     # lazy load remaining permissions
-    if hasattr(current_user, 'roles'):
-        for role in current_user.roles:
-            role.load_needs_to_identity_for_permissions(current_user, required_permissions)
+    if hasattr(current_user, 'role'):
+        current_user.role.load_needs_to_identity_for_permissions(current_user, required_permissions)
 
     # check if used provides enough needs to pass all permissions
     if any(not p.can() if type(p) is MyPermission else not p.permission.can() for p in required_permissions):

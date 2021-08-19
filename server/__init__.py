@@ -2,7 +2,7 @@ __version__ = "4.0.1"
 
 import os
 
-from flasgger import Swagger
+# from flasgger import Swagger
 from flask_cors import CORS
 from flask_principal import Principal, identity_loaded, Identity
 from flask_seasurf import SeaSurf
@@ -40,7 +40,7 @@ temp = {
     "schemes": ["https"],
 }
 
-swagger = Swagger(template=temp)
+# swagger = Swagger(template=temp)
 
 
 def init_app(config=None):
@@ -88,7 +88,7 @@ def init_app(config=None):
         content_security_policy_nonce_in=["script-src", "style-src"],
     )
 
-    swagger.init_app(app)
+    # swagger.init_app(app)
     principal.init_app(app)
     csrf.init_app(app)
 
@@ -102,6 +102,7 @@ def init_app(config=None):
         from .blueprints.pre_enrolment.config import pre_enrolment_blueprint
         from .blueprints.calendars import calendars_blueprint
         from .blueprints.invites import invites_blueprint
+        from .blueprints.teacher_dashboard.config import teacher_dashboard_blueprint
 
         from server.models import User
         from server.auth_auth.principal_identity_loaded import on_identity_loaded
@@ -149,6 +150,7 @@ def init_app(config=None):
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
         app.register_blueprint(pre_enrolment_blueprint, url_prefix="/pre-enrolment/v1")
         app.register_blueprint(calendars_blueprint, url_prefix="/calendars/v1")
+        app.register_blueprint(teacher_dashboard_blueprint, url_prefix="/teacher-dashboard/v1")
         # print(swagger.get_apispecs())  # todo customize ui
 
         from server.containers import Container

@@ -3,10 +3,15 @@ import {API_VERSION, BACKEND_URL} from "../config";
 
 const axios = require('axios');  // todo default headers
 
-export default function serviceFactory(resource, subresource=null){  // todo subresource for all methods?
+export default function serviceFactory(resource, subresource=null, serviceName=null, baseUrl=null, apiVersion=null){  // todo subresource for all methods?
+    
+    baseUrl = baseUrl === null? BACKEND_URL: baseUrl;
+    serviceName = serviceName === null? 'api': serviceName;
+    apiVersion = apiVersion === null? API_VERSION: apiVersion;
+    const url = `${baseUrl}/${serviceName}/${apiVersion}`;
+
     return class {
-        resource = resource;
-        subresource = subresource;
+        
 
         getAll(likeSearchText=null, page = 1, include=null, filters=null, parent_id=null) {
             return new Promise(function (resolve, reject) {
@@ -24,10 +29,10 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
                     myFilters[`filter.${key}.eq`] = filters[key];
                 })
                 }
-
+                
                 axios({
                     method: 'get',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}${subresource===null? '': `/${parent_id}/${subresource}`}`,
+                    url: `${url}/${resource}${subresource===null? '': `/${parent_id}/${subresource}`}`,
                     params: myFilters,
                     headers: {
                         ...{
@@ -47,7 +52,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'get',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    url: `${url}/${resource}/${id}`,
                     params: {
                         "include": include === null? null: JSON.stringify(include)
                     },
@@ -99,7 +104,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'patch',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    url: `${url}/${resource}/${id}`,
                     data: body,
                     headers: {
                         ...{
@@ -121,7 +126,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'post',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}${subresource !== null? `/${subresourcId}/${subresource}`: ''}`,
+                    url: `${url}/${resource}${subresource !== null? `/${subresourcId}/${subresource}`: ''}`,
                     data: body,
                     headers: {
                         ...{
@@ -143,7 +148,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'post',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}${subresourceid === null?
+                    url: `${url}/${resource}/${id}${subresourceid === null?
                     '': `/${subresource}/${subresourceid}`}`,
                     headers: {
                         ...{
@@ -163,7 +168,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'delete',
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}${subresource !== null? `/${subresource}/${subresourceId}`: ''}`,
+                    url: `${url}/${resource}/${id}${subresource !== null? `/${subresource}/${subresourceId}`: ''}`,
                     headers: {
                         ...{
                             'Content-Type': 'application/json',
@@ -199,7 +204,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
                 }
 
                 axios({
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}`,
+                    url: `${url}/${resource}`,
                     method: 'GET',
                     responseType: 'blob', // important
                     params: myFilters,
@@ -232,7 +237,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
         downloadOneCsv(id) {
             return new Promise(function (resolve, reject) {
                 axios({
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}`,
+                    url: `${url}/${resource}/${id}`,
                     method: 'GET',
                     responseType: 'blob', // important
                     headers: {
@@ -279,7 +284,7 @@ export default function serviceFactory(resource, subresource=null){  // todo sub
         downloadSubresource(id, subresource, params) {
             return new Promise(function (resolve, reject) {
                 axios({
-                    url: `${BACKEND_URL}/api/${API_VERSION}/${resource}/${id}/${subresource}`,
+                    url: `${url}/${resource}/${id}/${subresource}`,
                     method: 'POST',
                     params: params,
                     responseType: 'blob', // important

@@ -65,10 +65,13 @@ const LoginPage = (props) => {
     const {enqueueSnackbar} = useSnackbar();
 
     const logged = (needs) => {
+        console.log("needs", needs);
         const setLogged = userCtx["setUser"];
         const setNeeds = userCtx["setNeeds"];
+        const setTeacher = userCtx["setTeacher"];
         setLogged({logged: true, ping: true});
-        setNeeds(needs);
+        setNeeds(needs["needs"]);
+        setTeacher(needs["teacher"]);
         const {from} = props.location.state || {from: {pathname: "/home/students"}};
         props.history.push(from);
     }

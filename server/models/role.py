@@ -23,11 +23,22 @@ class RoleProvider:
 
     @classmethod
     def has_need(cls, role_id: str, user: 'User', need: BaseNeed):
+        print(0, "----------")
+        print(role_id)
         if role_id != Role.TEACHER:
             return False
+        print("01")
         if user.teacher is None:
             return False
-        if need.resource not in ('courses', 'students', 'attendance'):
+        print("02", need.resource)
+        if need.resource not in ('courses', 'students', 'attendance', 'teachers'):
+            return False
+        if need.resource == 'teachers':
+            print(1)
+            if need.param == user.teacher_id:
+                print(2)
+                return True
+            print(3)
             return False
         if need.action != 'read':
             return False
@@ -69,6 +80,7 @@ class Role(db.Model):
             self._load_need_to_identity(need)
 
     def load_needs_to_identity_for_permissions(self, user: 'User', permissions: Iterable[Permission]):
+        print(000)
         for permission in permissions:
             for need in permission.needs:
                 if RoleProvider.has_need(self.id, user, need):

@@ -10,6 +10,7 @@ import {
     StepLabel,
     Stepper, Tooltip, withStyles
 } from "@material-ui/core";
+import XamfraLogo from '../_components/xamfra.logo.component';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import {useTranslation} from "react-i18next";
@@ -50,6 +51,8 @@ import useTheme from "@material-ui/core/styles/useTheme";
 import DoneIcon from '@material-ui/icons/Done';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {textSchedulesForCourse} from "../utils/localized-weekdays";
+
+import XamfraHeader from '../_components/xamfra.header.component';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%"
@@ -126,9 +129,6 @@ const PreEnrolmentPage = (props) => {
       setRecaptcha(value);
     }
 
-
-
-
     const {enqueueSnackbar} = useSnackbar();
     const [skipped, setSkipped] = React.useState(new Set());
     const [availableCourses, setAvailableCourses] = React.useState([]);
@@ -140,7 +140,7 @@ const PreEnrolmentPage = (props) => {
   };
 
     const [activeStep, setActiveStep] = React.useState(0);
-      const steps = [t("data_protection"), t("student_info"), t("contact_person_1"), t("contact_person_2"), t("courses"), t("payment"), t("confirmation")];
+    const steps = [t("data_protection"), t("student_info"), t("contact_person_1"), t("contact_person_2"), t("courses"), t("payment"), t("confirmation")];
 
     const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
@@ -421,25 +421,20 @@ __person1__surname1: '',
         window.scrollTo(0,0);
     }
 
-    
-
-const handleNext = () => {
+    const handleNext = () => {
         formik.setFieldTouched('');
 
+        let newSkipped = skipped;
+        if (isStepSkipped(activeStep)) {
+            newSkipped = new Set(newSkipped.values());
+            newSkipped.delete(activeStep);
+        }
 
-            let newSkipped = skipped;
-            if (isStepSkipped(activeStep)) {
-              newSkipped = new Set(newSkipped.values());
-              newSkipped.delete(activeStep);
-            }
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setSkipped(newSkipped);
 
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-            setSkipped(newSkipped);
-
-            scrollToTop();
-
-
-      };
+        scrollToTop();
+    };
 
     const secondaryListItemTextForCourse = (course) => {
         const schedules = textSchedulesForCourse(course);
@@ -488,20 +483,15 @@ const handleNext = () => {
 
     return (
         <Box>
-        <Box p={2} style={{width: '100%'}}>
-             <TranslateButton style={{float: 'right'}}/>
-                <ThemeButton style={{float: 'right'}}/>
-
-            <Box mx={2} style={{textAlign: "left"}}>
-        <img src={ `${PUBLIC_URL}/logo_xamfra_${themeCtx.label}.png`} alt="Logo Xamfrà"
-             style={{height: "35px"}}/>
-            </Box>
-        </Box>
+        <XamfraHeader>
+            <TranslateButton/>
+            <ThemeButton/>
+        </XamfraHeader> 
                     <div>
 
-
+                   
      <Box marginBottom={2}>
-            <Divider />
+            
             </Box>
         {activeStep === steps.length ? (
           <div style={{textAlign:"center"}}>

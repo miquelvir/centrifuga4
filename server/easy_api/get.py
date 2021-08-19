@@ -136,8 +136,8 @@ class _ImplementsGet:
         ("application/json", "text/csv")
     )  # content negotiation (and automatic creation of raw csv from json)
     def get(self, *args, id_=None, parent=None, many=False, **kwargs):
-        Requires().require(list(need.read(id_).permission for need in self.model.permissions))
-        print("........", list(need.read(id_).permission for need in self.model.permissions))
+
+
         filters, sort, page, include = self._parse_args(request.args)
         do_pagination = page is not None
 
@@ -207,6 +207,8 @@ class ImplementsGetOne(_ImplementsGet):
     schema: MySQLAlchemyAutoSchema
 
     def get(self, id_, *args, **kwargs):
+        Requires().require(list(need.read(id_).permission for need in self.model.permissions))
+
         results = []
         for one_id in id_.split(","):
             result = super().get(*args, id_=one_id, many=False, **kwargs)
@@ -225,4 +227,6 @@ class ImplementsGetCollection(_ImplementsGet):
     schema: MySQLAlchemyAutoSchema
 
     def get(self, *args, **kwargs):
+        Requires().require(list(need.read().permission for need in self.model.permissions))
+
         return super().get(*args, many=True, **kwargs)

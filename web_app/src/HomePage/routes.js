@@ -15,61 +15,53 @@ import Teachers from "../_components/teachers.component";
 import Courses from "../_components/courses.component";
 import {NEEDS} from "../_helpers/needs";
 import Email from "../_components/email.component";
-import Attendance from "../_components/attendance.component";
-
 
 const Routes = [
   {
-    path: '/students',
+    path: 'students',
     component: Students,
     title: 'students',
     icon: PersonIcon,
     needs: [NEEDS.students, NEEDS.get]
   },
   {
-    path: '/courses',
+    path: 'courses',
     component: Courses,
     title: 'courses',
     icon: ClassIcon,
     needs: [NEEDS.courses, NEEDS.get]
   },
   {
-    path: '/teachers',
+    path: 'teachers',
     component: Teachers,
     title: 'teachers',
     icon: SchoolIcon,
     needs: [NEEDS.teachers, NEEDS.get]
   },
   {
-    path: '/rooms',
+    path: 'rooms',
     component: Rooms,
     title: 'rooms',
     icon:  RoomIcon,
     needs: [NEEDS.rooms, NEEDS.get]
   },{
-    path: '/payments',
+    path: 'payments',
     component: Payments,
     title: 'payments',
     icon: AccountBalanceIcon,
     needs: [NEEDS.payments, NEEDS.get]
   },{
-    path: '/users',
+    path: 'users',
     component: Users,
     title: 'users',
     icon: ContactMailIcon,
     needs: [NEEDS.users, NEEDS.get]
   },{
-    path: '/email',
+    path: 'email',
     component: Email,
     title: 'email',
     icon: EmailIcon,
     needs: [NEEDS.send_email, NEEDS.get]
-  },{
-    path: '/attendance',
-    component: Attendance,
-    title: 'attendance',
-    icon: AssignmentTurnedInIcon,
-    needs: [NEEDS.attendance, NEEDS.get]
   }
 ];
 

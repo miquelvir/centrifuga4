@@ -84,6 +84,5 @@ class Course(MyBase):
 
     def get_attendance(self, date: datetime.date = None) -> Iterable:
         for attendance in self.attendances:
-            print(attendance.date, date)
             if date is None or attendance.date == date:
                 yield attendance

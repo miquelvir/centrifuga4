@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function AddDeleteSubresource({  defaultSearchBy, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, add_message,onSubresourceAdded, onSubresourceDeleted, ...other}) {
+function AddDeleteSubresource({  defaultSearchBy, displayText, auxFields, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, add_message,onSubresourceAdded, onSubresourceDeleted, ...other}) {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -131,6 +131,8 @@ const navigator = React.useContext(tabContext);
                     searchByOptions={searchByOptions}
                     items={items}
                     setItems={setItems}
+                    displayText={displayText}
+                    auxFields={auxFields} 
                     searchBarLabel={resourceName}
                     displayNameField={displayNameField}
                     parent_id={parent_id}
@@ -141,7 +143,7 @@ const navigator = React.useContext(tabContext);
                         onSubresourceDeleted(id);
                     }}
                     onItemClick={(id) => {
-                        navigator.goTo("/"+resourceName, id);
+                        navigator.goTo(resourceName, id);
                     }}
                 />}
               </div>
