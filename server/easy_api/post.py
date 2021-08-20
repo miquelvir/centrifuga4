@@ -36,7 +36,9 @@ class ImplementsPostOne:
 
     @safe_post
     def post(self):
-        Requires().require(list(need.create().permission for need in self.model.permissions))
+        Requires().require(
+            list(need.create().permission for need in self.model.permissions)
+        )
 
         body = request.get_json()
 

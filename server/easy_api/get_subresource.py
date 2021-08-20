@@ -19,6 +19,8 @@ class ImplementsGetCollectionSubresource(ImplementsGetCollection):
     def get(self, id_, *args, **kwargs):
         parent = get_parent(self.parent_model, id_)
 
-        Requires().require(list(need.read(id_).permission for need in self.parent_model.permissions))
+        Requires().require(
+            list(need.read(id_).permission for need in self.parent_model.permissions)
+        )
 
         return super().get(*args, parent=parent, **kwargs)

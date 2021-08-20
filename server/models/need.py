@@ -22,9 +22,7 @@ class Need(db.Model):
 
     @property
     def need(self):
-        return BaseNeed(resource=self.resource,
-                        action=self.action,
-                        param=self.param)
+        return BaseNeed(resource=self.resource, action=self.action, param=self.param)
 
     def user_representation(self):
         return self.id

@@ -15,7 +15,7 @@ from server.pdfs.grant_letter import generate_grant_letter_pdf
 
 class StudentsGrantLettersRes(Resource, SwaggerView):  # todo documented class higher up
     def post(self, id_):
-        assert_permissions((StudentsNeed.make_grant_letter(id_), ))
+        assert_permissions((StudentsNeed.make_grant_letter(id_),))
 
         query = Student.query.filter(Student.id == id_)
         student: Student = query.first()

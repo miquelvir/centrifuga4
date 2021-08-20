@@ -14,7 +14,9 @@ from server.emails.emails.bulk_email import my_job
 
 class BulkEmailCollectionRes(Resource):
     def post(self):
-        assert_permissions((EmailNeed.create(), CoursesNeed.read()))  # todo for requested ids maybe
+        assert_permissions(
+            (EmailNeed.create(), CoursesNeed.read())
+        )  # todo for requested ids maybe
 
         try:
             course_ids = json.loads(request.form["courseIds"])

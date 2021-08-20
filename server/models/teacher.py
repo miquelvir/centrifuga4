@@ -45,7 +45,10 @@ class Teacher(MyBase):
 
     def is_teacher_of_student(self, student_id: str):
         # todo maybe optimize
-        return any((student.id == student_id for student in course.students) for course in self.courses)
+        return any(
+            (student.id == student_id for student in course.students)
+            for course in self.courses
+        )
 
     @validates(
         "name", "surname1", "surname2", "email", "address", "zip", "gender", "city"

@@ -13,7 +13,6 @@ from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema
 
 
-
 def _get_page_url(original_url, page, _page):
     url_params = request.url[len(request.base_url) :]
     if len(url_params) <= 1:
@@ -137,7 +136,6 @@ class _ImplementsGet:
     )  # content negotiation (and automatic creation of raw csv from json)
     def get(self, *args, id_=None, parent=None, many=False, **kwargs):
 
-
         filters, sort, page, include = self._parse_args(request.args)
         do_pagination = page is not None
 
@@ -207,7 +205,9 @@ class ImplementsGetOne(_ImplementsGet):
     schema: MySQLAlchemyAutoSchema
 
     def get(self, id_, *args, **kwargs):
-        Requires().require(list(need.read(id_).permission for need in self.model.permissions))
+        Requires().require(
+            list(need.read(id_).permission for need in self.model.permissions)
+        )
 
         results = []
         for one_id in id_.split(","):
@@ -227,6 +227,8 @@ class ImplementsGetCollection(_ImplementsGet):
     schema: MySQLAlchemyAutoSchema
 
     def get(self, *args, **kwargs):
-        Requires().require(list(need.read().permission for need in self.model.permissions))
+        Requires().require(
+            list(need.read().permission for need in self.model.permissions)
+        )
 
         return super().get(*args, many=True, **kwargs)

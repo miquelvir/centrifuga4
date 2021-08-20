@@ -18,9 +18,10 @@ class ImplementsDeleteOneSubresource:
     parent_field: str
 
     def delete(self, id_, nested_id):
-        Requires().require(list(need.patch(id_).permission for need in self.parent_model.permissions)
-                           +
-                           list(need.delete(nested_id).permission for need in self.model.permissions))
+        Requires().require(
+            list(need.patch(id_).permission for need in self.parent_model.permissions)
+            + list(need.delete(nested_id).permission for need in self.model.permissions)
+        )
 
         parent = get_parent(self.parent_model, id_)
         field = getattr(parent, self.parent_field)

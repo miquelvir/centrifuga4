@@ -10,7 +10,7 @@ from server.models import (
     Need,
     Label,
     Attendance,
-    Role
+    Role,
 )
 from server.schemas.schemas import (
     StudentSchema,
@@ -24,7 +24,7 @@ from server.schemas.schemas import (
     NeedSchema,
     LabelSchema,
     AttendanceSchema,
-    RoleSchema
+    RoleSchema,
 )
 
 

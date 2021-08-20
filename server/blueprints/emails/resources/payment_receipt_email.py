@@ -13,7 +13,12 @@ from server.emails.emails.payment_receipt_email import my_job
 
 class PaymentReceiptEmailCollectionRes(Resource):
     def post(self, payment_id):
-        assert_permissions((EmailNeed.create(), PaymentsNeed.make_receipts(payment_id), ))
+        assert_permissions(
+            (
+                EmailNeed.create(),
+                PaymentsNeed.make_receipts(payment_id),
+            )
+        )
 
         query = Payment.query.filter(Payment.id == payment_id)
         payment: Payment = query.first()

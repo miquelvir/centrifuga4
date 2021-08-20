@@ -16,7 +16,9 @@ class ImplementsDeleteOne:
     schema: MySQLAlchemyAutoSchema
 
     def delete(self, id_):
-        Requires().require(list(need.delete(id_).permission for need in self.model.permissions))
+        Requires().require(
+            list(need.delete(id_).permission for need in self.model.permissions)
+        )
 
         result = db.session.query(self.model).filter(self.model.id == id_).one_or_none()
 

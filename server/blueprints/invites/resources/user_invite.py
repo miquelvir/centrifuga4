@@ -38,7 +38,7 @@ def generate_signup_link(_token, _email, frontend_url=None):
 class UserInviteCollectionRes(Resource):
     @fresh_login_required
     def post(self):
-        assert_permissions((UsersNeed.make_invites(), ))
+        assert_permissions((UsersNeed.make_invites(),))
         try:
             user_email = request.json["userEmail"].lower()
         except KeyError:

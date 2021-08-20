@@ -17,7 +17,7 @@ class StudentsEnrollmentAgreementRes(
     Resource, SwaggerView
 ):  # todo documented class higher up
     def post(self, id_):
-        assert_permissions((StudentsNeed.read(id_), ))
+        assert_permissions((StudentsNeed.read(id_),))
 
         query = Student.query.filter(Student.id == id_)
         student: Student = query.first()

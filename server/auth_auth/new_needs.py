@@ -9,6 +9,7 @@ from server import init_app, principal
 
 # BaseNeed = namedtuple("resource_need", ["resource", "action", "param"])
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from server.models import User, Teacher
 
@@ -78,15 +79,15 @@ class NeedPermission:
 
 
 class CrudNeed:
-    """ a crud need is a Flask Principal Need's factory
+    """a crud need is a Flask Principal Need's factory
 
     it creates needs for a specific resource and all possible NEED actions
     """
 
-    CREATE = 'create'
-    READ = 'read'
-    UPDATE = 'update'
-    DELETE = 'delete'
+    CREATE = "create"
+    READ = "read"
+    UPDATE = "update"
+    DELETE = "delete"
 
     ANY = None
 
@@ -96,10 +97,13 @@ class CrudNeed:
     def _validate_custom_actions(self, special_actions: Sequence[str]):
         for x in special_actions:
             if type(x) is not str:
-                raise ValueError(f"special actions must be of type string, not {type(x)!r}")
+                raise ValueError(
+                    f"special actions must be of type string, not {type(x)!r}"
+                )
             if x in self.BASE_ACTIONS:
                 raise ValueError(
-                    f"special actions must not override existing base actions, {x!r} is already present in {self.BASE_ACTIONS!r}")
+                    f"special actions must not override existing base actions, {x!r} is already present in {self.BASE_ACTIONS!r}"
+                )
 
     def __init__(self, resource: str, custom_actions: Sequence[str] = None):
         self._resource = resource
@@ -113,7 +117,9 @@ class CrudNeed:
 
     def _base_action(self, action: str, param: Optional[str]):
         if param is None:
-            param = CrudNeed.ANY  # no arg specified, so need/permission valid for all args (e.g. all ids)
+            param = (
+                CrudNeed.ANY
+            )  # no arg specified, so need/permission valid for all args (e.g. all ids)
 
         constructed_need = partial(self.ResourceNeed, action, param)
 
@@ -142,22 +148,22 @@ class CrudNeed:
         yield self.any()
 
     def __getattr__(self, custom_action) -> Callable[[], NeedPermission]:
-        """ allows accessing custom actions as attributes """
+        """allows accessing custom actions as attributes"""
         if custom_action not in self._custom_actions:
             raise AttributeError(custom_action)
         return lambda id_=None: self._base_action(custom_action, id_)
 
 
-CoursesNeed = CrudNeed('courses')
-GuardiansNeed = CrudNeed('guardians')
-PaymentsNeed = CrudNeed('payments', ('make_receipts',))
-RoomsNeed = CrudNeed('rooms')
-SchedulesNeed = CrudNeed('schedules')
-StudentsNeed = CrudNeed('students', ('make_grant_letter', ))
-TeachersNeed = CrudNeed('teachers')
-UsersNeed = CrudNeed('users', ('make_invites',))
-AttendanceNeed = CrudNeed('attendance')
-EmailNeed = CrudNeed('emails')
+CoursesNeed = CrudNeed("courses")
+GuardiansNeed = CrudNeed("guardians")
+PaymentsNeed = CrudNeed("payments", ("make_receipts",))
+RoomsNeed = CrudNeed("rooms")
+SchedulesNeed = CrudNeed("schedules")
+StudentsNeed = CrudNeed("students", ("make_grant_letter",))
+TeachersNeed = CrudNeed("teachers")
+UsersNeed = CrudNeed("users", ("make_invites",))
+AttendanceNeed = CrudNeed("attendance")
+EmailNeed = CrudNeed("emails")
 
 ADMINISTRATIVE_LEVEL_NEEDS = (
     CoursesNeed,
@@ -168,7 +174,7 @@ ADMINISTRATIVE_LEVEL_NEEDS = (
     StudentsNeed,
     TeachersNeed,
     AttendanceNeed,
-    EmailNeed
+    EmailNeed,
 )
 
 ADMINISTRATOR_LEVEL_NEEDS = (
@@ -197,7 +203,7 @@ class Role:
     def __init__(self, needs: Sequence):
         self.needs = needs
 
-    def get_needs(self, user: 'User'):
+    def get_needs(self, user: "User"):
         return self.needs
 
 
@@ -205,10 +211,10 @@ class TeacherRole(Role):
     def __init__(self):
         super().__init__(tuple())
 
-    def get_needs(self, user: 'User'):
+    def get_needs(self, user: "User"):
         needs = list(self.needs)
 
-        teacher: 'Teacher' = user.teacher
+        teacher: "Teacher" = user.teacher
         if teacher is not None:
             for course in teacher.courses:
                 needs.append(CoursesNeed.read(course.id).need)
@@ -219,12 +225,8 @@ class TeacherRole(Role):
 
 
 LaymanRole = Role(tuple())
-AdministratorRole = Role(
-    tuple(need.any() for need in ADMINISTRATOR_LEVEL_NEEDS)
-)
-AdministrativeRole = Role(
-    tuple(need.any() for need in ADMINISTRATIVE_LEVEL_NEEDS)
-)
+AdministratorRole = Role(tuple(need.any() for need in ADMINISTRATOR_LEVEL_NEEDS))
+AdministrativeRole = Role(tuple(need.any() for need in ADMINISTRATIVE_LEVEL_NEEDS))
 TeacherRole = TeacherRole()
 
 

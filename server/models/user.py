@@ -24,7 +24,7 @@ class User(MyBase, UserMixin):
     password_hash = db.Column(db.Text, nullable=False)
     needs = db.relationship("Need", secondary="user_need")
 
-    role_id = db.Column(db.Text, db.ForeignKey('role.id'), nullable=True)
+    role_id = db.Column(db.Text, db.ForeignKey("role.id"), nullable=True)
     role = db.relationship("Role")
 
     teacher_id = db.Column(db.Text, db.ForeignKey("teacher.id"))

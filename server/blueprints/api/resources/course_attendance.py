@@ -34,7 +34,9 @@ class CoursesAttendanceRes(Resource):
         if date is None:
             attendances = Attendance.query.filter(Attendance.course_id == id_).all()
         else:
-            attendances = Attendance.query.filter(and_(Attendance.date == date, Attendance.course_id == id_)).all()
+            attendances = Attendance.query.filter(
+                and_(Attendance.date == date, Attendance.course_id == id_)
+            ).all()
 
         result = {}
         for attendance in attendances:
@@ -89,7 +91,12 @@ class CoursesAttendanceRes(Resource):
 
         for student_id in to_be_added_student_ids:
             db.session.add(
-                Attendance(date=date, student_id=student_id, course_id=course.id, status=Attendance.STATUS_ATTENDED)
+                Attendance(
+                    date=date,
+                    student_id=student_id,
+                    course_id=course.id,
+                    status=Attendance.STATUS_ATTENDED,
+                )
             )
 
         db.session.commit()

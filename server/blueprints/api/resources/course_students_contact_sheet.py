@@ -211,7 +211,9 @@ def write_students(students, spamwriter):
 
 class CourseContactSheet(Resource, SwaggerView):
     def post(self, id_):
-        assert_permissions((CoursesNeed.read(id_), StudentsNeed.read()))  # todo maybe student by student
+        assert_permissions(
+            (CoursesNeed.read(id_), StudentsNeed.read())
+        )  # todo maybe student by student
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()
 

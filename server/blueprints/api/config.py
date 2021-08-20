@@ -26,7 +26,8 @@ from server.models import (
     Payment,
     Schedule,
     Teacher,
-    Room, Role,
+    Room,
+    Role,
 )
 
 api_blueprint = Blueprint("api", __name__, template_folder="templates")

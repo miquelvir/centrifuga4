@@ -17,7 +17,7 @@ from server.models import Course
 
 class CoursesAttendanceListRes(Resource, SwaggerView):
     def post(self, id_):
-        assert_permissions((CoursesNeed.read(id_), ))
+        assert_permissions((CoursesNeed.read(id_),))
 
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()

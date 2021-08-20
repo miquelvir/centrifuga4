@@ -33,7 +33,9 @@ class ImplementsPatchOne:
 
     @safe_patch
     def patch(self, id_):
-        Requires().require(list(need.update(id_).permission for need in self.model.permissions))
+        Requires().require(
+            list(need.update(id_).permission for need in self.model.permissions)
+        )
 
         body = request.get_json()
         body["id"] = id_  # force id_
