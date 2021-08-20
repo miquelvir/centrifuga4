@@ -1,7 +1,6 @@
 from flask import Blueprint
 from flask_restful import Api as Api
 
-from server.blueprints.api.resources.course_attendance import CoursesAttendanceRes
 from server.blueprints.api.resources.course_attendance_list import (
     CoursesAttendanceListRes,
 )
@@ -46,7 +45,6 @@ api.add_resource(
 api.add_resource(PaymentsReceiptsRes, "/payments/<string:id_>/receipt")
 api.add_resource(CoursesAttendanceListRes, "/courses/<string:id_>/attendanceList")
 api.add_resource(CourseContactSheet, "/courses/<string:id_>/contactsSheet")
-api.add_resource(CoursesAttendanceRes, "/courses/<string:id_>/attendance")
 api.add_resource(GodFile, "/files/god")
 
 
