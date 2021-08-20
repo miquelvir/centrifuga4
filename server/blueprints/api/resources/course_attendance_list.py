@@ -14,6 +14,7 @@ from server.constants import SHORT_NAME
 from server.file_utils.string_bytes_io import make_response_with_file
 from server.models import Course
 
+
 # todo check status etc
 class CoursesAttendanceListRes(Resource, SwaggerView):
     def post(self, id_):

@@ -1,3 +1,5 @@
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from server import db
 from server.auth_auth.new_needs import AttendanceNeed
 from server.models._base import MyBase
@@ -14,6 +16,12 @@ class Attendance(MyBase):
 
     STATUS_ABSENT_JUSTIFIED = 2
     STATUS_ABSENT_JUSTIFIED_TEXT = "absent-justified"
+
+    STATUS_INT_TO_TEXT = {
+        STATUS_ATTENDED: STATUS_ATTENDED_TEXT,
+        STATUS_ABSENT: STATUS_ABSENT_TEXT,
+        STATUS_ABSENT_JUSTIFIED: STATUS_ABSENT_JUSTIFIED_TEXT
+    }
 
     permissions = {AttendanceNeed}
 
@@ -36,3 +44,7 @@ class Attendance(MyBase):
 
     def __repr__(self):
         return "<Attendance | %s - %s>" % (self.student_id, self.course_id)
+
+    @hybrid_property
+    def text_status(self):
+        return self.STATUS_INT_TO_TEXT.get(self.status, None)

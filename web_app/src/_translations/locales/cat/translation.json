@@ -53,6 +53,7 @@
   "chose_list_dates": "escull el primer i l'últim dia pels quals vulguis crear les llistes",
   "user": "usuari",
   "teacher": "professor",
+  "export_attendances": "baixar llista d'assistència",
   "attended": "assistència",
   "absent": "absència",
   "absent-justified": "absència justificada",
