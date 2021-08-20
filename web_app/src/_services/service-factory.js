@@ -91,21 +91,22 @@ export default function serviceFactory(resource, subresource=null, serviceName=n
 
         patch({id, body, initial_values = null}) {
             if (initial_values !== null) {
-                for (const [key, value] of Object.entries(body)) {
-                  if (key in initial_values && initial_values[key] === value){
-                      delete body[key];  // unchanged value, no need to patch it
-                  }
-                }
+                var dirtyBody = Object.keys(body).reduce(function (filtered, key) {
+                    if (!(key in initial_values && initial_values[key] === body[key])){
+                        filtered[key] = body[key];
+                    }
+                    return filtered;
+                }, {});
             }
 
-            if ("id" in body) {
-                delete body["id"];  // no id is to be sent in the body, since it is sent as url param
+            if ("id" in dirtyBody) {
+                delete dirtyBody["id"];  // no id is to be sent in the body, since it is sent as url param
             }
             return new Promise(function (resolve, reject) {
                 axios({
                     method: 'patch',
                     url: `${url}/${resource}/${id}`,
-                    data: body,
+                    data: dirtyBody,
                     headers: {
                         ...{
                             'Content-Type': 'application/json',

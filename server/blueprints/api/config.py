@@ -26,7 +26,7 @@ from server.models import (
     Payment,
     Schedule,
     Teacher,
-    Room, Role,
+    Room, Role, Attendance,
 )
 
 api_blueprint = Blueprint("api", __name__, template_folder="templates")
@@ -50,6 +50,6 @@ api.add_resource(CoursesAttendanceRes, "/courses/<string:id_>/attendance")
 api.add_resource(GodFile, "/files/god")
 
 
-for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User, Role):
+for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User, Role, Attendance):
     for res in get_resources(model):
         api.add_resource(*res)

@@ -4,7 +4,8 @@ import {useTranslation} from "react-i18next";
 import Fab from "@material-ui/core/Fab";
 import {Checkbox, ListItem, ListItemIcon, Button, ListItemText, Tooltip} from "@material-ui/core";
 import CourseStudentsDataService from "../../_services/course_students.service";
-import {attendanceService} from "../../_services/course_attendance.service"
+import {attendanceService} from "../../_services/course_attendance.service";
+import AttendanceService from "../../_services/attendance.service";
 import CloseIcon from '@material-ui/icons/Close';
 import dataService from "../../_services/courses.service";
 import * as yup from "yup";
@@ -124,8 +125,9 @@ export default function Attendance({...other}) {
   }
 
   const hasChanges = (initial, updated) => {
-    if (initial['student_id'] !== updated['student_id']) throw new Error("student id has changed");
-    if (initial['course_id'] !== updated['course_id']) throw new Error("course id has changed");
+    console.log("iu", initial, updated);
+    if (initial['student_id'] !== updated['student_id']) throw new Error(`student id has changed from ${initial['student_id']} to ${updated['student_id']}`);
+    if (initial['course_id'] !== updated['course_id']) throw new Error(`course id has changed from ${initial['course_id']} to ${updated['course_id']}`);
     if (initial['date'] !== updated['date']) return true;
     if (initial['comment'] !== updated['comment']) return true;
     if (initial['status'] !== updated['status']) return true;
@@ -145,30 +147,13 @@ export default function Attendance({...other}) {
     setDirty(hasChangesGlobal());
   }, [initialAttendances, attendances]);
 
-  const getChangedFields = (initial, updated) => {
-    if (!hasChanges(initial, updated)) return null;
-
-    let result = {};
-    if (initial['date'] !== updated['date']) {
-      result['date'] = updated['date'];
-    }
-    if (initial['comment'] !== updated['comment']){
-      result['comment'] = updated['comment'];
-    }
-    if (initial['status'] !== updated['status']){
-      result['status'] = updated['status'];
-    }
-    return result;
-  }
-
   const hasUpdatedAttendances = () => Object.keys(initialAttendances).some(key => 
     hasChanges(initialAttendances[key], attendances[key]));
 
   const getUpdatedAttendances = () => {
     const filtered = Object.keys(initialAttendances)
       .reduce((obj, key) => {
-        const dirtyFields = getChangedFields(initialAttendances[key], attendances[key]);
-        if (dirtyFields !== null) obj[key] = dirtyFields;
+        if (hasChanges(initialAttendances[key], attendances[key])) obj[key] = attendances[key];
         return obj;
       }, {});
     return filtered;
@@ -177,7 +162,7 @@ export default function Attendance({...other}) {
   const [students, setStudents] = useState(null);
   const [courseId, setCourseId] = useState(id);
   const [allDone, setAllDone] = useState(true);
-  const [date, setDate] = useState(null);
+  
 
   useEffect(() => {
     if (attendances === null) return;
@@ -211,15 +196,17 @@ export default function Attendance({...other}) {
       if (formik.values["start"] === '') return;
       if (students === null) return;
       
-      attendanceService
-        .get(courseId, formik.values["start"])
+      AttendanceService 
+        .getAll(null,  "*", null, {
+            course_id: courseId,
+            date: formik.values["start"]
+          }
+        )
         .then(...errorHandler({}))
         .then(function (res) {
-          const newAttendances = res["data"][0]["data"].reduce((a,x) => ({...a, [x['student_id']]: x}), {});
+          const newAttendances = res["data"].reduce((a,x) => ({...a, [x['student_id']]: x}), {});
           setInitialAttendances(newAttendances);
-          setDate(res["data"][0]["date"]);
           setAttendances(createEmptyAttendances(students, newAttendances, date));
-          
         });
     }
 
@@ -245,6 +232,7 @@ const formik = useFormik({
           setSubmitting(true);
       }
   });
+  const date = formik.values['start'];
 
   useEffect(loadAttendances, [formik.values["start"], courseId, students]);
 
@@ -337,12 +325,36 @@ const formik = useFormik({
             </Tooltip>
            <Tooltip title={t("save")}>
                 <Fab className={classes.fab} color="primary" onClick={() => {
-                        /*attendanceService
-                            .put(courseId, formik.values["start"], hasAttended)
-                            .then(...errorHandler({}))
-                            .then(function (res) {
-                                setHasAttendedInitial(hasAttended);
-                            });*/
+                  let promises = [];
+
+                  const newAttendances = getNewAttendances();
+                  if (newAttendances !== null) {
+                    Object.keys(newAttendances).forEach(studentId => {
+                      const attendance = newAttendances[studentId];
+                      promises.push(AttendanceService.post(attendance))
+                    })
+                  }
+                  
+
+                  const updatedAttendances = getUpdatedAttendances();
+                  if (updatedAttendances !== null) {
+                    Object.keys(updatedAttendances).forEach(studentId => {
+                      const attendance = updatedAttendances[studentId];
+                      const initialAttendance = initialAttendances[studentId];
+                      promises.push(AttendanceService
+                        .patch({
+                          id:initialAttendance['id'], 
+                          body:attendance, 
+                          initial_values:initialAttendance
+                        }));
+                    })
+                  }
+
+                  Promise.all(promises)
+                  .then(...errorHandler({}))
+                  .then(function (res) {
+                    loadAttendances();
+                  })
                 }} disabled={formik.isSubmitting || !dirty}>
                     <SaveIcon/>
                 </Fab>

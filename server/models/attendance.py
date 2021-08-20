@@ -17,6 +17,7 @@ class Attendance(MyBase):
 
     permissions = {AttendanceNeed}
 
+    id = db.Column(db.String, primary_key=True)  # todo maybe not store as string
     date = db.Column(db.Date, nullable=False)
     course_id = db.Column(db.Text, db.ForeignKey("course.id"), nullable=False)
     student_id = db.Column(db.Text, db.ForeignKey("student.id"), nullable=False)
@@ -31,7 +32,7 @@ class Attendance(MyBase):
         "Course", foreign_keys=course_id, back_populates="attendances"
     )
 
-    __table_args__ = (db.PrimaryKeyConstraint(date, course_id, student_id),)
+    __table_args__ = (db.UniqueConstraint(date, course_id, student_id),)
 
     def __repr__(self):
         return "<Attendance | %s - %s>" % (self.student_id, self.course_id)
