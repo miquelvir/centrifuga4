@@ -8,6 +8,7 @@ from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
 from server.auth_auth.new_needs import CoursesNeed, AttendanceNeed
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires, assert_permissions
 from server.blueprints.api.errors import NotFound
 from server.constants import SHORT_NAME
@@ -18,10 +19,10 @@ from server.models import Course, Attendance
 # todo check status etc
 class CoursesAttendanceV2ListRes(Resource, SwaggerView):
     def post(self, id_):
-        assert_permissions((CoursesNeed.read(id_), AttendanceNeed.read(), ))
-
         query = Course.query.filter(Course.id == id_)
         course: Course = query.one_or_none()
+
+        Require.ensure.read(course)
 
         if course is None:
             raise NotFound("resource with the given id not found", requestedId=id_)
@@ -30,6 +31,8 @@ class CoursesAttendanceV2ListRes(Resource, SwaggerView):
         attendances = {}
         field_names = set()
         for attendance in Attendance.query.filter(Attendance.course_id == id_).all():
+            Require.ensure.read(attendance)
+
             student_id = attendance.student_id
             if student_id not in attendances:
                 attendances[student_id] = []

@@ -40,7 +40,7 @@ class MyBase(db.Model):
         while attempts < 10:
             id_ = str(uuid.uuid4())
             exists = (
-                db.session.query(cls.id).filter(cls.id == id_).scalar() is not None
+                    db.session.query(cls.id).filter(cls.id == id_).scalar() is not None
             )  # todo could actually collide with super
             if not exists and id_ not in avoid:
                 return id_

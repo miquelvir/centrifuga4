@@ -32,7 +32,7 @@ from server.models import (
 api_blueprint = Blueprint("api", __name__, template_folder="templates")
 
 
-@api_blueprint.errorhandler(RawForbidden)
+@api_blueprint.errorhandler(RawForbidden)  # todo common outside api?
 def handle(e):
     raise Forbidden(e.message, **e.kwargs)
 

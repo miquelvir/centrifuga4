@@ -2,6 +2,7 @@ from flask import request, current_app, jsonify
 from sqlalchemy.exc import InvalidRequestError
 import json
 
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires
 from server.easy_api._content_negotiation import produces
 from server.blueprints.api.errors import (
@@ -12,6 +13,11 @@ from server.blueprints.api.errors import (
 from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema
 
+
+class KeyContainer:
+    def __init__(self, obj, fields):
+        self.object = obj
+        self.fields = fields
 
 
 def _get_page_url(original_url, page, _page):
@@ -136,8 +142,6 @@ class _ImplementsGet:
         ("application/json", "text/csv")
     )  # content negotiation (and automatic creation of raw csv from json)
     def get(self, *args, id_=None, parent=None, many=False, **kwargs):
-
-
         filters, sort, page, include = self._parse_args(request.args)
         do_pagination = page is not None
 
@@ -146,8 +150,8 @@ class _ImplementsGet:
         if parent:
             query = query.with_parent(parent)
 
-        if include:
-            query = query.with_entities(*include)
+        """if include:  # todo
+            query = query.with_entities(*include)"""
 
         if filters:
             query = query.filter(*filters)
@@ -170,6 +174,8 @@ class _ImplementsGet:
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
+            for obj in result:
+                Require.ensure.read(obj)
         else:
 
             if not id_:
@@ -189,6 +195,8 @@ class _ImplementsGet:
                     filters=request.args,
                 )
 
+            Require.ensure.read(result)
+
         dumped_result = self.schema.dump(result, many=many)
 
         if not (many and do_pagination):
@@ -207,8 +215,6 @@ class ImplementsGetOne(_ImplementsGet):
     schema: MySQLAlchemyAutoSchema
 
     def get(self, id_, *args, **kwargs):
-        Requires().require(list(need.read(id_).permission for need in self.model.permissions))
-
         results = []
         for one_id in id_.split(","):
             result = super().get(*args, id_=one_id, many=False, **kwargs)
@@ -227,6 +233,4 @@ class ImplementsGetCollection(_ImplementsGet):
     schema: MySQLAlchemyAutoSchema
 
     def get(self, *args, **kwargs):
-        Requires().require(list(need.read().permission for need in self.model.permissions))
-
         return super().get(*args, many=True, **kwargs)

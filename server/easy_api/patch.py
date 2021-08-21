@@ -3,6 +3,7 @@ from typing import List
 from flask import request
 
 from server import db
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires
 from server.blueprints.api.errors import integrity, no_nested, safe_marshmallow
 from server.models._base import MyBase
@@ -33,14 +34,17 @@ class ImplementsPatchOne:
 
     @safe_patch
     def patch(self, id_):
-        Requires().require(list(need.update(id_).permission for need in self.model.permissions))
-
         body = request.get_json()
         body["id"] = id_  # force id_
 
         updated_student = self.schema.load(body, partial=True)
+
+        Require.ensure.update(updated_student)
+
         merged = db.session.merge(updated_student)
-        """if not result:
+
+        # todo investigate
+        """if not result:  
                     raise NotFound("resource with the given id not found", requestedId=id_)"""
 
         db.session.commit()

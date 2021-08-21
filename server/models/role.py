@@ -1,54 +1,4 @@
-from collections import Iterable
-
-from flask_principal import Permission
-from flask import g
 from server import db
-from server.auth_auth.new_needs import ADMINISTRATOR_LEVEL_NEEDS_ALL_VARIANTS, BaseNeed, \
-    ADMINISTRATIVE_LEVEL_NEEDS_ALL_VARIANTS, LAYMAN_LEVEL_NEEDS
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from server.models import User
-
-
-class RoleProvider:
-    @classmethod
-    def needs_for_role_id(cls, role_id: str) -> Iterable:
-        if role_id == Role.ADMINISTRATOR:
-            return ADMINISTRATOR_LEVEL_NEEDS_ALL_VARIANTS
-        if role_id == Role.ADMINISTRATIVE:
-            return ADMINISTRATIVE_LEVEL_NEEDS_ALL_VARIANTS
-        if role_id == Role.LAYMAN:
-            return LAYMAN_LEVEL_NEEDS
-        return tuple()
-
-    @classmethod
-    def has_need(cls, role_id: str, user: 'User', need: BaseNeed):
-        print(0, "----------")
-        print(role_id)
-        if role_id != Role.TEACHER:
-            return False
-        print("01")
-        if user.teacher is None:
-            return False
-        print("02", need.resource)
-        if need.resource not in ('courses', 'students', 'attendance', 'teachers'):
-            return False
-        if need.resource == 'teachers':
-            print(1)
-            if need.param == user.teacher_id:
-                print(2)
-                return True
-            print(3)
-            return False
-        if need.action != 'read':
-            return False
-        if need.param is None:
-            return False
-        if need.resource == 'courses':
-            return user.teacher.is_teacher_of_course(need.param)
-        if need.resource == 'students':
-            return user.teacher.is_teacher_of_student(need.param)
-        return False
 
 
 class Role(db.Model):
@@ -69,19 +19,3 @@ class Role(db.Model):
     def user_representation(self):
         return self.id
 
-    @staticmethod
-    def _load_need_to_identity(need):
-        g.identity.provides.add(need)
-
-    def load_needs_to_identity(self):
-        print("x")
-        for need in RoleProvider.needs_for_role_id(self.id):
-            print(f"loading need... {need}")
-            self._load_need_to_identity(need)
-
-    def load_needs_to_identity_for_permissions(self, user: 'User', permissions: Iterable[Permission]):
-        print(000)
-        for permission in permissions:
-            for need in permission.needs:
-                if RoleProvider.has_need(self.id, user, need):
-                    self._load_need_to_identity(need)

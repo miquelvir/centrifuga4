@@ -18,9 +18,7 @@ def students_file():
 
 
 class GodFile(Resource, SwaggerView):
-    def post(self):
-        assert_permissions((CoursesNeed.read(), StudentsNeed.read()))
-
+    def post(self):  # todo where is this used
         query = Student.query
         students: Student = query.all()
 

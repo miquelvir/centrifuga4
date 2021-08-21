@@ -6,6 +6,7 @@ from flasgger import SwaggerView
 from flask_restful import Resource
 
 from server.auth_auth.new_needs import CoursesNeed, StudentsNeed
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires, assert_permissions
 from server.blueprints.api.errors import NotFound
 from server.constants import SHORT_NAME
@@ -61,6 +62,8 @@ def write_students(students, spamwriter):
         ]
     )
     for student in students:
+        Require.ensure.read(student)
+
         if student.enrolment_status not in emails:
             emails[student.enrolment_status] = {
                 "official_contact_emails": set(),
@@ -211,9 +214,10 @@ def write_students(students, spamwriter):
 
 class CourseContactSheet(Resource, SwaggerView):
     def post(self, id_):
-        assert_permissions((CoursesNeed.read(id_), StudentsNeed.read()))  # todo maybe student by student
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()
+
+        Require.ensure.read(course)
 
         if not course:
             raise NotFound("resource with the given id not found", requestedId=id_)

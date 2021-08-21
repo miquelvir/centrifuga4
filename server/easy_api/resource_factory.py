@@ -2,11 +2,9 @@ from typing import List, Tuple
 
 from flask_restful import Resource
 from sqlalchemy import inspect
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapper, RelationshipProperty
 
 from server import easy_api as easy
-from server.models import Student
 
 from server.models._base import MyBase
 from server.schema_from_model import get_schema_from_model

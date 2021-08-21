@@ -5,7 +5,9 @@ from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
 from server.auth_auth.new_needs import EmailNeed, StudentsNeed
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires, assert_permissions
+from server.auth_auth.special_permissions import EmailPermission
 from server.blueprints.api.errors import NotFound
 from server.models import Student
 from server.emails.emails.enrolment_agreement_email import my_job
@@ -13,10 +15,12 @@ from server.emails.emails.enrolment_agreement_email import my_job
 
 class EnrollmentEmailCollectionRes(Resource):
     def post(self, student_id):
-        assert_permissions((EmailNeed.create(), StudentsNeed.read(student_id)))
+        Require.ensure.create(EmailPermission())
 
         query = Student.query.filter(Student.id == student_id)
         student: Student = query.first()
+
+        Require.ensure.read(student)
 
         if not student:
             raise NotFound(

@@ -1,6 +1,7 @@
 from flask import request
 
 from server import db
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires
 
 from server.blueprints.api.errors import (
@@ -36,8 +37,6 @@ class ImplementsPostOne:
 
     @safe_post
     def post(self):
-        Requires().require(list(need.create().permission for need in self.model.permissions))
-
         body = request.get_json()
 
         if "id" in body:
@@ -50,6 +49,9 @@ class ImplementsPostOne:
         body["id"] = new_id
 
         new = self.schema.load(body)
+
+        Require.ensure.create(new)
+
         db.session.add(new)
         db.session.commit()
 

@@ -102,7 +102,6 @@ def init_app(config=None):
         from .blueprints.pre_enrolment.config import pre_enrolment_blueprint
         from .blueprints.calendars import calendars_blueprint
         from .blueprints.invites import invites_blueprint
-        from .blueprints.teacher_dashboard.config import teacher_dashboard_blueprint
 
         from server.models import User
         from server.auth_auth.principal_identity_loaded import on_identity_loaded
@@ -135,7 +134,6 @@ def init_app(config=None):
         # https://stackoverflow.com/questions/24487449/flask-principal-flask-login-remember-me-and-identity-loaded
         @principal.identity_loader
         def load_identity_when_session_expires():
-            print("load_identity_when_session_expires", current_user, getattr(current_user, 'id', None))
             if hasattr(current_user, "id"):
                 return Identity(current_user.id)
 
@@ -150,7 +148,6 @@ def init_app(config=None):
         app.register_blueprint(validation_blueprint, url_prefix="/validation/v1")
         app.register_blueprint(pre_enrolment_blueprint, url_prefix="/pre-enrolment/v1")
         app.register_blueprint(calendars_blueprint, url_prefix="/calendars/v1")
-        app.register_blueprint(teacher_dashboard_blueprint, url_prefix="/teacher-dashboard/v1")
         # print(swagger.get_apispecs())  # todo customize ui
 
         from server.containers import Container

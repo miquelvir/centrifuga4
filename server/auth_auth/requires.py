@@ -15,9 +15,10 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
     :param required_permissions: an iterable with all the permissions to be checked
     :return: true if the current user passes all permissions, false otherwise
     """
+    raise NotImplementedError()
     if current_app.config["DEVELOPMENT"]:
         # session cookie does not work properly if using the front end server independently
-        return True  # todo migrate to jwt or something?
+        pass  # todo migrate to jwt or something?
 
     if all(p.can() if type(p) is MyPermission else p.permission.can() for p in required_permissions):
         return True  # optimize for non-teachers
@@ -34,6 +35,7 @@ def check_permissions(required_permissions: Iterable[type(Permission)]) -> bool:
 
 
 def assert_permissions(permissions: Iterable[type(Permission)]):
+    raise NotImplementedError()
     if not check_permissions(permissions):
         raise Forbidden(
             "Insufficient privileges for requested action.",
@@ -58,6 +60,7 @@ class Requires:
         self.method_permissions: set = set(method_permissions)
 
     def require(self, permissions: iter = None):
+        raise NotImplementedError()
         if permissions is None:
             permissions = {}
         assert_permissions(self.method_permissions.union(permissions))

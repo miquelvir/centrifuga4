@@ -6,6 +6,7 @@ from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
 from server.auth_auth.new_needs import StudentsNeed
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires, assert_permissions
 from server.blueprints.api.errors import NotFound
 from server.file_utils.string_bytes_io import make_response_with_file
@@ -15,10 +16,10 @@ from server.pdfs.grant_letter import generate_grant_letter_pdf
 
 class StudentsGrantLettersRes(Resource, SwaggerView):  # todo documented class higher up
     def post(self, id_):
-        assert_permissions((StudentsNeed.make_grant_letter(id_), ))
-
         query = Student.query.filter(Student.id == id_)
         student: Student = query.first()
+
+        Require.ensure.read(student)
 
         if not student:
             raise NotFound("resource with the given id not found", requestedId=id_)

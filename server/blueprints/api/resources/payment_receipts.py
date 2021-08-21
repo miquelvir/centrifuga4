@@ -5,7 +5,9 @@ from flask import current_app
 from flask_restful import Resource
 
 from server.auth_auth.new_needs import PaymentsNeed
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires, assert_permissions
+from server.auth_auth.special_permissions import PaymentReceiptsPermission
 
 from server.blueprints.api.errors import NotFound
 from server.file_utils.string_bytes_io import make_response_with_file
@@ -15,9 +17,12 @@ from server.pdfs.payment_receipt import generate_payment_recipe_pdf
 
 class PaymentsReceiptsRes(Resource, SwaggerView):  # todo documented class higher up
     def post(self, id_):
-        assert_permissions((PaymentsNeed.read(), PaymentsNeed.make_receipts()))
+        Require.ensure.create(PaymentReceiptsPermission())
+
         query = Payment.query.filter(Payment.id == id_)
         payment: Payment = query.first()
+
+        Require.ensure.read(payment)
 
         if not payment:
             raise NotFound("resource with the given id not found", requestedId=id_)

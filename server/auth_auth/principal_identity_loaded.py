@@ -13,7 +13,7 @@ def on_identity_loaded(_, identity):
     """
     # Set the identity user object
     identity.user = current_user
-
+    return  # todo can be removed as well as principal dependency
     # add the needs that the user provides to the identity
     if hasattr(current_user, "needs"):  # needed since identity could be Anonymous
         for need in current_user.needs:

@@ -15,7 +15,7 @@ import ThemeButton from "../_components/theme_button.component";
 import TranslateButton from "../_components/translate_button.component";
 import useTheme from "@material-ui/core/styles/useTheme";
 import CourseCard from "./components/CourseCard.js";
-import TeacherCoursesService from "../_services/teacher_dashboard_courses.service";
+import TeacherCoursesService from "../_services/teachers_courses.service";
 import {userContext} from "../_context/user-context";
 import MoreButton from "./components/MoreButton";
 import NotATeacherTitle from './components/NotATeacherTitle';
@@ -73,7 +73,7 @@ const TeacherDashboardPage = (props) => {
     
     const userCtx = React.useContext(userContext);
     useEffect(() => {
-        if (userCtx.teacher === null) return;
+        if (userCtx.teacher === null || userCtx.teacher === undefined) return;
         
         const page = attemptLoadedUntilPage;
         setAttemptingLoad(true);
@@ -95,12 +95,12 @@ const TeacherDashboardPage = (props) => {
 
             <Box p={4} className={classes.root}>
             {
-            userCtx.teacher === null && 
+            (userCtx.teacher === null || userCtx.teacher === undefined) && 
               <NotATeacherTitle/>
             }
 
             {
-            userCtx.teacher !== null && 
+            !(userCtx.teacher === null || userCtx.teacher === undefined) && 
             <Box>
                 <WelcomeTitle/>
 

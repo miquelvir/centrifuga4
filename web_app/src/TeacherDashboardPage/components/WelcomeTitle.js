@@ -38,7 +38,7 @@ export default function WelcomeTitle({course}) {
       justifyContent="center"
       alignItems="center">
           <Typography variant="h4" className={classes.welcomeMessage}>
-              {t("hi")} {userCtx.teacher.name} 
+              {t("hi")} {userCtx.teacher === undefined? '': userCtx.teacher.name} 
           </Typography>
           <Typography variant="h4" className={classes.welcomeMessage} onClick={switchWelcomeEmoji} onMouseOver={() => setWelcomeEmoji(hiii)} onMouseOut={() => setWelcomeEmoji(hi)}>
               {welcomeEmoji}

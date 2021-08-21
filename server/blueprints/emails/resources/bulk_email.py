@@ -7,14 +7,16 @@ from flask import request
 from flask_restful import Resource
 
 from server.auth_auth.new_needs import EmailNeed, CoursesNeed
+from server.auth_auth.require import Require
 from server.auth_auth.requires import Requires, assert_permissions
+from server.auth_auth.special_permissions import EmailPermission
 from server.models import Course
 from server.emails.emails.bulk_email import my_job
 
 
 class BulkEmailCollectionRes(Resource):
     def post(self):
-        assert_permissions((EmailNeed.create(), CoursesNeed.read()))  # todo for requested ids maybe
+        Require.ensure.create(EmailPermission())
 
         try:
             course_ids = json.loads(request.form["courseIds"])
@@ -50,7 +52,11 @@ class BulkEmailCollectionRes(Resource):
 
         emails = []
         for course in courses:
+            Require.ensure.read(course)
+
             for student in course.students:
+                Require.ensure.read(student)
+
                 if email_preference == "resolved":
                     emails.extend(student.official_notification_emails)
                 elif email_preference == "student":
