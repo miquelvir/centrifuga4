@@ -26,7 +26,7 @@ administrative which can manage users
 Els usuaris poden seguir un **rol**, que els garanteix un grup de permisos.
 
 ## professor
-pot passar llista a les seves classes i llegir els seus cursos i estudiant
+pot passar llista a les seves classes i llegir els seus cursos i estudiants
 
 ## buit 
 no té cap permís especial
