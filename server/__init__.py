@@ -64,8 +64,6 @@ def init_app(config=None):
         else:
             raise ValueError("no environment variable found")
 
-    # config.SQLALCHEMY_DATABASE_URI = "postgres://wlxecvuwhzcehs:cbc817db30820f9184ecce5dbe5c87755195f68abe0b09423b5bfd5cf5de1c88@ec2-54-72-188-148.eu-west-1.compute.amazonaws.com:5432/dft5had1ruhc0f"
-
     app.config.from_object(config)
 
     # plugin initialization
