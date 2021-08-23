@@ -2,11 +2,9 @@ from typing import List, Tuple
 
 from flask_restful import Resource
 from sqlalchemy import inspect
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapper, RelationshipProperty
 
 from server import easy_api as easy
-from server.models import Student
 
 from server.models._base import MyBase
 from server.schema_from_model import get_schema_from_model
@@ -26,7 +24,6 @@ def get_resources(
             {
                 "schema": get_schema_from_model(model),
                 "model": model,
-                "permissions": model.permissions,
             },
         )
 
@@ -44,7 +41,6 @@ def get_resources(
             {
                 "schema": get_schema_from_model(model),
                 "model": model,
-                "permissions": model.permissions,
             },
         )
         resources.append((resource, "/%s/<string:id_>" % resource_name))
@@ -72,7 +68,6 @@ def get_resources(
                     "model": nested_model,
                     "parent_model": model,
                     "parent_field": nested_resource_name,
-                    "permissions": model.permissions.union(nested_model.permissions),
                 },
             )
             resources.append(
@@ -92,7 +87,6 @@ def get_resources(
                     "model": nested_model,
                     "parent_model": model,
                     "parent_field": nested_resource_name,
-                    "permissions": model.permissions.union(nested_model.permissions),
                 },
             )
             resources.append(

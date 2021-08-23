@@ -7,7 +7,7 @@ import {NEEDS} from "../_helpers/needs";
 import {confirmContext} from "../_context/confirm-context";
 
 
-const ItemsListSecondary = ({dataService, parent_id, deleteTooltip, delete_message, onItemDeleted = () => {}, ...props}) => {
+const ItemsListSecondary = ({dataService, displayText, auxFields, parent_id, deleteTooltip, delete_message, onItemDeleted = () => {}, ...props}) => {
     const errorHandler = useErrorHandler();
     const confirm = React.useContext(confirmContext);
     const {t} = useTranslation();
@@ -27,6 +27,8 @@ const ItemsListSecondary = ({dataService, parent_id, deleteTooltip, delete_messa
             });
         }}
         parent_id={parent_id}
+        displayText={displayText}
+        auxFields={auxFields}
         secondaryActionTooltip={deleteTooltip}
         secondaryActionNeeds={[NEEDS.delete]}
         secondaryActionIcon={<DeleteIcon/>}

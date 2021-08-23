@@ -19,10 +19,17 @@ import TranslateButton from "./translate_button.component";
 import ThemeButton from "./theme_button.component";
 import {DOCS_URL} from "../config";
 import DescriptionIcon from '@material-ui/icons/Description';
+import SchoolIcon from '@material-ui/icons/School';
+import { withRouter } from "react-router";
+import { useHistory } from "react-router-dom";
+import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import TeacherDashboardButton from "./teacher_dashboard_button";
+
 const languageMap = {
     eng: { label: "english", dir: "ltr", active: true },
     cat: { label: "català", dir: "ltr", active: false }
 };
+
 
 const useStyles = makeStyles(theme => (createStyles({
     toolbar: {
@@ -38,8 +45,8 @@ const useStyles = makeStyles(theme => (createStyles({
     },
 })));
 
-export default function HomeToolbar(props){
-    const changeTheme = props.changeTheme;
+export default withRouter(function HomeToolbar(props){
+    let history = useHistory();
     const classes = useStyles();
     const errorHandler = useErrorHandler();
 
@@ -123,6 +130,8 @@ export default function HomeToolbar(props){
 
     return (
     <Toolbar>
+        
+
                     <IconButton
                         color="inherit"
                         aria-label={t("open_drawer")}
@@ -137,6 +146,10 @@ export default function HomeToolbar(props){
                       {title}
                     </Typography>
                     <div className={classes.grow}/>
+
+
+                    <TeacherDashboardButton/>
+
 
                     <Tooltip title={t("docs")}>
                         <IconButton
@@ -167,4 +180,4 @@ export default function HomeToolbar(props){
         {userMenu}
                 </Toolbar>
     )
-};
+});

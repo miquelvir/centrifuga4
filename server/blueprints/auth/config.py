@@ -2,9 +2,8 @@ from flask import Blueprint, g, request, current_app, session, abort, jsonify
 
 # initialise the blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_principal import identity_changed, Identity, AnonymousIdentity
 
-from server.models import User
+from server.models import User, Role
 
 auth_blueprint = Blueprint("auth", __name__)
 
@@ -34,26 +33,33 @@ def basic_http_auth_required(f):
 
 def get_current_needs():
     """returns a json object with the needs of the current user"""
-    return jsonify({"needs": [n.id for n in current_user.needs]})
+    result = {}
+
+    if hasattr(current_user, 'role') and current_user.role is not None:
+        result["role"] = current_user.role.id
+
+        if current_user.role.id == Role.TEACHER:
+            result["teacher"] = {}
+            result["teacher"]["id"] = current_user.teacher_id
+            result["teacher"]["name"] = current_user.name
+        else:
+            result["teacher"] = None
+
+    return jsonify(result)
 
 
 @auth_blueprint.route("/login", methods=["POST"])
 @basic_http_auth_required  # require user and password to be validated
-def get_auth_token():
+def login():
     """
-    endpoint to get a JWT for next calls
-
-
     In the before_request, the user is required to login. When reaching this endpoint, the user is already validated.
         // pre-condition: g.user has the user name
     Given a username, it generates the jwt_token and send it to the client.
     The client must store it for future calls.
     """
-
     user = g.user
 
     login_user(user, remember=True)
-    identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
 
     return get_current_needs()
 
@@ -71,11 +77,6 @@ def logout():
     logout_user()
 
     current_app.login_manager._update_request_context_with_user()
-
-    # Tell Flask-Principal the user is anonymous
-    identity_changed.send(
-        current_app._get_current_object(), identity=AnonymousIdentity()
-    )
 
     session.clear()
 

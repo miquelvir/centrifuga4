@@ -1,10 +1,10 @@
 from flask import Blueprint
 from flask_restful import Api as Api
 
-from server.blueprints.api.resources.course_attendance import CoursesAttendanceRes
 from server.blueprints.api.resources.course_attendance_list import (
     CoursesAttendanceListRes,
 )
+from server.blueprints.api.resources.course_attendance_list_v2 import CoursesAttendanceV2ListRes
 from server.blueprints.api.resources.course_students_contact_sheet import (
     CourseContactSheet,
 )
@@ -26,13 +26,13 @@ from server.models import (
     Payment,
     Schedule,
     Teacher,
-    Room,
+    Room, Role, Attendance,
 )
 
 api_blueprint = Blueprint("api", __name__, template_folder="templates")
 
 
-@api_blueprint.errorhandler(RawForbidden)
+@api_blueprint.errorhandler(RawForbidden)  # todo common outside api?
 def handle(e):
     raise Forbidden(e.message, **e.kwargs)
 
@@ -44,12 +44,12 @@ api.add_resource(
     StudentsEnrollmentAgreementRes, "/students/<string:id_>/enrolmentAgreement"
 )
 api.add_resource(PaymentsReceiptsRes, "/payments/<string:id_>/receipt")
-api.add_resource(CoursesAttendanceListRes, "/courses/<string:id_>/attendanceList")
+api.add_resource(CoursesAttendanceListRes, "/courses/<string:id_>/attendance-list/v1")
+api.add_resource(CoursesAttendanceV2ListRes, "/courses/<string:id_>/attendance-list/v2")
 api.add_resource(CourseContactSheet, "/courses/<string:id_>/contactsSheet")
-api.add_resource(CoursesAttendanceRes, "/courses/<string:id_>/attendance")
 api.add_resource(GodFile, "/files/god")
 
 
-for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User):
+for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User, Role, Attendance):
     for res in get_resources(model):
         api.add_resource(*res)

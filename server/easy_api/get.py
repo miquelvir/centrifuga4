@@ -1,10 +1,9 @@
-from flask import request, current_app, jsonify, Response
+from flask import request, current_app, jsonify
 from sqlalchemy.exc import InvalidRequestError
 import json
 
-from server.auth_auth.action_need import GetPermission
+from server.auth_auth.require import Require
 from server.easy_api._content_negotiation import produces
-from server.easy_api._requires import EasyRequires
 from server.blueprints.api.errors import (
     NotFound,
     ResourceModelBadRequest,
@@ -14,14 +13,10 @@ from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema
 
 
-def safe_get(function):
-    """a safe get is one which checks for the user permissions to get such resource"""
-
-    @EasyRequires(GetPermission)
-    def decorator(*args, **kwargs):
-        return function(*args, **kwargs)
-
-    return decorator
+class KeyContainer:
+    def __init__(self, obj, fields):
+        self.object = obj
+        self.fields = fields
 
 
 def _get_page_url(original_url, page, _page):
@@ -142,7 +137,6 @@ class _ImplementsGet:
                 )
         return filters if len(filters) > 0 else None, sort, page, include
 
-    @safe_get
     @produces(
         ("application/json", "text/csv")
     )  # content negotiation (and automatic creation of raw csv from json)
@@ -155,8 +149,8 @@ class _ImplementsGet:
         if parent:
             query = query.with_parent(parent)
 
-        if include:
-            query = query.with_entities(*include)
+        """if include:  # todo
+            query = query.with_entities(*include)"""
 
         if filters:
             query = query.filter(*filters)
@@ -179,6 +173,8 @@ class _ImplementsGet:
             except InvalidRequestError as e:
                 raise ResourceModelBadRequest(e)
 
+            for obj in result:
+                Require.ensure.read(obj)
         else:
 
             if not id_:
@@ -197,6 +193,8 @@ class _ImplementsGet:
                     requestedId=id_,
                     filters=request.args,
                 )
+
+            Require.ensure.read(result)
 
         dumped_result = self.schema.dump(result, many=many)
 

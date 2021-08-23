@@ -2,15 +2,14 @@ __version__ = "4.0.1"
 
 import os
 
-from flasgger import Swagger
+# from flasgger import Swagger
 from flask_cors import CORS
-from flask_principal import Principal, identity_loaded, Identity
 from flask_seasurf import SeaSurf
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, redirect
 from flask_talisman import Talisman
-from flask_login import LoginManager, current_user
-
+from flask_login import LoginManager
+from flask_migrate import Migrate
 
 # https://github.com/pallets/flask/issues/1045
 import mimetypes
@@ -21,8 +20,8 @@ mimetypes.add_type("application/javascript", ".js")
 db = SQLAlchemy()
 man = Talisman()
 login = LoginManager()
-principal = Principal()
 csrf = SeaSurf()
+migrate = Migrate()
 
 temp = {
     "swagger": "2.0",
@@ -40,7 +39,7 @@ temp = {
     "schemes": ["https"],
 }
 
-swagger = Swagger(template=temp)
+# swagger = Swagger(template=temp)
 
 
 def init_app(config=None):
@@ -64,6 +63,9 @@ def init_app(config=None):
             config = DevelopmentConfig
         else:
             raise ValueError("no environment variable found")
+
+    # config.SQLALCHEMY_DATABASE_URI = "postgres://wlxecvuwhzcehs:cbc817db30820f9184ecce5dbe5c87755195f68abe0b09423b5bfd5cf5de1c88@ec2-54-72-188-148.eu-west-1.compute.amazonaws.com:5432/dft5had1ruhc0f"
+
     app.config.from_object(config)
 
     # plugin initialization
@@ -88,9 +90,9 @@ def init_app(config=None):
         content_security_policy_nonce_in=["script-src", "style-src"],
     )
 
-    swagger.init_app(app)
-    principal.init_app(app)
+    # swagger.init_app(app)
     csrf.init_app(app)
+    migrate.init_app(app, db)
 
     with app.app_context():
         from . import blueprints
@@ -104,7 +106,6 @@ def init_app(config=None):
         from .blueprints.invites import invites_blueprint
 
         from server.models import User
-        from server.auth_auth.principal_identity_loaded import on_identity_loaded
 
         from server.auth_auth.login_user_loader import user_loader
 
@@ -126,16 +127,6 @@ def init_app(config=None):
         @app.errorhandler(404)
         def page_not_found(e):
             return render_template("not_found.html"), 404
-
-        # add needs loader for Flask Principal
-        identity_loaded.connect_via(app)(on_identity_loaded)
-
-        # add identity loader (required to work with remember me)
-        # https://stackoverflow.com/questions/24487449/flask-principal-flask-login-remember-me-and-identity-loaded
-        @principal.identity_loader
-        def load_identity_when_session_expires():
-            if hasattr(current_user, "id"):
-                return Identity(current_user.id)
 
         # load blueprints for the different parts
         app.register_blueprint(api_blueprint, url_prefix="/api/v1")

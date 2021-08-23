@@ -30,9 +30,9 @@ import {DEFAULT_COURSE_PRICE_TERM} from "../_data/price_term";
 import {useNeeds} from "../_helpers/needs";
 import {loadingContext} from "../_context/loading-context";
 import {confirmContext} from "../_context/confirm-context";
-import Link from "@material-ui/core/Link";
+import { useHistory } from "react-router-dom";
 import {downloadCalendar} from "../_services/calendar.service";
-
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 const useStyles = makeStyles((theme) => ({
   actionIcon: {
@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CourseDetails({ children, addCourseId, setNewCourse, newCourse, currentCourse, updateCurrentCourse, patchService, deleteCourse, ...other }) {
   const { t } = useTranslation();
+  let history = useHistory();
   const loading = currentCourse === null;
   const classes = useStyles();
   const errorHandler = useErrorHandler();
@@ -98,7 +99,7 @@ const confirm = React.useContext(confirmContext);
             setStatus();
 
              CoursesDataService
-                    .downloadSubresource(currentCourse["id"], 'attendanceList', values)
+                    .downloadSubresource(currentCourse["id"], 'attendance-list/v1', values)
                     .then(...errorHandler({snackbarSuccess: true}))
                     .then(() => {
                         setOpenDownloadAttendanceList(false);
@@ -113,6 +114,12 @@ const confirm = React.useContext(confirmContext);
 
         }
     });
+
+    const downloadAttendances = () => {
+      CoursesDataService
+          .downloadSubresource(currentCourse["id"], 'attendance-list/v2')
+          .then(...errorHandler({snackbarSuccess: true}));
+    }
 
     const formik = useNormik(!newCourse, {
         initialValues: initialValues,
@@ -252,7 +259,7 @@ const [hasNeeds, NEEDS] = useNeeds();
 
 
                             <div style={{clear: 'both'}}>
-                               {   ["100%", "100%", "100%"].map((value, idx) => {
+                               {   ["100%", "100%", "100%", "100%"].map((value, idx) => {
                                 return (
                                     <Box key={idx} py={0} >
                                         <Skeleton variant="text" width={value} height="60px"/>
@@ -344,9 +351,27 @@ const [hasNeeds, NEEDS] = useNeeds();
             <Divider />
             </Box>}
 
+
+            <Box className={[classes.line, classes.composite]}>
+                {!loading && !newCourse &&
+                <Tooltip style={{flex: 1}} title={t("take attendance")} aria-label={t("take_attendance")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<AssignmentTurnedInIcon/>}
+                      onClick={(e) => {
+                        history.replace(`/attendance?id=${currentCourse['id']}`)
+                      }}
+                  >
+                    {t("take attendance")}
+                  </Button>
+                </Tooltip>}
+              </Box>
+
             <Box className={[classes.line, classes.composite]}>
                 {!loading && hasNeeds([NEEDS.students]) &&  !newCourse &&
-                <Tooltip style={{flex: 1}} title={t("export_attendance_list")} aria-label={t("send_grant_letter")}>
+                <Tooltip style={{flex: 1}} title={t("export_attendance_list")} aria-label={t("export_attendance_list")}>
                   <Button
                       variant="contained"
                       color="default"
@@ -357,6 +382,39 @@ const [hasNeeds, NEEDS] = useNeeds();
                       }}
                   >
                     {t("attendance_list")}
+                  </Button>
+                </Tooltip>}
+
+                {!loading && hasNeeds([NEEDS.students]) &&  !newCourse &&
+                <Tooltip style={{flex: 1}} title={t("export_attendance_list")} aria-label={t("export_attendance_list")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<GetAppIcon/>}
+                      onClick={downloadAttendances}
+                  >
+                    {t("export_attendance_list") + ` (${t("v2")})`}
+                  </Button>
+                </Tooltip>}
+
+                
+              </Box>
+
+
+                <Box className={[classes.line, classes.composite]}>
+                {!loading && !newCourse &&
+                <Tooltip style={{flex: 1}} title={t("export_calendar")} aria-label={t("send_grant_letter")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<GetAppIcon/>}
+                      onClick={(e) => {
+                        downloadCalendar("courses", currentCourse['id'], currentCourse['calendar_id']).then(r => {});
+                      }}
+                  >
+                    {t("export_calendar")}
                   </Button>
                 </Tooltip>}
 
@@ -384,22 +442,7 @@ const [hasNeeds, NEEDS] = useNeeds();
               </Box>
 
 
-                <Box className={[classes.line, classes.composite]}>
-                {!loading && !newCourse &&
-                <Tooltip style={{flex: 1}} title={t("export_calendar")} aria-label={t("send_grant_letter")}>
-                  <Button
-                      variant="contained"
-                      color="default"
-                      className={classes.button}
-                      startIcon={<GetAppIcon/>}
-                      onClick={(e) => {
-                        downloadCalendar("courses", currentCourse['id'], currentCourse['calendar_id']).then(r => {});
-                      }}
-                  >
-                    {t("export_calendar")}
-                  </Button>
-                </Tooltip>}
-              </Box>
+
 
             </Box>
         </Box>

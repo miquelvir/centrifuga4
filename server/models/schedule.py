@@ -2,7 +2,6 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
 
 from server import db
-from server.auth_auth.resource_need import SchedulesPermission
 from server.models._base import MyBase
 
 
@@ -12,7 +11,6 @@ class Schedule(MyBase):
     """
 
     __tablename__ = "schedule"
-    permissions = {SchedulesPermission}
 
     id = db.Column(db.Text, primary_key=True)
 

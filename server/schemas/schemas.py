@@ -67,9 +67,9 @@ class PublicCourseSchema(CourseSchema):
     schedules = fields.Nested(BaseScheduleSchema, many=True)
 
 
-class NeedSchema(MySQLAlchemyAutoSchema):
+class RoleSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
-        model = models.Need
+        model = models.Role
 
 
 class LabelSchema(MySQLAlchemyAutoSchema):
@@ -130,6 +130,7 @@ class StudentSchema(PersonSchema):
 
     schedules = fields.Pluck(ScheduleSchema, "id", many=True)
     attendances = fields.Str(dump_only=True, load_only=True)
+    display_name = fields.Str(dump_only=True)
 
 
 class PaymentSchema(MySQLAlchemyAutoSchema):

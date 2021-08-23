@@ -6,7 +6,6 @@ from flask import current_app
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from server import db
-from server.auth_auth.resource_need import CoursesPermission
 from server.models._base import MyBase
 
 db.Table(
@@ -37,7 +36,6 @@ db.Table(
 class Course(MyBase):
     __tablename__ = "course"
     __mapper_args__ = {"polymorphic_identity": "course"}
-    permissions = {CoursesPermission}
 
     id = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)
@@ -84,6 +82,5 @@ class Course(MyBase):
 
     def get_attendance(self, date: datetime.date = None) -> Iterable:
         for attendance in self.attendances:
-            print(attendance.date, date)
             if date is None or attendance.date == date:
                 yield attendance

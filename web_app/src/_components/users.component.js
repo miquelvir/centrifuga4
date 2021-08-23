@@ -11,6 +11,7 @@ import {
     TextField,
     Tooltip
 } from "@material-ui/core";
+import RoleSelect from './user.role-select.component';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -19,9 +20,7 @@ import {useFormik} from "formik";
 import {invitationsService} from "../_services/userInvites.service";
 import {useErrorHandler} from "../_helpers/handle-response";
 import User from "./users.user.component";
-import ItemsList from "./items_list.component";
 import UsersDataService from "../_services/users.service";
-import NeedsSelection from "./needs_selection.component";
 import {useNeeds} from "../_helpers/needs";
 import {safe_email_required} from "../_yup/validators";
 import ItemsListMain from "./items_list_main.component";
@@ -33,15 +32,23 @@ const useStyles = makeStyles((theme) => ({
     root2: {
     display: 'flex',
   },
+  line: {
+    width: "100%",
+    marginTop: theme.spacing(1)
+  },
+  composite: {
+      display: "flex", flexDirection: "row", flex: 1, flexWrap: "wrap",
+      gap: theme.spacing(1), width: "100%"
+  },
   formControl: {
       padding: theme.spacing(2),
         maxHeight: '50vh',
       overflow: 'auto',
       minWidth: '40vw'
   },
-    dialog: {
+  dialog: {
 
-    },
+  },
   left: {
     display: 'flex',
     flexDirection: 'column',
@@ -87,7 +94,7 @@ export default function Users({...other}) {
         onSubmit: (values, {setStatus, setSubmitting}) => {
             setSubmitting(true);
             invitationsService
-                .inviteUser(values['email'], values['needs'])
+                .inviteUser(values['email'], values['role_id'])
                 .then(...errorHandler({snackbarSuccess: true}))
                 .then(res => {
                     handleClose();
@@ -103,42 +110,41 @@ export default function Users({...other}) {
   return (
       <Grid container spacing={3} className={classes.root}>
           <Dialog  open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">
-            {t("invite_user")}
-        </DialogTitle> <form onSubmit={formik.handleSubmit}>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="email"
-            name="email"
-            label={t("email")}
-            type="email"
-            fullWidth
-            value={formik.values['email']}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.status  || formik.errors['email'] !== undefined}
-            helperText={formik.touched['email'] && formik.errors['email']}
-          />
-          <Box my={2} className={classes.dialog}>
-
-                  <NeedsSelection
-                      noDirty={true}
-                    formik={formik}
+              <DialogTitle id="form-dialog-title">
+                  {t("invite_user")}
+              </DialogTitle> 
+              <form onSubmit={formik.handleSubmit}>
+                <DialogContent>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="email"
+                    name="email"
+                    label={t("email")}
+                    type="email"
+                    fullWidth
+                    value={formik.values['email']}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.status  || formik.errors['email'] !== undefined}
+                    helperText={formik.touched['email'] && formik.errors['email']}
                   />
-
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-              {t("cancel")}
-          </Button>
-          <Button type="submit" color="primary" disabled={formik.isSubmitting}>
-              {t("invite")}
-          </Button>
-        </DialogActions></form>
-      </Dialog>
+                  <Box my={2} className={classes.dialog}>
+                    <Box className={[classes.line, classes.composite]}>
+                      <RoleSelect formik={formik}/>
+                    </Box>
+                  </Box>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                      {t("cancel")}
+                  </Button>
+                  <Button type="submit" color="primary" disabled={formik.isSubmitting}>
+                      {t("invite")}
+                  </Button>
+                </DialogActions>
+              </form>
+          </Dialog>
         <Grid item xs={4} className={classes.left}>
           <h1>{t("users")}</h1>
           <ItemsListMain

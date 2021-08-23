@@ -6,16 +6,16 @@ from typing import List
 from flask import request
 from flask_restful import Resource
 
-from server.auth_auth.action_need import EmailPermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import StudentsPermission, CoursesPermission
+from server.auth_auth.require import Require
+from server.auth_auth.special_permissions import EmailPermission
 from server.models import Course
 from server.emails.emails.bulk_email import my_job
 
 
 class BulkEmailCollectionRes(Resource):
-    @Requires(EmailPermission, StudentsPermission, CoursesPermission)
     def post(self):
+        Require.ensure.create(EmailPermission())
+
         try:
             course_ids = json.loads(request.form["courseIds"])
         except KeyError:
@@ -50,7 +50,11 @@ class BulkEmailCollectionRes(Resource):
 
         emails = []
         for course in courses:
+            Require.ensure.read(course)
+
             for student in course.students:
+                Require.ensure.read(student)
+
                 if email_preference == "resolved":
                     emails.extend(student.official_notification_emails)
                 elif email_preference == "student":

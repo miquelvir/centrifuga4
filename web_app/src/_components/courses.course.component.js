@@ -152,6 +152,8 @@ const [hasNeeds, NEEDS] = useNeeds();
                   searchByOptions={["full_name"]}
                   resourceName={"students"}
                   displayNameField={"full_name"}
+                  auxFields={["enrolment_status"]}
+                  displayText={(student) => student['full_name'] + (student['enrolment_status'] === 'enrolled'? ' ☑️': '')}
                   add_message="enroll_to_course"
                   onSubresourceAdded={(id) => {
                     setCourse({

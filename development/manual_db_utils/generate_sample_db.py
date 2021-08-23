@@ -1,9 +1,6 @@
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-load_dotenv(join(dirname(__file__), "../../.env"))
-
-
 import datetime
 from typing import List
 
@@ -12,71 +9,53 @@ from server.models import (
     Student,
     User,
     Guardian,
-    Need,
     Payment,
     Course,
     Teacher,
     Label,
     Room,
     Schedule,
+    Role,
 )
 from random import randint, choice, sample
 
+role_administrator = Role(
+    id=Role.ADMINISTRATOR,
+    description="administrative which can manage users",
+    name=Role.ADMINISTRATOR,
+)
+role_administrative = Role(
+    id=Role.ADMINISTRATIVE,
+    description="layman which can modify resources and create payment receipts",
+    name=Role.ADMINISTRATIVE,
+)
+role_teacher = Role(
+    id=Role.TEACHER,
+    description="can mark attendance on his classes and access its courses & students",
+    name=Role.TEACHER,
+)
+role_layman = Role(
+    id=Role.LAYMAN, description="can read most resources", name=Role.LAYMAN
+)
+role_empty = Role(
+    id=Role.EMPTY, description="does not have special permissions", name=Role.EMPTY
+)
 
-need_get = Need(id="get", description="can perform get operations", type="action")
-need_patch = Need(id="patch", description="can perform patch operations", type="action")
-need_delete = Need(
-    id="delete", description="can perform delete operations", type="action"
-)
-need_post = Need(id="post", description="can perform post operations", type="action")
-need_send_email = Need(id="send_email", description="can send emails", type="action")
-need_invite_users = Need(
-    id="invite_users", description="can invite users", type="action"
-)
-need_students = Need(id="students", description="can use students resource", type="res")
-need_courses = Need(id="courses", description="can use courses resource", type="res")
-need_guardians = Need(
-    id="guardians", description="can use guardians resource", type="res"
-)
-need_payments = Need(id="payments", description="can use payments resource", type="res")
-need_rooms = Need(id="rooms", description="can use rooms resource", type="res")
-need_schedules = Need(
-    id="schedules", description="can use schedules resource", type="res"
-)
-need_teachers = Need(id="teachers", description="can use teachers resource", type="res")
-need_users = Need(id="users", description="can use users resource", type="res")
-need_recipes = Need(
-    id="payments-receipts", description="can use the recipes of payments", type="res"
-)
-need_attendance = Need(
-    id="attendance", description="can mark attendance on classes", type="res"
-)
-all_needs = (
-    need_get,
-    need_patch,
-    need_delete,
-    need_post,
-    need_send_email,
-    need_invite_users,
-    need_students,
-    need_courses,
-    need_guardians,
-    need_payments,
-    need_rooms,
-    need_schedules,
-    need_teachers,
-    need_users,
-    need_recipes,
-    need_attendance,
+all_roles = (
+    role_teacher,
+    role_administrative,
+    role_administrator,
+    role_empty,
+    role_layman,
 )
 
 
-def add_needs():
-    for need in all_needs:
-        server.db.session.add(need)
+def add_roles():
+    for role in all_roles:
+        server.db.session.add(role)
 
 
-def add_users():
+def add_users(teachers):
     for idx in range(20):
         print("    user %s" % idx)
         u = User(
@@ -98,10 +77,21 @@ def add_users():
         password_hash=User.hash_password("admin"),
     )
 
-    for need in all_needs:
-        admin.needs.append(need)
-
+    admin.role = role_administrator
     server.db.session.add(admin)
+    teacher = User(
+        id=User.generate_new_id(),
+        name="teacher",
+        surname1="teacher",
+        surname2="teacher",
+        email="teacher@gmail.com",
+        password_hash=User.hash_password("teacher"),
+        teacher=teachers[0],
+    )
+
+    teacher.role = role_teacher
+
+    server.db.session.add(teacher)
 
 
 def add_teachers():
@@ -279,14 +269,15 @@ def add_all():
     server.db.drop_all()  # drop previous schemas
     print("creating... [2]")
     server.db.create_all()  # load new schemas
-    print("adding needs... [3]")
-    add_needs()
+    print("adding roles... [3]")
+    add_roles()
     print("adding users... [4]")
-    add_users()
+    teachers = add_teachers()
+    add_users(teachers)
     print("adding students... [5]")
     students = add_students()
     print("adding teachers... [6]")
-    teachers = add_teachers()
+
     print("adding labels... [7]")
     labels = add_labels()
     print("adding rooms... [8]")

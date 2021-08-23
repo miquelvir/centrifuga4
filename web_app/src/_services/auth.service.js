@@ -18,7 +18,7 @@ function login(username, password) {
             },
             headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()}
         }).then(res => {
-            resolve(res["data"]["needs"]);
+            resolve(res["data"]);
         }).catch(function (res) {
             try { if (res["response"]["status"] === 401) resolve(false) } catch(err){}
             reject(res);

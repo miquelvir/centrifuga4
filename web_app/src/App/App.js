@@ -14,7 +14,9 @@ import {themeContext} from '../_context/theme-context';
 import SignupPage from "../SignupPage/SignupPage";
 import ResetPage from "../ResetPage/ResetPage";
 import PreEnrolmentPage from "../PreEnrolmentPage/PreEnrolmentPage";
+import TeacherDashboardPage from "../TeacherDashboardPage/TeacherDashboardPage";
 import NotFound from "../_components/not_found";
+import AttendancePage from '../AttendancePage/AttendancePage';
 
 function App() {
     const [theme, setTheme] = useState(localStorage.getItem("darkTheme") === "true");
@@ -27,23 +29,36 @@ function App() {
         if (!Array.isArray(needs)) return _setNeeds([]);
         return _setNeeds(needs);
     }
+    const [teacher, setTeacher] = useState(null);
+    const routerRef = React.createRef();
+
 
     return (
       <ThemeProvider theme={appliedTheme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3}>
-            <userContext.Provider value={{user: user, setUser: setUser, needs: needs, setNeeds: setNeeds}}>
+            <userContext.Provider value={{
+                user: user, 
+                setUser: setUser, 
+                
+                needs: needs, 
+                setNeeds: setNeeds,
+                
+                teacher: teacher,
+                setTeacher: setTeacher}}>
                 <themeContext.Provider value={{theme: theme, switchTheme: () => {
                     localStorage.setItem("darkTheme", (!theme).toString());
                     setTheme(!theme);
                 }, label: theme? "dark": "light"}}>
-                    <BrowserRouter basename="/app">
+                    <BrowserRouter  ref={routerRef} basename="/app">
                         <Switch>
-                        <PrivateRoute path={'/home'}  component={HomePage}/>
+                        <PrivateRoute path={'/home'} baseRouter={routerRef} component={HomePage}/>
                         <Route path={'/login'} component={LoginPage}/>
                         <Route path={'/signup'} component={SignupPage}/>
                         <Route path={'/password-reset'} component={ResetPage}/>
                         <Route path={'/prematricula'} component={PreEnrolmentPage}/>
+                        <PrivateRoute path={'/teacher-dashboard'} component={TeacherDashboardPage}/>
+                        <PrivateRoute path={'/attendance'} component={AttendancePage}/>
                         <Route component={NotFound}/>
                         </Switch>
                     </BrowserRouter>

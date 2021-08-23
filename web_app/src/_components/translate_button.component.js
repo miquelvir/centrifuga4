@@ -15,7 +15,7 @@ export default function TranslateButton({...props}){
     const {t} = useTranslation();
     const selectedLanguage = getCurrentLanguage();
 
-    return  <Tooltip title={selectedLanguage === "cat"? t("use_eng"): t("use_cat")} {...props}>
+    return  <Tooltip title={selectedLanguage === "cat"? t("use_eng"): t("use_cat")} style={{float: 'right'}} {...props}>
                 <IconButton
                     color="inherit"
                     onClick={() => {

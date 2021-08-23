@@ -16,7 +16,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ListItemText from "@material-ui/core/ListItemText";
 import useTheme from "@material-ui/core/styles/useTheme";
 import Routes from "./routes";
-import {BrowserRouter, Link, Route} from "react-router-dom";
+import {BrowserRouter, Switch, Link, Route, Redirect} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import HomeToolbar from "../_components/toolbar.home.component";
 import {useNeeds} from "../_helpers/needs";
@@ -35,6 +35,7 @@ import {tabContext} from '../_context/tab-context';
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
+import { useRouteMatch, useLocation  } from "react-router-dom";
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => (createStyles({
@@ -130,10 +131,15 @@ const HomePage = (props) => {
     const theme = useTheme();
     const classes = useStyles();
 
+    const baseRouter = props.baseRouter;
+
     const { t } = useTranslation();
 
     const [open, setOpen] = React.useState(false);
-    const [currentRoute, setCurrentRoute] = React.useState('/students');
+
+    let match = useRouteMatch();
+    const location = useLocation();
+    const currentRoute = location.pathname;
     const [hasNeeds, NEEDS] = useNeeds();
 
     const handleDrawerOpen = () => {
@@ -141,10 +147,6 @@ const HomePage = (props) => {
     };
     const handleDrawerClose = () => {
         setOpen(false);
-    };
-
-    const onItemClick = p => {
-        setCurrentRoute(p.path);
     };
 
     const [loading, setLoading] = React.useState(false);
@@ -177,6 +179,7 @@ const HomePage = (props) => {
       }
 
       const routerRef = React.createRef();
+      let history = useHistory();
 
     return (
         <div className={classes.root}>
@@ -190,19 +193,21 @@ const HomePage = (props) => {
                                     [classes.appBarShift]: open,
                                 })}>
                                 <HomeToolbar
+                                    routerRef={baseRouter}
                                     changeTheme={props.changeTheme}
                                     handleDrawerOpen={handleDrawerOpen}
                                     handleDrawerClose={handleDrawerClose}
                                     open={open}
                                 />
                             </AppBar>
-                            <BrowserRouter ref={routerRef} basename="/app/home">
+                            <Switch ref={routerRef}>
+                           
+                            
                                 <tabContext.Provider value={{currentTab: currentRoute, goTo: (res, id=null) => {
-                                setCurrentRoute(res);
                                 if (id === null) {
-                                    routerRef.current.history.push(res);
+                                    history.replace(`/home/${res}`);
                                 } else {
-                                    routerRef.current.history.push(`${res}?id=${id}`);
+                                    history.replace(`/home/${res}?id=${id}`);
                                 }
                             }}}>
                                 <Drawer
@@ -228,8 +233,8 @@ const HomePage = (props) => {
                                         {Routes
                                             .filter(route => hasNeeds(route.needs))
                                             .map((prop) =>(
-                                                  <ListItem key={prop.title} to={prop.path } button component={Link} onClick={() => onItemClick(prop)}>
-                                                    <ListItemIcon className={prop.path === currentRoute? classes.selectedIcon: classes.icon}>
+                                                  <ListItem key={prop.title} to={prop.path } button component={Link}>
+                                                    <ListItemIcon className={`/home/${prop.path}` === currentRoute? classes.selectedIcon: classes.icon}>
                                                         <Tooltip title={t(prop.title)} aria-label={t(prop.title)}>
                                                             {<prop.icon/>}
                                                         </Tooltip>
@@ -244,16 +249,17 @@ const HomePage = (props) => {
                                 <div className={classes.content}>
                                     <div className={classes.toolbar}/>
                                     <main className={classes.main}>
+                                    <Route exact path="/home/">
+                                        <Redirect to="/home/students" />
+                                    </Route>
                                         {Routes
                                             .filter(route => hasNeeds(route.needs))
-                                            .map((prop) => {
-                                            return (
-                                                <Route key={prop.title} path={prop.path} component={prop.component}/>)
-                                        })}
+                                            .map((prop) => <Route key={prop.title} path={`/home/${prop.path}`} component={prop.component}/>)
+                                        }
                                     </main>
                                 </div>
                                      </tabContext.Provider>
-                            </BrowserRouter>
+                            </Switch>
 
                     <Backdrop className={classes.backdrop} open={loading} onClick={handleClose}>
                     <CircularProgress color="inherit" />

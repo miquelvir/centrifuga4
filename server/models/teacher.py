@@ -1,19 +1,17 @@
 import uuid
 
 from flask import current_app
-from sqlalchemy import case
+from sqlalchemy import case, text
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import column_property, validates
 
 from server import db
-from server.auth_auth.resource_need import TeachersPermission
 from server.models._base import MyBase
 
 
 class Teacher(MyBase):
     __tablename__ = "teacher"
     __mapper_args__ = {"polymorphic_identity": "teacher"}
-    permissions = {TeachersPermission}
 
     id = db.Column(db.Text, primary_key=True)
 
@@ -38,6 +36,18 @@ class Teacher(MyBase):
         + case([(surname1 != None, surname1 + " ")], else_="")
         + case([(surname2 != None, surname2)], else_="")
     )
+
+    def is_teacher_of_course(self, course_id: str):
+        # todo maybe optimize
+        return any(course.id == course_id for course in self.courses)
+
+    def is_teacher_of_student(self, student_id: str):
+        # todo maybe optimize
+        for course in self.courses:
+            for student in course.students:
+                if student.id == student_id:
+                    return True
+        return False
 
     @validates(
         "name", "surname1", "surname2", "email", "address", "zip", "gender", "city"

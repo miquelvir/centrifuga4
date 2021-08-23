@@ -5,9 +5,7 @@ from datetime import datetime
 from flasgger import SwaggerView
 from flask_restful import Resource
 
-from server.auth_auth.action_need import PostPermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import StudentsPermission, CoursesPermission
+from server.auth_auth.require import Require
 from server.blueprints.api.errors import NotFound
 from server.constants import SHORT_NAME
 from server.file_utils.string_bytes_io import make_response_with_file
@@ -62,6 +60,8 @@ def write_students(students, spamwriter):
         ]
     )
     for student in students:
+        Require.ensure.read(student)
+
         if student.enrolment_status not in emails:
             emails[student.enrolment_status] = {
                 "official_contact_emails": set(),
@@ -211,10 +211,11 @@ def write_students(students, spamwriter):
 
 
 class CourseContactSheet(Resource, SwaggerView):
-    @Requires(PostPermission, CoursesPermission, StudentsPermission)
     def post(self, id_):
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()
+
+        Require.ensure.read(course)
 
         if not course:
             raise NotFound("resource with the given id not found", requestedId=id_)

@@ -5,9 +5,6 @@ import io
 from flasgger import SwaggerView
 from flask_restful import Resource
 
-from server.auth_auth.action_need import PostPermission
-from server.auth_auth.requires import Requires
-from server.auth_auth.resource_need import StudentsPermission, CoursesPermission
 from server.blueprints.api.resources.course_students_contact_sheet import write_students
 from server.constants import SHORT_NAME
 from server.file_utils.string_bytes_io import make_response_with_file
@@ -19,8 +16,7 @@ def students_file():
 
 
 class GodFile(Resource, SwaggerView):
-    @Requires(PostPermission, CoursesPermission, StudentsPermission)
-    def post(self):
+    def post(self):  # todo where is this used
         query = Student.query
         students: Student = query.all()
 

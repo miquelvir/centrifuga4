@@ -51,7 +51,7 @@ class Config(object):
     BCC_ADMIN = False
 
     DEBUGGING_EMAIL = "vazquezrius.miquel@gmail.com"
-    DEBUGGING_MODE = bool(int(os.getenv("EMAIL_DEBUGGING_MODE")))
+    DEBUGGING_MODE = bool(int(os.getenv("EMAIL_DEBUGGING_MODE", 0)))
     DEBUGGING_SEND_EMAILS = True
 
 

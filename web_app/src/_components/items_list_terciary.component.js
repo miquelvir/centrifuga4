@@ -17,6 +17,7 @@ const ItemsListTerciary = ({dataService, dataServiceSR, add_message, parent_id, 
         dataService={dataService}
         onItemClick={(id) => {
             confirm.confirm(add_message,null,  () => {
+                if (dataServiceSR === null) return onAdded(id, null);
                 dataServiceSR
                     .postWithId(parent_id, id)
                     .then(...errorHandler({snackbarSuccess: true}))
