@@ -5,11 +5,9 @@ from flask import request, current_app
 from flask_login import fresh_login_required
 from flask_restful import Resource
 
-from server.auth_auth.new_needs import UsersNeed
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires, assert_permissions
 from server.auth_auth.special_permissions import UserInvitePermission
-from server.models import User, Need
+from server.models import User
 from server.emails.emails.invite_email import my_job
 from server.emails.url_utils import merge_url_query_params
 

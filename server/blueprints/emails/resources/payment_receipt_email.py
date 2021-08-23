@@ -3,9 +3,7 @@ from threading import Thread
 from flask import current_app
 from flask_restful import Resource
 
-from server.auth_auth.new_needs import PaymentsNeed, EmailNeed
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires, assert_permissions
 from server.auth_auth.special_permissions import EmailPermission
 
 from server.blueprints.api.errors import NotFound

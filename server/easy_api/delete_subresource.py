@@ -1,7 +1,6 @@
 from server import db
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires
-from server.easy_api._subresource_utils import get_subresource, get_parent
+from server.easy_api._subresource_utils import get_parent
 from server.blueprints.api.errors import NotFound
 from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema

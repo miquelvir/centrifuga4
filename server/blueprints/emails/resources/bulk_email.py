@@ -6,9 +6,7 @@ from typing import List
 from flask import request
 from flask_restful import Resource
 
-from server.auth_auth.new_needs import EmailNeed, CoursesNeed
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires, assert_permissions
 from server.auth_auth.special_permissions import EmailPermission
 from server.models import Course
 from server.emails.emails.bulk_email import my_job

@@ -6,7 +6,6 @@ from sqlalchemy import case
 from sqlalchemy.orm import validates, column_property
 
 from server import db
-from server.auth_auth.new_needs import UsersNeed
 from server.models._base import MyBase
 import bcrypt
 
@@ -14,7 +13,6 @@ import bcrypt
 class User(MyBase, UserMixin):
     __tablename__ = "user"
     __mapper_args__ = {"polymorphic_identity": "user"}
-    permissions = {UsersNeed}
 
     id = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)
@@ -22,7 +20,6 @@ class User(MyBase, UserMixin):
     surname2 = db.Column(db.Text, nullable=True)
     email = db.Column(db.Text, nullable=False, unique=True)
     password_hash = db.Column(db.Text, nullable=False)
-    needs = db.relationship("Need", secondary="user_need")
 
     role_id = db.Column(db.Text, db.ForeignKey('role.id'), nullable=True)
     role = db.relationship("Role")

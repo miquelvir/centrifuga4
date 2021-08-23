@@ -6,7 +6,6 @@ from flask import current_app
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from server import db
-from server.auth_auth.new_needs import CoursesNeed
 from server.models._base import MyBase
 
 db.Table(
@@ -37,7 +36,6 @@ db.Table(
 class Course(MyBase):
     __tablename__ = "course"
     __mapper_args__ = {"polymorphic_identity": "course"}
-    permissions = {CoursesNeed}
 
     id = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)

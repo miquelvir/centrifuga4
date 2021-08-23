@@ -7,7 +7,6 @@ from server.models import (
     Room,
     Schedule,
     Teacher,
-    Need,
     Label,
     Attendance,
     Role
@@ -21,7 +20,6 @@ from server.schemas.schemas import (
     RoomSchema,
     ScheduleSchema,
     TeacherSchema,
-    NeedSchema,
     LabelSchema,
     AttendanceSchema,
     RoleSchema
@@ -45,8 +43,6 @@ def get_schema_from_model(model):
         return ScheduleSchema
     if model == Room:
         return RoomSchema
-    if model == Need:
-        return NeedSchema
     if model == Label:
         return LabelSchema
     if model == Attendance:

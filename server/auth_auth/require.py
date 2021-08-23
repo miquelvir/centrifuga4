@@ -111,7 +111,6 @@ class AdministrativeCRUDRolePermissions(LaymanCRUDRolePermissions):
 
 class TeacherCRUDRolePermissions(EmptyCRUDRolePermissions):
     def _is_allowed_resource(self, obj) -> bool:
-        print(f"requiring access to {obj} of type {type(obj)}")
         if self.user.teacher is None:
             return False
         if type(obj) not in (Course, Student, Attendance, Teacher, Schedule):

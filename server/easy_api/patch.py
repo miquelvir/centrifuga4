@@ -4,7 +4,6 @@ from flask import request
 
 from server import db
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires
 from server.blueprints.api.errors import integrity, no_nested, safe_marshmallow
 from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema

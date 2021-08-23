@@ -3,7 +3,6 @@ from sqlalchemy.exc import InvalidRequestError
 import json
 
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires
 from server.easy_api._content_negotiation import produces
 from server.blueprints.api.errors import (
     NotFound,

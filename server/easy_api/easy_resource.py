@@ -1,10 +1,7 @@
 from flasgger import SwaggerView
-from flask_principal import Permission
 from flask_restful import Resource
 from flask_sqlalchemy import Model
 from marshmallow_sqlalchemy import SQLAlchemySchema
-
-from server.auth_auth.new_needs import CrudNeed
 
 
 class EasyResource(Resource, SwaggerView):
@@ -42,26 +39,6 @@ class EasyResource(Resource, SwaggerView):
             "instances of EasyResource must initialise field model with a valid SQLAlchemy model, found %s"
             % type(cls.model).__name__
         )
-
-        try:
-            cls.permissions
-        except AttributeError:
-            assert False, "instances of EasyResource must define field permissions"
-
-        try:
-            for permission in cls.permissions:
-                assert type(permission) == CrudNeed, (
-                    "instances of EasyResource must initialise field permissions "
-                    "with an iterable of Flask Principal permissions, "
-                    "found an iterable of '%s'" % type(permission)
-                )
-
-        except TypeError:
-            assert False, (
-                "instances of EasyResource must initialise field permissions with an iterable of Flask "
-                "Principal permissions, found no iterable but '%s'"
-                % type(cls.permissions)
-            )
 
     def __init__(self, *args, **kwargs):
         """initialises the schema field and adds an empty permissions field if not given"""

@@ -2,7 +2,6 @@ from flask import request
 
 from server import db
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires
 
 from server.blueprints.api.errors import (
     no_nested,

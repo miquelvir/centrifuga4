@@ -67,11 +67,6 @@ class PublicCourseSchema(CourseSchema):
     schedules = fields.Nested(BaseScheduleSchema, many=True)
 
 
-class NeedSchema(MySQLAlchemyAutoSchema):
-    class Meta(MySQLAlchemyAutoSchema.Meta):
-        model = models.Need
-
-
 class RoleSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Role

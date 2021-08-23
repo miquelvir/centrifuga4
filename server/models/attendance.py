@@ -1,7 +1,6 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from server import db
-from server.auth_auth.new_needs import AttendanceNeed
 from server.models._base import MyBase
 
 
@@ -22,8 +21,6 @@ class Attendance(MyBase):
         STATUS_ABSENT: STATUS_ABSENT_TEXT,
         STATUS_ABSENT_JUSTIFIED: STATUS_ABSENT_JUSTIFIED_TEXT
     }
-
-    permissions = {AttendanceNeed}
 
     id = db.Column(db.String, primary_key=True)  # todo maybe not store as string
     date = db.Column(db.Date, nullable=False)

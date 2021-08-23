@@ -24,7 +24,6 @@ def get_resources(
             {
                 "schema": get_schema_from_model(model),
                 "model": model,
-                "permissions": model.permissions,
             },
         )
 
@@ -42,7 +41,6 @@ def get_resources(
             {
                 "schema": get_schema_from_model(model),
                 "model": model,
-                "permissions": model.permissions,
             },
         )
         resources.append((resource, "/%s/<string:id_>" % resource_name))
@@ -70,7 +68,6 @@ def get_resources(
                     "model": nested_model,
                     "parent_model": model,
                     "parent_field": nested_resource_name,
-                    "permissions": model.permissions.union(nested_model.permissions),
                 },
             )
             resources.append(
@@ -90,7 +87,6 @@ def get_resources(
                     "model": nested_model,
                     "parent_model": model,
                     "parent_field": nested_resource_name,
-                    "permissions": model.permissions.union(nested_model.permissions),
                 },
             )
             resources.append(

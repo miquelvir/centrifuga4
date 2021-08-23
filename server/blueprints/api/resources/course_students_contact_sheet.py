@@ -5,9 +5,7 @@ from datetime import datetime
 from flasgger import SwaggerView
 from flask_restful import Resource
 
-from server.auth_auth.new_needs import CoursesNeed, StudentsNeed
 from server.auth_auth.require import Require
-from server.auth_auth.requires import Requires, assert_permissions
 from server.blueprints.api.errors import NotFound
 from server.constants import SHORT_NAME
 from server.file_utils.string_bytes_io import make_response_with_file

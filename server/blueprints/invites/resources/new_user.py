@@ -1,9 +1,8 @@
 import jwt
 from flask import request, current_app
 from flask_restful import Resource
-from server.models import User, Need
+from server.models import User
 from server import db
-import logging as log
 
 
 class NewUserCollectionRes(Resource):

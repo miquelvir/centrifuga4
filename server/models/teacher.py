@@ -6,14 +6,12 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import column_property, validates
 
 from server import db
-from server.auth_auth.new_needs import TeachersNeed
 from server.models._base import MyBase
 
 
 class Teacher(MyBase):
     __tablename__ = "teacher"
     __mapper_args__ = {"polymorphic_identity": "teacher"}
-    permissions = {TeachersNeed}
 
     id = db.Column(db.Text, primary_key=True)
 
