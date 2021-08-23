@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # user roles
 
-User can follow a `Role`, which grants them a set of permissions.
+User can follow a **role**, which grants them a set of permissions.
 
 ## teacher
 can mark attendance on his classes and read its courses & students
@@ -23,7 +23,7 @@ administrative which can manage users
 
 # rols d'usuari
 
-Els usuaris poden seguir un `Rol`, que els garanteix un grup de permisos.
+Els usuaris poden seguir un **rol**, que els garanteix un grup de permisos.
 
 ## professor
 pot passar llista a les seves classes i llegir els seus cursos i estudiant
