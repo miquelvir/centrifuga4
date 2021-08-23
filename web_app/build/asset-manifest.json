@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "https://127.0.0.1:4999/static/css/main.7d202984.chunk.css",
-    "main.js": "https://127.0.0.1:4999/static/js/main.e4cb77a9.chunk.js",
-    "main.js.map": "https://127.0.0.1:4999/static/js/main.e4cb77a9.chunk.js.map",
-    "runtime-main.js": "https://127.0.0.1:4999/static/js/runtime-main.3c28066b.js",
-    "runtime-main.js.map": "https://127.0.0.1:4999/static/js/runtime-main.3c28066b.js.map",
-    "static/css/2.064bbef2.chunk.css": "https://127.0.0.1:4999/static/css/2.064bbef2.chunk.css",
-    "static/js/2.24be8ede.chunk.js": "https://127.0.0.1:4999/static/js/2.24be8ede.chunk.js",
-    "static/js/2.24be8ede.chunk.js.map": "https://127.0.0.1:4999/static/js/2.24be8ede.chunk.js.map",
-    "static/js/3.11d11dde.chunk.js": "https://127.0.0.1:4999/static/js/3.11d11dde.chunk.js",
-    "static/js/3.11d11dde.chunk.js.map": "https://127.0.0.1:4999/static/js/3.11d11dde.chunk.js.map",
-    "index.html": "https://127.0.0.1:4999/index.html",
-    "static/css/2.064bbef2.chunk.css.map": "https://127.0.0.1:4999/static/css/2.064bbef2.chunk.css.map",
-    "static/css/main.7d202984.chunk.css.map": "https://127.0.0.1:4999/static/css/main.7d202984.chunk.css.map",
-    "static/js/2.24be8ede.chunk.js.LICENSE.txt": "https://127.0.0.1:4999/static/js/2.24be8ede.chunk.js.LICENSE.txt"
+    "main.css": "https://centrifuga4.herokuapp.com/static/css/main.68b8b5e7.chunk.css",
+    "main.js": "https://centrifuga4.herokuapp.com/static/js/main.8cb1b7d0.chunk.js",
+    "main.js.map": "https://centrifuga4.herokuapp.com/static/js/main.8cb1b7d0.chunk.js.map",
+    "runtime-main.js": "https://centrifuga4.herokuapp.com/static/js/runtime-main.c096cf1e.js",
+    "runtime-main.js.map": "https://centrifuga4.herokuapp.com/static/js/runtime-main.c096cf1e.js.map",
+    "static/css/2.064bbef2.chunk.css": "https://centrifuga4.herokuapp.com/static/css/2.064bbef2.chunk.css",
+    "static/js/2.bf308bc0.chunk.js": "https://centrifuga4.herokuapp.com/static/js/2.bf308bc0.chunk.js",
+    "static/js/2.bf308bc0.chunk.js.map": "https://centrifuga4.herokuapp.com/static/js/2.bf308bc0.chunk.js.map",
+    "static/js/3.11d11dde.chunk.js": "https://centrifuga4.herokuapp.com/static/js/3.11d11dde.chunk.js",
+    "static/js/3.11d11dde.chunk.js.map": "https://centrifuga4.herokuapp.com/static/js/3.11d11dde.chunk.js.map",
+    "index.html": "https://centrifuga4.herokuapp.com/index.html",
+    "static/css/2.064bbef2.chunk.css.map": "https://centrifuga4.herokuapp.com/static/css/2.064bbef2.chunk.css.map",
+    "static/css/main.68b8b5e7.chunk.css.map": "https://centrifuga4.herokuapp.com/static/css/main.68b8b5e7.chunk.css.map",
+    "static/js/2.bf308bc0.chunk.js.LICENSE.txt": "https://centrifuga4.herokuapp.com/static/js/2.bf308bc0.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.3c28066b.js",
+    "static/js/runtime-main.c096cf1e.js",
     "static/css/2.064bbef2.chunk.css",
-    "static/js/2.24be8ede.chunk.js",
-    "static/css/main.7d202984.chunk.css",
-    "static/js/main.e4cb77a9.chunk.js"
+    "static/js/2.bf308bc0.chunk.js",
+    "static/css/main.68b8b5e7.chunk.css",
+    "static/js/main.8cb1b7d0.chunk.js"
   ]
 }
