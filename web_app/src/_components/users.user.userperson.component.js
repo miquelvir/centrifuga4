@@ -18,10 +18,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import {IconButtonSkeleton} from "../_skeletons/iconButton";
 import {useNeeds} from "../_helpers/needs";
-import ItemsListSecondary from "./items_list_secondary.component";
 import ItemsListTerciary from "./items_list_terciary.component";
 import Skeleton from "@material-ui/lab/Skeleton";
-import {MenuItem} from "@material-ui/core";
 import * as yup from 'yup';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -34,6 +32,7 @@ import SaveButton from "./formik_save_button";
 import DiscardButton from "./formik_discard_button";
 import {safe_email_required} from "../_yup/validators";
 import {confirmContext} from "../_context/confirm-context";
+import RoleSelect from "./user.role-select.component";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -264,27 +263,7 @@ const [hasNeeds, NEEDS] = useNeeds();
                         </Box>
 
                         <Box className={[classes.line, classes.composite]}>
-                            <DirtyTextField
-                                label={t("role")}
-                                style={{flex: 1}}
-                                name="role_id"
-                                formik={formik}
-                                select>
-                                {[{name: 'administrator',
-                                   id: 'administrator'},
-                                   {name: 'administrative',
-                                   id: 'administrative'},
-                                   {name: 'layman',
-                                   id: 'layman'},
-                                   {name: 'teacher',
-                                   id: 'teacher'},
-                                   {name: 'empty',
-                                   id: 'empty'},
-                                   {name: 'no role',
-                                   id: null}].map((role) => (
-                                    <MenuItem key={role.name} value={role.id}>{t(role.name)}</MenuItem>
-                                ))}
-                            </DirtyTextField>
+                            <RoleSelect formik={formik}/>
                         </Box>
 
                         {formik.values["role"] == "teacher" && <Box className={[classes.line, classes.composite]}>

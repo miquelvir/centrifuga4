@@ -38,12 +38,12 @@ def get_current_needs():
     if hasattr(current_user, 'role') and current_user.role is not None:
         result["role"] = current_user.role.id
 
-    if current_user.role.id == Role.TEACHER:
-        result["teacher"] = {}
-        result["teacher"]["id"] = current_user.teacher_id
-        result["teacher"]["name"] = current_user.name
-    else:
-        result["teacher"] = None
+        if current_user.role.id == Role.TEACHER:
+            result["teacher"] = {}
+            result["teacher"]["id"] = current_user.teacher_id
+            result["teacher"]["name"] = current_user.name
+        else:
+            result["teacher"] = None
 
     return jsonify(result)
 

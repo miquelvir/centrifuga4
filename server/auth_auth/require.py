@@ -150,7 +150,7 @@ class Require:
 
     @classmethod
     def _permission_provider(cls):
-        if not hasattr(current_user, "role"):
+        if not hasattr(current_user, "role") or current_user.role is None:
             return EmptyCRUDRolePermissions(None)
 
         try:

@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, redirect
 from flask_talisman import Talisman
 from flask_login import LoginManager
-
+from flask_migrate import Migrate
 
 # https://github.com/pallets/flask/issues/1045
 import mimetypes
@@ -21,6 +21,7 @@ db = SQLAlchemy()
 man = Talisman()
 login = LoginManager()
 csrf = SeaSurf()
+migrate = Migrate()
 
 temp = {
     "swagger": "2.0",
@@ -88,6 +89,7 @@ def init_app(config=None):
 
     # swagger.init_app(app)
     csrf.init_app(app)
+    migrate.init_app(app, db)
 
     with app.app_context():
         from . import blueprints

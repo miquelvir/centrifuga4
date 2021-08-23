@@ -1,7 +1,7 @@
 import jwt
 from flask import request, current_app
 from flask_restful import Resource
-from server.models import User
+from server.models import User, Role
 from server import db
 
 
@@ -56,12 +56,11 @@ class NewUserCollectionRes(Resource):
                 password_hash=User.hash_password(user_password),
             )
 
-            for n in data["needs"]:
-                need = Need.query.filter(Need.id == n).one_or_none()
-                if need:
-                    u.needs.append(need)
-                else:
-                    return "invalid need name '%s'" % n, 400
+            if data.get("role_id", None) is not None:
+                role = Role.query.filter(Role.id == data["role_id"]).one_or_none()
+                if role is None:
+                    return "invalid role name '%s'" % data["role_id"], 400
+                u.role = role
 
             db.session.add(u)
             db.session.commit()

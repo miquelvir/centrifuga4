@@ -5,12 +5,10 @@ import datetime
 from typing import List
 
 import server
-from server.auth_auth.new_needs import ADMINISTRATOR_LEVEL_NEEDS
 from server.models import (
     Student,
     User,
     Guardian,
-    Need,
     Payment,
     Course,
     Teacher,
@@ -20,20 +18,6 @@ from server.models import (
     Role,
 )
 from random import randint, choice, sample
-
-all_needs = []
-for need in ADMINISTRATOR_LEVEL_NEEDS:
-    for n in (need.read(), need.create(), need.update(), need.delete(), need.any()):
-        n = n.need
-        all_needs.append(
-            Need(
-                id=n.resource + str(n.action),
-                description="des",
-                resource=n.resource,
-                action=n.action,
-                param=None,
-            )
-        )
 
 role_administrator = Role(
     id=Role.ADMINISTRATOR,
@@ -64,11 +48,6 @@ all_roles = (
     role_empty,
     role_layman,
 )
-
-
-def add_needs():
-    for need in all_needs:
-        server.db.session.add(need)
 
 
 def add_roles():
@@ -290,8 +269,7 @@ def add_all():
     server.db.drop_all()  # drop previous schemas
     print("creating... [2]")
     server.db.create_all()  # load new schemas
-    print("adding needs & roles... [3]")
-    add_needs()
+    print("adding roles... [3]")
     add_roles()
     print("adding users... [4]")
     teachers = add_teachers()

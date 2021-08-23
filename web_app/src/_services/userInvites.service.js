@@ -6,14 +6,14 @@ export const invitationsService = {
     inviteUser
 };
 
-function inviteUser(userEmail, needs) {
+function inviteUser(userEmail, role) {
     return new Promise(function(resolve, reject) {
         axios({url: `${BACKEND_URL}/invites/v1/userInvite`,  // todo server url
             method: 'POST',
             headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()},
             data: {
                 userEmail: userEmail,
-                needs: needs
+                role_id: role
             }
         }).then(res => {
             resolve(true);

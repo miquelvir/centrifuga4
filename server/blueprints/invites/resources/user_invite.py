@@ -7,7 +7,7 @@ from flask_restful import Resource
 
 from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import UserInvitePermission
-from server.models import User
+from server.models import User, Role
 from server.emails.emails.invite_email import my_job
 from server.emails.url_utils import merge_url_query_params
 
@@ -45,22 +45,16 @@ class UserInviteCollectionRes(Resource):
         except KeyError:
             return "no userEmail found", 400
 
-        try:
-            needs = request.json["needs"]
-        except KeyError:
-            return "no field needs found", 400
-
-        clean_needs = []
-        for need in needs:
-            if Need.query.filter(Need.id == need).count() == 0:
-                return "invalid need '%s' supplied" % need, 400
-            clean_needs.append(need)
+        role_id = request.json.get("role_id", None)
+        if role_id is not None:
+            if Role.query.filter(Role.id == role_id).count() == 0:
+                return "invalid role '%s' supplied" % role_id, 400
 
         if User.query.filter(User.email == user_email).count() > 0:
             return "there already exists a user with this email", 400
 
         token = jwt.encode(
-            {"userEmail": user_email, "needs": clean_needs},
+            {"userEmail": user_email, "role_id": role_id},
             current_app.config["INVITES_SECRET"],
             algorithm="HS256",
         )

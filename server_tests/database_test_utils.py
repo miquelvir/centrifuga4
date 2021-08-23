@@ -3,7 +3,6 @@ import tempfile
 import unittest
 
 from config import TestingConfig, TestingConfigNoDb
-from development.manual_db_utils.generate_sample_db import add_needs
 from server import init_app
 
 
@@ -12,7 +11,6 @@ def init_db():
 
     server.db.drop_all()
     server.db.create_all()
-    add_needs()
     server.db.session.commit()
 
 
