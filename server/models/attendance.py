@@ -19,7 +19,7 @@ class Attendance(MyBase):
     STATUS_INT_TO_TEXT = {
         STATUS_ATTENDED: STATUS_ATTENDED_TEXT,
         STATUS_ABSENT: STATUS_ABSENT_TEXT,
-        STATUS_ABSENT_JUSTIFIED: STATUS_ABSENT_JUSTIFIED_TEXT
+        STATUS_ABSENT_JUSTIFIED: STATUS_ABSENT_JUSTIFIED_TEXT,
     }
 
     id = db.Column(db.String, primary_key=True)  # todo maybe not store as string

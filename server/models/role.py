@@ -18,4 +18,3 @@ class Role(db.Model):
 
     def user_representation(self):
         return self.id
-

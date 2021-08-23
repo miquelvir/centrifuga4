@@ -5,7 +5,11 @@ from flask_login import current_user
 
 from werkzeug.exceptions import Forbidden
 
-from server.auth_auth.special_permissions import UserInvitePermission, EmailPermission, PaymentReceiptsPermission
+from server.auth_auth.special_permissions import (
+    UserInvitePermission,
+    EmailPermission,
+    PaymentReceiptsPermission,
+)
 from server.models import User, Teacher, Attendance, Student, Course, Role, Schedule
 
 
@@ -28,7 +32,7 @@ class BaseCRUD(abc.ABC):
 
 
 class BaseCRUDRolePermissions(BaseCRUD, abc.ABC):
-    def __init__(self, user: 'User'):
+    def __init__(self, user: "User"):
         self.user = user
 
 
@@ -84,7 +88,12 @@ class AdministratorCRUDRolePermissions(BaseCRUDRolePermissions):
 
 
 class LaymanCRUDRolePermissions(EmptyCRUDRolePermissions):
-    NOT_ALLOWED_RESOURCES = (User, PaymentReceiptsPermission, EmailPermission, UserInvitePermission)
+    NOT_ALLOWED_RESOURCES = (
+        User,
+        PaymentReceiptsPermission,
+        EmailPermission,
+        UserInvitePermission,
+    )
 
     @classmethod
     def _is_allowed_resource(cls, obj: object) -> bool:
@@ -145,7 +154,7 @@ class Require:
         Role.LAYMAN: LaymanCRUDRolePermissions,
         Role.TEACHER: TeacherCRUDRolePermissions,
         Role.ADMINISTRATIVE: AdministrativeCRUDRolePermissions,
-        Role.ADMINISTRATOR: AdministratorCRUDRolePermissions
+        Role.ADMINISTRATOR: AdministratorCRUDRolePermissions,
     }
 
     @classmethod
@@ -167,4 +176,3 @@ class Require:
     @property
     def ensure(cls):
         return EnsureCRUDRolePermissions(cls._permission_provider())
-
