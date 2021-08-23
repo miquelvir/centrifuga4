@@ -45,14 +45,33 @@ class CoursesAttendanceV2ListRes(Resource, SwaggerView):
         )
 
         with io.StringIO() as proxy:
-            writer = csv.DictWriter(proxy, fieldnames=['name', 'surname1', 'surname2']+sorted(list(field_names) + [f"{date} - comments" for date in field_names]))
+            writer = csv.DictWriter(
+                proxy,
+                fieldnames=["name", "surname1", "surname2"]
+                + sorted(
+                    list(field_names) + [f"{date} - comments" for date in field_names]
+                ),
+            )
 
             writer.writeheader()
             for student_id, attendances in attendances.items():
                 student = students[student_id]
-                writer.writerow({**{'name': student.name, 'surname1': student.surname1, 'surname2': student.surname2},
-                                 **{str(attendance.date): attendance.text_status for attendance in attendances},
-                                **{f"{attendance.date} - comments": attendance.comment for attendance in attendances}}
+                writer.writerow(
+                    {
+                        **{
+                            "name": student.name,
+                            "surname1": student.surname1,
+                            "surname2": student.surname2,
+                        },
+                        **{
+                            str(attendance.date): attendance.text_status
+                            for attendance in attendances
+                        },
+                        **{
+                            f"{attendance.date} - comments": attendance.comment
+                            for attendance in attendances
+                        },
+                    }
                 )
 
             return make_response_with_file(

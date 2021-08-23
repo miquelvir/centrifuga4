@@ -19,7 +19,9 @@ class StudentsEnrollmentAgreementRes(
         query = Student.query.filter(Student.id == id_)
         student: Student = query.first()
 
-        Require.ensure.read(student)  # todo maybe special permissions for enrollment agreements and emails and so on
+        Require.ensure.read(
+            student
+        )  # todo maybe special permissions for enrollment agreements and emails and so on
 
         if not student:
             raise NotFound("resource with the given id not found", requestedId=id_)

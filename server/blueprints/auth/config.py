@@ -35,7 +35,7 @@ def get_current_needs():
     """returns a json object with the needs of the current user"""
     result = {}
 
-    if hasattr(current_user, 'role') and current_user.role is not None:
+    if hasattr(current_user, "role") and current_user.role is not None:
         result["role"] = current_user.role.id
 
         if current_user.role.id == Role.TEACHER:

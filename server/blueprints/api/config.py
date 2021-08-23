@@ -4,7 +4,9 @@ from flask_restful import Api as Api
 from server.blueprints.api.resources.course_attendance_list import (
     CoursesAttendanceListRes,
 )
-from server.blueprints.api.resources.course_attendance_list_v2 import CoursesAttendanceV2ListRes
+from server.blueprints.api.resources.course_attendance_list_v2 import (
+    CoursesAttendanceV2ListRes,
+)
 from server.blueprints.api.resources.course_students_contact_sheet import (
     CourseContactSheet,
 )
@@ -26,7 +28,9 @@ from server.models import (
     Payment,
     Schedule,
     Teacher,
-    Room, Role, Attendance,
+    Room,
+    Role,
+    Attendance,
 )
 
 api_blueprint = Blueprint("api", __name__, template_folder="templates")
@@ -50,6 +54,17 @@ api.add_resource(CourseContactSheet, "/courses/<string:id_>/contactsSheet")
 api.add_resource(GodFile, "/files/god")
 
 
-for model in (Student, Guardian, Course, Payment, Schedule, Teacher, Room, User, Role, Attendance):
+for model in (
+    Student,
+    Guardian,
+    Course,
+    Payment,
+    Schedule,
+    Teacher,
+    Room,
+    User,
+    Role,
+    Attendance,
+):
     for res in get_resources(model):
         api.add_resource(*res)
