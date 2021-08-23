@@ -17,7 +17,7 @@ from server.models import (
     Label,
     Room,
     Schedule,
-    Role
+    Role,
 )
 from random import randint, choice, sample
 
@@ -26,18 +26,29 @@ for need in ADMINISTRATOR_LEVEL_NEEDS:
     for n in (need.read(), need.create(), need.update(), need.delete(), need.any()):
         n = n.need
         all_needs.append(
-            Need(id=n.resource + str(n.action), description="des", resource=n.resource, action=n.action, param=None))
+            Need(
+                id=n.resource + str(n.action),
+                description="des",
+                resource=n.resource,
+                action=n.action,
+                param=None,
+            )
+        )
 
 role_administrator = Role(
-    id=Role.ADMINISTRATOR, description="administrative which can manage users", name=Role.ADMINISTRATOR
+    id=Role.ADMINISTRATOR,
+    description="administrative which can manage users",
+    name=Role.ADMINISTRATOR,
 )
 role_administrative = Role(
-    id=Role.ADMINISTRATIVE, description="layman which can modify resources and create payment receipts",
-    name=Role.ADMINISTRATIVE
+    id=Role.ADMINISTRATIVE,
+    description="layman which can modify resources and create payment receipts",
+    name=Role.ADMINISTRATIVE,
 )
 role_teacher = Role(
-    id=Role.TEACHER, description="can mark attendance on his classes and access its courses & students",
-    name=Role.TEACHER
+    id=Role.TEACHER,
+    description="can mark attendance on his classes and access its courses & students",
+    name=Role.TEACHER,
 )
 role_layman = Role(
     id=Role.LAYMAN, description="can read most resources", name=Role.LAYMAN
@@ -51,7 +62,7 @@ all_roles = (
     role_administrative,
     role_administrator,
     role_empty,
-    role_layman
+    role_layman,
 )
 
 
@@ -96,7 +107,7 @@ def add_users(teachers):
         surname2="teacher",
         email="teacher@gmail.com",
         password_hash=User.hash_password("teacher"),
-        teacher=teachers[0]
+        teacher=teachers[0],
     )
 
     teacher.role = role_teacher
@@ -146,10 +157,10 @@ def generate_schedule(course_id):
 
 
 def add_courses(
-        students: List[Student],
-        teachers: List[Teacher],
-        labels: List[Label],
-        rooms: List[Room],
+    students: List[Student],
+    teachers: List[Teacher],
+    labels: List[Label],
+    rooms: List[Room],
 ):
     for idx in range(100):
         print("    course %s" % idx)
@@ -243,30 +254,30 @@ def add_students(amount=500):
 def add_labels():
     labels = []
     for label_name in (
-            "kindergarten_p1",
-            "kindergarten_p2",
-            "kindergarten_p3",
-            "kindergarten_p4",
-            "kindergarten_p5",
-            "primary_1",
-            "primary_2",
-            "primary_3",
-            "primary_4",
-            "primary_5",
-            "primary_6",
-            "eso_1",
-            "eso_2",
-            "eso_3",
-            "eso_4",
-            "baccalaureate_1",
-            "baccalaureate_2",
-            "FP_lower",
-            "FP_higher",
-            "undergraduate",
-            "master",
-            "phd",
-            "other",
-            "adult",
+        "kindergarten_p1",
+        "kindergarten_p2",
+        "kindergarten_p3",
+        "kindergarten_p4",
+        "kindergarten_p5",
+        "primary_1",
+        "primary_2",
+        "primary_3",
+        "primary_4",
+        "primary_5",
+        "primary_6",
+        "eso_1",
+        "eso_2",
+        "eso_3",
+        "eso_4",
+        "baccalaureate_1",
+        "baccalaureate_2",
+        "FP_lower",
+        "FP_higher",
+        "undergraduate",
+        "master",
+        "phd",
+        "other",
+        "adult",
     ):
         l = Label(id=label_name)
         server.db.session.add(l)

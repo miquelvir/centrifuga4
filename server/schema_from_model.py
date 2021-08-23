@@ -9,7 +9,7 @@ from server.models import (
     Teacher,
     Label,
     Attendance,
-    Role
+    Role,
 )
 from server.schemas.schemas import (
     StudentSchema,
@@ -22,7 +22,7 @@ from server.schemas.schemas import (
     TeacherSchema,
     LabelSchema,
     AttendanceSchema,
-    RoleSchema
+    RoleSchema,
 )
 
 

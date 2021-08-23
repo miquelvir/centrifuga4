@@ -19,9 +19,4 @@ class EasyRequires(Requires):
     """
     # noinspection PyMethodOverriding
     def wrapper(self, function: Callable, resource: EasyResource, *args, **kwargs):
-        return super().wrapper(
-            function,
-            resource,
-            *args,
-            **kwargs
-        )
+        return super().wrapper(function, resource, *args, **kwargs)

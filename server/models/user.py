@@ -21,7 +21,7 @@ class User(MyBase, UserMixin):
     email = db.Column(db.Text, nullable=False, unique=True)
     password_hash = db.Column(db.Text, nullable=False)
 
-    role_id = db.Column(db.Text, db.ForeignKey('role.id'), nullable=True)
+    role_id = db.Column(db.Text, db.ForeignKey("role.id"), nullable=True)
     role = db.relationship("Role")
 
     teacher_id = db.Column(db.Text, db.ForeignKey("teacher.id"))
