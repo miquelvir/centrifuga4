@@ -35,7 +35,7 @@ no té cap permís especial
 pot llegir la majoria dels recursos
 
 ## administratiu
-rol simple que pot editar recursos i crear rebuts de pagaments
+rol simple que pot editar la majora dels recursos i crear rebuts de pagaments
 
 ## administrador
 rol administratiu que pot gestionar usuaris
