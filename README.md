@@ -5,6 +5,7 @@ Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management 
 ![black](https://github.com/miquelvir/centrifuga4/actions/workflows/black.yml/badge.svg)
 ![build-react](https://github.com/miquelvir/centrifuga4/actions/workflows/build-react.yml/badge.svg)
 ![docs](https://github.com/miquelvir/centrifuga4/actions/workflows/docs.yml/badge.svg)
+![CodeQL](https://github.com/miquelvir/centrifuga4/actions/workflows/codeql-analysis.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/miquelvir/centrifuga4)
 
