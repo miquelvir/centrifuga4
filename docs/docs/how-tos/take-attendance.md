@@ -5,7 +5,7 @@ can take attendance of courses.
 ## accessing the attendance page
 ### from the teacher dashboard
 
-[**Teachers**](../basics/roles.md#teacher) have access to the [Teacher Dashboard](https://centrifuga4.herokuapp.com/app/teacher-dashboard). 
+[**Teachers**](../basics/roles.md#teacher) have access to the [Teacher Dashboard](https://centrifuga4.herokuapp.com/app/teacher-dashboard) at [teachers.xamfra.net](https://centrifuga4.herokuapp.com/logo_xamfra_light.png). 
 They can find the collection of all courses they teach there, and a shortcut to the attendance page.
 
 ![teacher dashboard](/img/teacher-dashboard.png)
@@ -41,7 +41,7 @@ poden passar llista a cursos.
 ## accedir a la pàgina del passa-llista
 ### des del panell del professorx
 
-Els [**professors**](../basics/roles.md#professor) tenen accés al [Panell del professorx](https://centrifuga4.herokuapp.com/app/teacher-dashboard). 
+Els [**professors**](../basics/roles.md#professor) tenen accés al [Panell del professorx](https://centrifuga4.herokuapp.com/app/teacher-dashboard) a [professorxs.xamfra.net](https://centrifuga4.herokuapp.com/app/teacher-dashboard). 
 Hi poden trobar tots els cursos que imparteixen, així com un enllaç a la pàgina del curs.
 
 ![panell del professorx](/img/teacher-dashboard.png)
