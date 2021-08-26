@@ -10,7 +10,9 @@ from pydantic import BaseModel, ValidationError
 
 from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import UserInvitePermission
-from server.blueprints.user_invites.schemas.user_invite_jwt_body import UserInviteJwtBody
+from server.blueprints.user_invites.schemas.user_invite_jwt_body import (
+    UserInviteJwtBody,
+)
 from server.containers import Container
 from server.models import User, Role
 from server.email_notifications.user_invite import send_user_invite_email
@@ -31,8 +33,12 @@ class UserInviteRequest(BaseModel):
 
 class UserInviteRequestCollectionRes(Resource):
     @fresh_login_required
-    def post(self,
-             user_invites_service: 'UserInvitesService' = Provide[Container.user_invites_service]):
+    def post(
+        self,
+        user_invites_service: "UserInvitesService" = Provide[
+            Container.user_invites_service
+        ],
+    ):
         Require.ensure.create(UserInvitePermission())
 
         try:

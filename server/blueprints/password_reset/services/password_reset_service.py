@@ -16,9 +16,7 @@ if TYPE_CHECKING:
 from server.signals import user_password_reset_request, user_password_changed
 
 
-PASSWORD_RESET_TOKEN_EXPIRES_IN = datetime.timedelta(
-            minutes=10
-        )
+PASSWORD_RESET_TOKEN_EXPIRES_IN = datetime.timedelta(minutes=10)
 
 
 class PasswordResetService:

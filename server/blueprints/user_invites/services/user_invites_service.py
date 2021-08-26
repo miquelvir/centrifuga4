@@ -8,7 +8,9 @@ from flask import current_app
 from werkzeug.exceptions import BadRequest, Unauthorized
 
 from server import db
-from server.blueprints.user_invites.schemas.user_invite_jwt_body import UserInviteJwtBody
+from server.blueprints.user_invites.schemas.user_invite_jwt_body import (
+    UserInviteJwtBody,
+)
 from server.email_notifications.user_invite import send_user_invite_email
 from server.email_notifications.utils.url_utils import merge_url_query_params
 from server.models import User, Role
@@ -18,13 +20,11 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from server.services.jwt_service import JwtService
 
-USER_INVITE_TOKEN_EXPIRES_IN = datetime.timedelta(
-    minutes=10
-)
+USER_INVITE_TOKEN_EXPIRES_IN = datetime.timedelta(minutes=10)
 
 
 class UserInvitesService:
-    def __init__(self, jwt_service: 'JwtService'):
+    def __init__(self, jwt_service: "JwtService"):
         self.jwt_service = jwt_service
 
     @staticmethod
@@ -46,8 +46,9 @@ class UserInvitesService:
         return Role.query.filter(Role.id == id_).one_or_none()
 
     def generate_token(self, jwt_body: UserInviteJwtBody):
-        return self.jwt_service.encode(jwt_body.dict(),
-                                        expires_in=USER_INVITE_TOKEN_EXPIRES_IN)
+        return self.jwt_service.encode(
+            jwt_body.dict(), expires_in=USER_INVITE_TOKEN_EXPIRES_IN
+        )
 
     # no-unittest
     def send_invite(self, email, token):

@@ -7,6 +7,7 @@ from flask_restful import Resource
 from werkzeug.exceptions import BadRequest, Unauthorized, InternalServerError
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from server.blueprints.password_reset.services.password_reset_service import (
         PasswordResetService,
@@ -32,8 +33,8 @@ class BadRequestNotStrongPassword(BadRequest):
 class NewPasswordCollectionRes(Resource):
     def post(
         self,
-        recaptcha_service: 'RecaptchaService' = Provide[Container.recaptcha_service],
-        password_reset_service: 'PasswordResetService' = Provide[
+        recaptcha_service: "RecaptchaService" = Provide[Container.recaptcha_service],
+        password_reset_service: "PasswordResetService" = Provide[
             Container.password_reset_service
         ],
     ):

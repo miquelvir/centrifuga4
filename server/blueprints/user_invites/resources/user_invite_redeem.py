@@ -3,15 +3,20 @@ from dependency_injector.wiring import Provide
 from flask import request
 from flask_restful import Resource
 
-from server.blueprints.user_invites.schemas.user_invite_jwt_body import UserInviteJwtBody
+from server.blueprints.user_invites.schemas.user_invite_jwt_body import (
+    UserInviteJwtBody,
+)
 from server.containers import Container
 from server.models import User
 
 from pydantic import BaseModel, ValidationError
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from server.services.jwt_service import JwtService
-    from server.blueprints.user_invites.services.user_invites_service import UserInvitesService
+    from server.blueprints.user_invites.services.user_invites_service import (
+        UserInvitesService,
+    )
 
 
 class UserInviteRedeem(BaseModel):
@@ -23,9 +28,13 @@ class UserInviteRedeem(BaseModel):
 
 
 class UserInviteRedeemRes(Resource):
-    def post(self,
-             jwt_service: 'JwtService' = Provide[Container.jwt_service],
-             user_invites_service: 'UserInvitesService' = Provide[Container.user_invites_service]):
+    def post(
+        self,
+        jwt_service: "JwtService" = Provide[Container.jwt_service],
+        user_invites_service: "UserInvitesService" = Provide[
+            Container.user_invites_service
+        ],
+    ):
         try:
             body = UserInviteRedeem(**request.json)
         except ValidationError as e:
@@ -58,7 +67,7 @@ class UserInviteRedeemRes(Resource):
             surname2=body.surname2,
             email=data.user_email,
             password_hash=User.hash_password(body.password),
-            role_id=data.role_id
+            role_id=data.role_id,
         )
 
         user_invites_service.save_user(user)
