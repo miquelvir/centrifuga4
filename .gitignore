@@ -7,3 +7,4 @@ attendance-dashboard/node_modules
 /.idea/
 web_app/.eslintcache
 attendance-dashboard/.eslintcache
+__pycache__/
