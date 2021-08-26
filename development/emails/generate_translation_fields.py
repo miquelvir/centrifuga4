@@ -8,9 +8,9 @@ import json
 def is_default_kw(kw):
     if len(kw) < 5:
         return False
-    if kw[:2] != '__':
+    if kw[:2] != "__":
         return False
-    if kw[-2:] != '__':
+    if kw[-2:] != "__":
         return False
     return True
 
@@ -18,7 +18,7 @@ def is_default_kw(kw):
 def is_standard_kw(kw):
     if len(kw) < 3:
         return True
-    if kw[:1] != '_':
+    if kw[:1] != "_":
         return True
     return False
 
@@ -35,7 +35,10 @@ def get_keywords(text):
     if text is None:
         return set()
 
-    env = Environment(loader=DictLoader({'footer.html': '<<<footer goes here>>>'}), undefined=DebugUndefined)
+    env = Environment(
+        loader=DictLoader({"footer.html": "<<<footer goes here>>>"}),
+        undefined=DebugUndefined,
+    )
     tmp = env.from_string(text)
     rendered = tmp.render()
 
@@ -49,15 +52,15 @@ def get_keywords(text):
 
 def ask_file(file_name):
     path = input(f"path to {file_name}: ")
-    path = 'C:\\Users\\vazqu\\PycharmProjects\\centrifuga4\\server\\emails\\templates\\invite_email\\body.html'
-    return path if path != '' else None
+    path = "C:\\Users\\vazqu\\PycharmProjects\\centrifuga4\\server\\emails\\templates\\invite_email\\body.html"
+    return path if path != "" else None
 
 
 def read_file(file_path):
     if file_path is None:
         return None
 
-    with open(file_path, encoding='utf8') as f:
+    with open(file_path, encoding="utf8") as f:
         return f.read()
 
 
@@ -67,38 +70,36 @@ def main():
     if not os.path.exists(email_folder_path):
         os.makedirs(email_folder_path)
 
-    translations_path = os.path.join(email_folder_path, 'translations')
+    translations_path = os.path.join(email_folder_path, "translations")
     if not os.path.exists(translations_path):
         os.makedirs(translations_path)
 
     parsed = []
 
-    body_path = os.path.join(email_folder_path, 'body.html')
+    body_path = os.path.join(email_folder_path, "body.html")
     if os.path.exists(body_path):
         body = read_file(body_path)
         parsed.append(body)
 
-    plain_path = os.path.join(email_folder_path, 'plain.txt')
+    plain_path = os.path.join(email_folder_path, "plain.txt")
     if os.path.exists(plain_path):
         plain = read_file(plain_path)
         parsed.append(plain)
 
-    languages = input('languages (comma-separated) [ca,en,es]: ')
-    languages = languages if languages != '' else 'ca,en,es'
-    languages = set(languages.split(','))
-    print('lans >', languages)
+    languages = input("languages (comma-separated) [ca,en,es]: ")
+    languages = languages if languages != "" else "ca,en,es"
+    languages = set(languages.split(","))
+    print("lans >", languages)
 
     all_keywords = set()
     for file in parsed:
         all_keywords.update(get_keywords(file))
-    print('keywords >', all_keywords)
+    print("keywords >", all_keywords)
 
-    keywords_dict = {
-        kw: "" for kw in all_keywords
-    }
+    keywords_dict = {kw: "" for kw in all_keywords}
 
     for language in languages:
-        with open(os.path.join(translations_path, f"{language}.json"), 'w') as f:
+        with open(os.path.join(translations_path, f"{language}.json"), "w") as f:
             json.dump(keywords_dict, f, indent=4)
 
 

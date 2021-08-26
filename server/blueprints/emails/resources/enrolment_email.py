@@ -8,7 +8,9 @@ from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import EmailPermission
 from server.blueprints.api.errors import NotFound
 from server.models import Student
-from server.email_notifications.enrolment_agreement import send_enrolment_agreement_email
+from server.email_notifications.enrolment_agreement import (
+    send_enrolment_agreement_email,
+)
 from server.schemas.schemas import StudentSchema
 
 

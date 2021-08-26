@@ -14,7 +14,7 @@ from server.email_notifications.utils.url_utils import merge_url_query_params
 
 def generate_signup_link(_token, _email, frontend_url=None):
     return {
-        'url_ca': merge_url_query_params(
+        "url_ca": merge_url_query_params(
             "%s/app/signup"
             % (
                 frontend_url
@@ -23,7 +23,7 @@ def generate_signup_link(_token, _email, frontend_url=None):
             ),
             {"token": _token, "email": _email, "lan": "cat"},
         ),
-        'url_en': merge_url_query_params(
+        "url_en": merge_url_query_params(
             "%s/app/signup"
             % (
                 frontend_url
@@ -60,7 +60,8 @@ class UserInviteCollectionRes(Resource):
         )
 
         thread = Thread(
-            target=send_user_invite_email, args=(user_email, generate_signup_link(token, user_email))
+            target=send_user_invite_email,
+            args=(user_email, generate_signup_link(token, user_email)),
         )
         thread.start()
 

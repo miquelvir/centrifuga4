@@ -7,8 +7,12 @@ from server.models import Student, User
 from server import signals
 
 from server.email_notifications.pre_enrolled import send_pre_enrolled_email
-from server.email_notifications.password_reset_request import send_password_reset_request_email
-from server.email_notifications.password_reset_redeem import send_password_reset_redeem_email
+from server.email_notifications.password_reset_request import (
+    send_password_reset_request_email,
+)
+from server.email_notifications.password_reset_redeem import (
+    send_password_reset_redeem_email,
+)
 from server.schemas.schemas import StudentSchema, UserSchema
 
 
@@ -36,15 +40,19 @@ def when_user_password_reset_request(_, user: User, token: str) -> None:
         target=send_password_reset_request_email,
         args=(
             UserSchema().dump(user),
-            {'url_ca': generate_password_reset_url(user, token, "cat"),
-             'url_en': generate_password_reset_url(user, token, "eng"), }
+            {
+                "url_ca": generate_password_reset_url(user, token, "cat"),
+                "url_en": generate_password_reset_url(user, token, "eng"),
+            },
         ),
     )
     thread.start()
 
 
 def when_user_password_changed(_, user: User) -> None:
-    thread = Thread(target=send_password_reset_redeem_email, args=(UserSchema().dump(user),))
+    thread = Thread(
+        target=send_password_reset_redeem_email, args=(UserSchema().dump(user),)
+    )
     thread.start()
 
 

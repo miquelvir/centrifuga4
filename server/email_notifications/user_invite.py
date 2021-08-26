@@ -7,11 +7,5 @@ def send_user_invite_email(user_email, urls):
     emailer = EmailSender()
 
     emailer.send(
-        LocalizedEmail(
-            template_name="user_invite",
-            to=[user_email],
-            variables={
-                **urls
-            }
-        )
+        LocalizedEmail(template_name="user_invite", to=[user_email], variables={**urls})
     )

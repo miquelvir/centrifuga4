@@ -53,7 +53,7 @@ class Email:
 
     @staticmethod
     def _get_attachment_part(filepath: str, filename: str) -> base.MIMEBase:
-        """ given a filepath and its final filename, return a MIMEBase part for it """
+        """given a filepath and its final filename, return a MIMEBase part for it"""
         # use original filename if no new filename given
         filename = filepath.split("\\")[-1] if filename is None else filename
 
@@ -61,7 +61,7 @@ class Email:
             "application", "octet-stream"
         )  # create octet-stream MIME part for the attachment
         with open(
-                filepath, "rb"
+            filepath, "rb"
         ) as attachment:  # open file in binary mode and add to part
             part.set_payload(attachment.read())
 
@@ -146,7 +146,9 @@ class ThemedEmail(Email):
 
     def __post_init__(self):
         if self.template_name is None:
-            raise EmailTemplateError("No template_name given (template_name is 'None').")
+            raise EmailTemplateError(
+                "No template_name given (template_name is 'None')."
+            )
         if self.variables is None:
             self.variables = {}
         self._load_template()
@@ -158,17 +160,19 @@ class ThemedEmail(Email):
 
     @property
     def _path_body(self):
-        return os.path.join(self._path_template, 'body.html')
+        return os.path.join(self._path_template, "body.html")
 
     @property
     def _path_plain(self):
-        return os.path.join(self._path_template, 'plain.txt')
+        return os.path.join(self._path_template, "plain.txt")
 
     def _render_template(self, **kwargs):
-        return self._tr.render_template(f'{self.template_name}/body.html',
-                                        __subject__=self.subject,
-                                        **self.variables,
-                                        **kwargs)
+        return self._tr.render_template(
+            f"{self.template_name}/body.html",
+            __subject__=self.subject,
+            **self.variables,
+            **kwargs,
+        )
 
     @property
     def html_body(self):
@@ -182,7 +186,9 @@ class DefinitionEmail(Email):
 
     def __post_init__(self):
         if self.template_name is None:
-            raise EmailTemplateError("No template_name given (template_name is 'None').")
+            raise EmailTemplateError(
+                "No template_name given (template_name is 'None')."
+            )
         if self.variables is None:
             self.variables = {}
 
@@ -195,39 +201,45 @@ class DefinitionEmail(Email):
 
     @property
     def _path_body(self):
-        return os.path.join(self._path_template, 'body.html')
+        return os.path.join(self._path_template, "body.html")
 
     @property
     def _path_definition(self):
-        return os.path.join(self._path_template, 'definition.json')
+        return os.path.join(self._path_template, "definition.json")
 
     @property
     def _path_plain(self):
-        return os.path.join(self._path_template, 'plain.txt')
+        return os.path.join(self._path_template, "plain.txt")
 
     def _assert_template_definition_exists(self):
         if not os.path.exists(self._path_definition):
-            raise EmailTemplateError(f"A definition should be found in {self._path_definition}")
+            raise EmailTemplateError(
+                f"A definition should be found in {self._path_definition}"
+            )
 
     def _load_definition(self):
-        with open(self._path_definition, encoding='utf-8') as f:
+        with open(self._path_definition, encoding="utf-8") as f:
             self._definition = json.load(f)
-        if 'subject' not in self._definition:
-            raise EmailTemplateError(f"No 'subject' field found in the email definition in {self._path_definition}")
+        if "subject" not in self._definition:
+            raise EmailTemplateError(
+                f"No 'subject' field found in the email definition in {self._path_definition}"
+            )
 
     @property
     def subject(self):
-        return self._definition['subject']
+        return self._definition["subject"]
 
     def _load_template(self):
         self._assert_template_definition_exists()
         self._load_definition()
 
     def _render_template(self, **kwargs):
-        return self._tr.render_template(f'{self.template_name}/body.html',
-                                        __subject__=self.subject,
-                                        **self.variables,
-                                        **kwargs)
+        return self._tr.render_template(
+            f"{self.template_name}/body.html",
+            __subject__=self.subject,
+            **self.variables,
+            **kwargs,
+        )
 
     @property
     def html_body(self):
@@ -242,20 +254,23 @@ class LocalizedEmail(DefinitionEmail):
 
     @property
     def _path_translations(self):
-        return os.path.join(self._path_template, 'translations')
+        return os.path.join(self._path_template, "translations")
 
     def _assert_translations_exists(self):
         if not os.path.exists(self._path_translations):
-            raise EmailTemplateError(f"A translations folder should be found in {self._path_translations}")
+            raise EmailTemplateError(
+                f"A translations folder should be found in {self._path_translations}"
+            )
 
     def _assert_translation_exists(self, language):
         if not os.path.exists(self._translation_path(language)):
             raise EmailTemplateError(
-                f"A translation file should be found in {self._path_translations} or language {language!r} removed from the definition in {self._path_definition}.")
+                f"A translation file should be found in {self._path_translations} or language {language!r} removed from the definition in {self._path_definition}."
+            )
 
     def _load_translation(self, language):
         self._assert_translation_exists(language)
-        with open(self._translation_path(language), encoding='utf-8') as f:
+        with open(self._translation_path(language), encoding="utf-8") as f:
             translation = json.load(f)
         self._translations[language] = translation
 
@@ -264,11 +279,14 @@ class LocalizedEmail(DefinitionEmail):
 
     def _load_definition(self):
         super()._load_definition()
-        if 'languages' not in self._definition:
-            raise EmailTemplateError(f"No 'languages' field found in the email definition in {self._path_definition}")
-        if 'defaultLanguage' not in self._definition:
+        if "languages" not in self._definition:
             raise EmailTemplateError(
-                f"No 'defaultLanguage' field found in the email definition in {self._path_definition}")
+                f"No 'languages' field found in the email definition in {self._path_definition}"
+            )
+        if "defaultLanguage" not in self._definition:
+            raise EmailTemplateError(
+                f"No 'defaultLanguage' field found in the email definition in {self._path_definition}"
+            )
 
     def _load_localizations(self):
         self._translations = {}
@@ -279,11 +297,11 @@ class LocalizedEmail(DefinitionEmail):
 
     @property
     def languages(self):
-        return self._definition['languages'].copy()
+        return self._definition["languages"].copy()
 
     @property
     def default_language(self):
-        return self._definition['defaultLanguage']
+        return self._definition["defaultLanguage"]
 
     def _load_template(self):
         super()._load_template()
@@ -292,9 +310,11 @@ class LocalizedEmail(DefinitionEmail):
     def _render_template(self, language=None, **kwargs):
         if language is None:
             language = self.default_language
-        return self._tr.render_template(f'{self.template_name}/body.html',
-                                        __subject__=self.subject,
-                                        __lan__=language,
-                                        **self._translations[language],
-                                        **self.variables,
-                                        **kwargs)
+        return self._tr.render_template(
+            f"{self.template_name}/body.html",
+            __subject__=self.subject,
+            __lan__=language,
+            **self._translations[language],
+            **self.variables,
+            **kwargs,
+        )

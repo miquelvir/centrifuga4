@@ -12,7 +12,7 @@ def send_pre_enrolled_email(student):
     emailer.send(
         LocalizedEmail(
             template_name="pre_enrolled",
-            to=student['official_notification_emails'],
-            variables={"id": student['id']}
+            to=student["official_notification_emails"],
+            variables={"id": student["id"]},
         )
     )

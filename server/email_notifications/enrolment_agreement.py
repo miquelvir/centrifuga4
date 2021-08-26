@@ -15,15 +15,13 @@ def send_enrolment_agreement_email(student, backend_server_address):
     app = server.init_app()  # todo
     with app.app_context():
         pdf = generate_enrolment_agreement_pdf(
-            student['id'], backend_server_address=backend_server_address
+            student["id"], backend_server_address=backend_server_address
         )
 
     emailer.send(
         LocalizedEmail(
             template_name="enrolment_agreement",
-            to=student['official_notification_emails'],
-            files=[(io.BytesIO(pdf), "enrolment-%s.pdf" % student['id'])],
+            to=student["official_notification_emails"],
+            files=[(io.BytesIO(pdf), "enrolment-%s.pdf" % student["id"])],
         )
     )
-
-

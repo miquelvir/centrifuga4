@@ -15,8 +15,8 @@ def send_payment_receipt_email(payment, student, secret, backend_url):
     emailer.send(
         LocalizedEmail(
             template_name="payment_receipt",
-            to=student['official_notification_emails'],
-            variables={"quantity": payment['quantity']},
-            files=[(io.BytesIO(pdf), "receipt-%s.pdf" % payment['id'])],
+            to=student["official_notification_emails"],
+            variables={"quantity": payment["quantity"]},
+            files=[(io.BytesIO(pdf), "receipt-%s.pdf" % payment["id"])],
         )
     )

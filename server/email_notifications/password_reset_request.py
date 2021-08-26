@@ -9,7 +9,7 @@ def send_password_reset_request_email(user, urls: Dict[str, str]):
     emailer.send(
         LocalizedEmail(
             template_name="password_reset_request",
-            to=[user['email']],
-            variables={**urls}
+            to=[user["email"]],
+            variables={**urls},
         )
     )
