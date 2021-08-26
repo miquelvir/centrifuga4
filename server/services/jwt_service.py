@@ -33,16 +33,22 @@ class JwtService:
             data = {}
 
         if expires_in is not None and expires_at is not None:
-            raise ValueError("only one of 'expires_in' or 'expires_at' can be given at a time")
+            raise ValueError(
+                "only one of 'expires_in' or 'expires_at' can be given at a time"
+            )
 
         if expires_in is not None:
             if type(expires_in) is not timedelta:
-                raise ValueError(f"expires_in must be of type {timedelta} not {type(expires_in)}")
+                raise ValueError(
+                    f"expires_in must be of type {timedelta} not {type(expires_in)}"
+                )
             expires_at = self._get_datetime_now() + expires_in
 
         if expires_at is not None:
             if type(expires_at) is not datetime:
-                raise ValueError(f"expires_in must be of type {datetime} not {type(expires_at)}")
+                raise ValueError(
+                    f"expires_in must be of type {datetime} not {type(expires_at)}"
+                )
             data = {**data, "exp": expires_at}
 
         return jwt.encode(data, secret, algorithm=self.JWT_ALGORITHM, **kwargs).decode(

@@ -7,14 +7,16 @@ from server.blueprints.pre_enrolment.services.pre_enrolment_service import (
     PreEnrolmentService,
 )
 from server.blueprints.user_invites.services.user_invites_service import (
-    UserInvitesService
+    UserInvitesService,
 )
 
 from server.services.jwt_service import JwtService
 from server.services.recaptcha_service import RecaptchaService
 
 
-class Container(containers.DeclarativeContainer):  # todo can we migrate to not using this and just use patch in the mock library?
+class Container(
+    containers.DeclarativeContainer
+):  # todo can we migrate to not using this and just use patch in the mock library?
     recaptcha_service = providers.Singleton(RecaptchaService)
     jwt_service = providers.Factory(JwtService)
 
