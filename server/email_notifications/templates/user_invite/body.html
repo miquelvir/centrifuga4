@@ -1,0 +1,7 @@
+{% extends "base_email/body.html" %}
+{% block body %}
+    <p>{{ _hi }}</p>
+    <p>{{ _happy }} {{ _sign_up }} <a href="{{url_ca if __lan__ == 'ca' else url_en}}" target="_blank">{{ _here }}</a> 📝</p>
+    <p>{{ _cheers }}</p>
+{% endblock %}
+
