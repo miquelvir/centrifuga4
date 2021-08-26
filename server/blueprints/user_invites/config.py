@@ -1,11 +1,11 @@
 from flask import Blueprint
 from flask_restful import Api as Api
 
-from server.blueprints.api.errors import Unauthorized, Forbidden
+from server.blueprints.api.errors import Forbidden
 from server.errors.authorization import Forbidden as RawForbidden
-from .resources.new_user import NewUserCollectionRes
+from .resources.user_invite_redeem import UserInviteRedeemRes
 
-from .resources.user_invite import UserInviteCollectionRes
+from .resources.user_invite_request import UserInviteRequestCollectionRes
 
 invites_blueprint = Blueprint("invites", __name__)
 
@@ -17,5 +17,5 @@ def handle(e):
 
 api = Api(invites_blueprint)
 
-api.add_resource(UserInviteCollectionRes, "/userInvite")
-api.add_resource(NewUserCollectionRes, "/newUser")
+api.add_resource(UserInviteRequestCollectionRes, "/request")
+api.add_resource(UserInviteRedeemRes, "/redeem")

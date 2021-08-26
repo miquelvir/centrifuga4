@@ -15,6 +15,7 @@ from werkzeug.exceptions import BadRequest, Unauthorized
 
 import unittest
 
+from server.services.jwt_service import JwtService
 from server_tests.database_test_utils import WithDatabase, WithApp
 from server_tests.mothers.user_mother import UserMother
 
@@ -159,10 +160,12 @@ class TestPasswordResetServiceGenerateToken(WithApp):  # todo refractor config o
         start = datetime.datetime(
             day=1, month=1, year=2001, hour=20, minute=0, tzinfo=datetime.timezone.utc
         )
-        self.sut._get_datetime_now = lambda: start
         expected_end = start + datetime.timedelta(
             minutes=PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES
         )
+        mock_jwt_service = JwtService()
+        mock_jwt_service._get_datetime_now = lambda: start
+        self.sut.jwt_service = mock_jwt_service
 
         # Act
         with self.app.app_context():

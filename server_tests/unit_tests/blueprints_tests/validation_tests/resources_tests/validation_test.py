@@ -33,7 +33,7 @@ class TestValidationGet(WithApp):
         # Act
         with self.app.app_context(), self.app.container.jwt_service.override(
             self.mock_jwt_service
-        ) as ctx:
+        ):
             r = self.client.get(f"{VALIDATION_URL}/{sample_token}", json=None)
 
         # Assert

@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Optional, Container
 
 import jwt
 from dependency_injector.wiring import Provide
@@ -16,16 +16,14 @@ if TYPE_CHECKING:
 from server.signals import user_password_reset_request, user_password_changed
 
 
-PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES = 10
+PASSWORD_RESET_TOKEN_EXPIRES_IN = datetime.timedelta(
+            minutes=10
+        )
 
 
 class PasswordResetService:
     def __init__(self, jwt_service: "JwtService"):
         self.jwt_service = jwt_service
-
-    @staticmethod
-    def _get_datetime_now():
-        return datetime.datetime.utcnow()
 
     def generate_token(self, user: User) -> str:
         """
@@ -45,14 +43,10 @@ class PasswordResetService:
         :return: password reset token with the user email and expiration time
         """
 
-        expires_delta = datetime.timedelta(
-            minutes=PASSWORD_RESET_TOKEN_EXPIRES_IN_MINUTES
-        )
-        expiration_datetime = self._get_datetime_now() + expires_delta
         body = {"email": user.email}
         return self.jwt_service.encode(
             body,
-            expires_in=expiration_datetime,
+            expires_in=PASSWORD_RESET_TOKEN_EXPIRES_IN,
             secret=current_app.config["PASSWORD_RESET_SECRET"] + user.password_hash,
         )
 
@@ -62,9 +56,9 @@ class PasswordResetService:
                 token,
                 secret=current_app.secret_key + password_hash,
             )
-        except jwt.exceptions.ExpiredSignatureError:
+        except jwt.ExpiredSignatureError:
             raise Unauthorized("token expired")
-        except jwt.exceptions.InvalidTokenError:
+        except jwt.InvalidTokenError:
             raise Unauthorized("invalid token")
 
     @staticmethod

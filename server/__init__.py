@@ -97,11 +97,11 @@ def init_app(config=None):
         from .blueprints.api.config import api_blueprint
         from .blueprints.auth import auth_blueprint
         from .blueprints.emails import emails_blueprint
-        from .blueprints.password_reset import password_reset_blueprint
+        from .blueprints.password_reset.config import password_reset_blueprint
         from .blueprints.validation import validation_blueprint
         from .blueprints.pre_enrolment.config import pre_enrolment_blueprint
         from .blueprints.calendars import calendars_blueprint
-        from .blueprints.invites import invites_blueprint
+        from .blueprints.user_invites.config import invites_blueprint
 
         from server.models import User
 
@@ -130,7 +130,7 @@ def init_app(config=None):
         app.register_blueprint(api_blueprint, url_prefix="/api/v1")
         app.register_blueprint(auth_blueprint, url_prefix="/auth/v1")
         app.register_blueprint(emails_blueprint, url_prefix="/emails/v1")
-        app.register_blueprint(invites_blueprint, url_prefix="/invites/v1")
+        app.register_blueprint(invites_blueprint, url_prefix="/user-invites/v1")
         app.register_blueprint(
             password_reset_blueprint, url_prefix="/password-reset/v1"
         )

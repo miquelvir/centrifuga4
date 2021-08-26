@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api as Api
 
-from server.blueprints.api.errors import Unauthorized, Forbidden
+from server.blueprints.api.errors import Forbidden
 from server.blueprints.password_reset.resources.password_reset_redeem import (
     NewPasswordCollectionRes,
 )

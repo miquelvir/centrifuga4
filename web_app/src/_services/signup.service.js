@@ -9,7 +9,7 @@ export const authenticationService = {
 function signup(username, password, email, name, surname1, surname2, token) {
 
     return new Promise(function(resolve, reject) {
-        axios({url: `${BACKEND_URL}/invites/v1/newUser`,
+        axios({url: `${BACKEND_URL}/user-invites/v1/redeem`,
             method: 'POST',
             data: {
                 password: password,

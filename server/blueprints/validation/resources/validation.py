@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class Validation(Resource):
     def get(
-        self, token: str, jwt_service: "JwtService" = Provide[Container.jwt_service]
+        self, token: str, jwt_service: 'JwtService' = Provide[Container.jwt_service]
     ):
         is_valid, data = jwt_service.is_valid(token)
         if is_valid:
