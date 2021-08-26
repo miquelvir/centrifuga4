@@ -1,15 +1,10 @@
 import datetime
 from threading import Thread
 from typing import Optional
-
-import jwt
-from dependency_injector.wiring import Provide
 from flask import current_app
-from werkzeug.exceptions import BadRequest, Unauthorized
 
 from server import db
 from server.blueprints.user_invites.schemas.user_invite_jwt_body import UserInviteJwtBody
-from server.email_notifications.user_invite import send_user_invite_email
 from server.email_notifications.utils.url_utils import merge_url_query_params
 from server.models import User, Role
 
@@ -51,6 +46,8 @@ class UserInvitesService:
 
     # no-unittest
     def send_invite(self, email, token):
+        from server.email_notifications.user_invite import send_user_invite_email
+
         Thread(
             target=send_user_invite_email,
             args=(email, self.get_signup_urls(token, email)),

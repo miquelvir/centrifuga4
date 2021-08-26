@@ -5,9 +5,6 @@ from flask import current_app
 from parameterized import parameterized
 
 import server
-from server.blueprints.password_reset.services.password_reset_service import (
-    PasswordResetService,
-)
 from server.containers import Container
 from server.models import User
 from unittest.mock import Mock

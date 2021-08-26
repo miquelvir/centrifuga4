@@ -2,9 +2,6 @@ import contextlib
 from unittest.mock import Mock
 
 import server
-from server.blueprints.password_reset.services.password_reset_service import (
-    PasswordResetService,
-)
 from server.containers import Container
 from server.services.recaptcha_service import RecaptchaService
 import unittest

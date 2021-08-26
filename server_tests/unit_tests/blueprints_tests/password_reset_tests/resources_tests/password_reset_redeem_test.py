@@ -5,9 +5,6 @@ from flask.wrappers import Response
 from werkzeug.exceptions import BadRequest, InternalServerError, Unauthorized
 import unittest
 
-from server.blueprints.password_reset.services.password_reset_service import (
-    PasswordResetService,
-)
 from server.containers import Container
 from server_tests.unit_tests.blueprints_tests.password_reset_tests.resources_tests.base_test_class import (
     TestPasswordResetPost,

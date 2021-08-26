@@ -13,8 +13,6 @@ _PLAIN = "plain"
 _HTML = "html"
 _REPLY_TO = "Reply-To"
 
-config = current_app.config
-
 
 class EmailSender:
     """allows for SSL secure email sending; optionally with html emails and/or attachments"""
@@ -97,6 +95,7 @@ class EmailSender:
 
     def send(self, email: LocalizedEmail):
         """send a message using the server"""
+        config = current_app.config
 
         # create a multipart message and set headers
         message = email.message()

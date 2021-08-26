@@ -8,8 +8,6 @@ from typing import List, Tuple, Iterable
 
 from flask import current_app
 
-config = current_app.config
-
 from server.email_notifications.utils.config import TEMPLATES_FOLDER
 import os
 import json
@@ -85,6 +83,7 @@ class Email:
 
     def message(self):
         """send a message using the server"""
+        config = current_app.config
 
         # create a multipart message and set headers
         message = multipart.MIMEMultipart()
