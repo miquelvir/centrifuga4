@@ -5,7 +5,7 @@ from jinja2 import (
     StrictUndefined,
     TemplateError,
 )
-from server.emails import config
+from server.email_notifications.utils import config
 import logging as log
 
 
@@ -29,11 +29,11 @@ class TemplateRenderer:
 
         log.debug("environment created at '%s'" % templates_folder)
 
-    def render_template(self, template_name: str, **kwargs) -> str:
+    def render_template(self, template_name: str, parent: str = None, **kwargs) -> str:
         """renders a template in the templates folder given its name and variables to use for rendering"""
 
         try:
-            template = self._env.get_template(template_name)
+            template = self._env.get_template(template_name, parent)
             rendered = template.render(**kwargs)
         except TemplateError:
             log.exception("can't render template with name '%s'" % template_name)

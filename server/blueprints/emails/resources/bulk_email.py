@@ -9,7 +9,7 @@ from flask_restful import Resource
 from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import EmailPermission
 from server.models import Course
-from server.emails.emails.bulk_email import my_job
+from server.email_notifications.bulk_email import send_bulk_email
 
 
 class BulkEmailCollectionRes(Resource):
@@ -65,7 +65,7 @@ class BulkEmailCollectionRes(Resource):
                     emails.extend(student.all_emails)
 
         thread = Thread(
-            target=my_job,
+            target=send_bulk_email,
             args=(
                 emails,
                 subject,

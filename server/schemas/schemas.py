@@ -131,6 +131,7 @@ class StudentSchema(PersonSchema):
     schedules = fields.Pluck(ScheduleSchema, "id", many=True)
     attendances = fields.Str(dump_only=True, load_only=True)
     display_name = fields.Str(dump_only=True)
+    official_notification_emails = fields.List(fields.Str, dump_only=True)
 
 
 class PaymentSchema(MySQLAlchemyAutoSchema):

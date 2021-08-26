@@ -8,7 +8,8 @@ from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import EmailPermission
 from server.blueprints.api.errors import NotFound
 from server.models import Student
-from server.emails.emails.grant_letter_email import my_job
+from server.email_notifications.grant_letter import send_grant_letter_email
+from server.schemas.schemas import StudentSchema
 
 
 class GrantEmailCollectionRes(Resource):
@@ -28,10 +29,9 @@ class GrantEmailCollectionRes(Resource):
             raise BadRequest("no price per term set")
 
         thread = Thread(
-            target=my_job,
+            target=send_grant_letter_email,
             args=(
-                student,
-                student.official_notification_emails,
+                StudentSchema().dump(student),
                 current_app.config["BACKEND_SERVER_URL"],
             ),
         )

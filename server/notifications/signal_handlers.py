@@ -2,25 +2,20 @@ from threading import Thread
 
 from flask import current_app
 
-from server.emails.url_utils import merge_url_query_params
+from server.email_notifications.utils.url_utils import merge_url_query_params
 from server.models import Student, User
 from server import signals
 
-from server.emails.emails.pre_enrolment_email import (
-    my_job as pre_enrolment_email_job,
-)  # todo rename
-from server.emails.emails.password_reset_email import (
-    my_job as password_reset_email_job,
-)  # todo rename
-from server.emails.emails.password_change_email import (
-    my_job as password_changed_email_job,
-)  # todo rename
+from server.email_notifications.pre_enrolled import send_pre_enrolled_email
+from server.email_notifications.password_reset_request import send_password_reset_request_email
+from server.email_notifications.password_reset_redeem import send_password_reset_redeem_email
+from server.schemas.schemas import StudentSchema, UserSchema
 
 
 def when_student_enrolled(_, student: Student) -> None:
     thread = Thread(
-        target=pre_enrolment_email_job,
-        args=(student.official_notification_emails, student.id),
+        target=send_pre_enrolled_email,
+        args=(StudentSchema().dump(student),),
     )
     thread.start()
 
@@ -38,18 +33,18 @@ def when_user_password_reset_request(_, user: User, token: str) -> None:
         return merge_url_query_params(reset_page_url, query_parameters)
 
     thread = Thread(
-        target=password_reset_email_job,
+        target=send_password_reset_request_email,
         args=(
-            generate_password_reset_url(user, token, "cat"),
-            generate_password_reset_url(user, token, "eng"),
-            user.email,
+            UserSchema().dump(user),
+            {'url_ca': generate_password_reset_url(user, token, "cat"),
+             'url_en': generate_password_reset_url(user, token, "eng"), }
         ),
     )
     thread.start()
 
 
 def when_user_password_changed(_, user: User) -> None:
-    thread = Thread(target=password_changed_email_job, args=(user.email,))
+    thread = Thread(target=send_password_reset_redeem_email, args=(UserSchema().dump(user),))
     thread.start()
 
 

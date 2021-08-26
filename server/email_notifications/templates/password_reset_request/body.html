@@ -1,0 +1,19 @@
+{% extends "base_email/body.html" %}
+{% block body %}
+    <i>
+        <p>
+             {{ _i_forget }}<br>
+            {{ _you_singular_forget }}<br>
+            {{ _he_forgets }}<br>
+            {{ _we_forget }}<br>
+            {{ _you_plural_forget }}<br>
+            {{ _they_forget }}
+        </p>
+    </i>
+    <br>
+    <p>{{ _things }}</p>
+    <p>{{ _easy }} <a href="{{url_ca if __lan__ == 'ca' else url_en}}" target="_blank">{{ _change_here }}</a> 🔑<br></p>
+    <p>{{ _expire }}</p>
+    <p>{{ _cheers }}</p>
+{% endblock %}
+

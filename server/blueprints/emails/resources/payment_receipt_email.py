@@ -8,7 +8,8 @@ from server.auth_auth.special_permissions import EmailPermission
 
 from server.blueprints.api.errors import NotFound
 from server.models import Payment
-from server.emails.emails.payment_receipt_email import my_job
+from server.email_notifications.payment_receipt import send_payment_receipt_email
+from server.schemas.schemas import PaymentSchema, StudentSchema
 
 
 class PaymentReceiptEmailCollectionRes(Resource):
@@ -26,10 +27,10 @@ class PaymentReceiptEmailCollectionRes(Resource):
             )
 
         thread = Thread(
-            target=my_job,
+            target=send_payment_receipt_email,
             args=(
-                payment,
-                payment.student.official_notification_emails,
+                PaymentSchema().dump(payment),
+                StudentSchema().dump(payment.student),
                 current_app.config["PUBLIC_VALIDATION_SECRET"],
                 current_app.config["BACKEND_SERVER_URL"],
             ),

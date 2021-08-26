@@ -8,13 +8,13 @@ from flask_restful import Resource
 from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import UserInvitePermission
 from server.models import User, Role
-from server.emails.emails.invite_email import my_job
-from server.emails.url_utils import merge_url_query_params
+from server.email_notifications.user_invite import send_user_invite_email
+from server.email_notifications.utils.url_utils import merge_url_query_params
 
 
 def generate_signup_link(_token, _email, frontend_url=None):
-    return (
-        merge_url_query_params(
+    return {
+        'url_ca': merge_url_query_params(
             "%s/app/signup"
             % (
                 frontend_url
@@ -23,7 +23,7 @@ def generate_signup_link(_token, _email, frontend_url=None):
             ),
             {"token": _token, "email": _email, "lan": "cat"},
         ),
-        merge_url_query_params(
+        'url_en': merge_url_query_params(
             "%s/app/signup"
             % (
                 frontend_url
@@ -32,7 +32,7 @@ def generate_signup_link(_token, _email, frontend_url=None):
             ),
             {"token": _token, "email": _email, "lan": "eng"},
         ),
-    )
+    }
 
 
 class UserInviteCollectionRes(Resource):
@@ -60,7 +60,7 @@ class UserInviteCollectionRes(Resource):
         )
 
         thread = Thread(
-            target=my_job, args=(*generate_signup_link(token, user_email), user_email)
+            target=send_user_invite_email, args=(user_email, generate_signup_link(token, user_email))
         )
         thread.start()
 

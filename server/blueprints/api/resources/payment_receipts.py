@@ -11,6 +11,7 @@ from server.blueprints.api.errors import NotFound
 from server.file_utils.string_bytes_io import make_response_with_file
 from server.models import Payment
 from server.pdfs.payment_receipt import generate_payment_recipe_pdf
+from server.schemas.schemas import PaymentSchema, StudentSchema
 
 
 class PaymentsReceiptsRes(Resource, SwaggerView):  # todo documented class higher up
@@ -27,7 +28,8 @@ class PaymentsReceiptsRes(Resource, SwaggerView):  # todo documented class highe
 
         pdf = generate_payment_recipe_pdf(
             current_app.config["PUBLIC_VALIDATION_SECRET"],
-            payment,
+            PaymentSchema().dump(payment),
+            StudentSchema().dump(payment.student),
             current_app.config["BACKEND_SERVER_URL"],
         )
 

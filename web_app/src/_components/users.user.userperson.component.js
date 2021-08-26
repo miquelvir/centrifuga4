@@ -161,10 +161,10 @@ const [hasNeeds, NEEDS] = useNeeds();
             <ItemsListTerciary
                     dataService={TeachersDataService}
                     dataServiceSR={null}
-                    defaultSearchBy="name"
-                    searchByOptions={["name"]}
+                    defaultSearchBy="full_name"
+                    searchByOptions={["full_name"]}
                     searchBarLabel={"teachers"}
-                    displayNameField={"name"}
+                    displayNameField={"full_name"}
                     secondaryDisplayNameField={null}
                     parent_id={currentStudent === null? null: currentStudent['id']}
                     add_message={"link-user-to-teacher"}

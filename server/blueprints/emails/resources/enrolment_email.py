@@ -8,7 +8,8 @@ from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import EmailPermission
 from server.blueprints.api.errors import NotFound
 from server.models import Student
-from server.emails.emails.enrolment_agreement_email import my_job
+from server.email_notifications.enrolment_agreement import send_enrolment_agreement_email
+from server.schemas.schemas import StudentSchema
 
 
 class EnrollmentEmailCollectionRes(Resource):
@@ -28,10 +29,9 @@ class EnrollmentEmailCollectionRes(Resource):
             raise BadRequest("no price per term set")
 
         thread = Thread(
-            target=my_job,
+            target=send_enrolment_agreement_email,
             args=(
-                student,
-                student.official_notification_emails,
+                StudentSchema().dump(student),
                 current_app.config["BACKEND_SERVER_URL"],
             ),
         )
