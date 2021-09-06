@@ -26,7 +26,7 @@ class StudentsEnrollmentAgreementRes(
         if not student:
             raise NotFound("resource with the given id not found", requestedId=id_)
         if student.price_term is None:
-            raise BadRequest("no price per term set")
+            raise BadRequest("no 'price per term' set")
 
         pdf = generate_enrolment_agreement_pdf(
             student.id, backend_server_address=current_app.config["BACKEND_SERVER_URL"]

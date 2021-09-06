@@ -26,7 +26,7 @@ class GrantEmailCollectionRes(Resource):
                 "resource with the given id not found", requestedId=student_id
             )
         if student.price_term is None:
-            raise BadRequest("no price per term set")
+            raise BadRequest("no 'price per term' set")
 
         thread = Thread(
             target=send_grant_letter_email,

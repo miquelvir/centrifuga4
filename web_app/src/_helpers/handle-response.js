@@ -38,8 +38,16 @@ export function useErrorHandler() {
 
     const failureHandlerUnexpected = (res, reportUnexpected) => {
         // an unexpected error happened
-
-        enqueueSnackbar("Something went wrong! 😣",
+        if (res.request.responseType == 'blob'){
+            res.response.data.text().then(res => {
+                showSnackbar(JSON.parse(res)['message']);
+            });
+        } else {
+            showSnackbar('');
+        }
+        
+        const showSnackbar = (message) => {
+            enqueueSnackbar(`Something went wrong! 😣 ${message}`,
             {
                 variant: "error",
                 autoHideDuration: 10000,
@@ -91,6 +99,7 @@ export function useErrorHandler() {
                     </React.Fragment>
                 }
             });
+        }
 
         return Promise.reject(res);
     }
