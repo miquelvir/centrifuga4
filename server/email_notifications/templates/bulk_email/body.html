@@ -1,4 +1,7 @@
 {% extends "base_email/body.html" %}
 {% block body %}
-    <p>{{ _body }}</p>
+    {% for paragraph in _body %}
+        <p>{{ paragraph }}</p>
+    {% endfor %}
+
 {% endblock %}

@@ -6,11 +6,12 @@ export const bulkEmailService = {
     bulkSend
 };
 
-function bulkSend(courseIds, subject, body, emailPreference, files) {
+function bulkSend(courseIds, subject, body, emailPreference, studentEnrolmentStatus, files) {
     const data = new FormData();
     data.append("courseIds", JSON.stringify(courseIds));
     data.append("emailPreference", emailPreference);
     data.append("subject", subject);
+    data.append("studentEnrolmentStatus", studentEnrolmentStatus);
     data.append("body", body);
     files.forEach(f => {
         data.append(f.name, f);

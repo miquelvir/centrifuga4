@@ -93,12 +93,11 @@ class EmailSender:
             log.exception("exception during login to the smtp server")
             raise ValueError("smtp login failed") from e
 
-    def send(self, email: LocalizedEmail):
+    def send(self, email: LocalizedEmail, config):
         """send a message using the server"""
-        config = current_app.config
 
         # create a multipart message and set headers
-        message = email.message()
+        message = email.message(config)
         message[_FROM] = self._from
         message[_REPLY_TO] = self._reply_to
 

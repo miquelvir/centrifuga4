@@ -3,13 +3,14 @@ from io import BytesIO
 from threading import Thread
 from typing import List
 
-from flask import request
+from flask import request, current_app
 from flask_restful import Resource
 
 from server.auth_auth.require import Require
 from server.auth_auth.special_permissions import EmailPermission
 from server.models import Course
 from server.email_notifications.bulk_email import send_bulk_email
+from server.models.student import EnrolmentStatus
 
 
 class BulkEmailCollectionRes(Resource):
@@ -34,6 +35,11 @@ class BulkEmailCollectionRes(Resource):
             return "no subject found in body", 400
 
         try:
+            student_status = request.form["studentEnrolmentStatus"]
+        except KeyError:
+            student_status = EnrolmentStatus.enrolled  # default
+
+        try:
             body = request.form["body"]
         except KeyError:
             return "no body found in body", 400
@@ -53,6 +59,8 @@ class BulkEmailCollectionRes(Resource):
             Require.ensure.read(course)
 
             for student in course.students:
+                if student_status is not None and student.enrolment_status != student_status:
+                    continue  # skip this student
                 Require.ensure.read(student)
 
                 if email_preference == "resolved":
@@ -74,6 +82,7 @@ class BulkEmailCollectionRes(Resource):
                     (BytesIO(file.stream.read()), name)
                     for name, file in request.files.items()
                 ],
+                current_app.config.copy()
             ),
         )
         thread.start()

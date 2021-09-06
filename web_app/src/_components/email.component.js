@@ -101,7 +101,7 @@ export default function Email({...other}) {
         formik.setSubmitting(true);
         bulkEmailService
             .bulkSend(to.map(g => g.id), formik.values["subject"],
-                formik.values["body"], formik.values["emailPreference"], selectedFiles)
+                formik.values["body"], formik.values["emailPreference"], formik.values["studentEnrolmentStatus"], selectedFiles)
 
             .then(...errorHandler({snackbarSuccess: true}))
             .finally(() => {
@@ -115,7 +115,7 @@ export default function Email({...other}) {
   const errorHandler = useErrorHandler();
 
   const formik = useFormik({
-        initialValues: {emailPreference: "resolved"},
+        initialValues: {emailPreference: "resolved", studentEnrolmentStatus: "enrolled"},
         validationSchema: yup.object({
             email: safe_email_required(t)}),
         enableReinitialize: true,
@@ -212,6 +212,26 @@ export default function Email({...other}) {
           <MenuItem value="student">{t("student")}</MenuItem>
           <MenuItem value="all">{t("all")}</MenuItem>
         </TextField>
+
+        <TextField
+              className={classes.in}
+            label={t("status")}
+            style={{width: "100%"}}
+              value={formik.values["studentEnrolmentStatus"] === undefined? '': formik.values["studentEnrolmentStatus"]}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        error={formik.status  || formik.errors["studentEnrolmentStatus"] !== undefined}
+        helperText={formik.touched["studentEnrolmentStatus"] && formik.errors["studentEnrolmentStatus"]}
+
+            name="studentEnrolmentStatus"
+            select>
+            <MenuItem value="enrolled">{t("enrolled")}</MenuItem>
+            <MenuItem value="pre-enrolled">{t("pre-enrolled")}</MenuItem>
+          <MenuItem value="early-unenrolled">{t("early-unenrolled")}</MenuItem>
+          <MenuItem value={null}>{t("all")}</MenuItem>
+        </TextField>
+
+        
 
 
 

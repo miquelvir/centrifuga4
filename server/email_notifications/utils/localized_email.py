@@ -81,10 +81,8 @@ class Email:
 
         return part
 
-    def message(self):
+    def message(self, config):
         """send a message using the server"""
-        config = current_app.config
-
         # create a multipart message and set headers
         message = multipart.MIMEMultipart()
         message[_SUBJECT] = self.subject
@@ -102,7 +100,6 @@ class Email:
                 if not config["DEBUGGING_MODE"]
                 else config["DEBUGGING_EMAIL"]
             )
-
         if self.bcc:
             message[_BCC] = (
                 ", ".join(
