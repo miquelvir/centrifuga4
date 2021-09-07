@@ -59,7 +59,10 @@ class BulkEmailCollectionRes(Resource):
             Require.ensure.read(course)
 
             for student in course.students:
-                if student_status is not None and student.enrolment_status != student_status:
+                if (
+                    student_status is not None
+                    and student.enrolment_status != student_status
+                ):
                     continue  # skip this student
                 Require.ensure.read(student)
 
@@ -82,7 +85,7 @@ class BulkEmailCollectionRes(Resource):
                     (BytesIO(file.stream.read()), name)
                     for name, file in request.files.items()
                 ],
-                current_app.config.copy()
+                current_app.config.copy(),
             ),
         )
         thread.start()
