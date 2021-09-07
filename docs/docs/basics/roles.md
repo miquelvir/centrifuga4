@@ -1,7 +1,3 @@
----
-sidebar_position: 1
----
-
 # user roles
 
 User can follow a **role**, which grants them a set of permissions.
