@@ -24,5 +24,5 @@ def send_grant_letter_email(student, backend_server_address, config):
             variables={"id": student["id"]},
             files=[(io.BytesIO(pdf), "grants-%s.pdf" % student["id"])],
         ),
-        config=config
+        config=config,
     )

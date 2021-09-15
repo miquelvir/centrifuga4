@@ -19,5 +19,5 @@ def send_payment_receipt_email(payment, student, secret, backend_url, config):
             variables={"quantity": payment["quantity"]},
             files=[(io.BytesIO(pdf), "receipt-%s.pdf" % payment["id"])],
         ),
-        config=config
+        config=config,
     )

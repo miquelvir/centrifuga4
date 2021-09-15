@@ -14,5 +14,6 @@ def send_pre_enrolled_email(student, config):
             template_name="pre_enrolled",
             to=student["official_notification_emails"],
             variables={"id": student["id"]},
-        ), config=config
+        ),
+        config=config,
     )
