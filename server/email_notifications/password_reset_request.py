@@ -12,5 +12,5 @@ def send_password_reset_request_email(user, urls: Dict[str, str], config):
             to=[user["email"]],
             variables={**urls},
         ),
-        config=config
+        config=config,
     )

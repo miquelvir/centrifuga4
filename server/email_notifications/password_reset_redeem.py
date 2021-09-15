@@ -8,5 +8,5 @@ def send_password_reset_redeem_email(user, config):
 
     emailer.send(
         LocalizedEmail(template_name="password_reset_redeem", to=[user["email"]]),
-        config=config
+        config=config,
     )

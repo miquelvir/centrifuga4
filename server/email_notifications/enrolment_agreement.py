@@ -26,5 +26,5 @@ def send_enrolment_agreement_email(student, backend_server_address, config):
             to=student["official_notification_emails"],
             files=[(io.BytesIO(pdf), "enrolment-%s.pdf" % student["id"])],
         ),
-        config=config
+        config=config,
     )

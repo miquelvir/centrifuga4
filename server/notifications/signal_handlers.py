@@ -19,7 +19,10 @@ from server.schemas.schemas import StudentSchema, UserSchema
 def when_student_enrolled(_, student: Student) -> None:
     thread = Thread(
         target=send_pre_enrolled_email,
-        args=(StudentSchema().dump(student),current_app.config.copy(),),
+        args=(
+            StudentSchema().dump(student),
+            current_app.config.copy(),
+        ),
     )
     thread.start()
 
@@ -52,7 +55,11 @@ def when_user_password_reset_request(_, user: User, token: str) -> None:
 
 def when_user_password_changed(_, user: User) -> None:
     thread = Thread(
-        target=send_password_reset_redeem_email, args=(UserSchema().dump(user), current_app.config.copy(),)
+        target=send_password_reset_redeem_email,
+        args=(
+            UserSchema().dump(user),
+            current_app.config.copy(),
+        ),
     )
     thread.start()
 
