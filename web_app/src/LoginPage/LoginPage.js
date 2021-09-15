@@ -91,15 +91,20 @@ const LoginPage = (props) => {
             setStatus();
             authenticationService
                 .login(username, password)
-                .then(...errorHandler({}))
-                .then(function (needs) {
-                        logged(needs);
-                    })
+                .then(...errorHandler({handle401: false}))
+                .then(function (res) {
+                    if (!res['logged']) {
+                        setStatus(true);
+                        return;
+                    }
+                    logged(res['needs']);
+                })
                 .catch(() => {
-                    setStatus(true);
+                    console.log("catch...");
                 })
                 .finally(() => {
-                        setSubmitting(false);
+                    console.log("finally...");
+                   setSubmitting(false);
                 });
         }
     });
