@@ -51,7 +51,7 @@ class UserInvitesService:
 
         Thread(
             target=send_user_invite_email,
-            args=(email, self.get_signup_urls(token, email)),
+            args=(email, self.get_signup_urls(token, email), current_app.config.copy(),),
         ).start()
 
     @staticmethod

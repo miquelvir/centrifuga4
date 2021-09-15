@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from ..pdfs.grant_letter import generate_grant_letter_pdf
 
 
-def send_grant_letter_email(student, backend_server_address):
+def send_grant_letter_email(student, backend_server_address, config):
     emailer = EmailSender()
 
     app = server.init_app()  # todo check
@@ -23,5 +23,6 @@ def send_grant_letter_email(student, backend_server_address):
             to=student["official_notification_emails"],
             variables={"id": student["id"]},
             files=[(io.BytesIO(pdf), "grants-%s.pdf" % student["id"])],
-        )
+        ),
+        config=config
     )

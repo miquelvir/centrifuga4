@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from ..models import Student
 
 
-def send_pre_enrolled_email(student):
+def send_pre_enrolled_email(student, config):
     emailer = EmailSender()
 
     emailer.send(
@@ -14,5 +14,5 @@ def send_pre_enrolled_email(student):
             template_name="pre_enrolled",
             to=student["official_notification_emails"],
             variables={"id": student["id"]},
-        )
+        ), config=config
     )

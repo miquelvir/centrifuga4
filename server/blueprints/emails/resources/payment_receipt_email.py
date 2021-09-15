@@ -33,6 +33,7 @@ class PaymentReceiptEmailCollectionRes(Resource):
                 StudentSchema().dump(payment.student),
                 current_app.config["PUBLIC_VALIDATION_SECRET"],
                 current_app.config["BACKEND_SERVER_URL"],
+                current_app.config.copy(),
             ),
         )
         thread.start()

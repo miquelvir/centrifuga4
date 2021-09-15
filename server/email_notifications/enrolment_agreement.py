@@ -1,5 +1,7 @@
 import io
 
+from flask import current_app
+
 import server
 from .utils.localized_email import LocalizedEmail
 from .utils.email_sender import EmailSender
@@ -9,7 +11,7 @@ from ..pdfs.enrolment import generate_enrolment_agreement_pdf
 from ..pdfs.grant_letter import generate_grant_letter_pdf
 
 
-def send_enrolment_agreement_email(student, backend_server_address):
+def send_enrolment_agreement_email(student, backend_server_address, config):
     emailer = EmailSender()
 
     app = server.init_app()  # todo
@@ -23,5 +25,6 @@ def send_enrolment_agreement_email(student, backend_server_address):
             template_name="enrolment_agreement",
             to=student["official_notification_emails"],
             files=[(io.BytesIO(pdf), "enrolment-%s.pdf" % student["id"])],
-        )
+        ),
+        config=config
     )

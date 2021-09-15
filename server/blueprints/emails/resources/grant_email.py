@@ -33,6 +33,7 @@ class GrantEmailCollectionRes(Resource):
             args=(
                 StudentSchema().dump(student),
                 current_app.config["BACKEND_SERVER_URL"],
+                current_app.config.copy(),
             ),
         )
         thread.start()
