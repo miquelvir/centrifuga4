@@ -69,7 +69,10 @@ class User(MyBase, UserMixin):
                 re.compile("(?=.*[a-z])").match(password) is not None,
                 re.compile("(?=.*[A-Z])").match(password) is not None,
                 re.compile("(?=.*\d)").match(password) is not None,
-                re.compile("(?=.*[-\/:-@\!.,+`´\-%&\(\)#$€_[-`{-~]{1,})").match(password) is not None,
+                re.compile("(?=.*[-\/:-@\!.,+`´\-%&\(\)#$€_[-`{-~]{1,})").match(
+                    password
+                )
+                is not None,
             )
         )
 
