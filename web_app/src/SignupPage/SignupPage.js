@@ -61,7 +61,7 @@ const SignupPage = (props) => {
             name: '',
             surname1: '',
             surname2: '',
-            password2: ''
+            password2: '',
         },
         validationSchema: yup.object({  // todo translate
             username: safe_username_required(t),
@@ -200,7 +200,7 @@ const SignupPage = (props) => {
                                                 variant="contained"
                                                 color="primary"
                                                 type="submit"
-                                                disabled={formik.isSubmitting}
+                                                disabled={formik.isSubmitting || !(formik.isValid && formik.dirty)}
                                                 className={classes.field}>
                                                 {t("sign_up")}
                                             </Button>

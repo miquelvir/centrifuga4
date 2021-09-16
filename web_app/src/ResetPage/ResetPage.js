@@ -68,7 +68,7 @@ const ResetPage = (props) => {
         initialValues: {
             email: email,
             password: '',
-            password2: ''
+            password2: '',
         },
         validationSchema: yup.object({
             email: safe_username_required(t),
@@ -98,6 +98,8 @@ const ResetPage = (props) => {
                     });
         }
     });
+
+    console.log("***", formik.error, formik.errors, formik.errors['email'], formik.touched, formik.values, formik.initialValues);
 
     return (
         <div className={classes.root}>
@@ -168,7 +170,7 @@ const ResetPage = (props) => {
                                                 variant="contained"
                                                 color="primary"
                                                 type="submit"
-                                                disabled={formik.isSubmitting || recaptcha==null}
+                                                disabled={formik.isSubmitting || recaptcha==null || !(formik.isValid && formik.dirty)}
                                                 className={classes.field}>
                                                 {t("change_password")}
                                             </Button>
