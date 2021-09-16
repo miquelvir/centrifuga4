@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from server.services.jwt_service import JwtService
 
-USER_INVITE_TOKEN_EXPIRES_IN = datetime.timedelta(minutes=10)
+USER_INVITE_TOKEN_EXPIRES_IN = datetime.timedelta(hours=24)
 
 
 class UserInvitesService:
