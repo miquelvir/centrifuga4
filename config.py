@@ -96,7 +96,7 @@ class DevelopmentBuiltConfig(DevelopmentConfig):
 
 
 class ProductionConfig(Config):
-    CSRF_COOKIE_SAMESITE = "Strict"
+    CSRF_COOKIE_SAMESITE = "Lax"
     SESSION_PROTECTION = "strong"
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
