@@ -59,8 +59,7 @@ The worker process has been replaced with a threaded approach, so that the free 
 
 ### DEPLOYMENT
 
-Due to the Redis Server, the deployment is limited to Linux servers. The one being used is Heroku; the Procfile
-specifies how the workers are to be run (web uses wsgi.py, worker uses worker.py).
+The one being used is Heroku; the Procfile specifies how the workers are to be run (web uses wsgi.py).
 
 For now, it is run on the free tier; if dyno hours were not enough, then it would be useful to increment to a Hobby plan
 (which would allow for a custom domain together with SSL). Similarly, if more than 500 students + 100 courses are needed,
