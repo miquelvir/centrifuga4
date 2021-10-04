@@ -197,7 +197,7 @@ def add_students(amount=500):
         print("    student %s" % idx)
         s = generate_student(idx)
 
-        for idx2 in range(randint(0, 3)):
+        for idx2 in range(randint(1, 3)):
             g = Guardian(
                 id=Guardian.generate_new_id(),
                 name="maria%s-%s" % (idx, idx2),

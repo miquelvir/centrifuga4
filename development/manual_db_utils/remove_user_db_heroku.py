@@ -3,15 +3,13 @@ from dotenv import load_dotenv
 
 load_dotenv(join(dirname(__file__), "../../.env"))
 
-from server.models import User, Need
+from server.models import User, Person
 
 
 if __name__ == "__main__":
     import server
-    import manual_heroku_config as config
+    from config import HerokuManualLiveConfig
 
-    app = server.init_app(config.HerokuManualLiveConfig)
+    app = server.init_app(HerokuManualLiveConfig)
     with app.app_context():
-        admin = User.query.filter(User.email == "vazquezrius.miquel@gmail.com").first()
-        server.db.session.delete(admin)
-        server.db.session.commit()
+        print(User.query.filter(User.email == 'marcriera@emmvilafranca.cat').count())

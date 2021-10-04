@@ -99,11 +99,8 @@ const LoginPage = (props) => {
                     }
                     logged(res['needs']);
                 })
-                .catch(() => {
-                    console.log("catch...");
-                })
+
                 .finally(() => {
-                    console.log("finally...");
                    setSubmitting(false);
                 });
         }
