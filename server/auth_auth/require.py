@@ -10,7 +10,16 @@ from server.auth_auth.special_permissions import (
     EmailPermission,
     PaymentReceiptsPermission,
 )
-from server.models import User, Teacher, Attendance, Student, Course, Role, Schedule, Guardian
+from server.models import (
+    User,
+    Teacher,
+    Attendance,
+    Student,
+    Course,
+    Role,
+    Schedule,
+    Guardian,
+)
 
 
 class BaseCRUD(abc.ABC):
@@ -133,7 +142,10 @@ class TeacherCRUDRolePermissions(EmptyCRUDRolePermissions):
         if type(obj) == Student:
             return self.user.teacher.is_teacher_of_student(obj.id)
         if type(obj) == Guardian:
-            return any(self.user.teacher.is_teacher_of_student(student.id) for student in obj.students)
+            return any(
+                self.user.teacher.is_teacher_of_student(student.id)
+                for student in obj.students
+            )
         if type(obj) == Attendance:
             return self.user.teacher.is_teacher_of_course(obj.course_id)
         return False

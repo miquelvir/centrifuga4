@@ -12,4 +12,4 @@ if __name__ == "__main__":
 
     app = server.init_app(HerokuManualLiveConfig)
     with app.app_context():
-        print(User.query.filter(User.email == 'marcriera@emmvilafranca.cat').count())
+        print(User.query.filter(User.email == "marcriera@emmvilafranca.cat").count())
