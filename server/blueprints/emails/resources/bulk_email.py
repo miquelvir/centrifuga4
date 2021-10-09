@@ -4,6 +4,7 @@ from threading import Thread
 from typing import List
 
 from flask import request, current_app
+from flask_login import login_required
 from flask_restful import Resource
 
 from server.auth_auth.require import Require
@@ -14,6 +15,7 @@ from server.models.student import EnrolmentStatus
 
 
 class BulkEmailCollectionRes(Resource):
+    @login_required
     def post(self):
         Require.ensure.create(EmailPermission())
 

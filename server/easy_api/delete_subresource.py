@@ -1,3 +1,5 @@
+from flask_login import login_required
+
 from server import db
 from server.auth_auth.require import Require
 from server.easy_api._subresource_utils import get_parent
@@ -17,6 +19,7 @@ class ImplementsDeleteOneSubresource:
     parent_model: type(MyBase)
     parent_field: str
 
+    @login_required
     def delete(self, id_, nested_id):
         parent = get_parent(self.parent_model, id_)
         field = getattr(parent, self.parent_field)

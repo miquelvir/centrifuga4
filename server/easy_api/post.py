@@ -1,4 +1,5 @@
 from flask import request
+from flask_login import login_required
 
 from server import db
 from server.auth_auth.require import Require
@@ -35,6 +36,7 @@ class ImplementsPostOne:
     schema: MySQLAlchemyAutoSchema
 
     @safe_post
+    @login_required
     def post(self):
         body = request.get_json()
 

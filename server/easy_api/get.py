@@ -1,4 +1,5 @@
 from flask import request, current_app, jsonify
+from flask_login import login_required
 from sqlalchemy.exc import InvalidRequestError
 import json
 
@@ -140,6 +141,7 @@ class _ImplementsGet:
     @produces(
         ("application/json", "text/csv")
     )  # content negotiation (and automatic creation of raw csv from json)
+    @login_required
     def get(self, *args, id_=None, parent=None, many=False, **kwargs):
         filters, sort, page, include = self._parse_args(request.args)
         do_pagination = page is not None

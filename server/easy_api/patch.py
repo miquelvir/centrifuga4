@@ -1,6 +1,7 @@
 from typing import List
 
 from flask import request
+from flask_login import login_required
 
 from server import db
 from server.auth_auth.require import Require
@@ -32,6 +33,7 @@ class ImplementsPatchOne:
     privileges = List[str]
 
     @safe_patch
+    @login_required
     def patch(self, id_):
         body = request.get_json()
         body["id"] = id_  # force id_

@@ -2,6 +2,7 @@ import io
 
 from flasgger import SwaggerView
 from flask import current_app
+from flask_login import login_required
 from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
@@ -13,6 +14,7 @@ from server.pdfs.grant_letter import generate_grant_letter_pdf
 
 
 class StudentsGrantLettersRes(Resource, SwaggerView):  # todo documented class higher up
+    @login_required
     def post(self, id_):
         query = Student.query.filter(Student.id == id_)
         student: Student = query.first()

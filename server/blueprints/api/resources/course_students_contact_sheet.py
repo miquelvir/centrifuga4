@@ -3,6 +3,7 @@ import io
 from datetime import datetime
 
 from flasgger import SwaggerView
+from flask_login import login_required
 from flask_restful import Resource
 
 from server.auth_auth.require import Require
@@ -211,6 +212,7 @@ def write_students(students, spamwriter):
 
 
 class CourseContactSheet(Resource, SwaggerView):
+    @login_required
     def post(self, id_):
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()

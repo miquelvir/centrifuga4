@@ -1,6 +1,7 @@
 from threading import Thread
 
 from flask import current_app
+from flask_login import login_required
 from flask_restful import Resource
 
 from server.auth_auth.require import Require
@@ -13,6 +14,7 @@ from server.schemas.schemas import PaymentSchema, StudentSchema
 
 
 class PaymentReceiptEmailCollectionRes(Resource):
+    @login_required
     def post(self, payment_id):
         Require.ensure.create(EmailPermission())
 

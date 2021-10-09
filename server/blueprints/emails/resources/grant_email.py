@@ -1,6 +1,7 @@
 from threading import Thread
 
 from flask import current_app
+from flask_login import login_required
 from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
@@ -13,6 +14,7 @@ from server.schemas.schemas import StudentSchema
 
 
 class GrantEmailCollectionRes(Resource):
+    @login_required
     def post(self, student_id):
         Require.ensure.create(EmailPermission())
 

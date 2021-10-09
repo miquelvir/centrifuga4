@@ -1,4 +1,5 @@
 from flask import abort
+from flask_login import login_required
 
 from server import db
 from server.easy_api._subresource_utils import get_subresource, get_parent
@@ -20,6 +21,7 @@ class ImplementsPostOneSubresource:
     parent_field: str
 
     @safe_post
+    @login_required
     def post(self, id_, nested_id):
         # find the parent so that it can be added there
         parent = get_parent(self.parent_model, id_)

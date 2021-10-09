@@ -1,3 +1,5 @@
+from flask_login import login_required
+
 from server import db
 from server.auth_auth.require import Require
 from server.blueprints.api.errors import NotFound
@@ -14,6 +16,7 @@ class ImplementsDeleteOne:
     model: type(MyBase)
     schema: MySQLAlchemyAutoSchema
 
+    @login_required
     def delete(self, id_):
         result = db.session.query(self.model).filter(self.model.id == id_).one_or_none()
 

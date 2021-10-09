@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import io
 
 from flasgger import SwaggerView
+from flask_login import login_required
 from flask_restful import Resource
 
 from server.auth_auth.require import Require
@@ -14,6 +15,7 @@ from server.models import Course, Attendance
 
 # todo check status etc
 class CoursesAttendanceV2ListRes(Resource, SwaggerView):
+    @login_required
     def post(self, id_):
         query = Course.query.filter(Course.id == id_)
         course: Course = query.one_or_none()

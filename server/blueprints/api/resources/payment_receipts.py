@@ -2,6 +2,7 @@ import io
 
 from flasgger import SwaggerView
 from flask import current_app
+from flask_login import login_required
 from flask_restful import Resource
 
 from server.auth_auth.require import Require
@@ -15,6 +16,7 @@ from server.schemas.schemas import PaymentSchema, StudentSchema
 
 
 class PaymentsReceiptsRes(Resource, SwaggerView):  # todo documented class higher up
+    @login_required
     def post(self, id_):
         Require.ensure.create(PaymentReceiptsPermission())
 

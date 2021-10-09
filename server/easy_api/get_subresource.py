@@ -1,3 +1,5 @@
+from flask_login import login_required
+
 from server.auth_auth.require import Require
 from server.easy_api._subresource_utils import get_parent
 from server.easy_api.get import ImplementsGetCollection
@@ -16,6 +18,7 @@ class ImplementsGetCollectionSubresource(ImplementsGetCollection):
     parent_model: type(MyBase)
     parent_field: str
 
+    @login_required
     def get(self, id_, *args, **kwargs):
         parent = get_parent(self.parent_model, id_)
 

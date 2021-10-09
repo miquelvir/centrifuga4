@@ -4,6 +4,7 @@ import io
 
 from flasgger import SwaggerView
 from flask import request
+from flask_login import login_required
 from flask_restful import Resource
 from werkzeug.exceptions import BadRequest
 
@@ -16,6 +17,7 @@ from server.models import Course
 
 # todo check status etc
 class CoursesAttendanceListRes(Resource, SwaggerView):
+    @login_required
     def post(self, id_):
         query = Course.query.filter(Course.id == id_)
         course: Course = query.first()

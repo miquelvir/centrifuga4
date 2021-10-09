@@ -3,6 +3,7 @@ from datetime import datetime
 import io
 
 from flasgger import SwaggerView
+from flask_login import login_required
 from flask_restful import Resource
 
 from server.blueprints.api.resources.course_students_contact_sheet import write_students
@@ -16,6 +17,7 @@ def students_file():
 
 
 class GodFile(Resource, SwaggerView):
+    @login_required
     def post(self):  # todo where is this used
         query = Student.query
         students: Student = query.all()
