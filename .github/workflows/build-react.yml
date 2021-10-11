@@ -33,6 +33,7 @@ jobs:
           REACT_APP_RECAPTCHA: ${{ secrets.REACT_APP_RECAPTCHA }}
           REACT_APP_API_VERSION: v1
           REACT_APP_BACKEND_URL: https://centrifuga4.herokuapp.com
+          REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
           PUBLIC_URL: https://centrifuga4.herokuapp.com
           INLINE_RUNTIME_CHUNK: false
           DOCS_URL: https://miquelvir.github.io/centrifuga4/
