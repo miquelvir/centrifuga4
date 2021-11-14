@@ -69,6 +69,8 @@ const ItemsList = ({setCurrentItemId=() => {}, auxFields = [], displayText = nul
                        chips=[], currentItemId = null, items, setItems, displayNameField="full_name",
                        usableFilters=[], defaultSearchBy="full_name", searchByOptions=["full_name"],
                         dataService, searchBarLabel, exportPage=true, exportAllPages=true}) => {
+    
+    
     const [searchTerm, setSearchTerm] = useState("");
     const [filters, setFilters] = useState(usableFilters.reduce((map, f) => {
         map[f.name] = f.initialValue;

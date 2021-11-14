@@ -38,13 +38,7 @@ export function useErrorHandler() {
 
     const failureHandlerUnexpected = (res, reportUnexpected) => {
         // an unexpected error happened
-        if (res.request.responseType == 'blob'){
-            res.response.data.text().then(res => {
-                showSnackbar(JSON.parse(res)['message']);
-            });
-        } else {
-            showSnackbar('');
-        }
+        
         
         const showSnackbar = (message) => {
             enqueueSnackbar(`Something went wrong! 😣 ${message}`,
@@ -99,6 +93,14 @@ export function useErrorHandler() {
                     </React.Fragment>
                 }
             });
+        }
+
+        if (res.request.responseType == 'blob'){
+            res.response.data.text().then(res => {
+                showSnackbar(JSON.parse(res)['message']);
+            });
+        } else {
+            showSnackbar('');
         }
 
         return Promise.reject(res);

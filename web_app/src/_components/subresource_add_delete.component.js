@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function AddDeleteSubresource({  defaultSearchBy, displayText, auxFields, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, add_message,onSubresourceAdded, onSubresourceDeleted, ...other}) {
+function AddDeleteSubresource({  defaultSearchBy, withFiltersBox=false, displayText, auxFields, parentItemDataService, itemDataService, add_message_confirm, parent_id, secondaryDisplayNameField, searchByOptions, resourceName, displayNameField, add_message,onSubresourceAdded, onSubresourceDeleted, usableFilters, ...other}) {
   const { t } = useTranslation();
   const classes = useStyles();
 
@@ -130,11 +130,13 @@ const navigator = React.useContext(tabContext);
                     defaultSearchBy={defaultSearchBy}
                     searchByOptions={searchByOptions}
                     items={items}
+                    withFiltersBox={withFiltersBox}
                     setItems={setItems}
                     displayText={displayText}
                     auxFields={auxFields} 
                     searchBarLabel={resourceName}
                     displayNameField={displayNameField}
+                    usableFilters={usableFilters}
                     parent_id={parent_id}
                     deleteTooltip={"delete"}
                     delete_message={t("delete") + " " + t(resourceName)}

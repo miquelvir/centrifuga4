@@ -64,6 +64,7 @@ class DevelopmentConfig(Config):
     CSRF_DISABLE = True
 
     LOGIN_DISABLED = True
+    TESTING = True
 
     SSL_CERT = "development/cert.pem"
     SSL_KEY = "development/key.pem"

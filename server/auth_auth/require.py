@@ -1,6 +1,7 @@
 import abc
 from typing import Dict
 
+from flask import current_app
 from flask_login import current_user
 
 from werkzeug.exceptions import Forbidden
@@ -51,7 +52,7 @@ class EnsureCRUDRolePermissions(BaseCRUD):
 
     @staticmethod
     def _ensure(result: bool):
-        if not result:
+        if not current_app.config['LOGIN_DISABLED'] and not result:
             raise Forbidden()  # todo more informative
         return result
 

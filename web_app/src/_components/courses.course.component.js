@@ -150,8 +150,41 @@ const [hasNeeds, NEEDS] = useNeeds();
                   add_message_confirm="confirm_enroll_to_course"
                   parent_id={currentCourseId}
                   searchByOptions={["full_name"]}
+                  withFiltersBox={true}
                   resourceName={"students"}
                   displayNameField={"full_name"}
+                  usableFilters={[{
+                    name: 'enrolment_status',
+                    defaultValue: null,
+                    options: [
+                        {
+                            label: "enrolled",
+                            tooltip: "only_enrolled",
+                            name: 'enrolled'
+                        }, {
+                            label: "pre-enrolled",
+                            tooltip: "only_preenrolled",
+                            name: 'pre-enrolled'
+                        }, {
+                            label: "early-unenrolled",
+                            tooltip: "only_earlyunenrolled",
+                            name: 'early-unenrolled'
+                        }
+                    ]
+                },
+                    {
+                      name: 'default_payment_method',
+                        defaultValue: null,
+                        options: [
+                           {label: "cash", tooltip: "only_cash", name: 'cash'},
+                                {label: "bank-transfer", tooltip: "only_banktransfer", name: 'bank-transfer'},
+                                {
+                                    label: "bank-direct-debit",
+                                    tooltip: "only_bankdirectdebit",
+                                    name: 'bank-direct-debit'
+                                }
+                        ]
+                    }]}
                   auxFields={["enrolment_status"]}
                   displayText={(student) => student['full_name'] + (student['enrolment_status'] === 'enrolled'? ' ☑️': '')}
                   add_message="enroll_to_course"
