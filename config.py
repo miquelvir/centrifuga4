@@ -9,6 +9,8 @@ class Config(object):
     TESTING = False
     DEVELOPMENT = False
 
+    LOGIN_DISABLED = False
+
     API_PAGINATION = 10
 
     PROPAGATE_EXCEPTIONS = True  # needed due to Flask-Restful not passing them up
