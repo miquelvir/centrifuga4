@@ -5,7 +5,7 @@ can take attendance of courses.
 ## accessing the attendance page
 ### from the teacher dashboard
 
-[**Teachers**](../basics/roles.md#teacher) have access to the [Teacher Dashboard](https://centrifuga4.herokuapp.com/app/teacher-dashboard) at [teachers.xamfra.net](https://centrifuga4.herokuapp.com/logo_xamfra_light.png). 
+[**Teachers**](../basics/roles.md#teacher) have access to the [Teacher Dashboard](https://centrifuga4.herokuapp.com/app/teacher-dashboard) at [teachers.xamfra.net](https://centrifuga4.herokuapp.com/app/teacher-dashboard). 
 They can find the collection of all courses they teach there, and a shortcut to the attendance page.
 
 ![teacher dashboard](/img/teacher-dashboard.png)
