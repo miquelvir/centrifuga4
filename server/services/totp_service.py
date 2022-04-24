@@ -21,12 +21,16 @@ class TotpService:
         return pyotp.random_base32()
 
     @staticmethod
-    def encrypt_totp_secret(totp_secret, encryption_key: str = current_app.config["TOTP_ENCRYPTION_KEY"]) -> str:
-        return Fernet(bytes(encryption_key, 'utf-8')).encrypt(bytes(totp_secret, 'utf-8')).decode('utf-8')
+    def _encryption_key(encryption_key: str = None):
+        return current_app.config["TOTP_ENCRYPTION_KEY"] if encryption_key is None else encryption_key
 
     @staticmethod
-    def decrypt_totp_secret(encrypted_secret, encryption_key: str = current_app.config["TOTP_ENCRYPTION_KEY"]) -> str:
-        return Fernet(bytes(encryption_key, 'utf-8')).decrypt(bytes(encrypted_secret, 'utf-8')).decode('utf-8')
+    def encrypt_totp_secret(totp_secret, encryption_key: str = None) -> str:
+        return Fernet(bytes(TotpService._encryption_key(encryption_key), 'utf-8')).encrypt(bytes(totp_secret, 'utf-8')).decode('utf-8')
+
+    @staticmethod
+    def decrypt_totp_secret(encrypted_secret, encryption_key: str = None) -> str:
+        return Fernet(bytes(TotpService._encryption_key(encryption_key), 'utf-8')).decrypt(bytes(encrypted_secret, 'utf-8')).decode('utf-8')
 
     @staticmethod
     def generate_url(totp_secret: str, username: str) -> str:

@@ -9,8 +9,6 @@ from server import db
 from server.models._base import MyBase
 import bcrypt
 
-from server.services.totp_service import TotpService
-
 
 class User(MyBase, UserMixin):
     __tablename__ = "user"

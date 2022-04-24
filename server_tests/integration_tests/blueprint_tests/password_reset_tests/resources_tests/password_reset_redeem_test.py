@@ -4,6 +4,7 @@ from unittest.mock import Mock
 import server
 from server.containers import Container
 from server.services.recaptcha_service import RecaptchaService
+from server.services.totp_service import TotpService
 import unittest
 
 from server.models import Student, User
@@ -28,6 +29,8 @@ class TestPreEnrolmentPost(WithDatabase):
         self.recaptcha_service_mock = Mock(spec=RecaptchaService)
         self.recaptcha_service_mock.validate.return_value = True
 
+        self.totp_service_mock = Mock(spec=TotpService)
+
         self.password_reset_service = Container.password_reset_service()
         self.password_reset_service.trigger_event_user_password_reset_request = Mock()
         self.password_reset_service.trigger_event_user_password_reset_redeem = Mock()
@@ -41,7 +44,10 @@ class TestPreEnrolmentPost(WithDatabase):
             with self.app.container.password_reset_service.override(
                 self.password_reset_service
             ) as ctx2:
-                yield ctx1, ctx2
+                with self.app.container.totp_service.override(
+                    self.totp_service_mock
+                ) as ctx3:
+                    yield ctx1, ctx2, ctx3
 
     def _post_password_reset_redeem(self, token: str, password, recaptcha=""):
         with self.override_external_services():
