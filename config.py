@@ -126,7 +126,7 @@ class HerokuManualLiveConfig(ProductionConfig):
     BACKEND_SERVER_PORT = "443"
     BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
 
-    SQLALCHEMY_DATABASE_URI = "postgres://uvrwiswgtbdwey:c1395b3e174858c878ef33843cab9d5afcf103927361218c6315c7f2622d1bfc@ec2-54-72-188-148.eu-west-1.compute.amazonaws.com:5432/dft5had1ruhc0f"
+    SQLALCHEMY_DATABASE_URI = os.getenv("MANUAL_DATABASE_URL")
 
 
 class TestingConfig(DevelopmentConfig):

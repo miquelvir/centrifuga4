@@ -13,7 +13,7 @@ class TotpService:
         """ :returns the current TOTP """
         return pyotp.TOTP(totp_secret).now()
 
-    def is_valid(self, totp_secret: str, totp: str) -> bool:  # todo ="JBSWY3DPEHPK3PXP"
+    def is_valid(self, totp_secret: str, totp: str) -> bool:
         return hmac.compare_digest(self.generate_totp(totp_secret), totp)
 
     @staticmethod
