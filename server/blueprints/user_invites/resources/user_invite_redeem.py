@@ -35,7 +35,7 @@ class UserInviteRedeemRes(Resource):
         user_invites_service: "UserInvitesService" = Provide[
             Container.user_invites_service
         ],
-        totp_service: "TotpService" = Provide[Container.totp_service]
+        totp_service: "TotpService" = Provide[Container.totp_service],
     ):
         try:
             body = UserInviteRedeem(**request.json)
@@ -72,9 +72,12 @@ class UserInviteRedeemRes(Resource):
             email=data.user_email,
             password_hash=User.hash_password(body.password),
             role_id=data.role_id,
-            totp_secret=totp_service.encrypt_totp_secret(totp_secret)
+            totp_secret=totp_service.encrypt_totp_secret(totp_secret),
         )
 
         user_invites_service.save_user(user)
 
-        return {"user_id": user_id, "totp": totp_service.generate_url(totp_secret, user.email)}, 200
+        return {
+            "user_id": user_id,
+            "totp": totp_service.generate_url(totp_secret, user.email),
+        }, 200

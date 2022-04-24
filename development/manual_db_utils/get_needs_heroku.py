@@ -10,6 +10,7 @@ from config import HerokuManualLiveConfig
 import json
 import datetime
 
+
 def get_needs():
     attendances = Attendance.query.count()
     print(attendances)
