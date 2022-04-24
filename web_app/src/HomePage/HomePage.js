@@ -30,10 +30,7 @@ import {
     useMediaQuery
 } from "@material-ui/core";
 import {loadingContext} from '../_context/loading-context';
-import {confirmContext} from '../_context/confirm-context';
 import {tabContext} from '../_context/tab-context';
-import DialogContentText from "@material-ui/core/DialogContentText";
-import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { useRouteMatch, useLocation  } from "react-router-dom";
 
@@ -154,30 +151,6 @@ const HomePage = (props) => {
         setLoading(false);
       };
 
-      const [confirmDialog, setConfirmDialog] = React.useState({
-          open: false,
-          title: null,
-          subtitle: null,
-          success: () => {},
-          cancel: () => {},
-          args: []
-      });
-      const confirm = (title, subtitle, successCallable, cancelCallable=null, args=[]) => {
-          setConfirmDialog(
-              {
-                open: true,
-                title: title,
-                subtitle: subtitle,
-                success: successCallable,
-                cancel: cancelCallable === null? () => {}: cancelCallable,
-                  args: args
-              }
-          );
-      }
-      const handleCloseConfirm = () => {
-          setConfirmDialog({...confirmDialog, open: false});
-      }
-
       const routerRef = React.createRef();
       let history = useHistory();
 
@@ -185,8 +158,7 @@ const HomePage = (props) => {
         <div className={classes.root}>
             <CssBaseline/>
                 <loadingContext.Provider value={{loading: loading, startLoading: () => {setLoading(true)}, stopLoading: () =>{setLoading(false)}}}>
-                    <confirmContext.Provider value={{confirm: confirm}}>
-
+                    
                             <AppBar
                                 position="fixed"
                                 className={clsx(classes.appBar, {
@@ -265,38 +237,8 @@ const HomePage = (props) => {
                     <CircularProgress color="inherit" />
                   </Backdrop>
 
-                        <Dialog
-        open={confirmDialog.open}
-        onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
-      >
-        {confirmDialog.title &&
-        <DialogTitle id="responsive-dialog-title">
-            {t(confirmDialog.title)}
-        </DialogTitle>
-        }
-        {confirmDialog.subtitle && <DialogContent>
-            <DialogContentText>
-                {t(confirmDialog.subtitle)}
-            </DialogContentText>
-        </DialogContent>}
-        <DialogActions>
-          <Button autoFocus onClick={() => {
-              confirmDialog.cancel(...confirmDialog.args);
-              handleCloseConfirm();
-          }} color="primary">
-              {t("cancel")}
-          </Button>
-          <Button onClick={() => {
-              confirmDialog.success(...confirmDialog.args);
-              handleCloseConfirm();
-          }} color="primary" autoFocus>
-              {t("continue")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+                        
 
-                    </confirmContext.Provider>
             </loadingContext.Provider>
         </div>
     );

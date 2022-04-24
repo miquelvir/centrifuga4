@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from server.services.jwt_service import JwtService
+    from server.services.totp_service import TotpService
     from server.blueprints.user_invites.services.user_invites_service import (
         UserInvitesService,
     )
@@ -34,6 +35,7 @@ class UserInviteRedeemRes(Resource):
         user_invites_service: "UserInvitesService" = Provide[
             Container.user_invites_service
         ],
+        totp_service: "TotpService" = Provide[Container.totp_service]
     ):
         try:
             body = UserInviteRedeem(**request.json)
@@ -60,6 +62,8 @@ class UserInviteRedeemRes(Resource):
             return f"invalid role with role_id={data.role_id!r}", 400
 
         user_id = User.generate_new_id()
+        totp_secret = totp_service.generate_totp_secret()
+
         user = User(
             id=user_id,
             name=body.name,
@@ -68,7 +72,9 @@ class UserInviteRedeemRes(Resource):
             email=data.user_email,
             password_hash=User.hash_password(body.password),
             role_id=data.role_id,
+            totp_secret=totp_service.encrypt_totp_secret(totp_secret)
         )
 
         user_invites_service.save_user(user)
-        return {"user_id": user_id}, 200
+
+        return {"user_id": user_id, "totp": totp_service.generate_url(totp_secret, user.email)}, 200

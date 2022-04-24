@@ -9,6 +9,8 @@ from server import db
 from server.models._base import MyBase
 import bcrypt
 
+from server.services.totp_service import TotpService
+
 
 class User(MyBase, UserMixin):
     __tablename__ = "user"
@@ -20,6 +22,7 @@ class User(MyBase, UserMixin):
     surname2 = db.Column(db.Text, nullable=True)
     email = db.Column(db.Text, nullable=False, unique=True)
     password_hash = db.Column(db.Text, nullable=False)
+    totp_secret = db.Column(db.Text, nullable=True)
 
     role_id = db.Column(db.Text, db.ForeignKey("role.id"), nullable=True)
     role = db.relationship("Role")

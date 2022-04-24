@@ -318,5 +318,17 @@
   "use_eng": "veure en anglès",
   "use_cat": "veure en català",
   "use_dark": "usar tema fosc",
-  "use_light": "usar tema clar"
+  "use_light": "usar tema clar",
+  "2FA_code": "codi 2FA",
+  "2FA_needed": "escriu el codi de 2FA de l'aplicació",
+  "2FA_6digits": "el codi de 2FA té 6 dígits",
+  "2FA_invalid": "el codi de 2FA té 6 dígits numèrics",
+  "setup_2FA": "configura 2FA 🛡️",
+  "learn_how_2FA": "Com configuro 2FA?",
+  "title_2fa_continue": "Has escanejat el codi QR amb la teva app de 2FA?",
+  "description_2fa_continue": "No podràs accedir al teu compte si no configures la teva aplicació de 2FA ara. No podràs escanejar aquest codi QR en el futur.",
+  "2FA_tip1": "L'autentificació de doble factor (2FA) és essencial per assegurar que només tu pots accedir a les dades dels estudiants.",
+  "2FA_tip2": "Escaneja el codi QR amb la teva aplicació de 2FA.",
+  "2FA_tip3": "No podràs tornar a veure aquest codi QR mai més.",
+  "rememberMe": "recorda'm"
 }

@@ -12,6 +12,7 @@ from server.blueprints.user_invites.services.user_invites_service import (
 
 from server.services.jwt_service import JwtService
 from server.services.recaptcha_service import RecaptchaService
+from server.services.totp_service import TotpService
 
 
 class Container(
@@ -19,6 +20,7 @@ class Container(
 ):  # todo can we migrate to not using this and just use patch in the mock library?
     recaptcha_service = providers.Singleton(RecaptchaService)
     jwt_service = providers.Factory(JwtService)
+    totp_service = providers.Singleton(TotpService)
 
     pre_enrolment_service = providers.Singleton(PreEnrolmentService)
     password_reset_service = providers.Factory(
@@ -27,3 +29,4 @@ class Container(
     user_invites_service = providers.Factory(
         UserInvitesService, jwt_service=jwt_service
     )
+

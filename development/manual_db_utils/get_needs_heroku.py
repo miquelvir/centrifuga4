@@ -7,16 +7,17 @@ load_dotenv(join(dirname(__file__), "../../.env"))
 
 from config import HerokuManualLiveConfig
 
+import json
+import datetime
 
 def get_needs():
-    needs = Need.query.all()
-    for need in needs:
-        print(need)
+    attendances = Attendance.query.count()
+    print(attendances)
 
 
 if __name__ == "__main__":
     import server
-    from server.models import Need
+    from server.models import Attendance
 
     if input("type 'production'") == "production":
         app = server.init_app(HerokuManualLiveConfig)

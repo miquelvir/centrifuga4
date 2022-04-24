@@ -318,5 +318,17 @@
   "use_cat": "see in catalan",
   "use_dark": "use dark theme",
   "use_light": "use light theme",
-  "required": "field required"
+  "required": "field required",
+  "2FA_code": "2FA code",
+  "2FA_needed": "fill in the 2FA code from the app",
+  "2FA_6digits": "the 2FA code has 6 digits",
+  "2FA_invalid": "the 2FA code has 6 integer digits",
+  "setup_2FA": "set up 2FA 🛡️",
+  "learn_how_2FA": "How to set up 2FA?",
+  "title_2fa_continue": "Have you scanned the QR code in the 2FA app?",
+  "description_2fa_continue": "You won't be able to access your account if you don't set up you 2FA app now. You won't be able to scan this QR code in the future.",
+  "2FA_tip1": "Two-factor authentication (2FA) is essential to guarantee you are the only one who can access student's data.",
+  "2FA_tip2": "Scan the QR code with your 2FA app of choice.",
+  "2FA_tip3": "This QR code will never be shown again.",
+  "rememberMe": "remember me"
 }

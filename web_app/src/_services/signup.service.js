@@ -21,7 +21,7 @@ function signup(username, password, email, name, surname1, surname2, token) {
             },
             headers: {...{'Cache-Control': 'no-cache'}, ...authHeader()}
         }).then(response => {
-            resolve(true);
+            resolve(response.data);
         }).catch(function (err) {
             reject(err);
         });

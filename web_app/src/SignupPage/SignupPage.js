@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import {TextField} from "@material-ui/core";
@@ -19,6 +19,9 @@ import {safe_password_repetition, safe_email_required, safe_password, safe_usern
 import TranslateButton from "../_components/translate_button.component";
 import ThemeButton from "../_components/theme_button.component";
 import {PUBLIC_URL} from "../config";
+import QRCode from "react-qr-code";
+import Link from '@material-ui/core/Link';
+import {confirmContext} from "../_context/confirm-context";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,10 +42,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const STEP_REGISTER = 0;
+const STEP_TOTP = 1;
+
 const SignupPage = (props) => {
     const classes = useStyles();
     const themeCtx = React.useContext(themeContext);
     const {enqueueSnackbar} = useSnackbar();
+    const [step, setStep] = useState(STEP_REGISTER);
+    const [totpUri, setTotpUri] = useState(null);
+    const confirm = React.useContext(confirmContext);
 
     useOnMount(() => {
         i18next.changeLanguage(query.get('lan')).then();
@@ -82,7 +91,8 @@ const SignupPage = (props) => {
                     function (result) {
                         enqueueSnackbar(t("sign_up_success"), {variant: "success"});
                         setSubmitting(false);
-                        props.history.push("/login");
+                        setStep(STEP_TOTP);
+                        setTotpUri(result['totp']);
                     },
                     function (error) {
                         setSubmitting(false);
@@ -96,6 +106,132 @@ const SignupPage = (props) => {
                     });
         }
     });
+
+    const RegisterStep = () => <React.Fragment>
+        <Box m={2}>
+    <Typography>{t("been_invited")}</Typography>
+            </Box>
+            <form onSubmit={formik.handleSubmit}>
+                    <TextField
+                        label={t("email")}
+                        helperText={formik.touched["email"] && formik.errors["email"]}
+                        type="email"
+                        name="email"
+                        className={classes.field}
+                        value={formik.values["email"]}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.status}
+                        disabled
+                    />
+
+                    <TextField
+                        label={t("name")}
+                        helperText={formik.touched["name"] && formik.errors["name"]}
+                        name="name"
+                        className={classes.field}
+                        value={formik.values["name"]}
+                        onChange={formik.handleChange}
+                        disabled={formik.isSubmitting}
+                        onBlur={formik.handleBlur}
+                        error={formik.status}
+                    />
+                    <TextField
+                        label={t("surname1")}
+                        helperText={formik.touched["surname1"] && formik.errors["surname1"]}
+                        name="surname1"
+                        disabled={formik.isSubmitting}
+                        className={classes.field}
+                        value={formik.values["surname1"]}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.status}
+                    />
+                    <TextField
+                        label={t("surname2")}
+                        helperText={formik.touched["surname2"] && formik.errors["surname2"]}
+                        name="surname2"
+                        disabled={formik.isSubmitting}
+                        className={classes.field}
+                        value={formik.values["surname2"]}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.status}
+                    />
+                    <TextField
+                        label={t("password")}
+                        name="password"
+                        type="password"
+                        helperText={formik.touched["password"] && formik.errors["password"]}
+                        className={classes.field}
+                        value={formik.values["password"]}
+                        disabled={formik.isSubmitting}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.status}
+                        autoComplete="new-password"
+                    />
+                    <TextField
+                        label={t("confirm_password")}
+                        name="password2"
+                        type="password"
+                        helperText={formik.touched["password2"] && formik.errors["password2"]}
+                        className={classes.field}
+                        value={formik.values["password2"]}
+                        disabled={formik.isSubmitting}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.status}
+                        autoComplete="new-password"
+                    />
+                    <Box my={3}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            disabled={formik.isSubmitting || !(formik.isValid && formik.dirty)}
+                            className={classes.field}>
+                            {t("sign_up")}
+                        </Button>
+                    </Box>
+                </form>
+            </React.Fragment>;
+
+    const TotpStep = () => <React.Fragment>
+        <Box m={2}>
+            <Typography>{t("setup_2FA")}</Typography>
+        </Box>
+        <Box m={2}>   
+            <ul style={{textAlign: 'left'}}>
+                <li><Typography variant="body2" >{t("2FA_tip1")}</Typography></li>
+                <li><Typography variant="body2" >{t("2FA_tip2")}</Typography></li>
+                <li><Typography variant="body2" >{t("2FA_tip3")}</Typography></li>
+            </ul>
+        </Box>
+             
+        <Box m={4}>
+            {totpUri !== null && <QRCode value={totpUri} size='125' />}
+        </Box>
+
+        <Box m={1} style={{textAlign: 'right'}}>
+            <Link variant="overline" href="https://miquelvir.github.io/centrifuga4/docs/how-tos/2FA" target="_blank">{t("learn_how_2FA")}</Link>
+        </Box>
+
+        <Box my={3}>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                    console.log("click");
+                    confirm.confirm("title_2fa_continue", "description_2fa_continue", () => {
+                        props.history.push("/login");
+                      });
+                }}
+                className={classes.field}>
+                {t("continue")}
+            </Button>
+        </Box>
+    </React.Fragment>
 
     return (
         <div className={classes.root}>
@@ -116,96 +252,8 @@ const SignupPage = (props) => {
                                 <Paper className={classes.paper}>
                                     <img src={`${PUBLIC_URL}/logo_centrifuga4_${themeCtx.label}.svg`} alt="Logo Centrífuga" style={{height: "85px"}}/>
 
-                                     <Box m={2}>
-                                         <Typography>{t("been_invited")}</Typography>
-                                    </Box>
-
-                                    <form onSubmit={formik.handleSubmit}>
-                                        <TextField
-                                            label={t("email")}
-                                            helperText={formik.touched["email"] && formik.errors["email"]}
-                                            type="email"
-                                            name="email"
-                                            className={classes.field}
-                                            value={formik.values["email"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.status}
-                                            disabled
-                                        />
-
-
-
-                                        <TextField
-                                            label={t("name")}
-                                            helperText={formik.touched["name"] && formik.errors["name"]}
-                                            name="name"
-                                            className={classes.field}
-                                            value={formik.values["name"]}
-                                            onChange={formik.handleChange}
-                                            disabled={formik.isSubmitting}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.status}
-                                        />
-                                        <TextField
-                                            label={t("surname1")}
-                                            helperText={formik.touched["surname1"] && formik.errors["surname1"]}
-                                            name="surname1"
-                                            disabled={formik.isSubmitting}
-                                            className={classes.field}
-                                            value={formik.values["surname1"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.status}
-                                        />
-                                        <TextField
-                                            label={t("surname2")}
-                                            helperText={formik.touched["surname2"] && formik.errors["surname2"]}
-                                            name="surname2"
-                                            disabled={formik.isSubmitting}
-                                            className={classes.field}
-                                            value={formik.values["surname2"]}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.status}
-                                        />
-                                        <TextField
-                                            label={t("password")}
-                                            name="password"
-                                            type="password"
-                                            helperText={formik.touched["password"] && formik.errors["password"]}
-                                            className={classes.field}
-                                            value={formik.values["password"]}
-                                            disabled={formik.isSubmitting}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.status}
-                                            autoComplete="new-password"
-                                        />
-                                        <TextField
-                                            label={t("confirm_password")}
-                                            name="password2"
-                                            type="password"
-                                            helperText={formik.touched["password2"] && formik.errors["password2"]}
-                                            className={classes.field}
-                                            value={formik.values["password2"]}
-                                            disabled={formik.isSubmitting}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.status}
-                                            autoComplete="new-password"
-                                        />
-                                        <Box my={3}>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                type="submit"
-                                                disabled={formik.isSubmitting || !(formik.isValid && formik.dirty)}
-                                                className={classes.field}>
-                                                {t("sign_up")}
-                                            </Button>
-                                        </Box>
-                                    </form>
+                                    {step === STEP_REGISTER && RegisterStep()}
+                                    {step === STEP_TOTP && TotpStep()}
                                 </Paper></Box>
                         </Grid>
                     </Grid>

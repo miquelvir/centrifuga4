@@ -1,4 +1,10 @@
+from typing import TYPE_CHECKING
+
+from dependency_injector.wiring import Provide, inject
 from flask import Blueprint, g, request, current_app, session, abort, jsonify
+from server.containers import Container
+from server.services.totp_service import TotpService
+
 
 # initialise the blueprint
 from flask_login import login_user, logout_user, login_required, current_user
@@ -22,9 +28,21 @@ def basic_http_auth_required(f):
         g.user = user
         return True
 
+    @inject
+    def verify_totp(totp, user, totp_service: TotpService = Provide[Container.totp_service]) -> bool:
+        if user.totp_secret is None:
+            return True  # todo remove once all users have 2FA
+        return totp_service.is_valid(totp_service.decrypt_totp_secret(user.totp_secret), totp)
+
     def wrapper(*args, **kwargs):
-        auth = request.authorization
-        if not (auth and verify_password(auth.username, auth.password)):
+        auth = request.authorization  # first factor
+        totp = request.args.get('totp', None)  # second factor (2FA)
+
+        if not (totp and auth):  # missing fields
+            abort(401)
+        if not verify_password(auth.username, auth.password):  # wrong first factor
+            abort(401)
+        if not verify_totp(totp, g.user):  # wrong second factor
             abort(401)
         return f(*args, **kwargs)
 
@@ -59,7 +77,8 @@ def login():
     """
     user = g.user
 
-    login_user(user, remember=True)
+    remember_me = True if request.args.get('rememberMe', None) == '1' else False
+    login_user(user, remember=remember_me)
 
     return get_current_needs()
 

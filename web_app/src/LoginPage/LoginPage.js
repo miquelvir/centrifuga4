@@ -23,6 +23,7 @@ import {PUBLIC_URL, RECAPTCHA} from "../config";
 import TranslateButton from "../_components/translate_button.component";
 import ThemeButton from "../_components/theme_button.component";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import {Checkbox} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         margin: "5px"
     },
+    details: {
+        width: "100%",
+        display: 'flex',
+        verticalAlign: 'middle'
+    },
     paper: {
         height: "50%",
         [theme.breakpoints.up('md')]:{minWidth: "500px", width: "50%"},
@@ -44,7 +50,16 @@ const useStyles = makeStyles((theme) => ({
     reset: {
         width: "100%",
         textAlign: "end",
-        cursor: ""
+        cursor: "",
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        verticalAlign: 'middle'
+    },
+    remember: {
+        width: "100%",
+        textAlign: "start",
+        cursor: "",
+        verticalAlign: 'middle'
     }
 }));
 
@@ -65,7 +80,6 @@ const LoginPage = (props) => {
     const {enqueueSnackbar} = useSnackbar();
 
     const logged = (needs) => {
-        console.log("needs", needs);
         const setLogged = userCtx["setUser"];
         const setNeeds = userCtx["setNeeds"];
         const setTeacher = userCtx["setTeacher"];
@@ -80,17 +94,20 @@ const LoginPage = (props) => {
     const formik = useFormik({
         initialValues: {
             username: '',
-            password: ''
+            password: '',
+            totp: '',
+            rememberMe: false
         },
         validationSchema: yup.object({
             username: safe_username_required(t),
-            password: yup.string().required(t("password_required"))
+            password: yup.string().required(t("password_required")),
+            totp: yup.string().required(t("2FA_needed")).test('len', t("2FA_6digits"), (val) => (val === undefined ? "": val).toString().length === 6).test('digits', t("2FA_invalid"), (val) => Number(val)? true: false)
         }),
         enableReinitialize: true,
-        onSubmit: ({username, password}, {setStatus, setSubmitting}) => {
+        onSubmit: ({username, password, totp, rememberMe}, {setStatus, setSubmitting}) => {
             setStatus();
             authenticationService
-                .login(username, password)
+                .login(username, password, totp, rememberMe)
                 .then(...errorHandler({handle401: false}))
                 .then(function (res) {
                     if (!res['logged']) {
@@ -194,6 +211,20 @@ const LoginPage = (props) => {
                                             onBlur={formik.handleBlur}
                                             error={formik.status}
                                         />
+                                        <TextField
+                                            label={t("2FA_code")}
+                                            name="totp"
+                                            type="password"
+                                            helperText={formik.touched["totp"] && formik.errors["totp"]}
+                                            className={classes.field}
+                                            value={formik.values["totp"]}
+                                            disabled={formik.isSubmitting}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            error={formik.status}
+                                        />
+                                        
+
                                         <Box my={3}>
                                             <Button
                                                 variant="contained"
@@ -204,6 +235,36 @@ const LoginPage = (props) => {
                                                 {t("log_in")}
                                             </Button>
                                         </Box>
+
+                                        <Box my={1} className={classes.details}>
+                                            <div className={classes.remember}>
+                                                <Checkbox
+                                                    name={"rememberMe"}
+                                                    value={formik.values["rememberMe"]}
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    error={formik.status}
+                                                    helperText={formik.touched["rememberMe"] && formik.errors["rememberMe"]}
+                                                    checked={formik.values["rememberMe"]}
+                                                />
+                                                        
+                                                <Typography  variant="caption">
+                                                    {t("rememberMe")}
+                                                </Typography>
+                                            </div>
+                                            <div className={classes.resetPa}>
+                                                <Typography  className={classes.reset} variant="caption">
+                                                    <Link
+                                                        component="button"
+                                                        variant="body2"
+                                                        onClick={resetPassword}
+                                                        style={{verticalAlign: 'middle'}}>
+                                                    {t("reset_password")}
+                                                    </Link>
+                                                </Typography>
+                                            </div>
+                                        </Box>
+                                        
                                     </form>
 
                                      {showRecaptcha &&
@@ -225,17 +286,7 @@ const LoginPage = (props) => {
                                         </Box>
                                      </div>}
 
-                                    <Box className={classes.reset}>
-                                        <Typography variant="caption">
-                                            <Link
-                                              component="button"
-                                              variant="body2"
-                                              onClick={resetPassword}
-                                            >
-                                              {t("reset_password")}
-                                            </Link>
-                                        </Typography>
-                                        </Box>
+                                   
                                 </Paper></Box>
                         </Grid>
 

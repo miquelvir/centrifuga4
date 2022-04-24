@@ -8,9 +8,9 @@ export const authenticationService = {
     ping
 };
 
-function login(username, password) {
+function login(username, password, totp, rememberMe=false) {
     return new Promise(function(resolve, reject) {
-        axios({url: `${BACKEND_URL}/auth/v1/login`,
+        axios({url: `${BACKEND_URL}/auth/v1/login?totp=${totp}&rememberMe=${rememberMe? 1:0}`,
             method: 'POST',
             auth: {
                 username: username,
@@ -44,7 +44,7 @@ function ping() {
             method: 'GET',
             headers: {'Cache-Control': 'no-cache'}
         }).then(res => {
-            resolve({isLoggedIn: true, needs: res.data["needs"]});
+            resolve({isLoggedIn: true, needs: res.data});
         }).catch(function (res) {
             try { if (res["response"]["status"] === 401) resolve({isLoggedIn: false, needs: null}) } catch(err){}
 
