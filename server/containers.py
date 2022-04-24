@@ -29,4 +29,3 @@ class Container(
     user_invites_service = providers.Factory(
         UserInvitesService, jwt_service=jwt_service
     )
-

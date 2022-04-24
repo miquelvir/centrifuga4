@@ -29,14 +29,18 @@ def basic_http_auth_required(f):
         return True
 
     @inject
-    def verify_totp(totp, user, totp_service: TotpService = Provide[Container.totp_service]) -> bool:
+    def verify_totp(
+        totp, user, totp_service: TotpService = Provide[Container.totp_service]
+    ) -> bool:
         if user.totp_secret is None:
             return True  # todo remove once all users have 2FA
-        return totp_service.is_valid(totp_service.decrypt_totp_secret(user.totp_secret), totp)
+        return totp_service.is_valid(
+            totp_service.decrypt_totp_secret(user.totp_secret), totp
+        )
 
     def wrapper(*args, **kwargs):
         auth = request.authorization  # first factor
-        totp = request.args.get('totp', None)  # second factor (2FA)
+        totp = request.args.get("totp", None)  # second factor (2FA)
 
         if not (totp and auth):  # missing fields
             abort(401)
@@ -77,7 +81,7 @@ def login():
     """
     user = g.user
 
-    remember_me = True if request.args.get('rememberMe', None) == '1' else False
+    remember_me = True if request.args.get("rememberMe", None) == "1" else False
     login_user(user, remember=remember_me)
 
     return get_current_needs()
