@@ -31,7 +31,8 @@ if __name__ == "__main__":
                 add_admin_user,
             )
             from development.manual_db_utils.generate_sample_db import (
-                add_labels, add_roles
+                add_labels,
+                add_roles,
             )
 
             create()

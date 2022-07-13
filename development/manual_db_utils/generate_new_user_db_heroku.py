@@ -15,7 +15,7 @@ def ask_admin_user():
         surname2=input("surname2: "),
         email=input("email: "),
         password_hash=User.hash_password(input("password: ")),
-        role_id=Role.ADMINISTRATOR
+        role_id=Role.ADMINISTRATOR,
     )
 
     return admin
