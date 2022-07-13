@@ -505,13 +505,13 @@ __person1__surname1: '',
                   {activeStep === 0 &&
                   <div>
                       <Typography>
-                          Podeu consultar el quadre horari del curs 21-22 <Link target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</Link>.
+                          Podeu consultar el quadre horari del curs 22-23 <Link target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</Link>.
                       </Typography>
                       <br/>
                       <Typography variant={"caption"}>
 Enviar aquest formulari implica consentiment per fer ús de les dades per tal de rebre informació durant el període de preinscripció i inici de curs.
 
-La posterior matrícula presencial al centre implica també l'ús de les dades durant tot el curs 2021-2022.
+La posterior matrícula presencial al centre implica també l'ús de les dades durant tot el curs 2022-2023.
 
 La nostra política protecció de dades es basa en que:
 
