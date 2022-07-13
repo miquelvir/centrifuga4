@@ -40,7 +40,7 @@ class Course(MyBase):
     id = db.Column(db.Text, primary_key=True)
     name = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=True)
-    price_term = db.Column(db.Float, nullable=False, default=60)
+    price_term = db.Column(db.Float, nullable=False, default=75)
     is_published = db.Column(db.Boolean, nullable=False, default=False)
 
     calendar_id = db.Column(db.Text, nullable=False, default=lambda: str(uuid.uuid4()))
