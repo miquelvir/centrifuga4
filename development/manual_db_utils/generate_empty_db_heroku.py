@@ -13,13 +13,11 @@ def create():
     server.db.drop_all()  # drop previous schemas
     print("creating... [2]")
     server.db.create_all()  # load new schemas
-    print("adding needs... [3]")
-    add_needs()
     print("adding labels... [4]")
     add_labels()
+    print("adding roles... ")
+    add_roles()
     print("adding users... [5]")
-    while input("press enter to stop adding users") != "":
-        add_admin_user()
 
     print("commiting... [10]")
     server.db.session.commit()
@@ -33,8 +31,7 @@ if __name__ == "__main__":
                 add_admin_user,
             )
             from development.manual_db_utils.generate_sample_db import (
-                add_needs,
-                add_labels,
+                add_labels, add_roles
             )
 
             create()

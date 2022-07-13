@@ -32,8 +32,6 @@ def basic_http_auth_required(f):
     def verify_totp(
         totp, user, totp_service: TotpService = Provide[Container.totp_service]
     ) -> bool:
-        if user.totp_secret is None:
-            return True  # todo remove once all users have 2FA
         return totp_service.is_valid(
             totp_service.decrypt_totp_secret(user.totp_secret), totp
         )
