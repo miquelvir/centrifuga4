@@ -100,6 +100,7 @@ class PersonSchema(MySQLAlchemyAutoSchema):
     full_name = fields.Str(dump_only=True)
     is_underage = fields.Bool(dump_only=True)
     age = fields.Int(dump_only=True)
+    country_of_origin_name = fields.Str(dump_only=True)
 
     @pre_load
     def clean_fields(self, in_data, **kwargs):

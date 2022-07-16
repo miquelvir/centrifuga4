@@ -5,6 +5,7 @@ from sqlalchemy.orm import validates, column_property
 from server import db
 from server.models._base import MyBase
 import datetime
+from server.data.countries import countries
 
 
 class Person(MyBase):
@@ -37,6 +38,10 @@ class Person(MyBase):
         + case([(surname1 != None, surname1 + " ")], else_="")
         + case([(surname2 != None, surname2)], else_="")
     )
+
+    @hybrid_property
+    def country_of_origin_name(self):
+        return countries.get(self.country_of_origin, None)
 
     @validates(
         "name", "surname1", "surname2", "email", "address", "zip", "gender", "city"
