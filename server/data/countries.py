@@ -248,5 +248,5 @@ countries = {
     "ZM": "Zambia",
     "ZW": "Zimbabwe",
     "": "empty",
-    "OTHER": "other"
+    "OTHER": "other",
 }
