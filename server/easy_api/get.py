@@ -13,7 +13,6 @@ from server.blueprints.api.errors import (
 from server.models._base import MyBase
 from server.schemas.schemas import MySQLAlchemyAutoSchema
 
-
 class KeyContainer:
     def __init__(self, obj, fields):
         self.object = obj
@@ -102,6 +101,14 @@ class _ImplementsGet:
                 elif operator == "like":
                     try:
                         filters.append(self.model.get_field(field).like(v))
+                    except AttributeError as e:
+                        raise BaseBadRequest("can't access field '%s'" % v)
+                elif operator == "match":
+                    try:
+                        if current_app.config['DEVELOPMENT']:
+                            filters.append(self.model.get_field(field).like('%'+v+'%'))
+                        else:
+                            filters.append(self.model.get_field(field).match(v))
                     except AttributeError as e:
                         raise BaseBadRequest("can't access field '%s'" % v)
                 else:

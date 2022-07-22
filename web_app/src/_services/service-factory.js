@@ -21,7 +21,7 @@ export default function serviceFactory(resource, subresource=null, serviceName=n
                         "include": include === null? null: JSON.stringify(include)
                     };
                 if (likeSearchText !== null) {
-                    myFilters[`filter.${likeSearchText.name}.like`] = '%' + likeSearchText.value + '%';
+                    myFilters[`filter.${likeSearchText.name}.match`] = likeSearchText.value;
                 }
 
                 if (filters !== null) {
