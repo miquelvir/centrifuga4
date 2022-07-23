@@ -1,5 +1,6 @@
 from flask import request, current_app, jsonify
 from flask_login import login_required
+from sqlalchemy import func
 from sqlalchemy.exc import InvalidRequestError
 import json
 
@@ -83,7 +84,7 @@ class _ImplementsGet:
                     operator = k[2]
                 except IndexError:
                     raise BaseBadRequest(
-                        "Filter must have operator 'eq' or 'like'. Syntax: filter.[param-name].[operator]"
+                        "Filter must have operator 'eq', 'match' or 'like'. Syntax: filter.[param-name].[operator]"
                     )
 
                 if (
@@ -100,20 +101,19 @@ class _ImplementsGet:
                     except AttributeError as e:
                         raise BaseBadRequest("can't access field '%s'" % v)
                 elif operator == "like":
-                    try:
-                        filters.append(self.model.get_field(field).like(v))
-                    except AttributeError as e:
-                        raise BaseBadRequest("can't access field '%s'" % v)
+                    if v != "%%":
+                        try:
+                            filters.append(self.model.get_field(field).like(v))
+                        except AttributeError as e:
+                            raise BaseBadRequest("can't access field '%s'" % v)
                 elif operator == "match":
-                    try:
-                        if current_app.config["DEVELOPMENT"]:
+                    if v != "":
+                        try:
                             filters.append(
                                 self.model.get_field(field).like("%" + v + "%")
                             )
-                        else:
-                            filters.append(self.model.get_field(field).match(v))
-                    except AttributeError as e:
-                        raise BaseBadRequest("can't access field '%s'" % v)
+                        except AttributeError as e:
+                            raise BaseBadRequest("can't access field '%s'" % v)
                 else:
                     raise BaseBadRequest(
                         "Filter must have operator 'eq' or 'like'. Found: '%s'" % k[2]
