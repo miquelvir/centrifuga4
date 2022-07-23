@@ -13,6 +13,7 @@
   "administrative": "administrative",
   "layman": "layman",
   "courses": "courses",
+  "rooms": "rooms",
   "comment": "comment",
   "add-comment": "add comment",
   "export_attendances": "export saved attendances",
