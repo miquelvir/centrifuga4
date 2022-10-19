@@ -42,6 +42,7 @@ class Guardian(Person):
     def cleaner_ed_year(self, key, value):
         assert value in (
             None,  # todo assert breaks, so we should raise an exception everywhere
+            "kindergarten_p0",
             "kindergarten_p1",
             "kindergarten_p2",
             "kindergarten_p3",

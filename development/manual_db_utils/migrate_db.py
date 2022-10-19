@@ -73,6 +73,8 @@ def get_payments(conn, old_id, method):
 
 
 def education_year(raw):
+    if raw == "P0":
+        return "kindergarten_p0"
     if raw == "P1":
         return "kindergarten_p1"
     if raw == "P2":
@@ -224,6 +226,8 @@ def get_courses(conn):
             s.labels.append(Label.query.filter(Label.id == "kindergarten_p2").first())
         if row[2] == "p1":
             s.labels.append(Label.query.filter(Label.id == "kindergarten_p1").first())
+        if row[2] == "p0":
+            s.labels.append(Label.query.filter(Label.id == "kindergarten_p0").first())
 
         courses.append(s)
     return courses, ids

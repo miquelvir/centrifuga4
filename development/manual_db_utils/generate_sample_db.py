@@ -233,6 +233,7 @@ def add_students(amount=500):
 def add_labels():
     labels = []
     for label_name in (
+        "kindergarten_p0",
         "kindergarten_p1",
         "kindergarten_p2",
         "kindergarten_p3",

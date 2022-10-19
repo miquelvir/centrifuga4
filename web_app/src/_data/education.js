@@ -1,4 +1,5 @@
 export const education_years = [
+    "kindergarten_p0",
     "kindergarten_p1",
     "kindergarten_p2",
     "kindergarten_p3",
