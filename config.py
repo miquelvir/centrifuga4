@@ -108,7 +108,7 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SAMESITE = "Strict"
 
     BACKEND_SERVER_PORT = "443"
-    BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
+    BACKEND_SERVER_HOST = "c4.xamfra.net"
     BACKEND_SERVER_URL = "https://%s:%s" % (BACKEND_SERVER_HOST, BACKEND_SERVER_PORT)
     FRONTEND_SERVER_URL = BACKEND_SERVER_URL
 
@@ -122,9 +122,9 @@ class HerokuManualLiveConfig(ProductionConfig):
     PASSWORD_RESET_SECRET = "super-secret"
     PUBLIC_VALIDATION_SECRET = "super-secret"
 
-    FRONTEND_SERVER_URL = "https://centrifuga4.herokuapp.com"
+    FRONTEND_SERVER_URL = "https://c4.xamfra.net"
     BACKEND_SERVER_PORT = "443"
-    BACKEND_SERVER_HOST = "centrifuga4.herokuapp.com"
+    BACKEND_SERVER_HOST = "c4.xamfra.net"
 
     SQLALCHEMY_DATABASE_URI = os.getenv("MANUAL_DATABASE_URL")
 

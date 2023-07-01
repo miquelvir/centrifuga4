@@ -5,7 +5,7 @@ can take attendance of courses.
 ## accessing the attendance page
 ### from the teacher dashboard
 
-[**Teachers**](../basics/roles.md#teacher) have access to the [Teacher Dashboard](https://centrifuga4.herokuapp.com/app/teacher-dashboard) at [teachers.xamfra.net](https://centrifuga4.herokuapp.com/app/teacher-dashboard). 
+[**Teachers**](../basics/roles.md#teacher) have access to the [Teacher Dashboard](https://c4.xamfra.net/app/teacher-dashboard) at [teachers.xamfra.net](https://c4.xamfra.net/app/teacher-dashboard). 
 They can find the collection of all courses they teach there, and a shortcut to the attendance page.
 
 ![teacher dashboard](/img/teacher-dashboard.png)
@@ -15,7 +15,7 @@ They can find the collection of all courses they teach there, and a shortcut to 
 ### from the course page
 
 Users with access to the general `Course` resource can 
-go to the [courses pane](https://centrifuga4.herokuapp.com/app/home/courses)
+go to the [courses pane](https://c4.xamfra.net/app/home/courses)
 and use the shortcut there.
 
 ![course in the courses pane](/img/courses-course.png)
@@ -41,7 +41,7 @@ poden passar llista a cursos.
 ## accedir a la pàgina del passa-llista
 ### des del panell del professorx
 
-Els [**professors**](../basics/roles.md#professor) tenen accés al [Panell del professorx](https://centrifuga4.herokuapp.com/app/teacher-dashboard) a [professorxs.xamfra.net](https://centrifuga4.herokuapp.com/app/teacher-dashboard). 
+Els [**professors**](../basics/roles.md#professor) tenen accés al [Panell del professorx](https://c4.xamfra.net/app/teacher-dashboard) a [professorxs.xamfra.net](https://c4.xamfra.net/app/teacher-dashboard). 
 Hi poden trobar tots els cursos que imparteixen, així com un enllaç a la pàgina del curs.
 
 ![panell del professorx](/img/teacher-dashboard.png)
@@ -51,7 +51,7 @@ Hi poden trobar tots els cursos que imparteixen, així com un enllaç a la pàgi
 ### des de la pàgina del curs
 
 Els usuaris amb accés en general al recurs `Cursos` poden anar al
-[panell dels cursos](https://centrifuga4.herokuapp.com/app/home/courses)
+[panell dels cursos](https://c4.xamfra.net/app/home/courses)
 i usar l'enllaç que s'hi troba.
 
 ![curs en el panell de cursos](/img/courses-course.png)

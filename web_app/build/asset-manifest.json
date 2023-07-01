@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "https://centrifuga4.herokuapp.com/static/css/main.68b8b5e7.chunk.css",
-    "main.js": "https://centrifuga4.herokuapp.com/static/js/main.c81c1213.chunk.js",
-    "main.js.map": "https://centrifuga4.herokuapp.com/static/js/main.c81c1213.chunk.js.map",
-    "runtime-main.js": "https://centrifuga4.herokuapp.com/static/js/runtime-main.f177619d.js",
-    "runtime-main.js.map": "https://centrifuga4.herokuapp.com/static/js/runtime-main.f177619d.js.map",
-    "static/css/2.f898fd43.chunk.css": "https://centrifuga4.herokuapp.com/static/css/2.f898fd43.chunk.css",
-    "static/js/2.b82ef6c7.chunk.js": "https://centrifuga4.herokuapp.com/static/js/2.b82ef6c7.chunk.js",
-    "static/js/2.b82ef6c7.chunk.js.map": "https://centrifuga4.herokuapp.com/static/js/2.b82ef6c7.chunk.js.map",
-    "static/js/3.4c05fd7e.chunk.js": "https://centrifuga4.herokuapp.com/static/js/3.4c05fd7e.chunk.js",
-    "static/js/3.4c05fd7e.chunk.js.map": "https://centrifuga4.herokuapp.com/static/js/3.4c05fd7e.chunk.js.map",
-    "index.html": "https://centrifuga4.herokuapp.com/index.html",
-    "static/css/2.f898fd43.chunk.css.map": "https://centrifuga4.herokuapp.com/static/css/2.f898fd43.chunk.css.map",
-    "static/css/main.68b8b5e7.chunk.css.map": "https://centrifuga4.herokuapp.com/static/css/main.68b8b5e7.chunk.css.map",
-    "static/js/2.b82ef6c7.chunk.js.LICENSE.txt": "https://centrifuga4.herokuapp.com/static/js/2.b82ef6c7.chunk.js.LICENSE.txt"
+    "main.css": "https://c4.xamfra.net/static/css/main.68b8b5e7.chunk.css",
+    "main.js": "https://c4.xamfra.net/static/js/main.c81c1213.chunk.js",
+    "main.js.map": "https://c4.xamfra.net/static/js/main.c81c1213.chunk.js.map",
+    "runtime-main.js": "https://c4.xamfra.net/static/js/runtime-main.f177619d.js",
+    "runtime-main.js.map": "https://c4.xamfra.net/static/js/runtime-main.f177619d.js.map",
+    "static/css/2.f898fd43.chunk.css": "https://c4.xamfra.net/static/css/2.f898fd43.chunk.css",
+    "static/js/2.b82ef6c7.chunk.js": "https://c4.xamfra.net/static/js/2.b82ef6c7.chunk.js",
+    "static/js/2.b82ef6c7.chunk.js.map": "https://c4.xamfra.net/static/js/2.b82ef6c7.chunk.js.map",
+    "static/js/3.4c05fd7e.chunk.js": "https://c4.xamfra.net/static/js/3.4c05fd7e.chunk.js",
+    "static/js/3.4c05fd7e.chunk.js.map": "https://c4.xamfra.net/static/js/3.4c05fd7e.chunk.js.map",
+    "index.html": "https://c4.xamfra.net/index.html",
+    "static/css/2.f898fd43.chunk.css.map": "https://c4.xamfra.net/static/css/2.f898fd43.chunk.css.map",
+    "static/css/main.68b8b5e7.chunk.css.map": "https://c4.xamfra.net/static/css/main.68b8b5e7.chunk.css.map",
+    "static/js/2.b82ef6c7.chunk.js.LICENSE.txt": "https://c4.xamfra.net/static/js/2.b82ef6c7.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f177619d.js",

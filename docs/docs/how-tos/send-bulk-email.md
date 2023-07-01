@@ -1,6 +1,6 @@
 # send bulk emails
 [**Administratives**](../basics/roles.md#administrative) (and any [**role**](../basics/roles.md) with equal or greater permission level) 
-can send bulk emails to students in courses [here](https://centrifuga4.herokuapp.com/app/home/email).
+can send bulk emails to students in courses [here](https://c4.xamfra.net/app/home/email).
 
 ## emails to use
 There are some options to select which email addresses to use when sending the emails.
@@ -25,7 +25,7 @@ Selects to which courses is the email to be sent to.
 
 # enviar missatges massius
 Els [**Administratius**](../basics/roles.md#administratiu) (i qualsevol [**rol**](../basics/roles.md) amb igual o més permisos) 
-poden enviar correus massius als estudiants d'uns cursos [aquí](https://centrifuga4.herokuapp.com/app/home/email).
+poden enviar correus massius als estudiants d'uns cursos [aquí](https://c4.xamfra.net/app/home/email).
 
 ## correus a usar
 Hi ha algunes opcions per seleccionar quines adreces de correu usar en enviar el missatge.
