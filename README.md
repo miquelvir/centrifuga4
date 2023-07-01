@@ -45,17 +45,13 @@ v1-4 by @miquelvir
 Due to budget constraints, reduced development and maintenance group, and for simplicity's sake, centrifuga4 is build
 following a monolithic approach. However, code decoupling and modularity are still important.
 
-We are using 2 processes (dynos, in Heroku's slang), if we are not to count the Postgres and the Redis instances:
-1. Web process: a Flask server serving the static files (including the React frontend) and all the APIs.
+Web process: a Flask server serving the static files (including the React frontend) and all the APIs.
    1. Data API (for DB data access and modification)
    2. Auth API (to login, logout and ping)
    3. Front end static files
    4. Invites API (to create and send user invites, as well as to create users from invites)
    5. Password reset API (to ask for a password reset, as well as to change the password from a password reset request)
    6. Document validation page (checks the content and validity of a JWT token signed by the server and displays it in a simple static page).
-2. Worker process: a Redis Queue worker for emails and long exports.
-
-The worker process has been replaced with a threaded approach, so that the free dynos last for the whole month.
 
 ### DEPLOYMENT
 
