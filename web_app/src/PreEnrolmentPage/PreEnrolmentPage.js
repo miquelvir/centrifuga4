@@ -117,7 +117,7 @@ const isUnderage = (birthDateString) => {
 const PreEnrolmentPage = (props) => {
     const {t} = useTranslation();
 
-    const can_pay_75 = "Puc pagar la quota trimestral de 75€/estudiant";
+    const can_pay_80 = "Puc pagar la quota trimestral de 80€/estudiant";
 
     const classes = useStyles();
 
@@ -369,8 +369,8 @@ __person1__surname1: '',
                 }
             })
             body['payment_comments'] = raw_economic_comments.join('. ');
-            if (raw_economic_comments.includes(can_pay_75)){
-                body['price_term'] = 75;
+            if (raw_economic_comments.includes(can_pay_80)){
+                body['price_term'] = 80;
             } else {
                 body['price_term'] = null;
             }
@@ -983,7 +983,7 @@ La nostra política protecció de dades es basa en que:
 
           <List className={classes.list}>
                 {
-              [can_pay_75,
+              [can_pay_80,
               "Puc pagar una quota a acordar personalment",
               "No puc pagar la quota trimestral",
               "Puc aportar una segona quota per un altre nen/a (desgravació fiscal)",
