@@ -149,12 +149,12 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                         addStudentId(x);
                       }}
                       patchService={patchService}
-                      onUpdate={(changedBody) => {
+                      onUpdate={(changedBody, id) => {
                         if ("enrolment_status" in changedBody && changedBody["enrolment_status"] === "enrolled"){
                           confirm.confirm("send_grant_letter_question",
                           "this_will_be_sent",
                           () => {
-                                sendGrantLetter(changedBody['id']);
+                                sendGrantLetter(id);
                           });
                         }
                       }}
