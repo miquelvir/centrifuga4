@@ -75,7 +75,7 @@ function Person(props) {
                     .then(...errorHandler({snackbarSuccess: true}))
                     .then(function (new_id) {
                         updateCurrentPerson(new_id['id']);
-                        if (typeof onUpdate === 'function') onUpdate(changedValues);
+                        if (typeof onUpdate === 'function') onUpdate(changedValues, new_id['id']);
                     }).catch(function (err) {
                     setStatus(true);
                     }).finally(() => {
@@ -93,7 +93,7 @@ function Person(props) {
                         formik.resetForm(patched_body);
                         updateCurrentPerson(patched_body);
 
-                        if (typeof onUpdate === 'function') onUpdate(changedValues);
+                        if (typeof onUpdate === 'function') onUpdate(changedValues, initialValues["id"]);
                     }).catch(function (err) {
                         setStatus(true);
                     }).finally(() => {
