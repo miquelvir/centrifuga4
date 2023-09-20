@@ -83,9 +83,9 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
               });
   }
   const loadingCtx = React.useContext(loadingContext);
-  const sendGrantLetter = () => {
+  const sendGrantLetter = (id) => {
       loadingCtx.startLoading();
-      sendGrantEmail(currentStudent['id'])
+      sendGrantEmail(id)
           .then(...errorHandler({snackbarSuccess: true}))
           .finally(() => {
               loadingCtx.stopLoading();
@@ -154,7 +154,7 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                           confirm.confirm("send_grant_letter_question",
                           "this_will_be_sent",
                           () => {
-                                sendGrantLetter();
+                                sendGrantLetter(changedBody['id']);
                           });
                         }
                       }}
@@ -264,7 +264,7 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                       disabled={loadingCtx.loading}
                       startIcon={<SendIcon/>}
                       onClick={(e) => {
-                        sendGrantLetter();
+                        sendGrantLetter(currentStudent['id']);
                       }}
                   >
                     {t("grant_letter")}
