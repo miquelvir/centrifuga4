@@ -40,16 +40,16 @@ class StudentAttendanceListRes(Resource, SwaggerView):
             writer = csv.DictWriter(
                 proxy,
                 fieldnames=[
-                    "id", 
-                    "name", 
-                    "surname1", 
-                    "surname2", 
+                    "id",
+                    "name",
+                    "surname1",
+                    "surname2",
                     "course id",
                     "course name",
-                    "date", 
+                    "date",
                     "status",
-                    "comment"
-                    ],
+                    "comment",
+                ],
             )
 
             writer.writeheader()
@@ -64,7 +64,7 @@ class StudentAttendanceListRes(Resource, SwaggerView):
                         "course name": attendance.course.name,
                         "date": attendance.date,
                         "status": attendance.text_status,
-                        "comment": attendance.comment
+                        "comment": attendance.comment,
                     }
                 )
 
