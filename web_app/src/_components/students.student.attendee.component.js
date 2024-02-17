@@ -99,7 +99,12 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
               loadingCtx.stopLoading();
           });
   }
-
+  
+  const downloadAttendances = () => {
+    StudentsDataService
+        .downloadSubresource(currentStudent['id'], 'attendance-list')
+        .then(...errorHandler({snackbarSuccess: true}));
+  }
 
 
   return (
@@ -333,6 +338,25 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                       }}
                   >
                     {t("enrolment_agreement")}
+                  </Button>
+                </Tooltip>}
+              </Box>
+
+              <Box className={[classes.line, classes.composite]}>
+                {!loading && !newStudent &&
+                <Tooltip style={{flex: 1}} title={t("export_attendance_list")}
+                                                     aria-label={t("export_attendance_list")}>
+                  <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<GetAppIcon/>}
+                      disabled={loadingCtx.loading}
+                      onClick={(e) => {
+                        downloadAttendances();
+                      }}
+                  >
+                    {t("export_attendance_list")}
                   </Button>
                 </Tooltip>}
               </Box>

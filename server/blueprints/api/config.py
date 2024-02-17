@@ -7,6 +7,9 @@ from server.blueprints.api.resources.course_attendance_list import (
 from server.blueprints.api.resources.course_attendance_list_v2 import (
     CoursesAttendanceV2ListRes,
 )
+from server.blueprints.api.resources.student_attendance_list import (
+    StudentAttendanceListRes,
+)
 from server.blueprints.api.resources.course_students_contact_sheet import (
     CourseContactSheet,
 )
@@ -50,6 +53,7 @@ api.add_resource(
 api.add_resource(PaymentsReceiptsRes, "/payments/<string:id_>/receipt")
 api.add_resource(CoursesAttendanceListRes, "/courses/<string:id_>/attendance-list/v1")
 api.add_resource(CoursesAttendanceV2ListRes, "/courses/<string:id_>/attendance-list/v2")
+api.add_resource(StudentAttendanceListRes, "/students/<string:id_>/attendance-list")
 api.add_resource(CourseContactSheet, "/courses/<string:id_>/contactsSheet")
 api.add_resource(GodFile, "/files/god")
 
