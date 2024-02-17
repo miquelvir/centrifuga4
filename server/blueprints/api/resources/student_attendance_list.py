@@ -53,7 +53,7 @@ class StudentAttendanceListRes(Resource, SwaggerView):
             )
 
             writer.writeheader()
-            for attendance in attendances.items():
+            for attendance in attendances:
                 writer.writerow(
                     {
                         "id": student.id,
