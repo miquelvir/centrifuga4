@@ -62,11 +62,11 @@ class UserInviteRedeemRes(Resource):
             return f"Invalid token body. {e.json()}", 400
 
         if not user_invites_service.is_user_email_available(data.user_email):
-            audit_log_alert(f"User invite redeem failed (user already exists)")
+            audit_log_alert(f"User invite redeem failed (user already exists). Email: {data.user_email}")
             return "user already exists", 400
 
         if not user_invites_service.is_role_id_valid(data.role_id):
-            audit_log_alert(f"User invite redeem failed (invalid role id)")
+            audit_log_alert(f"User invite redeem failed (invalid role id). Email: {data.user_email}")
             return f"invalid role with role_id={data.role_id!r}", 400
 
         user_id = User.generate_new_id()
@@ -85,7 +85,7 @@ class UserInviteRedeemRes(Resource):
 
         user_invites_service.save_user(user)
 
-        audit_log_alert(f"User invite redeem successful")
+        audit_log_alert(f"User invite redeem successful. Email: {data.user_email}")
 
         return {
             "user_id": user_id,
