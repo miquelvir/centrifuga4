@@ -4,7 +4,7 @@ from dependency_injector.wiring import Provide, inject
 from flask import Blueprint, g, request, current_app, session, abort, jsonify
 from server.containers import Container
 from server.services.totp_service import TotpService
-
+import requests
 
 # initialise the blueprint
 from flask_login import login_user, logout_user, login_required, current_user
@@ -12,6 +12,19 @@ from flask_login import login_user, logout_user, login_required, current_user
 from server.models import User, Role
 
 auth_blueprint = Blueprint("auth", __name__)
+
+
+def audit_login(emoji: str, ip: str, username: str, result: str):
+    requests.post(current_app.config.DISCORD_LOGIN_NOTIFICATIONS, json={
+        "content": f"[{emoji}] [{username}] [{ip}] {result}"
+    })
+
+
+def get_ip():
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        return request.environ['REMOTE_ADDR']
+    else:
+        return request.environ['HTTP_X_FORWARDED_FOR'] # if behind a proxy
 
 
 def basic_http_auth_required(f):
@@ -39,13 +52,17 @@ def basic_http_auth_required(f):
     def wrapper(*args, **kwargs):
         auth = request.authorization  # first factor
         totp = request.args.get("totp", None)  # second factor (2FA)
-
         if not (totp and auth):  # missing fields
+            audit_login("⚠️", get_ip(), username, "Failed (missing totp or auth)")
             abort(401)
         if not verify_password(auth.username, auth.password):  # wrong first factor
+            audit_login("⚠️", get_ip(), username, "Failed (invalid password or username)")
             abort(401)
         if not verify_totp(totp, g.user):  # wrong second factor
+            audit_login("⚠️", get_ip(), username, "Failed (invalid totp)")
             abort(401)
+
+        audit_login("✅", get_ip(), username, "Successful")
         return f(*args, **kwargs)
 
     return wrapper

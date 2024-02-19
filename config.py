@@ -58,6 +58,8 @@ class Config(object):
     DEBUGGING_MODE = bool(int(os.getenv("EMAIL_DEBUGGING_MODE", 0)))
     DEBUGGING_SEND_EMAILS = True
 
+    DISCORD_LOGIN_NOTIFICATIONS = os.getenv("DISCORD_LOGIN_NOTIFICATIONS")
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
