@@ -18,6 +18,9 @@ if TYPE_CHECKING:
     from server.blueprints.user_invites.services.user_invites_service import (
         UserInvitesService,
     )
+    
+from server.services.audit_service import audit_log_alert
+
 
 
 class UserInviteRedeem(BaseModel):
@@ -40,25 +43,31 @@ class UserInviteRedeemRes(Resource):
         try:
             body = UserInviteRedeem(**request.json)
         except ValidationError as e:
+            audit_log_alert(f"User invite redeem failed (invalid body)")
             return e.json(), 400
 
         try:
             data = jwt_service.decode(body.token)
         except jwt.ExpiredSignatureError:
+            audit_log_alert(f"User invite redeem failed (token expired)")
             # this is a specific case of the following clause
             return "token expired", 401
         except jwt.InvalidTokenError:
+            audit_log_alert(f"User invite redeem failed (invalid token)")
             return "invalid token", 401
 
         try:
             data = UserInviteJwtBody(**data)
         except ValidationError as e:
+            audit_log_alert(f"User invite redeem failed (invalid token body)")
             return f"Invalid token body. {e.json()}", 400
 
         if not user_invites_service.is_user_email_available(data.user_email):
+            audit_log_alert(f"User invite redeem failed (user already exists)")
             return "user already exists", 400
 
         if not user_invites_service.is_role_id_valid(data.role_id):
+            audit_log_alert(f"User invite redeem failed (invalid role id)")
             return f"invalid role with role_id={data.role_id!r}", 400
 
         user_id = User.generate_new_id()
@@ -76,6 +85,8 @@ class UserInviteRedeemRes(Resource):
         )
 
         user_invites_service.save_user(user)
+
+        audit_log_alert(f"User invite redeem successful")
 
         return {
             "user_id": user_id,

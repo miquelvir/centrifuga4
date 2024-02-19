@@ -13,6 +13,8 @@ from server.models import Course
 from server.email_notifications.bulk_email import send_bulk_email
 from server.models.student import EnrolmentStatus
 
+from server.services.audit_service import audit_log_info
+
 
 class BulkEmailCollectionRes(Resource):
     @login_required
@@ -77,6 +79,8 @@ class BulkEmailCollectionRes(Resource):
                 elif email_preference == "all":
                     emails.extend(student.all_emails)
 
+        audit_log_info(f"Sending {len(emails)} emails")
+        
         thread = Thread(
             target=send_bulk_email,
             args=(

@@ -91,6 +91,7 @@ Create a .env on the root folder of the project with the following variables:
 13. SMTP_DOMAIN=smtp.xamfra.net
 14. SMTP_USER=xamfra@xamfra.net
 15. DISCORD_LOGIN_NOTIFICATIONS
+16. DISCORD_LOGIN_NOTIFICATIONS_ALERT
 
 ### FRONTEND
 
