@@ -84,10 +84,14 @@ class NewPasswordCollectionRes(Resource):
         try:
             user = password_reset_service.get_user_from_email(email)
         except BadRequest:
-            audit_log_alert(f"Password redeem failed (no user with the given email). Email: {email}")
+            audit_log_alert(
+                f"Password redeem failed (no user with the given email). Email: {email}"
+            )
             raise
         except KeyError:
-            audit_log_alert(f"Password redeem failed (no user with the given email). Email: {email}")
+            audit_log_alert(
+                f"Password redeem failed (no user with the given email). Email: {email}"
+            )
             raise BadRequest(f"no user found for email {email!r}")
 
         try:
@@ -99,10 +103,12 @@ class NewPasswordCollectionRes(Resource):
         try:
             password_reset_service.update_user_password(user, password)
         except BadRequest:
-            audit_log_alert(f"Password redeem failed (could not update password). Email: {email}")
+            audit_log_alert(
+                f"Password redeem failed (could not update password). Email: {email}"
+            )
             raise
 
         password_reset_service.trigger_event_user_password_reset_redeem(user)
         audit_log_alert(f"Password redeem successful. Email: {email}")
-            
+
         return "password change successful", 200  # todo return json instead

@@ -41,7 +41,9 @@ class PasswordResetCollectionRes(Resource):
             audit_log_alert(f"Password request failed (no email found). Email: {email}")
             raise
         except KeyError:
-            audit_log_alert(f"Password request failed (no user with the given email). Email: {email}")
+            audit_log_alert(
+                f"Password request failed (no user with the given email). Email: {email}"
+            )
             # no user found for this email, but don't reveal the result (privacy & security concerns)
             return SUCCESS_MESSAGE
 

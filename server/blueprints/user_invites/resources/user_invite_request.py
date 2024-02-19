@@ -55,16 +55,20 @@ class UserInviteRequestCollectionRes(Resource):
             return e.json(), 400
 
         if not user_invites_service.is_role_id_valid(body.role_id):
-            audit_log_alert(f"User invite request failed (invalid role id). For email: {body.user_email}")
+            audit_log_alert(
+                f"User invite request failed (invalid role id). For email: {body.user_email}"
+            )
             return f"Invalid role_id supplied.", 400
 
         if not user_invites_service.is_user_email_available(body.user_email):
-            audit_log_alert(f"User invite request failed (user already exists). For email: {body.user_email}")
+            audit_log_alert(
+                f"User invite request failed (user already exists). For email: {body.user_email}"
+            )
             return "There already exists a user with the provided email.", 400
 
         token = user_invites_service.generate_token(UserInviteJwtBody(**body.dict()))
         user_invites_service.send_invite(body.user_email, token)
-        
+
         audit_log_alert(f"User invite request successful. For email: {body.user_email}")
 
         return "", 200

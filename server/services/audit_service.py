@@ -23,12 +23,17 @@ def try_get_email():
 def audit_log(level: str, message: str):
     try:
         emoji = "⚠️" if level == "warn" else "🚨" if level == "alert" else "✅"
-        dest = current_app.config["DISCORD_LOGIN_NOTIFICATIONS_ALERT"] if level == "alert" else current_app.config["DISCORD_LOGIN_NOTIFICATIONS"]
+        dest = (
+            current_app.config["DISCORD_LOGIN_NOTIFICATIONS_ALERT"]
+            if level == "alert"
+            else current_app.config["DISCORD_LOGIN_NOTIFICATIONS"]
+        )
         requests.post(
-            dest, 
+            dest,
             json={
-            "content": f"{emoji} [email: {try_get_email()}] [ip: {get_ip()}] {message}"
-        })
+                "content": f"{emoji} [email: {try_get_email()}] [ip: {get_ip()}] {message}"
+            },
+        )
     except:
         print(f"Failed to post audit log")
 

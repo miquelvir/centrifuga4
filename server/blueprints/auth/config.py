@@ -15,7 +15,6 @@ from server.models import User, Role
 auth_blueprint = Blueprint("auth", __name__)
 
 
-
 def basic_http_auth_required(f):
     def verify_password(username: str, password: str) -> bool:
         """Given a username and optionally a password, verify its validity."""
@@ -45,7 +44,9 @@ def basic_http_auth_required(f):
             audit_log_warn("Login failed (missing totp or auth)")
             abort(401)
         if not verify_password(auth.username, auth.password):  # wrong first factor
-            audit_log_warn(f"Login failed (invalid password or username). Email: {auth.username}")
+            audit_log_warn(
+                f"Login failed (invalid password or username). Email: {auth.username}"
+            )
             abort(401)
         if not verify_totp(totp, g.user):  # wrong second factor
             audit_log_warn(f"Login failed (invalid TOTP). Email: {auth.username}")

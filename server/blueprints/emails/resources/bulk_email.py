@@ -80,7 +80,7 @@ class BulkEmailCollectionRes(Resource):
                     emails.extend(student.all_emails)
 
         audit_log_info(f"Sending {len(emails)} emails")
-        
+
         thread = Thread(
             target=send_bulk_email,
             args=(

@@ -18,9 +18,8 @@ if TYPE_CHECKING:
     from server.blueprints.user_invites.services.user_invites_service import (
         UserInvitesService,
     )
-    
-from server.services.audit_service import audit_log_alert
 
+from server.services.audit_service import audit_log_alert
 
 
 class UserInviteRedeem(BaseModel):
