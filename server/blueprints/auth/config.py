@@ -5,7 +5,7 @@ from flask import Blueprint, g, request, current_app, session, abort, jsonify
 from server.containers import Container
 from server.services.totp_service import TotpService
 from server.services.audit_service import audit_log_info, audit_log_warn
-import requests
+
 
 # initialise the blueprint
 from flask_login import login_user, logout_user, login_required, current_user
