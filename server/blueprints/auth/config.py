@@ -15,16 +15,17 @@ auth_blueprint = Blueprint("auth", __name__)
 
 
 def audit_login(emoji: str, ip: str, username: str, result: str):
-    requests.post(current_app.config.DISCORD_LOGIN_NOTIFICATIONS, json={
-        "content": f"[{emoji}] [{username}] [{ip}] {result}"
-    })
+    requests.post(
+        current_app.config.DISCORD_LOGIN_NOTIFICATIONS,
+        json={"content": f"[{emoji}] [{username}] [{ip}] {result}"},
+    )
 
 
 def get_ip():
-    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
-        return request.environ['REMOTE_ADDR']
+    if request.environ.get("HTTP_X_FORWARDED_FOR") is None:
+        return request.environ["REMOTE_ADDR"]
     else:
-        return request.environ['HTTP_X_FORWARDED_FOR'] # if behind a proxy
+        return request.environ["HTTP_X_FORWARDED_FOR"]  # if behind a proxy
 
 
 def basic_http_auth_required(f):
@@ -56,7 +57,9 @@ def basic_http_auth_required(f):
             audit_login("⚠️", get_ip(), "?", "Failed (missing totp or auth)")
             abort(401)
         if not verify_password(auth.username, auth.password):  # wrong first factor
-            audit_login("⚠️", get_ip(), auth.username, "Failed (invalid password or username)")
+            audit_login(
+                "⚠️", get_ip(), auth.username, "Failed (invalid password or username)"
+            )
             abort(401)
         if not verify_totp(totp, g.user):  # wrong second factor
             audit_login("⚠️", get_ip(), auth.username, "Failed (invalid totp)")
