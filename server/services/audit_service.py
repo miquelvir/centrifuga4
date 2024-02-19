@@ -1,5 +1,6 @@
 from flask import current_app, request
 from flask_login import current_user
+import requests
 
 
 def get_ip():
