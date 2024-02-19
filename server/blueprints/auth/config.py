@@ -16,10 +16,9 @@ auth_blueprint = Blueprint("auth", __name__)
 
 def audit_login(emoji: str, ip: str, username: str, result: str):
     requests.post(
-        current_app.config["DISCORD_LOGIN_NOTIFICATIONS"], 
-        json={
-        "content": f"[{emoji}] [{username}] [{ip}] {result}"
-    })
+        current_app.config["DISCORD_LOGIN_NOTIFICATIONS"],
+        json={"content": f"[{emoji}] [{username}] [{ip}] {result}"},
+    )
 
 
 def get_ip():
