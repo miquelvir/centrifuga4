@@ -53,16 +53,16 @@ def basic_http_auth_required(f):
         auth = request.authorization  # first factor
         totp = request.args.get("totp", None)  # second factor (2FA)
         if not (totp and auth):  # missing fields
-            audit_login("⚠️", get_ip(), username, "Failed (missing totp or auth)")
+            audit_login("⚠️", get_ip(), "?", "Failed (missing totp or auth)")
             abort(401)
         if not verify_password(auth.username, auth.password):  # wrong first factor
-            audit_login("⚠️", get_ip(), username, "Failed (invalid password or username)")
+            audit_login("⚠️", get_ip(), auth.username, "Failed (invalid password or username)")
             abort(401)
         if not verify_totp(totp, g.user):  # wrong second factor
-            audit_login("⚠️", get_ip(), username, "Failed (invalid totp)")
+            audit_login("⚠️", get_ip(), auth.username, "Failed (invalid totp)")
             abort(401)
 
-        audit_login("✅", get_ip(), username, "Successful")
+        audit_login("✅", get_ip(), auth.username, "Successful")
         return f(*args, **kwargs)
 
     return wrapper
