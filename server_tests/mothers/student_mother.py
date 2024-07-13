@@ -24,6 +24,7 @@ class StudentJsonMother:
         return {
             **JsonPersonMother.adult_anna(),
             "image_agreement": True,
+            "image_agreement_external": True,
             "country_of_origin": "ES",
             "gender": "m",
             "birth_date": "2001-01-01",
@@ -40,6 +41,7 @@ class StudentJsonMother:
         return {
             **JsonPersonMother.child_mark(),
             "image_agreement": True,
+            "image_agreement_external": True,
             "country_of_origin": "ES",
             "gender": "m",
             "birth_date": "2005-05-05",

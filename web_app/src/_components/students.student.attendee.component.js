@@ -166,6 +166,7 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                       additionalValidation={{
                         enrolment_status: yup.string().required(t("status_required")),
                         image_agreement: yup.boolean().required(t("image_required")),
+                        image_agreement_external: yup.boolean().required(t("image_required")),
                         birth_date: yup.date().required(t("birthdate_required"))
                       }}
                       additionalFields={
@@ -224,7 +225,15 @@ function Attendee({ children, setNewStudent, addStudentId, newStudent, title, cu
                                 select>
                                 <MenuItem value={true}>{t("yes")}</MenuItem>
                                 <MenuItem value={false}>{t("no")}</MenuItem>
-                            </DirtyTextField>
+                            </DirtyTextField>,
+                              <DirtyTextField
+                              label={t("image_agreement_external")}
+                              style={{flex: 1}}
+                              name="image_agreement_external"
+                              select>
+                              <MenuItem value={true}>{t("yes")}</MenuItem>
+                              <MenuItem value={false}>{t("no")}</MenuItem>
+                          </DirtyTextField>
                           ], [<DirtyTextField
                                 label={t("pre_enrolment_date")}
                                 type="date"

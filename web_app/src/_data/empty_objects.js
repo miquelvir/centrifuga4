@@ -24,6 +24,7 @@ export const emptyAttendee = {...newPerson,
     birth_date: null,
     other_comments: null,
     image_agreement: null,
+    image_agreement_external: null,
     enrolment_status: null,
     default_payment_method: null
 };

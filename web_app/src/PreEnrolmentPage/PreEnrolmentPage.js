@@ -192,7 +192,8 @@ __person1__surname1: '',
             __person2__email: '', __person2__phone: '', __person2__relation: '',
             __person2__is_studying: '', __person2__is_working: '', __person2__career: '',
             __person2__education_entity: '', __person2__education_year: '',
-            image_agreement: false
+            image_agreement: false,
+            image_agreement_external: false
 
 
         },
@@ -322,7 +323,8 @@ __person1__surname1: '',
                                                   is: true,
                                                   then: yup.string().required(required)
                                                 }),
-            image_agreement: yup.boolean(required)
+            image_agreement: yup.boolean(required),
+            image_agreement_external: yup.boolean(required)
         }),
         enableReinitialize: true,
         onSubmit: (values, {setStatus, setSubmitting}) => {
@@ -331,6 +333,7 @@ __person1__surname1: '',
             let body = {};
 
             body['image_agreement'] = values.image_agreement;
+            body['image_agreement_external'] = values.image_agreement_external;
             body['name'] = values.name;
             body['surname1'] = values.surname1;
             body['surname2'] = values.surname2;
@@ -409,7 +412,7 @@ __person1__surname1: '',
     ['birth_date', 'name', 'surname1', 'surname2', 'address', 'city', 'zip', 'gender', 'is_studying', 'is_working', 'education_entity', 'education_year', 'career', 'years_in_xamfra', 'country_of_origin', 'phone', 'email'],
         ['__person1__name', '__person1__surname1', '__person1__surname2', '__person1__email', '__person1__phone', '__person1__phone', '__person1__relation', '__person1__is_studying', '__person1__education_entity', '__person1__education_year', '__person1__is_working', '__person1__career'],
         ['__person2__name', '__person2__surname1', '__person2__surname2', '__person2__email', '__person2__phone', '__person2__phone', '__person2__relation', '__person2__is_studying', '__person2__education_entity', '__person2__education_year', '__person2__is_working', '__person2__career'],
-    [], [], ['image_agreement'], []];
+    [], [], ['image_agreement', 'image_agreement_external'], []];
 
     const scrollToTop = () => {
         window.scrollTo(0,0);
@@ -511,7 +514,7 @@ __person1__surname1: '',
                       <Typography variant={"caption"}>
 Enviar aquest formulari implica consentiment per fer ús de les dades per tal de rebre informació durant el període de preinscripció i inici de curs.
 
-La posterior matrícula presencial al centre implica també l'ús de les dades durant tot el curs 2023-2024.
+La posterior matrícula presencial al centre implica també l'ús de les dades durant tot el curs 2024-2025.
 
 La nostra política protecció de dades es basa en que:
 
@@ -1058,6 +1061,24 @@ La nostra política protecció de dades es basa en que:
                         label={isUnderage(formik.values['birth_date'])?
                         "En cas de matricular-lo, autoritzo l’ús de la imatge de l’estudiant, menor d'edat, per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà."
                         : "En cas de matricular-me, autoritzo l’ús de la meva imatge per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà." }
+                      />
+       
+</Box>
+<Box my={2}>
+          <FormControlLabel
+                        control={
+                            <Checkbox
+                                defaultValue={false}
+                                defaultChecked={false}
+                                checked={formik.values['image_agreement_external']}
+                                name={'image_agreement_external'}
+                                value={formik.values['image_agreement_external']}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                        }
+                        key={'image_agreement_external'}
+                        label={"En cas de matricular-me, autoritzo l’ús de la meva imatge i/o la dels meus fills/es matriculats per a que puguin aparèixer a materials escrits o multimèdia corresponents a activitats organitzades per terceres persones autoritzades per L’ARC Música i sobre la possibilitat de publicar imatges on apareguin clarament identificables els seus fills/es. Aquest material mai podrà ser utilitzat amb finalitats lucratives." }
                       />
 </Box>
           <Box textAlign="center">

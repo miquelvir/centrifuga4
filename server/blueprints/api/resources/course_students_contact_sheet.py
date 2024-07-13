@@ -100,6 +100,7 @@ def write_students(students, spamwriter):
                 student.price_term,
                 student.gender,
                 student.image_agreement,
+                student.image_agreement_external,
                 student.payment_comments,
                 student.default_payment_method,
                 student.dni,

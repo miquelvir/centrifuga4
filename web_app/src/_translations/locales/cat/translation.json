@@ -252,6 +252,7 @@
   "status_required": "cal l'estat de matrícula",
   "image_required": "cal l'ús d'imatge",
   "image_agreement": "ús d'imatge",
+  "image_agreement_external": "ús d'imatge per tercers",
   "cant_remove_schedule": "no es poden eliminar horaris comuns d'un taller",
   "continue": "seguir",
   "cancelled": "cancelat",

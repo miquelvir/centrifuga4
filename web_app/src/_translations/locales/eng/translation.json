@@ -225,6 +225,7 @@
   "status_required": "status is required",
   "image_required": "image use is required",
   "image_agreement": "use of image",
+  "image_agreement_external": "3rd party use of image",
   "cant_remove_schedule": "schedules of a whole course can't be removed",
   "continue": "continue",
   "cancelled": "cancelled",

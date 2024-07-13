@@ -188,6 +188,7 @@ def generate_student(idx):
         enrolment_status=choice(("enrolled", "early-unenrolled", "pre-enrolled")),
         years_in_xamfra=randint(0, 15),
         image_agreement=choice((True, False)),
+        image_agreement_external=choice((True, False)),
     )
 
 
