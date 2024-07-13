@@ -73,7 +73,7 @@ class Student(Person):
             if guardian.email:
                 emails.add(guardian.email)
 
-        if self.is_overage or len(emails) == 0:
+        if self.age >= 16 or len(emails) == 0:
             if self.email:
                 emails.add(self.email)
 
