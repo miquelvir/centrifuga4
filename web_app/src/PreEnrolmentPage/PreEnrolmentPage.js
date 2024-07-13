@@ -508,7 +508,7 @@ __person1__surname1: '',
                   {activeStep === 0 &&
                   <div>
                       <Typography>
-                          Podeu consultar el quadre horari del curs 23-24 <Link target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</Link>.
+                          Podeu consultar el quadre horari del curs 24-25 <Link target="_blank" href="https://xamfra.net/com-participar-hi/horaris/">aquí</Link>.
                       </Typography>
                       <br/>
                       <Typography variant={"caption"}>
