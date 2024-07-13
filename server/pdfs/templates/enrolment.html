@@ -188,18 +188,14 @@
         <input checked type="checkbox" id="underage_permission">
         <label for="underage_permission">Autoritzo l’ús del número de telèfon i adreça de correu electrònic de l'estudiant, menor d’edat, únicament i exclusiva per a finalitats derivades de l’activitat de Xamfrà.</label>
         <br>
-        <input {% if student.image_agreement %} checked {% endif %} type="checkbox" id="image_permission">
-        <label for="image_permission">Autoritzo l’ús de la imatge de l’estudiant, menor d'edat, per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà.</label>
-        <br>
-        {% else %}
-
-        <input {% if student.image_agreement %} checked {% endif %} type="checkbox" id="image_permission">
-        <label for="image_permission">Autoritzo l’ús de la meva imatge per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà.</label>
-        <br>
         {% endif %}
-
+        
+        <input {% if student.image_agreement %} checked {% endif %} type="checkbox" id="image_permission">
+        <label for="image_permission">Autoritzo l’ús de la meva imatge i/o la dels meus fills/es matriculats per a que pugui aparèixer a materials escrits o multimèdia corresponents a activitats educatives organitzades per Xamfrà.</label>
+        <br>
+        
         <input {% if student.image_agreement_external %} checked {% endif %} type="checkbox" id="image_permission_external">
-        <label for="image_permission_external">En cas de matricular-me, autoritzo l’ús de la meva imatge i/o la dels meus fills/es matriculats per a que puguin aparèixer a materials escrits o multimèdia corresponents a activitats organitzades per terceres persones autoritzades per L’ARC Música i sobre la possibilitat de publicar imatges on apareguin clarament identificables els seus fills/es. Aquest material mai podrà ser utilitzat amb finalitats lucratives.</label>
+        <label for="image_permission_external">Autoritzo l’ús de la meva imatge i/o la dels meus fills/es matriculats per a que puguin aparèixer a materials escrits o multimèdia corresponents a activitats organitzades per terceres persones autoritzades per L’ARC Música i sobre la possibilitat de publicar imatges on apareguin clarament identificables els seus fills/es. Aquest material mai podrà ser utilitzat amb finalitats lucratives.</label>
         <br>
 
         <input checked type="checkbox" id="p3">
