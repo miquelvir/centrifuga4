@@ -8,6 +8,7 @@ Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management 
 ![CodeQL](https://github.com/miquelvir/centrifuga4/actions/workflows/codeql-analysis.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/miquelvir/centrifuga4)
+[![Open in Codeanywhere](https://img.shields.io/badge/Open%20in-Codeanywhere-blue?style=flat-square&logo=codeanywhere)](https://app.codeanywhere.com/#https://github.com/miquelvir/centrifuga4)
 
 
 [`DEPLOY APP TO PRODUCTION`](https://github.com/miquelvir/centrifuga4/actions/workflows/deploy-heroku.yml)
