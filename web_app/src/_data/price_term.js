@@ -1,1 +1,1 @@
-export const DEFAULT_COURSE_PRICE_TERM = 75;
+export const DEFAULT_COURSE_PRICE_TERM = 90;
