@@ -16,7 +16,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import EuroIcon from '@material-ui/icons/Euro';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
 import PaymentsDataService from '../_services/payments.service';
 import {sendReceiptEmail} from '../_services/emailsReceipts.service';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
