@@ -16,6 +16,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import EuroIcon from '@material-ui/icons/Euro';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PaymentsDataService from '../_services/payments.service';
 import {sendReceiptEmail} from '../_services/emailsReceipts.service';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -139,12 +140,13 @@ const sendReceipt = (id) => {
       <CardHeader
         avatar={
           <Tooltip title={payment["method"] === 'cash'? t('has_paid_cash'):
+                payment["method"] === 'card'? t('has_paid_card'):
                 payment["method"] === 'bank-transfer' ? t('tooltip-bank-transfer'):
-                    payment["method"] === 'bank-direct-debit'? t('tooltip-bank-direct-debit'):
-                        t('other-payment-method')
+                payment["method"] === 'bank-direct-debit'? t('tooltip-bank-direct-debit'): t('other-payment-method')
             }>
           <Avatar aria-label="recipe" className={classes.avatar}>
             {payment["method"] === 'cash'? <EuroIcon/>:
+                payment["method"] === 'card'? <CreditCardIcon/>:
                 payment["method"] === 'bank-transfer'? <AccountBalanceWalletIcon/>:
                     payment["method"] === 'bank-direct-debit'? <AccountBalanceIcon/>:
                     <MoreHorizIcon/>

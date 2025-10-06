@@ -108,6 +108,7 @@ export default function Students({...other}) {
                         defaultValue: null,
                         options: [
                            {label: "cash", tooltip: "only_cash", name: 'cash'},
+                            {label: "card", tooltip: "only_card", name: 'card'},
                                 {label: "bank-transfer", tooltip: "only_banktransfer", name: 'bank-transfer'},
                                 {
                                     label: "bank-direct-debit",

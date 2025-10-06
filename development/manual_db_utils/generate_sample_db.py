@@ -218,7 +218,7 @@ def add_students(amount=500):
             p = Payment(
                 id=Payment.generate_new_id(),
                 quantity=randint(0, 150),
-                method=choice(("cash", "bank-transfer", "bank-direct-debit")),
+                method=choice(("cash", "bank-transfer", "bank-direct-debit", "card")),
                 date=datetime.date(randint(2019, 2020), randint(1, 12), randint(1, 28)),
                 concept=choice(
                     ("violin payment", "new payment", "recurring payment", "love ya")

@@ -129,8 +129,8 @@ class Student(Person):
 
     @validates("default_payment_method")
     def cleaner1(self, key, value):
-        assert value in (None, "bank-direct-debit", "cash", "bank-transfer"), (
-            "method must be either cash or bank-transfer, found %s" % value
+        assert value in (None, "card", "bank-direct-debit", "cash", "bank-transfer"), (
+            "method must be either card, cash or bank-transfer, found %s" % value
         )
         return value
 

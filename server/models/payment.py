@@ -18,8 +18,8 @@ class Payment(MyBase):
 
     @validates("method")
     def cleaner1(self, key, value):
-        assert value in ("cash", "bank-transfer", "bank-direct-debit"), (
-            "method must be either 'cash', 'bank-transfer' or 'bank-direct-debit', found '%s'"
+        assert value in ("cash", "card", "bank-transfer", "bank-direct-debit"), (
+            "method must be either 'cash', 'card', 'bank-transfer' or 'bank-direct-debit', found '%s'"
             % value
         )
         return value
