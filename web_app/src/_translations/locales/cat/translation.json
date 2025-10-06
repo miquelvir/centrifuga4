@@ -152,6 +152,7 @@
    "bank-direct-debit": "domiciliació bancària",
   "tooltip-bank-direct-debit": "ha pagat mitjançant domiciliació bancària",
   "cash": "efectiu",
+  "card": "targeta",
   "method": "mètode",
   "import": "import",
   "import_required": "cal l'import",

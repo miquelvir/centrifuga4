@@ -125,6 +125,7 @@
   "bank-direct-debit": "direct debit",
   "tooltip-bank-direct-debit": "has paid through direct debit",
   "cash": "cash",
+  "card": "card",
   "method": "method",
   "import": "amount",
   "import_required": "amount is required",
