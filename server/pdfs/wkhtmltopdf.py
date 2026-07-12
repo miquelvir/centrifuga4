@@ -8,7 +8,7 @@ def get_config():
     env_path = os.environ.get("wkhtmltopdf")
     if env_path:
         env_path = env_path.strip()
-        if env_path and os.path.exists(env_path):
+        if env_path and os.path.exists(env_path) and os.access(env_path, os.X_OK):
             return pdfkit.configuration(wkhtmltopdf=env_path)
 
     for path in [
@@ -17,7 +17,7 @@ def get_config():
         "/app/.apt/usr/bin/wkhtmltopdf",
         "/usr/local/bin/wkhtmltopdf",
     ]:
-        if os.path.exists(path):
+        if os.path.exists(path) and os.access(path, os.X_OK):
             return pdfkit.configuration(wkhtmltopdf=path)
 
     which_path = shutil.which("wkhtmltopdf")
