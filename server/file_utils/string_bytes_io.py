@@ -37,7 +37,7 @@ def make_response_with_file(
             else string_io_to_bytes_io(proxy, encoding=encoding),
             as_attachment=as_attachment,
             mimetype=mime_type,
-            attachment_filename=filename,
+            download_name=filename,
         )
     )
 
