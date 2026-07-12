@@ -1,6 +1,8 @@
 import os
 from datetime import timedelta
 
+from server.utils.db_url import get_database_url
+
 # todo clean config
 
 
@@ -115,7 +117,7 @@ class ProductionConfig(Config):
     BACKEND_SERVER_URL = "https://%s:%s" % (BACKEND_SERVER_HOST, BACKEND_SERVER_PORT)
     FRONTEND_SERVER_URL = BACKEND_SERVER_URL
 
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = get_database_url()
 
 
 class HerokuManualLiveConfig(ProductionConfig):
@@ -129,7 +131,7 @@ class HerokuManualLiveConfig(ProductionConfig):
     BACKEND_SERVER_PORT = "443"
     BACKEND_SERVER_HOST = "c4.xamfra.net"
 
-    SQLALCHEMY_DATABASE_URI = os.getenv("MANUAL_DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = get_database_url()
 
 
 class TestingConfig(DevelopmentConfig):
