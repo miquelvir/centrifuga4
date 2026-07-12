@@ -24,7 +24,7 @@ Source code of centrífuga4, [Xamfrà](https://xamfra.net)'s student management 
 1. Python backend
     1. Add all the required environment variables
     2. Use development/generate_sample_db.py to create a new database. It will contain a user 'admin@gmail.com' : 'admin'
-    3. Run development/wsgi_development.py to run the backend development server
+    3. Run development/wsgi_development.py to run the backend development server: `ENVIRONMENT=development PYTHONPATH=/workspaces/centrifuga4 python3 development/wsgi_development.py`
 2. Frontend development server
     1. Run `npm start` inside web_app to start the frontend development server
 3. Run Redis Server and email_queue/worker.py.
