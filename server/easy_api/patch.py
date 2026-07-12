@@ -35,7 +35,7 @@ class ImplementsPatchOne:
     @safe_patch
     @login_required
     def patch(self, id_):
-        body = request.get_json()
+        body = request.get_json(silent=True) or {}
         body["id"] = id_  # force id_
 
         updated_student = self.schema.load(body, partial=True)

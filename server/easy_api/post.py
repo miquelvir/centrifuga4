@@ -38,7 +38,7 @@ class ImplementsPostOne:
     @safe_post
     @login_required
     def post(self):
-        body = request.get_json()
+        body = request.get_json(silent=True) or {}
 
         if "id" in body:
             raise ResourceBaseBadRequest(

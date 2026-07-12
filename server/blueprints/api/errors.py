@@ -8,13 +8,18 @@ from werkzeug.exceptions import HTTPException
 
 class ApiException(HTTPException):
     def __init__(self, message=None, type_=None, **kwargs):
+        try:
+            request_body = request.get_json(silent=True)
+        except Exception:
+            request_body = None
+
         body = {
             "message": message,
             "type": (type(self) if not type_ else type_).__name__,
             "status": self.code,
             "localTimestamp": datetime.now().isoformat(),
             "utcTimestamp": datetime.utcnow().isoformat(),
-            "requestBody": request.get_json(),
+            "requestBody": request_body,
             "detail": kwargs,
             "requestUrl": request.url,
         }
@@ -102,8 +107,13 @@ def integrity(function):
 
 def no_nested(function):
     def function_wrapper(*args, **kwargs):
-        if request.get_json():
-            for key, value in request.get_json().items():
+        try:
+            payload = request.get_json(silent=True)
+        except Exception:
+            payload = None
+
+        if isinstance(payload, dict):
+            for key, value in payload.items():
                 if type(value) not in (str, int, float, bool, type(None)):
                     raise NestedNotAllowedBadRequest(
                         "use proper sub resource instead of nested objects",
