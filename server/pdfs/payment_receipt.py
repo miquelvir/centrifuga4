@@ -145,30 +145,6 @@ def build_payment_recipe_pdf(
     pdf.set_font("DejaVu", "B", 10)
     pdf.multi_cell(0, 6, f"id/ {payment_id}")
     pdf.multi_cell(0, 6, f"epoch/ {today_extended}")
-    pdf.multi_cell(
-        0,
-        6,
-        (
-            "l'autenticitat del contingut d'aquest document es pot verificar aquí: "
-            f"{verification_link}"
-        ),
-    )
-    pdf.multi_cell(
-        0,
-        6,
-        (
-            "la autenticidad del contenido de este documento se puede verificar aquí: "
-            f"{verification_link}"
-        ),
-    )
-    pdf.multi_cell(
-        0,
-        6,
-        (
-            "the authenticity of the content of this document can be verified here: "
-            f"{verification_link}"
-        ),
-    )
 
     pdf.ln(6)
     pdf.multi_cell(0, 6, f"{today}, Barcelona")
