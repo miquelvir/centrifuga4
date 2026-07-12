@@ -6,8 +6,10 @@ import pdfkit
 
 def get_config():
     env_path = os.environ.get("wkhtmltopdf")
-    if env_path and os.path.exists(env_path):
-        return pdfkit.configuration(wkhtmltopdf=env_path)
+    if env_path:
+        env_path = env_path.strip()
+        if env_path and os.path.exists(env_path):
+            return pdfkit.configuration(wkhtmltopdf=env_path)
 
     for path in [
         "/usr/bin/wkhtmltopdf",
@@ -22,4 +24,6 @@ def get_config():
     if which_path:
         return pdfkit.configuration(wkhtmltopdf=which_path)
 
-    return pdfkit.configuration(wkhtmltopdf=None)
+    raise RuntimeError(
+        "No wkhtmltopdf executable could be found. Install wkhtmltopdf or provide a valid wkhtmltopdf path."
+    )

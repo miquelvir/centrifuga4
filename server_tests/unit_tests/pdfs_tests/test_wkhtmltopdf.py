@@ -32,6 +32,13 @@ class TestWKHTMLToPDFConfig(unittest.TestCase):
 
         mock_configuration.assert_called_once_with(wkhtmltopdf="/usr/bin/wkhtmltopdf")
 
+    def test_raises_when_no_executable_can_be_found(self):
+        with patch.dict(os.environ, {}, clear=True):
+            with patch("server.pdfs.wkhtmltopdf.os.path.exists", return_value=False):
+                with patch("server.pdfs.wkhtmltopdf.shutil.which", return_value=None):
+                    with self.assertRaisesRegex(RuntimeError, "wkhtmltopdf executable"):
+                        get_config()
+
 
 if __name__ == "__main__":
     unittest.main()
