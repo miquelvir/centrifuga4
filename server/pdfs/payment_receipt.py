@@ -35,6 +35,8 @@ def generate_payment_recipe_pdf(
         secret,
         algorithm="HS256",
     )
+    if isinstance(token, bytes):
+        token = token.decode("utf-8")
 
     templater = TemplateRenderer(templates_folder=templates_folder)
     pdf_content = templater.render_template(
@@ -47,7 +49,7 @@ def generate_payment_recipe_pdf(
         today=datetime.date(datetime.now()),
         today_extended=signing_at,
         payment_id=payment["id"],
-        verification_link="%s/validation/v1/%s" % (backend_url, token.decode("utf-8")),
+        verification_link="%s/validation/v1/%s" % (backend_url, token),
     )
 
     pdf = pdfkit.from_string(pdf_content, False, configuration=get_config())
