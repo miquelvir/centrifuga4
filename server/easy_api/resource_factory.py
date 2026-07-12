@@ -1,6 +1,7 @@
 from typing import List, Tuple
 
-from flask_restful import Resource
+from flask import Blueprint
+from flask_restful import Api, Resource
 from sqlalchemy import inspect
 from sqlalchemy.orm import Mapper, RelationshipProperty
 
@@ -24,6 +25,7 @@ def get_resources(
             {
                 "schema": get_schema_from_model(model),
                 "model": model,
+                "methods": ["GET", "POST"],
             },
         )
 
@@ -41,6 +43,7 @@ def get_resources(
             {
                 "schema": get_schema_from_model(model),
                 "model": model,
+                "methods": ["GET", "PATCH", "DELETE"],
             },
         )
         resources.append((resource, "/%s/<string:id_>" % resource_name))
@@ -68,6 +71,7 @@ def get_resources(
                     "model": nested_model,
                     "parent_model": model,
                     "parent_field": nested_resource_name,
+                    "methods": ["POST", "DELETE"],
                 },
             )
             resources.append(
@@ -87,6 +91,7 @@ def get_resources(
                     "model": nested_model,
                     "parent_model": model,
                     "parent_field": nested_resource_name,
+                    "methods": ["GET"],
                 },
             )
             resources.append(
