@@ -1,12 +1,10 @@
 from datetime import datetime
 
-import pdfkit
-
 from server.models import Student
 from server.schemas.schemas import CourseSchema
 from server.jinja_utils.template_renderer import TemplateRenderer
 from server.pdfs import TEMPLATES_PATH
-from server.pdfs.wkhtmltopdf import get_config
+from server.pdfs.html_to_pdf import html_to_pdf
 
 
 def generate_grant_letter_pdf(
@@ -39,6 +37,4 @@ def generate_grant_letter_pdf(
         else None,
         datetime=datetime.date(datetime.now()),
     )
-    pdf = pdfkit.from_string(pdf_content, False, configuration=get_config())
-
-    return pdf
+    return html_to_pdf(pdf_content)
