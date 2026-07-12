@@ -175,7 +175,7 @@ class _ImplementsGet:
             try:
                 if do_pagination:
                     pagination = query.paginate(
-                        page,
+                        page=page,
                         per_page=current_app.config["API_PAGINATION"],
                         error_out=True,
                     )
