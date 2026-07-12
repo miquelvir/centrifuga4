@@ -23,6 +23,14 @@ from server.models import (
 )
 
 
+class classproperty:
+    def __init__(self, fget):
+        self.fget = fget
+
+    def __get__(self, instance, owner):
+        return self.fget(owner)
+
+
 class BaseCRUD(abc.ABC):
     @abc.abstractmethod
     def create(self, obj: object) -> bool:
@@ -180,12 +188,10 @@ class Require:
         except KeyError:
             raise NotImplementedError
 
-    @classmethod
-    @property
+    @classproperty
     def can(cls) -> BaseCRUDRolePermissions:
         return cls._permission_provider()
 
-    @classmethod
-    @property
+    @classproperty
     def ensure(cls):
         return EnsureCRUDRolePermissions(cls._permission_provider())
