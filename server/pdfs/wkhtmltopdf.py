@@ -6,7 +6,7 @@ import pdfkit
 
 def get_config():
     env_path = os.environ.get("wkhtmltopdf")
-    if env_path:
+    if env_path and os.path.exists(env_path):
         return pdfkit.configuration(wkhtmltopdf=env_path)
 
     for path in [
