@@ -51,9 +51,8 @@ class JwtService:
                 )
             data = {**data, "exp": expires_at}
 
-        return jwt.encode(data, secret, algorithm=self.JWT_ALGORITHM, **kwargs).decode(
-            self.ENCODING
-        )
+        token = jwt.encode(data, secret, algorithm=self.JWT_ALGORITHM, **kwargs)
+        return token if isinstance(token, str) else token.decode(self.ENCODING)
 
     def _token(self, token: Union[bytes, str]) -> bytes:
         return (
