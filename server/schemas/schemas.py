@@ -165,3 +165,20 @@ class TeacherSchema(MySQLAlchemyAutoSchema):
 class AttendanceSchema(MySQLAlchemyAutoSchema):
     class Meta(MySQLAlchemyAutoSchema.Meta):
         model = models.Attendance
+
+    # Accept ids for related objects instead of requiring nested objects
+    student = fields.Nested(
+        lambda: StudentSchema(only=("id",)),
+        many=False,
+        dump_only=True,
+    )
+
+    course = fields.Nested(
+        lambda: CourseSchema(only=("id",)),
+        many=False,
+        dump_only=True,
+    )
+
+    # Ensure foreign key fields are available for loading/dumping
+    student_id = auto_field(load_only=True)
+    course_id = auto_field(load_only=True)
