@@ -172,3 +172,6 @@ class AttendanceSchema(MySQLAlchemyAutoSchema):
     student_id = auto_field()
     course_id = auto_field()
     status = auto_field()
+    # Do not require nested relationship objects when loading — expose them only when dumping
+    student = fields.Nested(StudentSchema(only=("id", "full_name")), dump_only=True)
+    course = fields.Nested(CourseSchema(only=("id", "name")), dump_only=True)
